@@ -1,0 +1,11 @@
+import brawlersRaw from "@/data/brawlers.json";
+import mapsRaw from "@/data/maps.json";
+import metaRaw from "@/data/meta.json";
+import type { Brawler, MapProfile } from "./types";
+export const brawlers=brawlersRaw as Brawler[];
+export const maps=mapsRaw as MapProfile[];
+export const meta=metaRaw;
+export const brawlerByName=(name:string)=>brawlers.find(b=>b.name.toLowerCase()===name.toLowerCase());
+export const brawlerBySlug=(slug:string)=>brawlers.find(b=>b.slug===slug);
+export const mapBySlug=(slug:string)=>maps.find(m=>m.slug===slug);
+export const modes=[...new Set(maps.map(m=>m.mode))];

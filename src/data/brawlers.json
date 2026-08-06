@@ -1,0 +1,2147 @@
+[
+  {
+    "slug": "shelly",
+    "name": "Shelly",
+    "rarity": "Starter",
+    "role": "Antitanque",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "antitanque"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "colt",
+    "name": "Colt",
+    "rarity": "Rare",
+    "role": "Tirador",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tirador"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "bull",
+    "name": "Bull",
+    "rarity": "Rare",
+    "role": "Tanque",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tanque"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "brock",
+    "name": "Brock",
+    "rarity": "Rare",
+    "role": "Tirador",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tirador"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "barley",
+    "name": "Barley",
+    "rarity": "Rare",
+    "role": "Artillero",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "artillero"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "nita",
+    "name": "Nita",
+    "rarity": "Rare",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "el-primo",
+    "name": "El Primo",
+    "rarity": "Rare",
+    "role": "Tanque",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tanque"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "poco",
+    "name": "Poco",
+    "rarity": "Rare",
+    "role": "Apoyo",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "apoyo"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "rosa",
+    "name": "Rosa",
+    "rarity": "Rare",
+    "role": "Tanque",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tanque"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "rico",
+    "name": "Rico",
+    "rarity": "Super Rare",
+    "role": "Tirador",
+    "tier": "A",
+    "range": "Largo",
+    "difficulty": 4,
+    "tags": [
+      "sniper",
+      "walls",
+      "carry"
+    ],
+    "modes": {
+      "Balón Brawl": 8,
+      "Atraco": 8,
+      "Atrapagemas": 7
+    },
+    "counters": [
+      "pasillos",
+      "equipos sin wallbreak"
+    ],
+    "counteredBy": [
+      "mapas abiertos",
+      "wallbreak"
+    ],
+    "build": "Daño + recarga; busca ángulos de rebote seguros.",
+    "profileComplete": true
+  },
+  {
+    "slug": "jessie",
+    "name": "Jessie",
+    "rarity": "Super Rare",
+    "role": "Control",
+    "tier": "A",
+    "range": "Largo",
+    "difficulty": 2,
+    "tags": [
+      "control",
+      "objective",
+      "safe"
+    ],
+    "modes": {
+      "Zona Restringida": 9,
+      "Atraco": 8,
+      "Atrapagemas": 7
+    },
+    "counters": [
+      "equipos agrupados",
+      "objetivos estáticos"
+    ],
+    "counteredBy": [
+      "snipers",
+      "burst a torreta"
+    ],
+    "build": "Daño + recarga; coloca la torreta fuera del fuego cruzado.",
+    "profileComplete": true
+  },
+  {
+    "slug": "dynamike",
+    "name": "Dynamike",
+    "rarity": "Super Rare",
+    "role": "Artillero",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "artillero"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "darryl",
+    "name": "Darryl",
+    "rarity": "Super Rare",
+    "role": "Asesino",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "asesino"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "penny",
+    "name": "Penny",
+    "rarity": "Super Rare",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "tick",
+    "name": "Tick",
+    "rarity": "Super Rare",
+    "role": "Artillero",
+    "tier": "B+",
+    "range": "Muy largo",
+    "difficulty": 3,
+    "tags": [
+      "thrower",
+      "control",
+      "lastpick"
+    ],
+    "modes": {
+      "Caza Estelar": 8,
+      "Noqueo": 8
+    },
+    "counters": [
+      "equipos sin acceso",
+      "zonas estrechas"
+    ],
+    "counteredBy": [
+      "asesinos",
+      "wallbreak"
+    ],
+    "build": "Escudo + recarga; solo como último pick seguro.",
+    "profileComplete": true
+  },
+  {
+    "slug": "carl",
+    "name": "Carl",
+    "rarity": "Super Rare",
+    "role": "Daño",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "daño"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "8-bit",
+    "name": "8-Bit",
+    "rarity": "Super Rare",
+    "role": "Tirador",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tirador"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "jacky",
+    "name": "Jacky",
+    "rarity": "Super Rare",
+    "role": "Tanque",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tanque"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "gus",
+    "name": "Gus",
+    "rarity": "Super Rare",
+    "role": "Apoyo",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "apoyo"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "bo",
+    "name": "Bo",
+    "rarity": "Epic",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "piper",
+    "name": "Piper",
+    "rarity": "Epic",
+    "role": "Tirador",
+    "tier": "S",
+    "range": "Muy largo",
+    "difficulty": 4,
+    "tags": [
+      "sniper",
+      "safe",
+      "open"
+    ],
+    "modes": {
+      "Noqueo": 10,
+      "Caza Estelar": 10,
+      "Atrapagemas": 7
+    },
+    "counters": [
+      "rangos medios",
+      "objetivos expuestos"
+    ],
+    "counteredBy": [
+      "dive",
+      "muros"
+    ],
+    "build": "Daño + escudo; elige herramienta defensiva frente a dive.",
+    "profileComplete": true
+  },
+  {
+    "slug": "pam",
+    "name": "Pam",
+    "rarity": "Epic",
+    "role": "Apoyo",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "apoyo"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "frank",
+    "name": "Frank",
+    "rarity": "Epic",
+    "role": "Tanque",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tanque"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "bibi",
+    "name": "Bibi",
+    "rarity": "Epic",
+    "role": "Tanque",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tanque"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "bea",
+    "name": "Bea",
+    "rarity": "Epic",
+    "role": "Tirador",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tirador"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "emz",
+    "name": "Emz",
+    "rarity": "Epic",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "gale",
+    "name": "Gale",
+    "rarity": "Epic",
+    "role": "Control",
+    "tier": "A",
+    "range": "Largo",
+    "difficulty": 2,
+    "tags": [
+      "antidive",
+      "control",
+      "safe"
+    ],
+    "modes": {
+      "Balón Brawl": 9,
+      "Zona Restringida": 8
+    },
+    "counters": [
+      "tanques",
+      "asesinos"
+    ],
+    "counteredBy": [
+      "snipers",
+      "sustain"
+    ],
+    "build": "Recarga + daño; conserva el empuje para cortar engages.",
+    "profileComplete": true
+  },
+  {
+    "slug": "nani",
+    "name": "Nani",
+    "rarity": "Epic",
+    "role": "Tirador",
+    "tier": "A",
+    "range": "Muy largo",
+    "difficulty": 5,
+    "tags": [
+      "sniper",
+      "burst",
+      "open",
+      "lastpick"
+    ],
+    "modes": {
+      "Noqueo": 9,
+      "Caza Estelar": 9
+    },
+    "counters": [
+      "snipers previsibles",
+      "objetivos quietos"
+    ],
+    "counteredBy": [
+      "dive",
+      "presión cercana"
+    ],
+    "build": "Daño + escudo; maximiza ángulos, no solo disparos frontales.",
+    "profileComplete": true
+  },
+  {
+    "slug": "colette",
+    "name": "Colette",
+    "rarity": "Epic",
+    "role": "Antitanque",
+    "tier": "A+",
+    "range": "Largo",
+    "difficulty": 3,
+    "tags": [
+      "antitank",
+      "objective",
+      "safe"
+    ],
+    "modes": {
+      "Atraco": 10,
+      "Balón Brawl": 8,
+      "Zona Restringida": 7
+    },
+    "counters": [
+      "tanques",
+      "mucha vida"
+    ],
+    "counteredBy": [
+      "snipers",
+      "burst"
+    ],
+    "build": "Daño + escudo; guarda el súper para doble impacto o caja.",
+    "profileComplete": true
+  },
+  {
+    "slug": "edgar",
+    "name": "Edgar",
+    "rarity": "Epic",
+    "role": "Asesino",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "asesino"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "stu",
+    "name": "Stu",
+    "rarity": "Epic",
+    "role": "Asesino",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "asesino"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "belle",
+    "name": "Belle",
+    "rarity": "Epic",
+    "role": "Tirador",
+    "tier": "A+",
+    "range": "Muy largo",
+    "difficulty": 3,
+    "tags": [
+      "sniper",
+      "safe",
+      "mid"
+    ],
+    "modes": {
+      "Noqueo": 9,
+      "Caza Estelar": 9,
+      "Atrapagemas": 8
+    },
+    "counters": [
+      "equipos agrupados",
+      "tanques marcables"
+    ],
+    "counteredBy": [
+      "asesinos",
+      "presión por muros"
+    ],
+    "build": "Recarga/daño y supervivencia; pick seguro de primera rotación.",
+    "profileComplete": true
+  },
+  {
+    "slug": "grom",
+    "name": "Grom",
+    "rarity": "Epic",
+    "role": "Artillero",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "artillero"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "griff",
+    "name": "Griff",
+    "rarity": "Epic",
+    "role": "Daño",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "daño"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "ash",
+    "name": "Ash",
+    "rarity": "Epic",
+    "role": "Tanque",
+    "tier": "A+",
+    "range": "Corto",
+    "difficulty": 4,
+    "tags": [
+      "tank",
+      "carry",
+      "lastpick"
+    ],
+    "modes": {
+      "Balón Brawl": 8,
+      "Zona Restringida": 8
+    },
+    "counters": [
+      "bajo DPS",
+      "equipos sin antitanque"
+    ],
+    "counteredBy": [
+      "antitanque",
+      "control"
+    ],
+    "build": "Velocidad + daño; necesita rutas y apoyo.",
+    "profileComplete": true
+  },
+  {
+    "slug": "lola",
+    "name": "Lola",
+    "rarity": "Epic",
+    "role": "Daño",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "daño"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "bonnie",
+    "name": "Bonnie",
+    "rarity": "Epic",
+    "role": "Asesino",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "asesino"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "sam",
+    "name": "Sam",
+    "rarity": "Epic",
+    "role": "Tanque",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tanque"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "mandy",
+    "name": "Mandy",
+    "rarity": "Epic",
+    "role": "Tirador",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tirador"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "maisie",
+    "name": "Maisie",
+    "rarity": "Epic",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "hank",
+    "name": "Hank",
+    "rarity": "Epic",
+    "role": "Tanque",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tanque"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "pearl",
+    "name": "Pearl",
+    "rarity": "Epic",
+    "role": "Daño",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "daño"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "larry-lawrie",
+    "name": "Larry & Lawrie",
+    "rarity": "Epic",
+    "role": "Artillero",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "artillero"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "angelo",
+    "name": "Angelo",
+    "rarity": "Epic",
+    "role": "Tirador",
+    "tier": "S",
+    "range": "Muy largo",
+    "difficulty": 4,
+    "tags": [
+      "sniper",
+      "mobile",
+      "open"
+    ],
+    "modes": {
+      "Noqueo": 10,
+      "Caza Estelar": 10,
+      "Atrapagemas": 7
+    },
+    "counters": [
+      "tiradores inmóviles",
+      "composiciones sin acceso"
+    ],
+    "counteredBy": [
+      "asesinos",
+      "mapas cerrados"
+    ],
+    "build": "Daño + escudo; movilidad si el mapa lo exige.",
+    "profileComplete": true
+  },
+  {
+    "slug": "berry",
+    "name": "Berry",
+    "rarity": "Epic",
+    "role": "Apoyo",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "apoyo"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "shade",
+    "name": "Shade",
+    "rarity": "Epic",
+    "role": "Asesino",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "asesino"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "meeple",
+    "name": "Meeple",
+    "rarity": "Epic",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "trunk",
+    "name": "Trunk",
+    "rarity": "Epic",
+    "role": "Tanque",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tanque"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "bolt",
+    "name": "Bolt",
+    "rarity": "Epic",
+    "role": "Daño",
+    "tier": "S",
+    "range": "Medio",
+    "difficulty": 3,
+    "tags": [
+      "carry",
+      "damage",
+      "safe"
+    ],
+    "modes": {
+      "Balón Brawl": 8,
+      "Atrapagemas": 8,
+      "Zona Restringida": 8,
+      "Atraco": 7
+    },
+    "counters": [
+      "rangos medios",
+      "equipos sin burst"
+    ],
+    "counteredBy": [
+      "rango extremo",
+      "control"
+    ],
+    "build": "Daño + escudo; presión constante y buena economía de munición.",
+    "profileComplete": true
+  },
+  {
+    "slug": "mortis",
+    "name": "Mortis",
+    "rarity": "Mythic",
+    "role": "Asesino",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "asesino"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "tara",
+    "name": "Tara",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "gene",
+    "name": "Gene",
+    "rarity": "Mythic",
+    "role": "Apoyo",
+    "tier": "S",
+    "range": "Largo",
+    "difficulty": 3,
+    "tags": [
+      "safe",
+      "support",
+      "pick",
+      "mid"
+    ],
+    "modes": {
+      "Atrapagemas": 10,
+      "Noqueo": 9,
+      "Caza Estelar": 9,
+      "Balón Brawl": 7
+    },
+    "counters": [
+      "equipos frágiles",
+      "composiciones sin movilidad"
+    ],
+    "counteredBy": [
+      "presión constante",
+      "asesinos con acceso"
+    ],
+    "build": "Control central; prioriza supervivencia, visión y recarga.",
+    "profileComplete": true
+  },
+  {
+    "slug": "mr-p",
+    "name": "Mr. P",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "max",
+    "name": "Max",
+    "rarity": "Mythic",
+    "role": "Apoyo",
+    "tier": "A+",
+    "range": "Medio",
+    "difficulty": 4,
+    "tags": [
+      "safe",
+      "support",
+      "mobile",
+      "tempo"
+    ],
+    "modes": {
+      "Balón Brawl": 10,
+      "Atrapagemas": 9,
+      "Zona Restringida": 8
+    },
+    "counters": [
+      "composiciones lentas",
+      "snipers sin peel"
+    ],
+    "counteredBy": [
+      "control duro",
+      "burst"
+    ],
+    "build": "Daño + velocidad/escudo; juega para tempo y engages.",
+    "profileComplete": true
+  },
+  {
+    "slug": "sprout",
+    "name": "Sprout",
+    "rarity": "Mythic",
+    "role": "Artillero",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "artillero"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "lou",
+    "name": "Lou",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "A+",
+    "range": "Largo",
+    "difficulty": 3,
+    "tags": [
+      "control",
+      "zone",
+      "antitank"
+    ],
+    "modes": {
+      "Zona Restringida": 10,
+      "Balón Brawl": 7
+    },
+    "counters": [
+      "tanques",
+      "equipos que deben pisar zona"
+    ],
+    "counteredBy": [
+      "snipers",
+      "wallbreak"
+    ],
+    "build": "Recarga + daño; encadena control sobre el objetivo.",
+    "profileComplete": true
+  },
+  {
+    "slug": "byron",
+    "name": "Byron",
+    "rarity": "Mythic",
+    "role": "Apoyo",
+    "tier": "A",
+    "range": "Muy largo",
+    "difficulty": 4,
+    "tags": [
+      "support",
+      "sniper",
+      "safe"
+    ],
+    "modes": {
+      "Noqueo": 8,
+      "Caza Estelar": 8,
+      "Atrapagemas": 7
+    },
+    "counters": [
+      "poke lento",
+      "composiciones sin burst"
+    ],
+    "counteredBy": [
+      "dive coordinado",
+      "antiheal"
+    ],
+    "build": "Recarga + escudo; alterna curación y presión.",
+    "profileComplete": true
+  },
+  {
+    "slug": "ruffs",
+    "name": "Ruffs",
+    "rarity": "Mythic",
+    "role": "Apoyo",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "apoyo"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "squeak",
+    "name": "Squeak",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "buzz",
+    "name": "Buzz",
+    "rarity": "Mythic",
+    "role": "Asesino",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "asesino"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "fang",
+    "name": "Fang",
+    "rarity": "Mythic",
+    "role": "Asesino",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "asesino"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "eve",
+    "name": "Eve",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "janet",
+    "name": "Janet",
+    "rarity": "Mythic",
+    "role": "Tirador",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tirador"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "otis",
+    "name": "Otis",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "buster",
+    "name": "Buster",
+    "rarity": "Mythic",
+    "role": "Tanque",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tanque"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "gray",
+    "name": "Gray",
+    "rarity": "Mythic",
+    "role": "Apoyo",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "apoyo"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "r-t",
+    "name": "R-T",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "A",
+    "range": "Largo",
+    "difficulty": 4,
+    "tags": [
+      "safe",
+      "control",
+      "antidive"
+    ],
+    "modes": {
+      "Noqueo": 8,
+      "Caza Estelar": 8,
+      "Atrapagemas": 8
+    },
+    "counters": [
+      "tanques",
+      "targets marcados"
+    ],
+    "counteredBy": [
+      "poke sostenido",
+      "movilidad"
+    ],
+    "build": "Daño + escudo; coordina la marca con el burst del equipo.",
+    "profileComplete": true
+  },
+  {
+    "slug": "willow",
+    "name": "Willow",
+    "rarity": "Mythic",
+    "role": "Artillero",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "artillero"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "doug",
+    "name": "Doug",
+    "rarity": "Mythic",
+    "role": "Apoyo",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "apoyo"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "chuck",
+    "name": "Chuck",
+    "rarity": "Mythic",
+    "role": "Especialista",
+    "tier": "A+",
+    "range": "Medio",
+    "difficulty": 4,
+    "tags": [
+      "objective",
+      "specialist",
+      "lastpick"
+    ],
+    "modes": {
+      "Atraco": 10
+    },
+    "counters": [
+      "defensas lentas",
+      "equipos sin control de rutas"
+    ],
+    "counteredBy": [
+      "presión temprana",
+      "control de postes"
+    ],
+    "build": "Configura rutas seguras; no sacrifiques todo el early.",
+    "profileComplete": true
+  },
+  {
+    "slug": "charlie",
+    "name": "Charlie",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "mico",
+    "name": "Mico",
+    "rarity": "Mythic",
+    "role": "Asesino",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "asesino"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "melodie",
+    "name": "Melodie",
+    "rarity": "Mythic",
+    "role": "Asesino",
+    "tier": "A",
+    "range": "Medio",
+    "difficulty": 4,
+    "tags": [
+      "assassin",
+      "objective",
+      "mobile",
+      "lastpick"
+    ],
+    "modes": {
+      "Atraco": 9,
+      "Balón Brawl": 8
+    },
+    "counters": [
+      "baja defensa",
+      "objetivos abiertos"
+    ],
+    "counteredBy": [
+      "control duro",
+      "burst"
+    ],
+    "build": "Daño + escudo; entra cuando el rival haya gastado control.",
+    "profileComplete": true
+  },
+  {
+    "slug": "lily",
+    "name": "Lily",
+    "rarity": "Mythic",
+    "role": "Asesino",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "asesino"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "clancy",
+    "name": "Clancy",
+    "rarity": "Mythic",
+    "role": "Daño",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "daño"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "moe",
+    "name": "Moe",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "juju",
+    "name": "Juju",
+    "rarity": "Mythic",
+    "role": "Artillero",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "artillero"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "ollie",
+    "name": "Ollie",
+    "rarity": "Mythic",
+    "role": "Tanque",
+    "tier": "A+",
+    "range": "Corto",
+    "difficulty": 3,
+    "tags": [
+      "tank",
+      "control",
+      "lastpick"
+    ],
+    "modes": {
+      "Balón Brawl": 8,
+      "Zona Restringida": 8
+    },
+    "counters": [
+      "equipos sin antitanque",
+      "objetivos cerrados"
+    ],
+    "counteredBy": [
+      "antitanque",
+      "rango"
+    ],
+    "build": "Velocidad + salud; juega por presencia, no por daño bruto.",
+    "profileComplete": true
+  },
+  {
+    "slug": "lumi",
+    "name": "Lumi",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "finx",
+    "name": "Finx",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "jae-yong",
+    "name": "Jae-Yong",
+    "rarity": "Mythic",
+    "role": "Apoyo",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "apoyo"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "alli",
+    "name": "Alli",
+    "rarity": "Mythic",
+    "role": "Asesino",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "asesino"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "mina",
+    "name": "Mina",
+    "rarity": "Mythic",
+    "role": "Daño",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "daño"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "ziggy",
+    "name": "Ziggy",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "gigi",
+    "name": "Gigi",
+    "rarity": "Mythic",
+    "role": "Asesino",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "asesino"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "glowy",
+    "name": "Glowy",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "najia",
+    "name": "Najia",
+    "rarity": "Mythic",
+    "role": "Tirador",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tirador"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "damian",
+    "name": "Damian",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "A",
+    "range": "Medio",
+    "difficulty": 4,
+    "tags": [
+      "control",
+      "burst",
+      "lastpick"
+    ],
+    "modes": {
+      "Zona Restringida": 8,
+      "Balón Brawl": 7
+    },
+    "counters": [
+      "zonas cerradas",
+      "equipos agrupados"
+    ],
+    "counteredBy": [
+      "rango",
+      "movilidad"
+    ],
+    "build": "Daño + escudo; busca encadenar explosiones sobre choke points.",
+    "profileComplete": true
+  },
+  {
+    "slug": "starr-nova",
+    "name": "Starr Nova",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "A+",
+    "range": "Medio",
+    "difficulty": 4,
+    "tags": [
+      "control",
+      "carry",
+      "tempo"
+    ],
+    "modes": {
+      "Balón Brawl": 9,
+      "Atrapagemas": 8,
+      "Zona Restringida": 8
+    },
+    "counters": [
+      "equipos lentos",
+      "composiciones agrupadas"
+    ],
+    "counteredBy": [
+      "rango",
+      "burst coordinado"
+    ],
+    "build": "Daño + escudo; administra transformaciones y no sobreextiendas.",
+    "profileComplete": true
+  },
+  {
+    "slug": "wendy",
+    "name": "Wendy",
+    "rarity": "Mythic",
+    "role": "Control",
+    "tier": "A",
+    "range": "Largo",
+    "difficulty": 3,
+    "tags": [
+      "control",
+      "safe",
+      "new"
+    ],
+    "modes": {
+      "Atrapagemas": 8,
+      "Zona Restringida": 8
+    },
+    "counters": [
+      "equipos agrupados"
+    ],
+    "counteredBy": [
+      "dive",
+      "rango extremo"
+    ],
+    "build": "Build provisional: prioriza supervivencia hasta consolidar datos.",
+    "profileComplete": true
+  },
+  {
+    "slug": "spike",
+    "name": "Spike",
+    "rarity": "Legendary",
+    "role": "Control",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "control"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "crow",
+    "name": "Crow",
+    "rarity": "Legendary",
+    "role": "Asesino",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "asesino"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "leon",
+    "name": "Leon",
+    "rarity": "Legendary",
+    "role": "Asesino",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "asesino"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "sandy",
+    "name": "Sandy",
+    "rarity": "Legendary",
+    "role": "Control",
+    "tier": "A",
+    "range": "Medio",
+    "difficulty": 3,
+    "tags": [
+      "control",
+      "support",
+      "tempo",
+      "safe"
+    ],
+    "modes": {
+      "Balón Brawl": 8,
+      "Atrapagemas": 9,
+      "Zona Restringida": 8
+    },
+    "counters": [
+      "equipos sin visión",
+      "composiciones lentas"
+    ],
+    "counteredBy": [
+      "snipers",
+      "wallbreak"
+    ],
+    "build": "Daño + velocidad; aprovecha el súper para ganar dos líneas.",
+    "profileComplete": true
+  },
+  {
+    "slug": "surge",
+    "name": "Surge",
+    "rarity": "Legendary",
+    "role": "Antidive",
+    "tier": "A+",
+    "range": "Medio",
+    "difficulty": 3,
+    "tags": [
+      "antidive",
+      "carry",
+      "scaling"
+    ],
+    "modes": {
+      "Balón Brawl": 9,
+      "Zona Restringida": 8,
+      "Atrapagemas": 7
+    },
+    "counters": [
+      "asesinos",
+      "tanques"
+    ],
+    "counteredBy": [
+      "rango antes de escalar",
+      "control"
+    ],
+    "build": "Daño + escudo; conserva la primera mejora.",
+    "profileComplete": true
+  },
+  {
+    "slug": "amber",
+    "name": "Amber",
+    "rarity": "Legendary",
+    "role": "Control",
+    "tier": "A+",
+    "range": "Largo",
+    "difficulty": 3,
+    "tags": [
+      "control",
+      "sustain",
+      "zone"
+    ],
+    "modes": {
+      "Zona Restringida": 9,
+      "Atrapagemas": 8,
+      "Balón Brawl": 7
+    },
+    "counters": [
+      "tanques",
+      "rutas estrechas"
+    ],
+    "counteredBy": [
+      "burst",
+      "snipers"
+    ],
+    "build": "Daño + velocidad en arbustos o escudo en abierto.",
+    "profileComplete": true
+  },
+  {
+    "slug": "meg",
+    "name": "Meg",
+    "rarity": "Legendary",
+    "role": "Tanque",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tanque"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "chester",
+    "name": "Chester",
+    "rarity": "Legendary",
+    "role": "Daño",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "daño"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "cordelius",
+    "name": "Cordelius",
+    "rarity": "Legendary",
+    "role": "Asesino",
+    "tier": "A",
+    "range": "Medio",
+    "difficulty": 4,
+    "tags": [
+      "assassin",
+      "control",
+      "lastpick"
+    ],
+    "modes": {
+      "Balón Brawl": 8,
+      "Atrapagemas": 8,
+      "Zona Restringida": 7
+    },
+    "counters": [
+      "carries aislados",
+      "supers clave"
+    ],
+    "counteredBy": [
+      "rango",
+      "control de acceso"
+    ],
+    "build": "Daño + velocidad; usa el reino para negar condiciones de victoria.",
+    "profileComplete": true
+  },
+  {
+    "slug": "kit",
+    "name": "Kit",
+    "rarity": "Legendary",
+    "role": "Apoyo",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "apoyo"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "draco",
+    "name": "Draco",
+    "rarity": "Legendary",
+    "role": "Tanque",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tanque"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "kenji",
+    "name": "Kenji",
+    "rarity": "Legendary",
+    "role": "Asesino",
+    "tier": "A+",
+    "range": "Corto",
+    "difficulty": 4,
+    "tags": [
+      "assassin",
+      "mobile",
+      "lastpick"
+    ],
+    "modes": {
+      "Balón Brawl": 9,
+      "Atrapagemas": 8,
+      "Noqueo": 8
+    },
+    "counters": [
+      "artilleros",
+      "snipers aislados"
+    ],
+    "counteredBy": [
+      "antidive",
+      "control duro",
+      "antitanque"
+    ],
+    "build": "Daño + escudo; úsalo de último pick, no a ciegas.",
+    "profileComplete": true
+  },
+  {
+    "slug": "pierce",
+    "name": "Pierce",
+    "rarity": "Legendary",
+    "role": "Tirador",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "tirador"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "nori",
+    "name": "Nori",
+    "rarity": "Legendary",
+    "role": "Daño",
+    "tier": "S",
+    "range": "Medio",
+    "difficulty": 4,
+    "tags": [
+      "carry",
+      "damage",
+      "mobile"
+    ],
+    "modes": {
+      "Balón Brawl": 9,
+      "Atrapagemas": 8,
+      "Atraco": 8
+    },
+    "counters": [
+      "equipos frágiles",
+      "líneas aisladas"
+    ],
+    "counteredBy": [
+      "control duro",
+      "antidive"
+    ],
+    "build": "Daño + escudo; entra después de forzar recursos.",
+    "profileComplete": true
+  },
+  {
+    "slug": "kaze",
+    "name": "Kaze",
+    "rarity": "Ultra Legendary",
+    "role": "Asesino",
+    "tier": "Sin evaluar",
+    "range": "Variable",
+    "difficulty": 3,
+    "tags": [
+      "asesino"
+    ],
+    "modes": {},
+    "counters": [],
+    "counteredBy": [],
+    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
+    "profileComplete": false
+  },
+  {
+    "slug": "sirius",
+    "name": "Sirius",
+    "rarity": "Ultra Legendary",
+    "role": "Especialista",
+    "tier": "A",
+    "range": "Variable",
+    "difficulty": 5,
+    "tags": [
+      "specialist",
+      "lastpick",
+      "copy"
+    ],
+    "modes": {
+      "Noqueo": 8,
+      "Atrapagemas": 7,
+      "Balón Brawl": 7
+    },
+    "counters": [
+      "composiciones con objetivo copiable"
+    ],
+    "counteredBy": [
+      "presión temprana",
+      "rango"
+    ],
+    "build": "Build dependiente del rival; prioriza flexibilidad.",
+    "profileComplete": true
+  }
+]

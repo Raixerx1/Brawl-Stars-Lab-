@@ -1,0 +1,30 @@
+{
+  "updated": "2026-08-06",
+  "officialPatch": "Release Notes June 2026",
+  "officialPatchDate": "2026-06-29",
+  "rosterCount": 106,
+  "newestBrawler": "Wendy",
+  "notes": [
+    "La última nota oficial de actualización localizada es la del 29/06/2026.",
+    "La actualización oficial destacó Rustic Arcade y Crystal Arcade para Atrapagemas, y Spiraling Out y Beach Ball para Balón Brawl.",
+    "Los tiers de la app son editoriales y no se presentan como win rates.",
+    "Las cifras de terceros deben mostrar fuente, periodo, rango y tamaño muestral."
+  ],
+  "sources": [
+    {
+      "name": "Supercell — Release Notes June 2026",
+      "url": "https://supercell.com/en/games/brawlstars/blog/release-notes/release-notes-june-2026/",
+      "kind": "Oficial"
+    },
+    {
+      "name": "Brawlify — roster de 106 brawlers",
+      "url": "https://brawlify.com/brawlers",
+      "kind": "Roster"
+    },
+    {
+      "name": "Brawl Time Ninja — estadísticas globales",
+      "url": "https://brawltime.ninja/es/tier-list/brawler",
+      "kind": "Estadísticas de terceros"
+    }
+  ]
+}
