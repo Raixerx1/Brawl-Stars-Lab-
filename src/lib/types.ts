@@ -1,4 +1,19 @@
-export type Brawler = { slug:string; name:string; rarity:string; role:string; tier:string; range:string; difficulty:number; tags:string[]; modes:Record<string,number>; counters:string[]; counteredBy:string[]; build:string; profileComplete:boolean };
-export type MapProfile = { slug:string; name:string; mode:string; layout:string; traits:string[]; tierS:string[]; tierA:string[]; firstPicks:string[]; lastPicks:string[]; bans:string[]; plan:string; featuredOfficialJune2026:boolean; status:string };
-export type DraftInput = { map:MapProfile; position:"First pick"|"Pick intermedio"|"Last pick"; allies:string[]; enemies:string[]; bans:string[] };
-export type DraftRecommendation = { brawler:Brawler; score:number; reasons:string[]; warning?:string };
+import brawlersRaw from "@/data/brawlers.json";
+import mapsRaw from "@/data/maps.json";
+import metaRaw from "@/data/meta.json";
+import type { Brawler, MapProfile } from "./types";
+
+export const brawlers = brawlersRaw as unknown as Brawler[];
+export const maps = mapsRaw as unknown as MapProfile[];
+export const meta = metaRaw;
+
+export const brawlerByName = (name: string) =>
+  brawlers.find((b) => b.name.toLowerCase() === name.toLowerCase());
+
+export const brawlerBySlug = (slug: string) =>
+  brawlers.find((b) => b.slug === slug);
+
+export const mapBySlug = (slug: string) =>
+  maps.find((m) => m.slug === slug);
+
+export const modes = [...new Set(maps.map((m) => m.mode))];
