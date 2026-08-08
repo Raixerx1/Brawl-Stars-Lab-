@@ -5,7 +5,7 @@ import type { KeyboardEvent } from "react";
 import type { Brawler } from "@/lib/types";
 import { BrawlerPortrait } from "./GameArtwork";
 
-type Tone = "ally" | "enemy" | "ban";
+type Tone = "ally" | "enemy" | "ban" | "self";
 
 export default function BrawlerDraftPicker({
   title,

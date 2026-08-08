@@ -24,6 +24,7 @@ type DraftSnapshot = {
   allies: string[];
   enemies: string[];
   bans: string[];
+  myPick?: string;
 };
 
 function selectDistinct(results: DraftRecommendation[], sorter: (a: DraftRecommendation, b: DraftRecommendation) => number, excluded: string[]) {
@@ -66,6 +67,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
   const [allies, setAllies] = useState<string[]>([]);
   const [enemies, setEnemies] = useState<string[]>([]);
   const [bans, setBans] = useState<string[]>([]);
+  const [myPick, setMyPick] = useState<string[]>([]);
   const [quickMode, setQuickMode] = useState(false);
   const [personalPool, setPersonalPool] = useState<PlayerPool>({});
   const [usePersonalPool, setUsePersonalPool] = useState(false);
@@ -82,6 +84,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
     const sharedAllies = params.get("allies")?.split("|").filter(Boolean) || [];
     const sharedEnemies = params.get("enemies")?.split("|").filter(Boolean) || [];
     const sharedBans = params.get("bans")?.split("|").filter(Boolean) || [];
+    const sharedPick = params.get("pick");
     if (sharedMap) {
       const found = maps.find((item) => item.slug === sharedMap);
       if (found) { setMode(found.mode); setMapSlug(found.slug); }
@@ -89,6 +92,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
     if (sharedAllies.length) setAllies(sharedAllies.slice(0, 2));
     if (sharedEnemies.length) setEnemies(sharedEnemies.slice(0, 3));
     if (sharedBans.length) setBans(sharedBans.slice(0, 6));
+    if (sharedPick) setMyPick([sharedPick]);
   }, [brawlers, maps]);
 
   const map = maps.find((item) => item.slug === mapSlug) || availableMaps[0];
@@ -98,23 +102,34 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
 
   const analysis = useMemo(() => {
     if (!map) return null;
-    return analyzeDraft({ map, position, allies, enemies: activeEnemies, bans, personalPool, usePersonalPool }, brawlers);
-  }, [map, position, allies, activeEnemies, bans, personalPool, usePersonalPool, brawlers]);
+    return analyzeDraft({ map, position, allies, enemies: activeEnemies, bans, myPick: myPick[0], personalPool, usePersonalPool }, brawlers);
+  }, [map, position, allies, activeEnemies, bans, myPick, personalPool, usePersonalPool, brawlers]);
 
-  const unavailable = useMemo(() => new Set([...allies, ...enemies, ...bans, scenarioEnemy].filter(Boolean).map(normalize)), [allies, enemies, bans, scenarioEnemy]);
-  const best = analysis?.recommendations[0];
-  const safe = analysis ? selectDistinct(analysis.recommendations, (a, b) => (b.metrics.safety * .55 + b.score * .45) - (a.metrics.safety * .55 + a.score * .45), best ? [best.brawler.name] : []) : undefined;
-  const counter = analysis ? selectDistinct(analysis.recommendations, (a, b) => (b.metrics.counter * .65 + b.score * .35) - (a.metrics.counter * .65 + a.score * .35), [best?.brawler.name, safe?.brawler.name].filter(Boolean) as string[]) : undefined;
+  const unavailable = useMemo(() => new Set([...allies, ...enemies, ...bans, ...myPick, scenarioEnemy].filter(Boolean).map(normalize)), [allies, enemies, bans, myPick, scenarioEnemy]);
+  const recommendedBest = analysis?.recommendations[0];
+  const selectedPick = analysis?.selectedPick;
+  const primaryPick = selectedPick || recommendedBest;
+  const safe = analysis ? selectDistinct(
+    analysis.recommendations,
+    (a, b) => (b.metrics.safety * .55 + b.score * .45) - (a.metrics.safety * .55 + a.score * .45),
+    recommendedBest ? [recommendedBest.brawler.name] : [],
+  ) : undefined;
+  const secondPick = selectedPick ? recommendedBest : safe;
+  const counter = analysis ? selectDistinct(
+    analysis.recommendations,
+    (a, b) => (b.metrics.counter * .65 + b.score * .35) - (a.metrics.counter * .65 + a.score * .35),
+    [primaryPick?.brawler.name, secondPick?.brawler.name].filter(Boolean) as string[],
+  ) : undefined;
 
   const changeMode = (nextMode: string) => {
     setMode(nextMode);
     const first = maps.find((item) => item.mode === nextMode && item.rotationStatus === "Actual") || maps.find((item) => item.mode === nextMode);
     if (first) setMapSlug(first.slug);
-    setAllies([]); setEnemies([]); setBans([]); setScenarioEnemy("");
+    setAllies([]); setEnemies([]); setBans([]); setMyPick([]); setScenarioEnemy("");
   };
 
   const resetDraft = () => {
-    setAllies([]); setEnemies([]); setBans([]); setScenarioEnemy("");
+    setAllies([]); setEnemies([]); setBans([]); setMyPick([]); setScenarioEnemy("");
     setAutoPosition(true); setManualPosition("First pick"); setMessage("");
   };
 
@@ -123,18 +138,19 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
     if (allies.length) params.set("allies", allies.join("|"));
     if (enemies.length) params.set("enemies", enemies.join("|"));
     if (bans.length) params.set("bans", bans.join("|"));
+    if (myPick[0]) params.set("pick", myPick[0]);
     const url = `${window.location.origin}/draft?${params.toString()}`;
     try {
       const nav = navigator as Navigator & { share?: (data: { title?: string; text?: string; url?: string }) => Promise<void> };
       const usedShare = typeof nav.share === "function";
-      if (usedShare) await nav.share!({ title: `Draft ${map.name}`, text: best ? `Mejor pick: ${best.brawler.name}` : "Draft Brawl Stars", url });
+      if (usedShare) await nav.share!({ title: `Draft ${map.name}`, text: primaryPick ? `${selectedPick ? "Mi pick" : "Mejor pick"}: ${primaryPick.brawler.name}` : "Draft Brawl Stars", url });
       else await navigator.clipboard.writeText(url);
       setMessage(usedShare ? "Draft compartido" : "Enlace copiado");
     } catch { setMessage("No se pudo compartir; copia la URL del navegador"); }
   };
 
   const saveDraft = () => {
-    const snapshot: DraftSnapshot = { id: crypto.randomUUID(), createdAt: new Date().toISOString(), mode, mapSlug: map.slug, allies, enemies, bans };
+    const snapshot: DraftSnapshot = { id: crypto.randomUUID(), createdAt: new Date().toISOString(), mode, mapSlug: map.slug, allies, enemies, bans, myPick: myPick[0] };
     const next = [snapshot, ...history].slice(0, 8);
     setHistory(next);
     window.localStorage.setItem(HISTORY_KEY, JSON.stringify(next));
@@ -142,7 +158,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
   };
 
   const loadSnapshot = (snapshot: DraftSnapshot) => {
-    setMode(snapshot.mode); setMapSlug(snapshot.mapSlug); setAllies(snapshot.allies); setEnemies(snapshot.enemies); setBans(snapshot.bans); setScenarioEnemy("");
+    setMode(snapshot.mode); setMapSlug(snapshot.mapSlug); setAllies(snapshot.allies); setEnemies(snapshot.enemies); setBans(snapshot.bans); setMyPick(snapshot.myPick ? [snapshot.myPick] : []); setScenarioEnemy("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -157,7 +173,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
   return <div className={`live-draft ${quickMode ? "quick-mode" : "analysis-mode"}`}>
     <section className="panel draft-control-panel">
       <div className="section-title">
-        <div><span className="eyebrow">Draft Coach v0.4</span><h2>Introduce los picks en orden</h2></div>
+        <div><span className="eyebrow">Draft Coach v0.4.2</span><h2>Introduce los picks en orden</h2></div>
         <div className="draft-action-row">
           <button type="button" className={`secondary-button compact-button ${quickMode ? "is-active" : ""}`} onClick={() => setQuickMode(!quickMode)}>{quickMode ? "Modo análisis" : "Modo rápido"}</button>
           <button type="button" className="secondary-button compact-button" onClick={shareDraft}>Compartir</button>
@@ -175,9 +191,10 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
         <label className="auto-position-toggle pool-draft-toggle"><input type="checkbox" checked={usePersonalPool} onChange={(event) => setUsePersonalPool(event.target.checked)} /><span><b>Usar mi pool</b><small>Fuerza, HC y dominio</small></span></label>
       </div>
 
-      <div className="draft-board">
+      <div className="draft-board draft-board-four">
         <BrawlerDraftPicker title="Mis aliados" subtitle="Los otros dos picks de tu equipo" values={allies} max={2} roster={brawlers} unavailable={unavailable} tone="ally" onChange={setAllies} />
         <BrawlerDraftPicker title="Rivales" subtitle="Añádelos conforme aparecen" values={enemies} max={3} roster={brawlers} unavailable={unavailable} tone="enemy" onChange={(values) => { setEnemies(values); setScenarioEnemy(""); }} />
+        <BrawlerDraftPicker title="Mi pick" subtitle="El brawler que vas a jugar" values={myPick} max={1} roster={brawlers} unavailable={unavailable} tone="self" onChange={setMyPick} />
         <BrawlerDraftPicker title="Bans" subtitle="Bloqueados o descartados" values={bans} max={6} roster={brawlers} unavailable={unavailable} tone="ban" onChange={setBans} />
       </div>
 
@@ -190,24 +207,35 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
       <div className="live-status"><span className="live-dot" /><div><b>Recalculando automáticamente</b><small>{analysis.draftStage}{scenarioEnemy ? ` · simulando ${scenarioEnemy}` : ""}</small></div><strong>{analysis.availableCount} disponibles</strong></div>
     </section>
 
-    {quickMode && best && <section className="quick-coach panel">
-      <BrawlerPortrait name={best.brawler.name} className="quick-coach-avatar" priority />
-      <div><span className="eyebrow">Pick inmediato</span><h2>{best.brawler.name}</h2><p>{best.brief}</p><b>{best.lanePlan.lane}{best.lanePlan.target ? ` → busca a ${best.lanePlan.target}` : ""}</b><small>{best.warning || `Alternativas: ${safe?.brawler.name || "—"} / ${counter?.brawler.name || "—"}`}</small></div>
-      <strong>{best.score}</strong>
+    {quickMode && primaryPick && <section className="quick-coach panel">
+      <BrawlerPortrait name={primaryPick.brawler.name} className="quick-coach-avatar" priority />
+      <div><span className="eyebrow">{selectedPick ? "Evaluación de mi pick" : "Pick inmediato"}</span><h2>{primaryPick.brawler.name}</h2><p>{primaryPick.brief}</p><b>{primaryPick.lanePlan.lane}{primaryPick.lanePlan.target ? ` → busca a ${primaryPick.lanePlan.target}` : ""}</b><small>{primaryPick.warning || `Alternativas: ${secondPick?.brawler.name || "—"} / ${counter?.brawler.name || "—"}`}</small></div>
+      <strong>{analysis.winEstimate ? `${analysis.winEstimate.percentage}%` : primaryPick.score}</strong>
     </section>}
 
     {!quickMode && <>
+      {analysis.winEstimate ? <section className="panel win-estimate-panel">
+        <div className="win-estimate-summary">
+          <div><span className="eyebrow">Probabilidad estimada del draft</span><h2>{analysis.winEstimate.title}</h2><p>{analysis.winEstimate.completeness < 100 ? "Estimación provisional que se recalcula con cada pick." : "Composición 3 contra 3 completa."}</p></div>
+          <div className="win-percentage"><strong>{analysis.winEstimate.percentage}%</strong><span>rango {analysis.winEstimate.lower}–{analysis.winEstimate.upper}%</span><small>Confianza {analysis.winEstimate.confidence}</small></div>
+        </div>
+        <div className="win-meter"><span style={{ width: `${analysis.winEstimate.percentage}%` }} /></div>
+        <div className="win-team-scores"><div><b>Tu equipo</b><strong>{analysis.winEstimate.alliedScore}/100</strong></div><div><b>Equipo rival</b><strong>{analysis.winEstimate.enemyScore}/100</strong></div><div><b>Draft completado</b><strong>{analysis.winEstimate.completeness}%</strong></div></div>
+        <div className="win-factors"><div><b>Factores favorables</b>{analysis.winEstimate.advantages.length ? analysis.winEstimate.advantages.map((item) => <span key={item}>+ {item}</span>) : <small>Sin ventaja clara todavía.</small>}</div><div><b>Riesgos</b>{analysis.winEstimate.risks.length ? analysis.winEstimate.risks.map((item) => <span key={item}>− {item}</span>) : <small>Sin riesgo crítico detectado.</small>}</div></div>
+        <small className="win-disclaimer">{analysis.winEstimate.disclaimer}</small>
+      </section> : <section className="panel win-estimate-placeholder"><div><span className="eyebrow">Estimación de victoria</span><h2>Añade tu pick para activarla</h2><p>El porcentaje se actualizará automáticamente según el mapa, los seis brawlers, los counters y el equilibrio de ambas composiciones.</p></div><span>Mi pick →</span></section>}
+
       <section className="draft-output-grid">
         <div className="panel live-recommendation-panel">
-          <div className="section-title"><div><span className="eyebrow">Recomendación actual</span><h2>Mejor, seguro y castigo</h2></div><span className="status-pill">Composición {analysis.compositionScore}/100</span></div>
-          <div className="featured-picks-grid"><FeaturedPick result={best} label="Mejor pick" tone="best" /><FeaturedPick result={safe} label="Pick seguro" tone="safe" /><FeaturedPick result={counter} label={enemies.length ? "Pick de castigo" : "Alternativa flexible"} tone="counter" /></div>
+          <div className="section-title"><div><span className="eyebrow">{selectedPick ? "Evaluación del pick" : "Recomendación actual"}</span><h2>{selectedPick ? "Tu pick y mejores alternativas" : "Mejor, seguro y castigo"}</h2></div><span className="status-pill">Composición {analysis.compositionScore}/100</span></div>
+          <div className="featured-picks-grid"><FeaturedPick result={primaryPick} label={selectedPick ? "Tu pick" : "Mejor pick"} tone="best" /><FeaturedPick result={secondPick} label={selectedPick ? "Mejor alternativa" : "Pick seguro"} tone="safe" /><FeaturedPick result={counter} label={enemies.length ? "Pick de castigo" : "Alternativa flexible"} tone="counter" /></div>
 
-          {best && <article className="coach-callout">
-            <BrawlerPortrait name={best.brawler.name} className="coach-avatar" />
-            <div><span className="eyebrow">Llamada del coach</span><h3>{best.brawler.name} — {best.suggestedLine}</h3><p>{best.plan}</p><b className="lane-instruction">{best.lanePlan.instruction}</b>{best.warning && <small>⚠ {best.warning}</small>}</div>
+          {primaryPick && <article className="coach-callout">
+            <BrawlerPortrait name={primaryPick.brawler.name} className="coach-avatar" />
+            <div><span className="eyebrow">Llamada del coach</span><h3>{primaryPick.brawler.name} — {primaryPick.suggestedLine}</h3><p>{primaryPick.plan}</p><b className="lane-instruction">{primaryPick.lanePlan.instruction}</b>{primaryPick.warning && <small>⚠ {primaryPick.warning}</small>}</div>
           </article>}
 
-          {best && <div className="metrics-grid metrics-grid-v4"><Metric label="Mapa" value={best.metrics.mapFit} /><Metric label="Counters" value={best.metrics.counter} /><Metric label="Sinergia" value={best.metrics.synergy} /><Metric label="Composición" value={best.metrics.composition} /><Metric label="Seguridad" value={best.metrics.safety} /><Metric label="Tu pool" value={best.metrics.personal} /><Metric label="Riesgo" value={best.metrics.risk} danger /></div>}
+          {primaryPick && <div className="metrics-grid metrics-grid-v4"><Metric label="Mapa" value={primaryPick.metrics.mapFit} /><Metric label="Counters" value={primaryPick.metrics.counter} /><Metric label="Sinergia" value={primaryPick.metrics.synergy} /><Metric label="Composición" value={primaryPick.metrics.composition} /><Metric label="Seguridad" value={primaryPick.metrics.safety} /><Metric label="Tu pool" value={primaryPick.metrics.personal} /><Metric label="Riesgo" value={primaryPick.metrics.risk} danger /></div>}
         </div>
 
         <aside className="panel draft-diagnosis-panel">
@@ -220,8 +248,8 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
         </aside>
       </section>
 
-      {best && <section className="draft-intelligence-grid">
-        <article className="panel build-panel"><span className="eyebrow">Build contextual</span><h2>{best.brawler.name}</h2><div className="build-grid"><div><b>Gadget</b><p>{best.build.gadget}</p></div><div><b>Habilidad estelar</b><p>{best.build.starPower}</p></div><div><b>Engranajes</b><p>{best.build.gears.join(" + ")}</p></div><div><b>Hipercarga</b><p>{best.build.hypercharge}</p></div></div><small>{best.build.reason}</small></article>
+      {primaryPick && <section className="draft-intelligence-grid">
+        <article className="panel build-panel"><span className="eyebrow">Build contextual</span><h2>{primaryPick.brawler.name}</h2><div className="build-grid"><div><b>Gadget</b><p>{primaryPick.build.gadget}</p></div><div><b>Habilidad estelar</b><p>{primaryPick.build.starPower}</p></div><div><b>Engranajes</b><p>{primaryPick.build.gears.join(" + ")}</p></div><div><b>Hipercarga</b><p>{primaryPick.build.hypercharge}</p></div></div><small>{primaryPick.build.reason}</small></article>
         <article className="panel line-panel"><span className="eyebrow">Plan de líneas</span><h2>Emparejamientos previstos</h2><div className="line-assignments">{analysis.teamAssignments.map((assignment) => <div key={`${assignment.ally}-${assignment.lane}`}><b>{assignment.lane}</b><span>{assignment.ally}{assignment.enemy ? ` vs ${assignment.enemy}` : ""}</span><small>{assignment.instruction}</small></div>)}</div></article>
       </section>}
 
@@ -242,7 +270,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
         </article>)}</div>
       </section>
 
-      {history.length > 0 && <section className="panel draft-history-panel"><div className="section-title"><div><span className="eyebrow">Historial local</span><h2>Drafts guardados</h2></div></div><div className="draft-history-list">{history.map((snapshot) => <button key={snapshot.id} onClick={() => loadSnapshot(snapshot)}><b>{maps.find((item) => item.slug === snapshot.mapSlug)?.name || snapshot.mapSlug}</b><span>{snapshot.allies.join(", ") || "Sin aliados"} vs {snapshot.enemies.join(", ") || "Sin rivales"}</span><small>{new Date(snapshot.createdAt).toLocaleString("es-ES")}</small></button>)}</div></section>}
+      {history.length > 0 && <section className="panel draft-history-panel"><div className="section-title"><div><span className="eyebrow">Historial local</span><h2>Drafts guardados</h2></div></div><div className="draft-history-list">{history.map((snapshot) => <button key={snapshot.id} onClick={() => loadSnapshot(snapshot)}><b>{maps.find((item) => item.slug === snapshot.mapSlug)?.name || snapshot.mapSlug}</b><span>{[...snapshot.allies, snapshot.myPick].filter(Boolean).join(", ") || "Sin equipo"} vs {snapshot.enemies.join(", ") || "Sin rivales"}</span><small>{new Date(snapshot.createdAt).toLocaleString("es-ES")}</small></button>)}</div></section>}
     </>}
   </div>;
 }

@@ -9,6 +9,7 @@ import type {
   LanePlan,
   TacticalBuild,
   TeamAssignment,
+  WinEstimate,
 } from "./types";
 
 const tierScore: Record<string, number> = {
@@ -381,7 +382,7 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
 }
 
 function banRecommendations(input: DraftInput, roster: Brawler[], allies: Brawler[]): BanRecommendation[] {
-  const excluded = new Set([...input.allies, ...input.enemies, ...input.bans].map(norm));
+  const excluded = new Set([...input.allies, ...input.enemies, ...input.bans, input.myPick || ""].filter(Boolean).map(norm));
   return roster
     .filter((brawler) => !excluded.has(norm(brawler.name)))
     .map((brawler) => {
@@ -402,7 +403,7 @@ function banRecommendations(input: DraftInput, roster: Brawler[], allies: Brawle
 }
 
 function predictEnemyPicks(input: DraftInput, roster: Brawler[], allies: Brawler[], enemies: Brawler[]): EnemyPickPrediction[] {
-  const excluded = new Set([...input.allies, ...input.enemies, ...input.bans].map(norm));
+  const excluded = new Set([...input.allies, ...input.enemies, ...input.bans, input.myPick || ""].filter(Boolean).map(norm));
   return roster
     .filter((brawler) => !excluded.has(norm(brawler.name)))
     .map((brawler) => {
@@ -481,13 +482,162 @@ function compositionScore(allies: Brawler[], candidate: Brawler | undefined, nee
   return clamp(score);
 }
 
+
+function brawlerMapStrength(brawler: Brawler, input: DraftInput) {
+  let score = tierScore[brawler.tier] ?? 41;
+  score += (brawler.modes[input.map.mode] ?? 0) * 2;
+
+  const sIndex = input.map.tierS.indexOf(brawler.name);
+  const aIndex = input.map.tierA.indexOf(brawler.name);
+  if (sIndex >= 0) score += 18 - sIndex * 1.8;
+  else if (aIndex >= 0) score += 10 - aIndex * 1.2;
+
+  if (input.map.layout === "Abierto") {
+    if (isLongRange(brawler)) score += 7;
+    if (isShortRange(brawler) && !hasTag(brawler, "mobile", "safe")) score -= 5;
+  }
+  if (input.map.layout === "Cerrado") {
+    if (isFrontline(brawler) || isThrower(brawler) || hasTag(brawler, "walls")) score += 6;
+    if (isLongRange(brawler) && !hasTag(brawler, "safe")) score -= 2;
+  }
+  if (input.map.mode === "Atraco" && isObjective(brawler)) score += 6;
+  if (input.map.mode === "Zona Restringida" && isControl(brawler)) score += 5;
+  if (input.map.mode === "Balón Brawl" && isFrontline(brawler)) score += 4;
+  return clamp(score);
+}
+
+function paddedAverage(values: number[], totalSlots = 3) {
+  const filled = values.slice(0, totalSlots);
+  const total = filled.reduce((sum, value) => sum + value, 0) + Math.max(0, totalSlots - filled.length) * 50;
+  return total / totalSlots;
+}
+
+function teamCompositionQuality(team: Brawler[], input: DraftInput) {
+  if (!team.length) return 50;
+  let score = 48;
+  score += new Set(team.map((brawler) => brawler.role)).size * 5;
+  if (team.some(isControl)) score += 6;
+  if (team.some(isAntidive)) score += 6;
+  if (team.some(isAntitank)) score += 6;
+  if (team.some(hasWallbreak) && input.map.traits.some((trait) => trait.includes("muro"))) score += 4;
+  if (input.map.layout === "Abierto" && team.some(isLongRange)) score += 5;
+  if (input.map.layout === "Cerrado" && team.some(isFrontline)) score += 5;
+  if (input.map.mode === "Atraco" && team.some(isObjective)) score += 7;
+  if (input.map.mode === "Zona Restringida" && team.some(isControl)) score += 6;
+  if (input.map.mode === "Atrapagemas" && team.some((brawler) => isSupport(brawler) || isControl(brawler) || isLongRange(brawler))) score += 4;
+  if (team.filter(isSupport).length >= 2) score -= 12;
+  if (team.filter(isLongRange).length === 3) score -= 9;
+  if (team.filter(isShortRange).length === 3 && input.map.layout === "Abierto") score -= 12;
+  if (team.filter(isThrower).length >= 2) score -= 7;
+  return clamp(score);
+}
+
+function matchupQuality(team: Brawler[], opponents: Brawler[]) {
+  if (!team.length || !opponents.length) return 50;
+  let edge = 0;
+  for (const ally of team) {
+    for (const enemy of opponents) {
+      if (includesName(ally.counters, enemy.name)) edge += 6;
+      if (includesName(ally.counteredBy, enemy.name)) edge -= 7;
+      if (includesName(enemy.counteredBy, ally.name)) edge += 3;
+      if (includesName(enemy.counters, ally.name)) edge -= 3;
+      if (isAntitank(ally) && enemy.role === "Tanque") edge += 2;
+      if (isAntidive(ally) && enemy.role === "Asesino") edge += 2;
+    }
+  }
+  return clamp(50 + edge);
+}
+
+function estimateWinProbability(input: DraftInput, allies: Brawler[], enemies: Brawler[]): WinEstimate | undefined {
+  if (!input.myPick || allies.length === 0 || enemies.length === 0) return undefined;
+
+  const allyBase = paddedAverage(allies.map((brawler) => brawlerMapStrength(brawler, input)));
+  const enemyBase = paddedAverage(enemies.map((brawler) => brawlerMapStrength(brawler, input)));
+  const allyComposition = teamCompositionQuality(allies, input);
+  const enemyComposition = teamCompositionQuality(enemies, input);
+  const allyMatchups = matchupQuality(allies, enemies);
+  const enemyMatchups = matchupQuality(enemies, allies);
+
+  let alliedScore = allyBase * 0.46 + allyComposition * 0.24 + allyMatchups * 0.30;
+  let enemyScore = enemyBase * 0.46 + enemyComposition * 0.24 + enemyMatchups * 0.30;
+
+  const selected = allies.find((brawler) => norm(brawler.name) === norm(input.myPick || ""));
+  const poolEntry = selected ? input.personalPool?.[selected.slug] : undefined;
+  if (input.usePersonalPool && poolEntry) {
+    if (poolEntry.power11) alliedScore += 1.5;
+    if (poolEntry.hypercharge) alliedScore += 1.2;
+    alliedScore += (poolEntry.mastery - 3) * 1.1;
+    if (poolEntry.avoid) alliedScore -= 5;
+  }
+
+  alliedScore = Math.max(0, Math.min(100, alliedScore));
+  enemyScore = Math.max(0, Math.min(100, enemyScore));
+
+  const delta = alliedScore - enemyScore;
+  const rawProbability = 100 / (1 + Math.exp(-delta / 13));
+  const visiblePicks = Math.min(6, allies.length + enemies.length);
+  const completeness = Math.round((visiblePicks / 6) * 100);
+  const shrinkFactor = 0.32 + 0.68 * (visiblePicks / 6);
+  const percentage = Math.max(18, Math.min(82, Math.round(50 + (rawProbability - 50) * shrinkFactor)));
+
+  const allComplete = [...allies, ...enemies].every((brawler) => brawler.profileComplete);
+  const confidence: WinEstimate["confidence"] =
+    visiblePicks === 6 && allComplete ? "Alta" :
+    visiblePicks >= 5 ? "Media" : "Baja";
+  const margin = confidence === "Alta" ? 5 : confidence === "Media" ? 9 : 14;
+
+  const favorablePairs: string[] = [];
+  const unfavorablePairs: string[] = [];
+  for (const ally of allies) {
+    for (const enemy of enemies) {
+      if (includesName(ally.counters, enemy.name)) favorablePairs.push(`${ally.name} frena a ${enemy.name}`);
+      if (includesName(ally.counteredBy, enemy.name)) unfavorablePairs.push(`${enemy.name} frena a ${ally.name}`);
+    }
+  }
+
+  const advantages: string[] = [];
+  const risks: string[] = [];
+  if (allyBase >= enemyBase + 3) advantages.push("Mejor encaje medio con el mapa y el modo");
+  if (allyComposition >= enemyComposition + 4) advantages.push("Composición aliada más equilibrada");
+  if (allyMatchups >= enemyMatchups + 4) advantages.push("Ventaja global de matchups");
+  advantages.push(...unique(favorablePairs).slice(0, 2));
+
+  if (enemyBase >= allyBase + 3) risks.push("El rival tiene mejor adaptación media al mapa");
+  if (enemyComposition >= allyComposition + 4) risks.push("La composición rival está más completa");
+  if (enemyMatchups >= allyMatchups + 4) risks.push("El rival domina más emparejamientos directos");
+  risks.push(...unique(unfavorablePairs).slice(0, 2));
+  if (visiblePicks < 6) risks.push(`Estimación provisional: faltan ${6 - visiblePicks} picks por introducir`);
+
+  const title = percentage >= 57 ? "Ventaja aliada" : percentage <= 43 ? "Ventaja rival" : "Draft equilibrado";
+
+  return {
+    percentage,
+    lower: Math.max(10, percentage - margin),
+    upper: Math.min(90, percentage + margin),
+    confidence,
+    completeness,
+    alliedScore: Math.round(alliedScore),
+    enemyScore: Math.round(enemyScore),
+    title,
+    advantages: unique(advantages).slice(0, 4),
+    risks: unique(risks).slice(0, 4),
+    disclaimer: "Estimación heurística del draft; no es un win rate observado ni garantiza el resultado de la partida.",
+  };
+}
+
 export function analyzeDraft(input: DraftInput, roster: Brawler[]): DraftAnalysis {
-  const unavailable = new Set([...input.allies, ...input.enemies, ...input.bans].map(norm));
+  const unavailable = new Set([...input.allies, ...input.enemies, ...input.bans, input.myPick || ""].filter(Boolean).map(norm));
   const enemies = findProfiles(input.enemies, roster);
-  const allies = findProfiles(input.allies, roster);
-  const needs = teamNeeds(input, allies, enemies);
-  const threats = draftThreats(allies, enemies);
-  const strengths = draftStrengths(input, allies, enemies);
+  const otherAllies = findProfiles(input.allies, roster);
+  const selectedProfile = input.myPick
+    ? roster.find((brawler) => norm(brawler.name) === norm(input.myPick || ""))
+    : undefined;
+  const fullAllies = selectedProfile ? [...otherAllies, selectedProfile] : otherAllies;
+
+  const recommendationNeeds = teamNeeds(input, otherAllies, enemies);
+  const finalNeeds = teamNeeds(input, fullAllies, enemies);
+  const threats = draftThreats(fullAllies, enemies);
+  const strengths = draftStrengths(input, fullAllies, enemies);
 
   const recommendations = roster
     .filter((brawler) => !unavailable.has(norm(brawler.name)))
@@ -497,30 +647,39 @@ export function analyzeDraft(input: DraftInput, roster: Brawler[]): DraftAnalysi
       if (!entry) return false;
       return entry.available && !entry.avoid;
     })
-    .map((brawler) => scoreCandidate(brawler, input, allies, enemies, needs))
+    .map((brawler) => scoreCandidate(brawler, input, otherAllies, enemies, recommendationNeeds))
     .sort((a, b) => b.score - a.score || b.metrics.safety - a.metrics.safety)
     .slice(0, 16);
 
-  const best = recommendations[0]?.brawler;
-  const visiblePicks = input.allies.length + input.enemies.length;
-  const draftStage = visiblePicks === 0
-    ? "Draft vacío: priorizando picks seguros y meta del mapa"
-    : input.enemies.length === 0
-      ? "Solo hay información aliada: priorizando equilibrio y flexibilidad"
-      : input.position === "Last pick"
-        ? "Cierre de draft: priorizando counters y castigo de debilidades"
-        : "Draft en curso: equilibrando mapa, sinergias y matchups";
+  const selectedPick = selectedProfile
+    ? scoreCandidate(selectedProfile, input, otherAllies, enemies, recommendationNeeds)
+    : undefined;
+  const coachCandidate = selectedProfile || recommendations[0]?.brawler;
+  const visiblePicks = fullAllies.length + enemies.length;
+  const draftStage = selectedProfile
+    ? visiblePicks >= 6
+      ? "Draft completo: evaluando ambos equipos y la probabilidad estimada"
+      : "Tu pick está seleccionado: estimación provisional mientras completas los equipos"
+    : visiblePicks === 0
+      ? "Draft vacío: priorizando picks seguros y meta del mapa"
+      : input.enemies.length === 0
+        ? "Solo hay información aliada: priorizando equilibrio y flexibilidad"
+        : input.position === "Last pick"
+          ? "Cierre de draft: priorizando counters y castigo de debilidades"
+          : "Draft en curso: equilibrando mapa, sinergias y matchups";
 
   return {
     recommendations,
-    needs,
+    selectedPick,
+    winEstimate: selectedProfile ? estimateWinProbability(input, fullAllies, enemies) : undefined,
+    needs: finalNeeds,
     threats,
     strengths,
     enemyWeaknesses: enemyWeaknesses(input, enemies),
-    banRecommendations: banRecommendations(input, roster, allies),
-    predictedEnemyPicks: predictEnemyPicks(input, roster, allies, enemies),
-    teamAssignments: laneAssignments(best, allies, enemies, input),
-    compositionScore: compositionScore(allies, best, needs),
+    banRecommendations: banRecommendations(input, roster, fullAllies),
+    predictedEnemyPicks: predictEnemyPicks(input, roster, fullAllies, enemies),
+    teamAssignments: laneAssignments(coachCandidate, selectedProfile ? otherAllies : fullAllies, enemies, input),
+    compositionScore: compositionScore(selectedProfile ? otherAllies : fullAllies, coachCandidate, finalNeeds),
     draftStage,
     availableCount: roster.length - unavailable.size,
   };

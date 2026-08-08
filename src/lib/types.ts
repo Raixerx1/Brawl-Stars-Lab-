@@ -66,6 +66,7 @@ export type DraftInput = {
   allies: string[];
   enemies: string[];
   bans: string[];
+  myPick?: string;
   personalPool?: PlayerPool;
   usePersonalPool?: boolean;
 };
@@ -116,8 +117,25 @@ export type TeamAssignment = {
   instruction: string;
 };
 
+
+export type WinEstimate = {
+  percentage: number;
+  lower: number;
+  upper: number;
+  confidence: "Baja" | "Media" | "Alta";
+  completeness: number;
+  alliedScore: number;
+  enemyScore: number;
+  title: string;
+  advantages: string[];
+  risks: string[];
+  disclaimer: string;
+};
+
 export type DraftAnalysis = {
   recommendations: DraftRecommendation[];
+  selectedPick?: DraftRecommendation;
+  winEstimate?: WinEstimate;
   needs: string[];
   threats: string[];
   strengths: string[];

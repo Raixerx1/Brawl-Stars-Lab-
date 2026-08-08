@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.4.2 — Mi pick y estimación de victoria
+
+- Cuarto bloque para introducir el pick propio.
+- Evaluación táctica del pick seleccionado.
+- Estimador dinámico del resultado del draft.
+- Intervalo, confianza, completitud y puntuación de ambos equipos.
+- Factores favorables y riesgos explicados.
+- El modelo evita presentar la estimación como dato estadístico real.
+
 ## v0.4.1 — Pool Ranked completo
 
 - Añadidos 11 mapas que faltaban.

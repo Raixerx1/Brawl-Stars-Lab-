@@ -1,6 +1,16 @@
-# Brawl Draft Lab v0.4.1
+# Brawl Draft Lab v0.4.2
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.4.2
+
+- Nuevo hueco **Mi pick** independiente de los otros dos aliados.
+- Evaluación específica del brawler escogido.
+- Probabilidad estimada del draft recalculada en tiempo real.
+- Intervalo estimado, nivel de confianza y porcentaje de draft completado.
+- Comparación de puntuación entre ambos equipos.
+- Factores favorables y riesgos de matchup.
+- El porcentaje se identifica expresamente como estimación heurística, no como win rate observado.
 
 ## Novedades v0.4.1
 
