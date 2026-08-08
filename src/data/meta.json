@@ -1,10 +1,12 @@
 {
-  "updated": "2026-08-06",
+  "updated": "2026-08-08",
   "officialPatch": "Mantenimiento y balance del 4 de agosto de 2026",
   "officialPatchDate": "04/08/2026",
   "rosterCount": 106,
   "newestBrawler": "Wendy",
   "notes": [
+    "Pool Ranked comprobado el 08/08/2026: 33 mapas vigentes y 6 históricos conservados para consulta.",
+    "La base incluye New Horizons, Flowing Springs, Sneaky Fields y el resto de mapas que faltaban en la versión anterior.",
     "La base se ha revisado con los cambios generales publicados para el mantenimiento del 04/08/2026.",
     "Los cambios de NanoPowers se muestran por separado porque pertenecen al evento y no deben trasladarse automáticamente al meta Ranked estándar.",
     "Los tiers y counters son editoriales; no se presentan como porcentajes de victoria.",
@@ -118,6 +120,11 @@
       "name": "Supercell — Release Notes June 2026, mantenimiento del 4 de agosto",
       "url": "https://supercell.com/en/games/brawlstars/blog/release-notes/release-notes-june-2026/",
       "kind": "Oficial"
+    },
+    {
+      "name": "Brawl Planet — pool actual de mapas Ranked (Diamond I+)",
+      "url": "https://www.brawlplanet.com/powerleague",
+      "kind": "Pool Ranked y estadísticas de terceros"
     },
     {
       "name": "BrawlAPI — assets y datos visuales",

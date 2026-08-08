@@ -59,7 +59,7 @@ function readHistory(): DraftSnapshot[] {
 export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[]; brawlers: Brawler[] }) {
   const modes = [...new Set(maps.map((map) => map.mode))];
   const [mode, setMode] = useState(modes[0]);
-  const availableMaps = useMemo(() => maps.filter((map) => map.mode === mode), [maps, mode]);
+  const availableMaps = useMemo(() => maps.filter((map) => map.mode === mode).sort((a, b) => Number(b.rotationStatus === "Actual") - Number(a.rotationStatus === "Actual") || a.name.localeCompare(b.name)), [maps, mode]);
   const [mapSlug, setMapSlug] = useState(availableMaps[0]?.slug || "");
   const [manualPosition, setManualPosition] = useState<DraftPosition>("First pick");
   const [autoPosition, setAutoPosition] = useState(true);
@@ -108,7 +108,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
 
   const changeMode = (nextMode: string) => {
     setMode(nextMode);
-    const first = maps.find((item) => item.mode === nextMode);
+    const first = maps.find((item) => item.mode === nextMode && item.rotationStatus === "Actual") || maps.find((item) => item.mode === nextMode);
     if (first) setMapSlug(first.slug);
     setAllies([]); setEnemies([]); setBans([]); setScenarioEnemy("");
   };
@@ -169,7 +169,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
 
       <div className="draft-context-grid draft-context-grid-v4">
         <label>Modo<select value={mode} onChange={(event) => changeMode(event.target.value)}>{modes.map((item) => <option key={item}>{item}</option>)}</select></label>
-        <label>Mapa<select value={mapSlug} onChange={(event) => { setMapSlug(event.target.value); setScenarioEnemy(""); }}>{availableMaps.map((item) => <option value={item.slug} key={item.slug}>{item.name}</option>)}</select></label>
+        <label>Mapa<select value={mapSlug} onChange={(event) => { setMapSlug(event.target.value); setScenarioEnemy(""); }}>{availableMaps.map((item) => <option value={item.slug} key={item.slug}>{item.name}{item.rotationStatus === "Histórico" ? " · histórico" : ""}</option>)}</select></label>
         <label>Posición<select value={position} disabled={autoPosition} onChange={(event) => setManualPosition(event.target.value as DraftPosition)}><option>First pick</option><option>Pick intermedio</option><option>Last pick</option></select></label>
         <label className="auto-position-toggle"><input type="checkbox" checked={autoPosition} onChange={(event) => setAutoPosition(event.target.checked)} /><span><b>Detectar turno</b><small>Ahora: {position}</small></span></label>
         <label className="auto-position-toggle pool-draft-toggle"><input type="checkbox" checked={usePersonalPool} onChange={(event) => setUsePersonalPool(event.target.checked)} /><span><b>Usar mi pool</b><small>Fuerza, HC y dominio</small></span></label>

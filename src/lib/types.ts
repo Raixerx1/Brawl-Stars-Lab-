@@ -28,6 +28,9 @@ export type MapProfile = {
   plan: string;
   featuredOfficialJune2026: boolean;
   status: string;
+  aliases?: string[];
+  rotationStatus: "Actual" | "Histórico";
+  poolCheckedAt: string;
 };
 
 export type DraftPosition = "First pick" | "Pick intermedio" | "Last pick";

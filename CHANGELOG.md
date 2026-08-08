@@ -1,17 +1,31 @@
 # Changelog
 
-## v0.4.0 — Draft Coach
-- Diagnóstico ampliado de composiciones aliadas y rivales.
-- Mejor pick, pick seguro y pick de castigo con comentarios breves.
-- Builds contextuales, plan de línea y emparejamientos previstos.
-- Predicción y simulación del siguiente pick rival.
-- Asistente de bans adaptado al mapa y a los aliados.
-- Modo ultrarrápido para drafts con temporizador.
-- Configuración de pool personal: disponibilidad, fuerza 11, hipercarga, dominio y evitar.
-- Historial local y enlaces compartibles de drafts.
-- Comparador de brawlers.
-- Lectura visual de líneas y zonas de presión en mapas.
-- Captura asistida para mantener el draft visible mientras se completa manualmente.
+## v0.4.1 — Pool Ranked completo
 
-## v0.3.0
-- Draft Assistant adaptativo en vivo.
+- Añadidos 11 mapas que faltaban.
+- New Horizons incorporado a Noqueo.
+- 33 mapas marcados como pool Ranked actual.
+- 6 mapas anteriores marcados como históricos.
+- Filtros por estado de rotación y alias españoles.
+- Draft Coach prioriza mapas actuales.
+
+## 0.2.0 — 06/08/2026
+
+- Actualización al mantenimiento y balance del 04/08/2026.
+- Separación entre balance general y cambios de NanoPowers.
+- 1.060 relaciones de matchup nominales.
+- Nueva ruta de counters.
+- Imágenes de brawlers y mapas mediante BrawlAPI/Brawlify.
+- Mejoras visuales en inicio, cartas, fichas y Draft Assistant.
+- Motor de draft con bonificaciones y penalizaciones por counter directo.
+- Actualización PWA y caché v0.2.
+
+## v0.3.0 — Draft Assistant adaptativo
+- Recomendaciones recalculadas en tiempo real al añadir o quitar aliados, rivales y bans.
+- Selector visual de brawlers con búsqueda, retratos y slots de draft.
+- Detección automática de first pick, pick intermedio y last pick.
+- Tres salidas diferenciadas: mejor pick, pick seguro y counter/cierre.
+- Diagnóstico de necesidades, amenazas y fortalezas de la composición.
+- Métricas separadas de mapa, counters, sinergia, composición, seguridad y riesgo.
+- Línea y plan de partida específicos para la recomendación principal.
+- Ranking adaptativo de ocho alternativas.

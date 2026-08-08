@@ -14,7 +14,7 @@ export default function MapCard({ map }: { map: MapProfile }) {
         <p>{map.layout} · {map.traits.slice(0, 2).join(" · ")}</p>
         <div className="mini-row">
           <span>S: {map.tierS.slice(0, 2).join(", ")}</span>
-          <span>{map.featuredOfficialJune2026 ? "Rotación destacada" : "Revisado 04/08"}</span>
+          <span>{map.rotationStatus === "Actual" ? "Ranked actual" : "Histórico"}</span>
         </div>
       </div>
     </Link>

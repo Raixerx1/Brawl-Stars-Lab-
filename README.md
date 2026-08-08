@@ -1,30 +1,19 @@
-# Brawl Draft Lab v0.4
+# Brawl Draft Lab v0.4.1
 
-Aplicación web competitiva para Brawl Stars Ranked, centrada en draft, counters y entrenamiento personal.
+Aplicación web competitiva para Brawl Stars Ranked.
 
-## Novedades v0.4
+## Novedades v0.4.1
 
-- Draft Coach en vivo con recalculo automático.
-- Recomendaciones separadas: mejor pick, pick seguro y pick de castigo.
-- Comentarios breves sobre qué rival frena cada brawler y quién lo amenaza.
-- Diagnóstico ampliado de composición aliada y rival.
-- Builds contextuales según mapa, modo y arquetipos enemigos.
-- Plan de líneas y emparejamientos previstos.
-- Predicción y simulación del siguiente pick rival.
-- Asistente de bans adaptado al mapa y a tus aliados.
-- Modo ultrarrápido para drafts con temporizador.
-- Pool personal: disponibilidad, fuerza 11, hipercarga, dominio y brawlers a evitar.
-- Historial local y enlaces compartibles de drafts.
-- Comparador de brawlers.
-- Mapas con lectura visual de líneas y puntos de presión.
-- Captura asistida para mantener una imagen del draft visible mientras se completa manualmente.
+- Pool Ranked revisado el 08/08/2026.
+- 33 mapas vigentes y 6 mapas históricos conservados.
+- Añadidos: New Horizons, Flowing Springs, Sneaky Fields, Deathcap Trap, Flooded Mine, Gem Fort, Lilygear Lake, Dry Season, Layer Cake, Pit Stop y Safe(r) Zone.
+- Filtro independiente para mapas Ranked actuales, históricos o todos.
+- Alias en español para encontrar mapas como “Nuevos horizontes”, “Fénix en llamas”, “Cueva subterránea” o “Tiroteo estelar”.
+- Draft Coach ordena los mapas actuales antes que los históricos.
 
-## Contenido de la base
+## Metodología
 
-- 106 brawlers.
-- 1.060 relaciones editoriales de matchup.
-- 28 mapas.
-- Parche de referencia: 04/08/2026.
+El pool actual se contrasta con Brawl Planet (Ranked Diamond I+) y las rotaciones/notas oficiales de Supercell. Los tiers y planes de partida son editoriales y se revisan tras cada balance.
 
 ## Desarrollo
 
@@ -39,7 +28,5 @@ npm run dev
 npm run build
 npm start
 ```
-
-Las puntuaciones son de encaje estratégico y no representan una probabilidad de victoria. Las builds contextuales son recomendaciones tácticas; los nombres exactos de gadget y habilidad estelar continúan ampliándose por brawler.
 
 Proyecto independiente no afiliado a Supercell.

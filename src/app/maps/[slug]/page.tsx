@@ -21,6 +21,7 @@ export default async function MapDetail({ params }: { params: Promise<{ slug: st
       <MapArtwork name={map.name} className="detail-map-art" />
       <div className="detail-copy">
         <div className="card-kicker">{map.mode}</div>
+        <span className="status-pill">{map.rotationStatus === "Actual" ? "Ranked actual" : "Histórico"}</span>
         <h1>{map.name}</h1>
         <p>{map.status}</p>
         <div className="tag-row">{map.traits.map((trait: string) => <span key={trait}>{trait}</span>)}</div>
@@ -52,6 +53,6 @@ export default async function MapDetail({ params }: { params: Promise<{ slug: st
     <div className="card-grid brawler-grid">{map.tierS.map((name: string) => brawlerByName(name)).filter(Boolean).map((brawler) => <BrawlerCard key={brawler!.slug} brawler={brawler!} />)}</div>
     <div className="section-title spaced"><div><span className="eyebrow">Tier A</span><h2>Alternativas sólidas</h2></div></div>
     <div className="card-grid brawler-grid">{map.tierA.map((name: string) => brawlerByName(name)).filter(Boolean).map((brawler) => <BrawlerCard key={brawler!.slug} brawler={brawler!} />)}</div>
-    <div className="notice">Tier revisado tras el balance general del 04/08/2026. No se muestran win rates sin una muestra verificable.</div>
+    <div className="notice">Pool comprobado el {map.poolCheckedAt}. Tier editorial revisado tras el balance general del 04/08/2026; no se muestran porcentajes sin una muestra verificable.</div>
   </div>;
 }

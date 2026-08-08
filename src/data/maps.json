@@ -40,7 +40,12 @@
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Palco central"
+    ]
   },
   {
     "slug": "pinball-dreams",
@@ -83,50 +88,60 @@
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Pinball"
+    ]
   },
   {
-    "slug": "penalty-kick",
-    "name": "Penalty Kick",
+    "name": "Sneaky Fields",
     "mode": "Balón Brawl",
-    "layout": "Mixto",
+    "layout": "Cerrado",
     "traits": [
-      "muros defensivos",
-      "laterales largos",
-      "apertura tardía"
+      "arbustos extensos",
+      "combate corto",
+      "control antidive"
     ],
     "tierS": [
-      "Nori",
-      "Kenji",
-      "Sandy",
-      "Gale",
-      "Rico"
+      "Bolt",
+      "Damian",
+      "Jacky",
+      "Doug",
+      "Nita"
     ],
     "tierA": [
-      "Max",
-      "Surge",
-      "Ash",
-      "Cordelius",
-      "Starr Nova"
+      "Starr Nova",
+      "R-T",
+      "Rosa",
+      "Sandy",
+      "Bibi"
     ],
     "firstPicks": [
-      "Nori",
-      "Sandy",
-      "Gale"
+      "Bolt",
+      "Damian",
+      "Nita"
     ],
     "lastPicks": [
-      "Kenji",
-      "Cordelius",
-      "Ash"
+      "Jacky",
+      "Doug",
+      "Bibi"
     ],
     "bans": [
-      "Nori",
-      "Kenji",
-      "Gale"
+      "Bolt",
+      "Damian",
+      "Jacky"
     ],
-    "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
+    "plan": "Controla los arbustos antes de conducir el balón. Conserva una respuesta antidive y rompe únicamente los muros que abran la portería rival.",
+    "slug": "sneaky-fields",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Campos furtivos"
+    ]
   },
   {
     "slug": "triple-dribble",
@@ -169,50 +184,12 @@
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
-  },
-  {
-    "slug": "spiraling-out",
-    "name": "Spiraling Out",
-    "mode": "Balón Brawl",
-    "layout": "Mixto",
-    "traits": [
-      "rutas curvas",
-      "control central",
-      "movilidad"
-    ],
-    "tierS": [
-      "Nori",
-      "Kenji",
-      "Sandy",
-      "Gale",
-      "Rico"
-    ],
-    "tierA": [
-      "Max",
-      "Surge",
-      "Ash",
-      "Cordelius",
-      "Starr Nova"
-    ],
-    "firstPicks": [
-      "Nori",
-      "Sandy",
-      "Gale"
-    ],
-    "lastPicks": [
-      "Kenji",
-      "Cordelius",
-      "Ash"
-    ],
-    "bans": [
-      "Nori",
-      "Kenji",
-      "Gale"
-    ],
-    "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
-    "featuredOfficialJune2026": true,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Triple drible"
+    ]
   },
   {
     "slug": "beach-ball",
@@ -255,222 +232,109 @@
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": true,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Mapa histórico o fuera del pool Ranked vigente · conservado para consulta.",
+    "rotationStatus": "Histórico",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Pelota de playa"
+    ]
   },
   {
-    "slug": "double-swoosh",
-    "name": "Double Swoosh",
-    "mode": "Atrapagemas",
-    "layout": "Cerrado",
+    "slug": "penalty-kick",
+    "name": "Penalty Kick",
+    "mode": "Balón Brawl",
+    "layout": "Mixto",
     "traits": [
-      "arbustos",
-      "visión",
-      "flanqueos"
+      "muros defensivos",
+      "laterales largos",
+      "apertura tardía"
     ],
     "tierS": [
-      "Gene",
+      "Nori",
+      "Kenji",
       "Sandy",
-      "Belle",
-      "R-T",
-      "Tara"
+      "Gale",
+      "Rico"
     ],
     "tierA": [
       "Max",
-      "Rico",
-      "Byron",
+      "Surge",
+      "Ash",
       "Cordelius",
       "Starr Nova"
     ],
     "firstPicks": [
-      "Gene",
+      "Nori",
       "Sandy",
-      "Belle"
+      "Gale"
     ],
     "lastPicks": [
-      "Tara",
+      "Kenji",
       "Cordelius",
-      "Rico"
+      "Ash"
     ],
     "bans": [
-      "Gene",
-      "Sandy",
-      "Belle"
+      "Nori",
+      "Kenji",
+      "Gale"
     ],
-    "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
+    "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Mapa histórico o fuera del pool Ranked vigente · conservado para consulta.",
+    "rotationStatus": "Histórico",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Penalti",
+      "Tiro penal"
+    ]
   },
   {
-    "slug": "hard-rock-mine",
-    "name": "Hard Rock Mine",
-    "mode": "Atrapagemas",
+    "slug": "spiraling-out",
+    "name": "Spiraling Out",
+    "mode": "Balón Brawl",
     "layout": "Mixto",
     "traits": [
-      "mid estable",
-      "muros laterales",
-      "control de mina"
-    ],
-    "tierS": [
-      "Gene",
-      "Sandy",
-      "Belle",
-      "R-T",
-      "Tara"
-    ],
-    "tierA": [
-      "Max",
-      "Rico",
-      "Byron",
-      "Cordelius",
-      "Starr Nova"
-    ],
-    "firstPicks": [
-      "Gene",
-      "Sandy",
-      "Belle"
-    ],
-    "lastPicks": [
-      "Tara",
-      "Cordelius",
-      "Rico"
-    ],
-    "bans": [
-      "Gene",
-      "Sandy",
-      "Belle"
-    ],
-    "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
-    "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
-  },
-  {
-    "slug": "last-stop",
-    "name": "Last Stop",
-    "mode": "Atrapagemas",
-    "layout": "Mixto",
-    "traits": [
-      "rutas laterales",
+      "rutas curvas",
       "control central",
-      "retroceso"
+      "movilidad"
     ],
     "tierS": [
-      "Gene",
+      "Nori",
+      "Kenji",
       "Sandy",
-      "Belle",
-      "R-T",
-      "Tara"
+      "Gale",
+      "Rico"
     ],
     "tierA": [
       "Max",
-      "Rico",
-      "Byron",
+      "Surge",
+      "Ash",
       "Cordelius",
       "Starr Nova"
     ],
     "firstPicks": [
-      "Gene",
+      "Nori",
       "Sandy",
-      "Belle"
+      "Gale"
     ],
     "lastPicks": [
-      "Tara",
+      "Kenji",
       "Cordelius",
-      "Rico"
+      "Ash"
     ],
     "bans": [
-      "Gene",
-      "Sandy",
-      "Belle"
+      "Nori",
+      "Kenji",
+      "Gale"
     ],
-    "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
-    "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
-  },
-  {
-    "slug": "undermine",
-    "name": "Undermine",
-    "mode": "Atrapagemas",
-    "layout": "Mixto",
-    "traits": [
-      "arbustos laterales",
-      "líneas largas",
-      "control de centro"
-    ],
-    "tierS": [
-      "Gene",
-      "Sandy",
-      "Belle",
-      "R-T",
-      "Tara"
-    ],
-    "tierA": [
-      "Max",
-      "Rico",
-      "Byron",
-      "Cordelius",
-      "Starr Nova"
-    ],
-    "firstPicks": [
-      "Gene",
-      "Sandy",
-      "Belle"
-    ],
-    "lastPicks": [
-      "Tara",
-      "Cordelius",
-      "Rico"
-    ],
-    "bans": [
-      "Gene",
-      "Sandy",
-      "Belle"
-    ],
-    "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
-    "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
-  },
-  {
-    "slug": "rustic-arcade",
-    "name": "Rustic Arcade",
-    "mode": "Atrapagemas",
-    "layout": "Mixto",
-    "traits": [
-      "mapa destacado",
-      "control de gemas",
-      "rutas laterales"
-    ],
-    "tierS": [
-      "Gene",
-      "Sandy",
-      "Belle",
-      "R-T",
-      "Tara"
-    ],
-    "tierA": [
-      "Max",
-      "Rico",
-      "Byron",
-      "Cordelius",
-      "Starr Nova"
-    ],
-    "firstPicks": [
-      "Gene",
-      "Sandy",
-      "Belle"
-    ],
-    "lastPicks": [
-      "Tara",
-      "Cordelius",
-      "Rico"
-    ],
-    "bans": [
-      "Gene",
-      "Sandy",
-      "Belle"
-    ],
-    "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
+    "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": true,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Mapa histórico o fuera del pool Ranked vigente · conservado para consulta.",
+    "rotationStatus": "Histórico",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Efecto envolvente"
+    ]
   },
   {
     "slug": "crystal-arcade",
@@ -513,7 +377,440 @@
     ],
     "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
     "featuredOfficialJune2026": true,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Arcade de cristal"
+    ]
+  },
+  {
+    "name": "Deathcap Trap",
+    "mode": "Atrapagemas",
+    "layout": "Mixto",
+    "traits": [
+      "centro expuesto",
+      "laterales con cobertura",
+      "control de gemas"
+    ],
+    "tierS": [
+      "Bolt",
+      "Starr Nova",
+      "Damian",
+      "Najia",
+      "Angelo"
+    ],
+    "tierA": [
+      "Hank",
+      "Buster",
+      "Ash",
+      "Ziggy",
+      "Gigi"
+    ],
+    "firstPicks": [
+      "Bolt",
+      "Najia",
+      "Angelo"
+    ],
+    "lastPicks": [
+      "Buster",
+      "Ash",
+      "Gigi"
+    ],
+    "bans": [
+      "Bolt",
+      "Damian",
+      "Najia"
+    ],
+    "plan": "El portador debe mantener una salida lateral. Presiona el centro desde dos ángulos y evita agruparte frente a daño de área.",
+    "slug": "deathcap-trap",
+    "featuredOfficialJune2026": false,
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": []
+  },
+  {
+    "slug": "double-swoosh",
+    "name": "Double Swoosh",
+    "mode": "Atrapagemas",
+    "layout": "Cerrado",
+    "traits": [
+      "arbustos",
+      "visión",
+      "flanqueos"
+    ],
+    "tierS": [
+      "Gene",
+      "Sandy",
+      "Belle",
+      "R-T",
+      "Tara"
+    ],
+    "tierA": [
+      "Max",
+      "Rico",
+      "Byron",
+      "Cordelius",
+      "Starr Nova"
+    ],
+    "firstPicks": [
+      "Gene",
+      "Sandy",
+      "Belle"
+    ],
+    "lastPicks": [
+      "Tara",
+      "Cordelius",
+      "Rico"
+    ],
+    "bans": [
+      "Gene",
+      "Sandy",
+      "Belle"
+    ],
+    "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
+    "featuredOfficialJune2026": false,
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Doble swoosh"
+    ]
+  },
+  {
+    "name": "Flooded Mine",
+    "mode": "Atrapagemas",
+    "layout": "Cerrado",
+    "traits": [
+      "pasillos",
+      "arbustos",
+      "control de acceso"
+    ],
+    "tierS": [
+      "Damian",
+      "Bolt",
+      "Nita",
+      "Jessie",
+      "Tara"
+    ],
+    "tierA": [
+      "Bo",
+      "Starr Nova",
+      "Crow",
+      "Bibi",
+      "Doug"
+    ],
+    "firstPicks": [
+      "Damian",
+      "Bolt",
+      "Jessie"
+    ],
+    "lastPicks": [
+      "Tara",
+      "Bibi",
+      "Doug"
+    ],
+    "bans": [
+      "Damian",
+      "Bolt",
+      "Tara"
+    ],
+    "plan": "Gana visión antes de entrar en los pasillos. Usa torretas, invocaciones y control de área para proteger la retirada del portador.",
+    "slug": "flooded-mine",
+    "featuredOfficialJune2026": false,
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Mina inundada"
+    ]
+  },
+  {
+    "name": "Gem Fort",
+    "mode": "Atrapagemas",
+    "layout": "Mixto",
+    "traits": [
+      "fortaleza central",
+      "muros laterales",
+      "presión sostenida"
+    ],
+    "tierS": [
+      "Bolt",
+      "Damian",
+      "Starr Nova",
+      "Jessie",
+      "Nori"
+    ],
+    "tierA": [
+      "Sprout",
+      "Clancy",
+      "Eve",
+      "Bonnie",
+      "Tara"
+    ],
+    "firstPicks": [
+      "Bolt",
+      "Jessie",
+      "Nori"
+    ],
+    "lastPicks": [
+      "Sprout",
+      "Tara",
+      "Clancy"
+    ],
+    "bans": [
+      "Bolt",
+      "Damian",
+      "Nori"
+    ],
+    "plan": "No entregues el fuerte central de forma simultánea por ambos lados. El portador debe jugar detrás de la cobertura y conservar una ruta de retirada.",
+    "slug": "gem-fort",
+    "featuredOfficialJune2026": false,
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Fuerte de gemas"
+    ]
+  },
+  {
+    "slug": "hard-rock-mine",
+    "name": "Hard Rock Mine",
+    "mode": "Atrapagemas",
+    "layout": "Mixto",
+    "traits": [
+      "mid estable",
+      "muros laterales",
+      "control de mina"
+    ],
+    "tierS": [
+      "Gene",
+      "Sandy",
+      "Belle",
+      "R-T",
+      "Tara"
+    ],
+    "tierA": [
+      "Max",
+      "Rico",
+      "Byron",
+      "Cordelius",
+      "Starr Nova"
+    ],
+    "firstPicks": [
+      "Gene",
+      "Sandy",
+      "Belle"
+    ],
+    "lastPicks": [
+      "Tara",
+      "Cordelius",
+      "Rico"
+    ],
+    "bans": [
+      "Gene",
+      "Sandy",
+      "Belle"
+    ],
+    "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
+    "featuredOfficialJune2026": false,
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Mina rocosa"
+    ]
+  },
+  {
+    "name": "Lilygear Lake",
+    "mode": "Atrapagemas",
+    "layout": "Abierto",
+    "traits": [
+      "agua",
+      "líneas largas",
+      "movilidad lateral"
+    ],
+    "tierS": [
+      "Bolt",
+      "Nori",
+      "8-Bit",
+      "Starr Nova",
+      "Damian"
+    ],
+    "tierA": [
+      "Sandy",
+      "Kaze",
+      "Kenji",
+      "Colette",
+      "Moe"
+    ],
+    "firstPicks": [
+      "Bolt",
+      "Nori",
+      "8-Bit"
+    ],
+    "lastPicks": [
+      "Kaze",
+      "Kenji",
+      "Moe"
+    ],
+    "bans": [
+      "Bolt",
+      "Nori",
+      "Damian"
+    ],
+    "plan": "Asegura rango y movilidad para cruzar los ángulos de agua. Evita una composición lenta sin herramientas para cambiar de línea.",
+    "slug": "lilygear-lake",
+    "featuredOfficialJune2026": false,
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": []
+  },
+  {
+    "slug": "rustic-arcade",
+    "name": "Rustic Arcade",
+    "mode": "Atrapagemas",
+    "layout": "Mixto",
+    "traits": [
+      "mapa destacado",
+      "control de gemas",
+      "rutas laterales"
+    ],
+    "tierS": [
+      "Gene",
+      "Sandy",
+      "Belle",
+      "R-T",
+      "Tara"
+    ],
+    "tierA": [
+      "Max",
+      "Rico",
+      "Byron",
+      "Cordelius",
+      "Starr Nova"
+    ],
+    "firstPicks": [
+      "Gene",
+      "Sandy",
+      "Belle"
+    ],
+    "lastPicks": [
+      "Tara",
+      "Cordelius",
+      "Rico"
+    ],
+    "bans": [
+      "Gene",
+      "Sandy",
+      "Belle"
+    ],
+    "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
+    "featuredOfficialJune2026": true,
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Salón recreativo rústico"
+    ]
+  },
+  {
+    "slug": "undermine",
+    "name": "Undermine",
+    "mode": "Atrapagemas",
+    "layout": "Mixto",
+    "traits": [
+      "arbustos laterales",
+      "líneas largas",
+      "control de centro"
+    ],
+    "tierS": [
+      "Gene",
+      "Sandy",
+      "Belle",
+      "R-T",
+      "Tara"
+    ],
+    "tierA": [
+      "Max",
+      "Rico",
+      "Byron",
+      "Cordelius",
+      "Starr Nova"
+    ],
+    "firstPicks": [
+      "Gene",
+      "Sandy",
+      "Belle"
+    ],
+    "lastPicks": [
+      "Tara",
+      "Cordelius",
+      "Rico"
+    ],
+    "bans": [
+      "Gene",
+      "Sandy",
+      "Belle"
+    ],
+    "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
+    "featuredOfficialJune2026": false,
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Cueva subterránea"
+    ]
+  },
+  {
+    "slug": "last-stop",
+    "name": "Last Stop",
+    "mode": "Atrapagemas",
+    "layout": "Mixto",
+    "traits": [
+      "rutas laterales",
+      "control central",
+      "retroceso"
+    ],
+    "tierS": [
+      "Gene",
+      "Sandy",
+      "Belle",
+      "R-T",
+      "Tara"
+    ],
+    "tierA": [
+      "Max",
+      "Rico",
+      "Byron",
+      "Cordelius",
+      "Starr Nova"
+    ],
+    "firstPicks": [
+      "Gene",
+      "Sandy",
+      "Belle"
+    ],
+    "lastPicks": [
+      "Tara",
+      "Cordelius",
+      "Rico"
+    ],
+    "bans": [
+      "Gene",
+      "Sandy",
+      "Belle"
+    ],
+    "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
+    "featuredOfficialJune2026": false,
+    "status": "Mapa histórico o fuera del pool Ranked vigente · conservado para consulta.",
+    "rotationStatus": "Histórico",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Última parada"
+    ]
   },
   {
     "slug": "belle-s-rock",
@@ -556,7 +853,12 @@
     ],
     "plan": "Prioriza vida y daño seguro. El gas es un recurso; no regales la primera baja por una eliminación improbable.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Roca de Belle"
+    ]
   },
   {
     "slug": "flaring-phoenix",
@@ -599,7 +901,61 @@
     ],
     "plan": "Prioriza vida y daño seguro. El gas es un recurso; no regales la primera baja por una eliminación improbable.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Fénix en llamas"
+    ]
+  },
+  {
+    "name": "Flowing Springs",
+    "mode": "Noqueo",
+    "layout": "Abierto",
+    "traits": [
+      "agua central",
+      "líneas largas",
+      "poca cobertura"
+    ],
+    "tierS": [
+      "Bolt",
+      "Najia",
+      "Brock",
+      "Byron",
+      "Piper"
+    ],
+    "tierA": [
+      "Angelo",
+      "Mandy",
+      "Gene",
+      "R-T",
+      "Nani"
+    ],
+    "firstPicks": [
+      "Bolt",
+      "Najia",
+      "Brock"
+    ],
+    "lastPicks": [
+      "Piper",
+      "Nani",
+      "Gene"
+    ],
+    "bans": [
+      "Bolt",
+      "Najia",
+      "Brock"
+    ],
+    "plan": "Juega por daño seguro y control del agua. No cruces el centro sin ventaja de vida o munición y conserva movilidad para el cierre del gas.",
+    "slug": "flowing-springs",
+    "featuredOfficialJune2026": false,
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Manantiales caudalosos",
+      "Manantial caudaloso"
+    ]
   },
   {
     "slug": "goldarm-gulch",
@@ -642,7 +998,60 @@
     ],
     "plan": "Prioriza vida y daño seguro. El gas es un recurso; no regales la primera baja por una eliminación improbable.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Barranco del brazo de oro"
+    ]
+  },
+  {
+    "name": "New Horizons",
+    "mode": "Noqueo",
+    "layout": "Mixto",
+    "traits": [
+      "obstáculo central",
+      "arbustos tras muros",
+      "wallbreak decisivo"
+    ],
+    "tierS": [
+      "Sirius",
+      "Brock",
+      "Tick",
+      "Bolt",
+      "Nori"
+    ],
+    "tierA": [
+      "Gray",
+      "Starr Nova",
+      "Gene",
+      "Byron",
+      "Piper"
+    ],
+    "firstPicks": [
+      "Brock",
+      "Bolt",
+      "Nori"
+    ],
+    "lastPicks": [
+      "Sirius",
+      "Tick",
+      "Gray"
+    ],
+    "bans": [
+      "Sirius",
+      "Brock",
+      "Bolt"
+    ],
+    "plan": "El muro central define el draft. Abre el mapa si el rival depende de corto alcance; consérvalo si tu composición gana mediante artilleros o flanqueos.",
+    "slug": "new-horizons",
+    "featuredOfficialJune2026": false,
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Nuevos horizontes"
+    ]
   },
   {
     "slug": "out-in-the-open",
@@ -685,7 +1094,13 @@
     ],
     "plan": "Prioriza vida y daño seguro. El gas es un recurso; no regales la primera baja por una eliminación improbable.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "A la intemperie",
+      "Out in the Open"
+    ]
   },
   {
     "slug": "dueling-beetles",
@@ -728,7 +1143,12 @@
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Duelo de escarabajos"
+    ]
   },
   {
     "slug": "open-business",
@@ -771,7 +1191,10 @@
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": []
   },
   {
     "slug": "parallel-plays",
@@ -814,7 +1237,12 @@
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Estrategias paralelas"
+    ]
   },
   {
     "slug": "ring-of-fire",
@@ -857,7 +1285,14 @@
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Pista ardiente",
+      "Anillo de fuego",
+      "Ring of Fire"
+    ]
   },
   {
     "slug": "bridge-too-far",
@@ -900,7 +1335,10 @@
     ],
     "plan": "Compara daño potencial a caja y defensa. No persigas bajas lejos del objetivo cuando exista una ventana de daño.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": []
   },
   {
     "slug": "hot-potato",
@@ -943,7 +1381,12 @@
     ],
     "plan": "Compara daño potencial a caja y defensa. No persigas bajas lejos del objetivo cuando exista una ventana de daño.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Patata caliente"
+    ]
   },
   {
     "slug": "kaboom-canyon",
@@ -986,7 +1429,58 @@
     ],
     "plan": "Compara daño potencial a caja y defensa. No persigas bajas lejos del objetivo cuando exista una ventana de daño.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": []
+  },
+  {
+    "name": "Pit Stop",
+    "mode": "Atraco",
+    "layout": "Cerrado",
+    "traits": [
+      "base accesible",
+      "arbustos",
+      "carriles cortos"
+    ],
+    "tierS": [
+      "Edgar",
+      "Mico",
+      "Nita",
+      "Bibi",
+      "Griff"
+    ],
+    "tierA": [
+      "Kenji",
+      "Bull",
+      "Jessie",
+      "Shade",
+      "Jacky"
+    ],
+    "firstPicks": [
+      "Nita",
+      "Griff",
+      "Jessie"
+    ],
+    "lastPicks": [
+      "Edgar",
+      "Mico",
+      "Bull"
+    ],
+    "bans": [
+      "Edgar",
+      "Nita",
+      "Mico"
+    ],
+    "plan": "Decide pronto si tu composición gana por carrera de daño o por defensa. No persigas rivales cuando tengas acceso directo a la caja.",
+    "slug": "pit-stop",
+    "featuredOfficialJune2026": false,
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Parada en boxes"
+    ]
   },
   {
     "slug": "safe-zone",
@@ -1029,50 +1523,108 @@
     ],
     "plan": "Compara daño potencial a caja y defensa. No persigas bajas lejos del objetivo cuando exista una ventana de daño.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Zona segura"
+    ]
   },
   {
-    "slug": "canal-grande",
-    "name": "Canal Grande",
+    "name": "Safe(r) Zone",
+    "mode": "Atraco",
+    "layout": "Mixto",
+    "traits": [
+      "dos rutas",
+      "presión de caja",
+      "control central"
+    ],
+    "tierS": [
+      "Nori",
+      "Bolt",
+      "8-Bit",
+      "Nita",
+      "Chuck"
+    ],
+    "tierA": [
+      "Jessie",
+      "Starr Nova",
+      "Berry",
+      "Griff",
+      "Mico"
+    ],
+    "firstPicks": [
+      "Nori",
+      "Bolt",
+      "8-Bit"
+    ],
+    "lastPicks": [
+      "Chuck",
+      "Mico",
+      "Nita"
+    ],
+    "bans": [
+      "Nori",
+      "Bolt",
+      "Chuck"
+    ],
+    "plan": "Mantén una línea de defensa y otra de presión. Si ganas la rotación central, convierte inmediatamente la ventaja en daño a caja.",
+    "slug": "safer-zone",
+    "featuredOfficialJune2026": false,
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Zona más segura"
+    ]
+  },
+  {
+    "name": "Dry Season",
     "mode": "Caza Estelar",
     "layout": "Mixto",
     "traits": [
-      "agua central",
-      "arbustos",
-      "ángulos"
+      "muros centrales",
+      "artilleros",
+      "rango lateral"
     ],
     "tierS": [
-      "Piper",
-      "Angelo",
-      "Belle",
-      "Nani",
-      "Gene"
+      "Najia",
+      "Tick",
+      "Brock",
+      "Grom",
+      "Damian"
     ],
     "tierA": [
-      "Mandy",
-      "Byron",
-      "R-T",
-      "Tick",
-      "Brock"
+      "Penny",
+      "Bonnie",
+      "Piper",
+      "Nani",
+      "Mandy"
     ],
     "firstPicks": [
-      "Belle",
-      "Gene",
+      "Najia",
+      "Brock",
       "Piper"
     ],
     "lastPicks": [
-      "Nani",
       "Tick",
-      "Angelo"
-    ],
-    "bans": [
-      "Piper",
-      "Angelo",
+      "Grom",
       "Nani"
     ],
-    "plan": "Con ventaja de estrellas, obliga al rival a cruzar espacio abierto y evita intercambios uno por uno innecesarios.",
+    "bans": [
+      "Najia",
+      "Tick",
+      "Brock"
+    ],
+    "plan": "Usa los muros para obtener daño seguro, pero reserva una respuesta frente a asesinos. Con ventaja de estrellas, obliga al rival a exponerse.",
+    "slug": "dry-season",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Sequía sanguinaria"
+    ]
   },
   {
     "slug": "hideout",
@@ -1115,7 +1667,58 @@
     ],
     "plan": "Con ventaja de estrellas, obliga al rival a cruzar espacio abierto y evita intercambios uno por uno innecesarios.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Escondite"
+    ]
+  },
+  {
+    "name": "Layer Cake",
+    "mode": "Caza Estelar",
+    "layout": "Cerrado",
+    "traits": [
+      "capas de muros",
+      "artilleros",
+      "choke points"
+    ],
+    "tierS": [
+      "Tick",
+      "Brock",
+      "Najia",
+      "Grom",
+      "Nori"
+    ],
+    "tierA": [
+      "Squeak",
+      "8-Bit",
+      "Nani",
+      "Penny",
+      "Starr Nova"
+    ],
+    "firstPicks": [
+      "Najia",
+      "Brock",
+      "Nori"
+    ],
+    "lastPicks": [
+      "Tick",
+      "Grom",
+      "Squeak"
+    ],
+    "bans": [
+      "Tick",
+      "Najia",
+      "Nori"
+    ],
+    "plan": "Controla una capa de muros cada vez. No apiles tres brawlers vulnerables al dive y abre el mapa si el rival depende de artilleros.",
+    "slug": "layer-cake",
+    "featuredOfficialJune2026": false,
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": []
   },
   {
     "slug": "shooting-star",
@@ -1158,7 +1761,60 @@
     ],
     "plan": "Con ventaja de estrellas, obliga al rival a cruzar espacio abierto y evita intercambios uno por uno innecesarios.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "rotationStatus": "Actual",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Tiroteo estelar"
+    ]
+  },
+  {
+    "slug": "canal-grande",
+    "name": "Canal Grande",
+    "mode": "Caza Estelar",
+    "layout": "Mixto",
+    "traits": [
+      "agua central",
+      "arbustos",
+      "ángulos"
+    ],
+    "tierS": [
+      "Piper",
+      "Angelo",
+      "Belle",
+      "Nani",
+      "Gene"
+    ],
+    "tierA": [
+      "Mandy",
+      "Byron",
+      "R-T",
+      "Tick",
+      "Brock"
+    ],
+    "firstPicks": [
+      "Belle",
+      "Gene",
+      "Piper"
+    ],
+    "lastPicks": [
+      "Nani",
+      "Tick",
+      "Angelo"
+    ],
+    "bans": [
+      "Piper",
+      "Angelo",
+      "Nani"
+    ],
+    "plan": "Con ventaja de estrellas, obliga al rival a cruzar espacio abierto y evita intercambios uno por uno innecesarios.",
+    "featuredOfficialJune2026": false,
+    "status": "Mapa histórico o fuera del pool Ranked vigente · conservado para consulta.",
+    "rotationStatus": "Histórico",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": [
+      "Gran Canal"
+    ]
   },
   {
     "slug": "snake-prairie",
@@ -1201,6 +1857,9 @@
     ],
     "plan": "Con ventaja de estrellas, obliga al rival a cruzar espacio abierto y evita intercambios uno por uno innecesarios.",
     "featuredOfficialJune2026": false,
-    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
+    "status": "Mapa histórico o fuera del pool Ranked vigente · conservado para consulta.",
+    "rotationStatus": "Histórico",
+    "poolCheckedAt": "08/08/2026",
+    "aliases": []
   }
 ]
