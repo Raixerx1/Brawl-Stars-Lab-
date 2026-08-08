@@ -4,6 +4,7 @@ import { maps, mapBySlug, brawlerByName } from "@/lib/data";
 import BrawlerCard from "@/components/BrawlerCard";
 import FavoriteButton from "@/components/FavoriteButton";
 import { MapArtwork } from "@/components/GameArtwork";
+import MapTactics from "@/components/MapTactics";
 
 export function generateStaticParams() {
   return maps.map((map) => ({ slug: map.slug }));
@@ -44,6 +45,8 @@ export default async function MapDetail({ params }: { params: Promise<{ slug: st
         <Link href={`/draft?map=${map.slug}`} className="secondary-button">Analizar un draft</Link>
       </section>
     </div>
+
+    <MapTactics map={map} />
 
     <div className="section-title spaced"><div><span className="eyebrow">Tier S</span><h2>Mejores opciones</h2></div></div>
     <div className="card-grid brawler-grid">{map.tierS.map((name: string) => brawlerByName(name)).filter(Boolean).map((brawler) => <BrawlerCard key={brawler!.slug} brawler={brawler!} />)}</div>

@@ -1,9 +1,14 @@
 import type {
+  BanRecommendation,
   Brawler,
   DraftAnalysis,
   DraftInput,
   DraftPosition,
   DraftRecommendation,
+  EnemyPickPrediction,
+  LanePlan,
+  TacticalBuild,
+  TeamAssignment,
 } from "./types";
 
 const tierScore: Record<string, number> = {
@@ -20,24 +25,22 @@ const clamp = (value: number) => Math.max(0, Math.min(100, Math.round(value)));
 const includesName = (list: string[], name: string) => list.some((item) => norm(item) === norm(name));
 const hasTag = (brawler: Brawler, ...tags: string[]) => tags.some((tag) => brawler.tags.includes(tag));
 const isLongRange = (brawler: Brawler) =>
-  brawler.range === "Muy largo" ||
-  brawler.range === "Largo" ||
-  hasTag(brawler, "sniper", "tirador", "open");
-const isControl = (brawler: Brawler) =>
-  brawler.role === "Control" || hasTag(brawler, "control", "zone");
+  brawler.range === "Muy largo" || brawler.range === "Largo" || hasTag(brawler, "sniper", "tirador", "open");
+const isShortRange = (brawler: Brawler) =>
+  brawler.range === "Corto" || brawler.role === "Tanque" || brawler.role === "Asesino" || hasTag(brawler, "tank", "assassin");
+const isControl = (brawler: Brawler) => brawler.role === "Control" || hasTag(brawler, "control", "zone");
 const isFrontline = (brawler: Brawler) =>
   brawler.role === "Tanque" || brawler.role === "Asesino" || hasTag(brawler, "tank", "mobile", "assassin");
-const isAntitank = (brawler: Brawler) =>
-  brawler.role === "Antitanque" || hasTag(brawler, "antitank", "antitanque");
-const isAntidive = (brawler: Brawler) =>
-  brawler.role === "Antidive" || hasTag(brawler, "antidive");
-const isObjective = (brawler: Brawler) => hasTag(brawler, "objective", "damage", "carry");
+const isAntitank = (brawler: Brawler) => brawler.role === "Antitanque" || hasTag(brawler, "antitank", "antitanque");
+const isAntidive = (brawler: Brawler) => brawler.role === "Antidive" || hasTag(brawler, "antidive") || ["Gale", "Shelly", "R-T", "Surge", "Otis", "Cordelius"].includes(brawler.name);
+const isObjective = (brawler: Brawler) => hasTag(brawler, "objective", "damage", "carry") || ["Colt", "Colette", "Chuck", "Melodie", "Nita", "Jessie", "8-Bit", "Brock"].includes(brawler.name);
 const isSupport = (brawler: Brawler) => brawler.role === "Apoyo" || hasTag(brawler, "support", "apoyo");
+const isThrower = (brawler: Brawler) => brawler.role === "Artillero" || hasTag(brawler, "thrower", "artillero");
+const hasWallbreak = (brawler: Brawler) => hasTag(brawler, "wallbreak") || ["Brock", "Colt", "Griff", "Shelly", "Frank", "Ruffs", "Gray", "Piper"].includes(brawler.name);
+const hasVision = (brawler: Brawler) => ["Tara", "Gene", "Bo", "Janet", "Crow", "Sandy", "Mr. P"].includes(brawler.name) || hasTag(brawler, "vision");
 
 function findProfiles(names: string[], roster: Brawler[]) {
-  return names
-    .map((name) => roster.find((brawler) => norm(brawler.name) === norm(name)))
-    .filter(Boolean) as Brawler[];
+  return names.map((name) => roster.find((brawler) => norm(brawler.name) === norm(name))).filter(Boolean) as Brawler[];
 }
 
 function unique(values: string[]) {
@@ -56,28 +59,24 @@ function teamNeeds(input: DraftInput, allies: Brawler[], enemies: Brawler[]) {
   const needs: string[] = [];
   const enemyHasTank = enemies.some((enemy) => enemy.role === "Tanque" || hasTag(enemy, "tank", "tanque"));
   const enemyHasDive = enemies.some((enemy) => enemy.role === "Asesino" || hasTag(enemy, "assassin", "asesino", "mobile"));
-  const enemyHasThrower = enemies.some((enemy) => enemy.role === "Artillero" || hasTag(enemy, "thrower", "artillero"));
+  const enemyHasThrower = enemies.some(isThrower);
 
   if (enemyHasTank && !allies.some(isAntitank)) needs.push("Antitanque");
   if (enemyHasDive && !allies.some(isAntidive)) needs.push("Antidive / peel");
-  if (enemyHasThrower && !allies.some((ally) => ally.role === "Asesino" || hasTag(ally, "mobile"))) {
-    needs.push("Acceso contra artilleros");
-  }
+  if (enemyHasThrower && !allies.some((ally) => ally.role === "Asesino" || hasTag(ally, "mobile"))) needs.push("Acceso contra artilleros");
   if (input.map.layout === "Abierto" && !allies.some(isLongRange)) needs.push("Rango largo");
   if (input.map.layout === "Cerrado" && allies.length > 0 && allies.every(isLongRange)) needs.push("Presencia de primera línea");
-  if (!allies.some(isControl) && ["Zona Restringida", "Atrapagemas", "Balón Brawl"].includes(input.map.mode)) {
-    needs.push("Control de espacio");
-  }
+  if (!allies.some(isControl) && ["Zona Restringida", "Atrapagemas", "Balón Brawl"].includes(input.map.mode)) needs.push("Control de espacio");
   if (input.map.mode === "Atraco" && !allies.some(isObjective)) needs.push("Daño al objetivo");
-  if (input.map.mode === "Atrapagemas" && !allies.some((ally) => hasTag(ally, "mid", "safe") || isSupport(ally))) {
-    needs.push("Mid / portador estable");
-  }
+  if (input.map.mode === "Atrapagemas" && !allies.some((ally) => hasTag(ally, "mid", "safe") || isSupport(ally) || isLongRange(ally))) needs.push("Mid / portador estable");
   if (input.map.mode === "Balón Brawl" && !allies.some(isFrontline)) needs.push("Presión y movilidad");
   if (input.map.mode === "Zona Restringida" && !allies.some(isControl)) needs.push("Negación de zona");
-  if (["Noqueo", "Caza Estelar"].includes(input.map.mode) && !allies.some((ally) => isLongRange(ally) || hasTag(ally, "safe"))) {
-    needs.push("Daño seguro a distancia");
-  }
-  return unique(needs).slice(0, 5);
+  if (["Noqueo", "Caza Estelar"].includes(input.map.mode) && !allies.some((ally) => isLongRange(ally) || hasTag(ally, "safe"))) needs.push("Daño seguro a distancia");
+  if (input.map.traits.some((trait) => trait.includes("arbust")) && !allies.some(hasVision)) needs.push("Visión de arbustos");
+  if (input.map.traits.some((trait) => trait.includes("muro")) && !allies.some(hasWallbreak) && enemies.some(isThrower)) needs.push("Ruptura de muros");
+  if (allies.filter(isSupport).length >= 2) needs.push("Carry con daño propio");
+  if (allies.filter(isLongRange).length >= 2 && enemies.some(isFrontline)) needs.push("Protección del backline");
+  return unique(needs).slice(0, 7);
 }
 
 function draftStrengths(input: DraftInput, allies: Brawler[], enemies: Brawler[]) {
@@ -87,12 +86,11 @@ function draftStrengths(input: DraftInput, allies: Brawler[], enemies: Brawler[]
   if (allies.some(isControl)) strengths.push("Control de espacio cubierto");
   if (allies.some(isAntidive)) strengths.push("Defensa frente a dive");
   if (allies.some(isAntitank)) strengths.push("Respuesta contra tanques");
+  if (allies.some(hasWallbreak)) strengths.push("Capacidad de modificar el mapa");
   if (input.map.layout === "Abierto" && allies.some(isLongRange)) strengths.push("Rango adaptado al mapa");
   if (input.map.mode === "Atraco" && allies.some(isObjective)) strengths.push("Presión directa sobre la caja");
-  if (enemies.some((enemy) => allies.some((ally) => includesName(ally.counters, enemy.name)))) {
-    strengths.push("Ya existe al menos un matchup favorable");
-  }
-  return unique(strengths).slice(0, 4);
+  if (enemies.some((enemy) => allies.some((ally) => includesName(ally.counters, enemy.name)))) strengths.push("Ya existe al menos un matchup favorable");
+  return unique(strengths).slice(0, 6);
 }
 
 function draftThreats(allies: Brawler[], enemies: Brawler[]) {
@@ -103,40 +101,117 @@ function draftThreats(allies: Brawler[], enemies: Brawler[]) {
   }
   if (enemies.some((enemy) => enemy.role === "Tanque") && !allies.some(isAntitank)) threats.push("Falta daño consistente contra tanques");
   if (enemies.some((enemy) => enemy.role === "Asesino") && !allies.some(isAntidive)) threats.push("El backline está expuesto al dive");
-  if (enemies.some((enemy) => enemy.role === "Artillero") && !allies.some(isFrontline)) threats.push("Falta acceso contra artilleros");
-  return unique(threats).slice(0, 5);
+  if (enemies.some(isThrower) && !allies.some(isFrontline)) threats.push("Falta acceso contra artilleros");
+  if (allies.filter(isLongRange).length >= 2 && enemies.filter(isFrontline).length >= 2) threats.push("Doble rango expuesto a entradas simultáneas");
+  return unique(threats).slice(0, 6);
+}
+
+function enemyWeaknesses(input: DraftInput, enemies: Brawler[]) {
+  const weaknesses: string[] = [];
+  if (enemies.length < 2) return weaknesses;
+  if (enemies.filter(isShortRange).length >= 2) weaknesses.push("Mucho corto alcance: castígalo con control y antitanque");
+  if (enemies.filter(isLongRange).length >= 2) weaknesses.push("Backline frágil: presión móvil y cierre de distancia");
+  if (enemies.filter(isThrower).length >= 2) weaknesses.push("Doble artillero: vulnerable a movilidad y ruptura de muros");
+  if (enemies.filter(isSupport).length >= 2) weaknesses.push("Daño propio limitado: fuerza intercambios rápidos");
+  if (!enemies.some(isAntitank)) weaknesses.push("Sin antitanque claro: un tanque de último pick puede castigar");
+  if (!enemies.some(isAntidive) && enemies.some(isLongRange)) weaknesses.push("Sin antidive: los asesinos móviles ganan valor");
+  if (input.map.mode === "Atraco" && !enemies.some(isObjective)) weaknesses.push("Poca presión directa sobre la caja");
+  if (input.map.layout === "Abierto" && !enemies.some(isLongRange)) weaknesses.push("Rango insuficiente para el mapa abierto");
+  return unique(weaknesses).slice(0, 5);
 }
 
 function lineFor(brawler: Brawler, input: DraftInput) {
-  if (hasTag(brawler, "mid") || (input.map.mode === "Atrapagemas" && (isSupport(brawler) || hasTag(brawler, "safe")))) {
-    return "Centro / portador";
-  }
-  if (brawler.role === "Artillero") return "Línea con muros";
+  if (hasTag(brawler, "mid") || (input.map.mode === "Atrapagemas" && (isSupport(brawler) || hasTag(brawler, "safe") || isLongRange(brawler)))) return "Centro / portador";
+  if (isThrower(brawler)) return "Línea con muros";
   if (brawler.role === "Asesino" || brawler.role === "Tanque") return "Lateral de presión";
   if (isLongRange(brawler)) return input.map.layout === "Abierto" ? "Línea larga" : "Lateral con ángulo";
   if (isControl(brawler)) return "Centro o línea de control";
   return "Línea flexible";
 }
 
+function tacticalBuild(brawler: Brawler, input: DraftInput, enemies: Brawler[]): TacticalBuild {
+  const enemyDive = enemies.some((enemy) => enemy.role === "Asesino" || isFrontline(enemy));
+  const enemyTank = enemies.some((enemy) => enemy.role === "Tanque");
+  const bushes = input.map.traits.some((trait) => trait.includes("arbust"));
+  const walls = input.map.traits.some((trait) => trait.includes("muro") || trait.includes("rebote") || trait.includes("choke"));
+  const open = input.map.layout === "Abierto";
+
+  let gadget = "Gadget de tempo o utilidad";
+  if (enemyDive || brawler.role === "Tirador" || brawler.role === "Artillero") gadget = "Gadget defensivo, escape o interrupción";
+  else if (walls && hasWallbreak(brawler)) gadget = "Gadget de apertura de mapa / wallbreak";
+  else if (brawler.role === "Asesino" || brawler.role === "Tanque") gadget = "Gadget de entrada o supervivencia";
+
+  let starPower = "Habilidad estelar más consistente";
+  if (enemyTank) starPower = "Habilidad estelar orientada a daño sostenido";
+  else if (enemyDive) starPower = "Habilidad estelar de supervivencia o control";
+  else if (open && isLongRange(brawler)) starPower = "Habilidad estelar de alcance, precisión o poke";
+  else if (input.map.mode === "Zona Restringida") starPower = "Habilidad estelar de control persistente";
+
+  const gears: string[] = [];
+  if (bushes) gears.push("Velocidad");
+  if (open && !bushes) gears.push("Escudo");
+  if (brawler.role === "Tanque" || enemyDive) gears.push("Salud");
+  if (isLongRange(brawler) || isObjective(brawler) || enemyTank) gears.push("Daño");
+  if (isControl(brawler) || isThrower(brawler)) gears.push("Recarga");
+  if (gears.length < 2) gears.push("Daño");
+
+  const hypercharge = brawler.profileComplete
+    ? "Úsala para ganar la interacción decisiva u objetivo, no solo por daño"
+    : "Priorízala si está disponible y el brawler forma parte de tu pool preparado";
+
+  return {
+    gadget,
+    starPower,
+    gears: unique(gears).slice(0, 2),
+    hypercharge,
+    reason: enemyDive
+      ? "El rival tiene acceso al backline: prima supervivencia y control de entrada."
+      : enemyTank
+        ? "El rival acumula vida: prima daño sostenido y recarga."
+        : walls
+          ? "El valor depende de pasillos, muros y control angular."
+          : "Build equilibrada para conservar flexibilidad durante el draft.",
+  };
+}
+
+function lanePlanFor(brawler: Brawler, countersHit: string[], exposedTo: string[], input: DraftInput): LanePlan {
+  const lane = lineFor(brawler, input);
+  const target = countersHit[0];
+  const avoid = exposedTo[0];
+  if (target) return { lane, target, avoid, instruction: `Busca a ${target}; si cambia de carril, rota para conservar el matchup favorable.` };
+  if (avoid) return { lane, avoid, instruction: `Evita a ${avoid}. Juega con cobertura aliada y cambia de línea en la primera pausa segura.` };
+  return { lane, instruction: input.position === "First pick" ? "No fuerces una línea extrema: conserva flexibilidad hasta ver el counter rival." : "Ocupa la línea que mejor complete el emparejamiento del equipo." };
+}
+
 function planFor(brawler: Brawler, countersHit: string[], exposedTo: string[], input: DraftInput) {
-  if (countersHit.length) {
-    return `Busca la línea de ${countersHit[0]} y fuerza ese matchup. ${input.map.plan}`;
-  }
-  if (exposedTo.length) {
-    return `Evita emparejarte directamente con ${exposedTo[0]}; rota de línea y juega con cobertura aliada. ${input.map.plan}`;
-  }
+  if (countersHit.length) return `Busca la línea de ${countersHit[0]} y fuerza ese matchup. ${input.map.plan}`;
+  if (exposedTo.length) return `Evita emparejarte directamente con ${exposedTo[0]}; rota de línea y juega con cobertura aliada. ${input.map.plan}`;
   if (input.position === "First pick") return `Juega de forma estable y evita revelar una condición de victoria frágil. ${input.map.plan}`;
   if (input.position === "Last pick") return `Usa la información completa del rival para imponer la línea favorable. ${input.map.plan}`;
   return input.map.plan;
 }
 
-function scoreCandidate(
-  brawler: Brawler,
-  input: DraftInput,
-  allies: Brawler[],
-  enemies: Brawler[],
-  needs: string[],
-): DraftRecommendation {
+function coversNeed(brawler: Brawler, need: string) {
+  return (
+    (need === "Antitanque" && isAntitank(brawler)) ||
+    (need === "Antidive / peel" && isAntidive(brawler)) ||
+    (need === "Acceso contra artilleros" && (brawler.role === "Asesino" || hasTag(brawler, "mobile"))) ||
+    (need === "Rango largo" && isLongRange(brawler)) ||
+    (need === "Presencia de primera línea" && isFrontline(brawler)) ||
+    (need === "Control de espacio" && isControl(brawler)) ||
+    (need === "Daño al objetivo" && isObjective(brawler)) ||
+    (need === "Mid / portador estable" && (hasTag(brawler, "mid", "safe") || isSupport(brawler) || isLongRange(brawler))) ||
+    (need === "Presión y movilidad" && isFrontline(brawler)) ||
+    (need === "Negación de zona" && isControl(brawler)) ||
+    (need === "Daño seguro a distancia" && (isLongRange(brawler) || hasTag(brawler, "safe"))) ||
+    (need === "Visión de arbustos" && hasVision(brawler)) ||
+    (need === "Ruptura de muros" && hasWallbreak(brawler)) ||
+    (need === "Carry con daño propio" && (hasTag(brawler, "carry") || isObjective(brawler))) ||
+    (need === "Protección del backline" && isAntidive(brawler))
+  );
+}
+
+function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], enemies: Brawler[], needs: string[]): DraftRecommendation {
   let score = tierScore[brawler.tier] ?? 41;
   const reasons: string[] = [];
   const warnings: string[] = [];
@@ -148,6 +223,7 @@ function scoreCandidate(
   let synergy = 50;
   let safety = 50;
   let composition = 50;
+  let personal = 50;
   let risk = 35;
 
   const modeScore = brawler.modes[input.map.mode] ?? 0;
@@ -168,9 +244,9 @@ function scoreCandidate(
   }
 
   if (input.position === "First pick") {
-    if (hasTag(brawler, "safe")) {
-      score += 9;
-      safety += 22;
+    if (hasTag(brawler, "safe") || isControl(brawler) || isLongRange(brawler)) {
+      score += 7;
+      safety += 18;
       reasons.push("Pick estable a ciegas");
     }
     if (hasTag(brawler, "lastpick", "assassin") || brawler.role === "Asesino") {
@@ -180,12 +256,12 @@ function scoreCandidate(
       warnings.push("Expone demasiado el draft como primera selección");
     }
   }
-  if (input.position === "Pick intermedio" && hasTag(brawler, "safe", "control")) {
+  if (input.position === "Pick intermedio" && (hasTag(brawler, "safe", "control") || isControl(brawler))) {
     score += 4;
     safety += 8;
   }
-  if (input.position === "Last pick" && (hasTag(brawler, "lastpick", "assassin") || brawler.role === "Asesino")) {
-    score += 10;
+  if (input.position === "Last pick" && (hasTag(brawler, "lastpick", "assassin") || brawler.role === "Asesino" || isFrontline(brawler))) {
+    score += 9;
     counter += 8;
     reasons.push("Escala como counterpick");
   }
@@ -218,122 +294,191 @@ function scoreCandidate(
 
   const enemyHasTank = enemies.some((enemy) => enemy.role === "Tanque" || hasTag(enemy, "tank", "tanque"));
   const enemyHasDive = enemies.some((enemy) => enemy.role === "Asesino" || hasTag(enemy, "assassin", "asesino", "mobile"));
-  const enemyHasThrower = enemies.some((enemy) => enemy.role === "Artillero" || hasTag(enemy, "thrower", "artillero"));
+  const enemyHasThrower = enemies.some(isThrower);
 
   if (enemyHasTank && isAntitank(brawler)) {
-    score += 10;
-    counter += 15;
-    composition += 10;
-    reasons.push("Cubre antitanque");
+    score += 10; counter += 15; composition += 10; reasons.push("Cubre antitanque");
   }
   if (enemyHasDive && isAntidive(brawler)) {
-    score += 11;
-    counter += 15;
-    composition += 12;
-    reasons.push("Protege frente a dive");
+    score += 11; counter += 15; composition += 12; reasons.push("Protege frente a dive");
   }
   if (enemyHasThrower && (brawler.role === "Asesino" || hasTag(brawler, "mobile"))) {
-    score += 8;
-    counter += 12;
-    reasons.push("Acceso contra artilleros");
+    score += 8; counter += 12; reasons.push("Acceso contra artilleros");
   }
 
   if (input.map.layout === "Abierto" && isLongRange(brawler)) {
-    score += 8;
-    mapFit += 15;
-    reasons.push("Aprovecha el mapa abierto");
+    score += 8; mapFit += 15; reasons.push("Aprovecha el mapa abierto");
   }
-  if (input.map.layout === "Abierto" && (brawler.role === "Tanque" || brawler.role === "Artillero") && !hasTag(brawler, "safe")) {
-    score -= 7;
-    mapFit -= 12;
-    risk += 9;
+  if (input.map.layout === "Abierto" && (brawler.role === "Tanque" || isThrower(brawler)) && !hasTag(brawler, "safe")) {
+    score -= 7; mapFit -= 12; risk += 9;
   }
-  if (input.map.layout === "Cerrado" && (isFrontline(brawler) || brawler.role === "Artillero" || hasTag(brawler, "walls"))) {
-    score += 7;
-    mapFit += 13;
-    reasons.push("Aprovecha cobertura y pasillos");
+  if (input.map.layout === "Cerrado" && (isFrontline(brawler) || isThrower(brawler) || hasTag(brawler, "walls"))) {
+    score += 7; mapFit += 13; reasons.push("Aprovecha cobertura y pasillos");
   }
 
   const allyRoles = allies.map((ally) => ally.role);
   const duplicateRoleCount = allyRoles.filter((role) => role === brawler.role).length;
   if (!allyRoles.includes(brawler.role)) {
-    score += 3;
-    synergy += 8;
+    score += 3; synergy += 8;
   } else if (duplicateRoleCount >= 1) {
-    score -= 3 * duplicateRoleCount;
-    synergy -= 7 * duplicateRoleCount;
+    score -= 3 * duplicateRoleCount; synergy -= 7 * duplicateRoleCount;
   }
 
   if (allies.length && allies.every(isLongRange) && (isControl(brawler) || isFrontline(brawler))) {
-    score += 7;
-    synergy += 13;
-    composition += 12;
-    reasons.push("Equilibra un backline de rango");
+    score += 7; synergy += 13; composition += 12; reasons.push("Equilibra un backline de rango");
   }
   if (allies.some(isSupport) && (brawler.role === "Tanque" || brawler.role === "Asesino" || hasTag(brawler, "carry"))) {
-    score += 4;
-    synergy += 9;
-    reasons.push("Aprovecha el soporte aliado");
+    score += 4; synergy += 9; reasons.push("Aprovecha el soporte aliado");
   }
-  if (allies.some((ally) => ally.role === "Artillero") && isAntidive(brawler)) {
-    score += 6;
-    synergy += 11;
-    reasons.push("Protege al artillero aliado");
+  if (allies.some(isThrower) && isAntidive(brawler)) {
+    score += 6; synergy += 11; reasons.push("Protege al artillero aliado");
   }
 
   for (const need of needs) {
-    const covers =
-      (need === "Antitanque" && isAntitank(brawler)) ||
-      (need === "Antidive / peel" && isAntidive(brawler)) ||
-      (need === "Acceso contra artilleros" && (brawler.role === "Asesino" || hasTag(brawler, "mobile"))) ||
-      (need === "Rango largo" && isLongRange(brawler)) ||
-      (need === "Presencia de primera línea" && isFrontline(brawler)) ||
-      (need === "Control de espacio" && isControl(brawler)) ||
-      (need === "Daño al objetivo" && isObjective(brawler)) ||
-      (need === "Mid / portador estable" && (hasTag(brawler, "mid", "safe") || isSupport(brawler))) ||
-      (need === "Presión y movilidad" && isFrontline(brawler)) ||
-      (need === "Negación de zona" && isControl(brawler)) ||
-      (need === "Daño seguro a distancia" && (isLongRange(brawler) || hasTag(brawler, "safe")));
-    if (covers) {
-      score += 7;
-      composition += 15;
-      reasons.push(`Cubre: ${need}`);
+    if (coversNeed(brawler, need)) {
+      score += 7; composition += 15; reasons.push(`Cubre: ${need}`);
     }
+  }
+
+  const poolEntry = input.personalPool?.[brawler.slug];
+  if (input.usePersonalPool && poolEntry) {
+    if (poolEntry.power11) { score += 4; personal += 12; reasons.push("Fuerza 11 en tu pool"); }
+    if (poolEntry.hypercharge) { score += 3; personal += 8; reasons.push("Hipercarga disponible"); }
+    if (poolEntry.mastery > 3) { score += (poolEntry.mastery - 3) * 3; personal += (poolEntry.mastery - 3) * 12; reasons.push(`Dominio personal ${poolEntry.mastery}/5`); }
+    if (poolEntry.mastery <= 2) { score -= 5; personal -= 15; warnings.push("Dominio personal bajo"); }
+    if (poolEntry.avoid) { score -= 30; personal = 0; warnings.push("Marcado para evitar en tu pool"); }
   }
 
   if (hasTag(brawler, "safe")) safety += 13;
   if (hasTag(brawler, "carry")) synergy += 5;
   if (brawler.profileComplete) safety += 4;
-  if (!brawler.profileComplete) {
-    score -= 6;
-    safety -= 8;
-    risk += 8;
-  }
+  if (!brawler.profileComplete) { score -= 4; safety -= 6; risk += 6; }
 
-  const warning = warnings.length
-    ? unique(warnings).slice(0, 2).join(" · ")
-    : !brawler.profileComplete
-      ? "Build pendiente de validación táctica completa"
-      : undefined;
+  const warning = warnings.length ? unique(warnings).slice(0, 2).join(" · ") : !brawler.profileComplete ? "Build exacta pendiente de validación; se muestra una recomendación táctica" : undefined;
+  const brief = countersHit.length
+    ? `Frena a ${countersHit.slice(0, 2).join(" y ")}. ${exposedTo.length ? `Evita a ${exposedTo[0]}.` : "Encaja bien en el cierre."}`
+    : exposedTo.length
+      ? `Aporta ${reasons[0]?.toLowerCase() || "equilibrio"}, pero ${exposedTo[0]} lo frena.`
+      : `${reasons[0] || "Pick flexible"}. ${reasons[1] || "Mantiene opciones abiertas."}`;
 
   return {
     brawler,
     score: clamp(score),
-    reasons: unique(reasons).slice(0, 6),
+    reasons: unique(reasons).slice(0, 7),
+    brief,
     warning,
     metrics: {
-      mapFit: clamp(mapFit),
-      counter: clamp(counter),
-      synergy: clamp(synergy),
-      safety: clamp(safety),
-      composition: clamp(composition),
-      risk: clamp(risk),
+      mapFit: clamp(mapFit), counter: clamp(counter), synergy: clamp(synergy), safety: clamp(safety),
+      composition: clamp(composition), personal: clamp(personal), risk: clamp(risk),
     },
     countersHit: unique(countersHit),
     exposedTo: unique(exposedTo),
     suggestedLine: lineFor(brawler, input),
     plan: planFor(brawler, countersHit, exposedTo, input),
+    build: tacticalBuild(brawler, input, enemies),
+    lanePlan: lanePlanFor(brawler, countersHit, exposedTo, input),
   };
+}
+
+function banRecommendations(input: DraftInput, roster: Brawler[], allies: Brawler[]): BanRecommendation[] {
+  const excluded = new Set([...input.allies, ...input.enemies, ...input.bans].map(norm));
+  return roster
+    .filter((brawler) => !excluded.has(norm(brawler.name)))
+    .map((brawler) => {
+      let score = 25;
+      const reasons: string[] = [];
+      const mapBanIndex = input.map.bans.indexOf(brawler.name);
+      const tierIndex = input.map.tierS.indexOf(brawler.name);
+      if (mapBanIndex >= 0) { score += 35 - mapBanIndex * 5; reasons.push("Ban prioritario del mapa"); }
+      if (tierIndex >= 0) { score += 18 - tierIndex * 2; reasons.push("Tier S del mapa"); }
+      const threatened = allies.filter((ally) => includesName(ally.counteredBy, brawler.name));
+      if (threatened.length) { score += threatened.length * 17; reasons.push(`Protege a ${threatened.map((ally) => ally.name).join(" y ")}`); }
+      if (input.position === "First pick" && (isLongRange(brawler) || isControl(brawler))) score += 4;
+      return { brawler, score: clamp(score), reasons: unique(reasons).slice(0, 3) };
+    })
+    .filter((item) => item.score >= 42)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
+}
+
+function predictEnemyPicks(input: DraftInput, roster: Brawler[], allies: Brawler[], enemies: Brawler[]): EnemyPickPrediction[] {
+  const excluded = new Set([...input.allies, ...input.enemies, ...input.bans].map(norm));
+  return roster
+    .filter((brawler) => !excluded.has(norm(brawler.name)))
+    .map((brawler) => {
+      let score = tierScore[brawler.tier] ?? 40;
+      const tierIndex = input.map.tierS.indexOf(brawler.name);
+      const aIndex = input.map.tierA.indexOf(brawler.name);
+      if (tierIndex >= 0) score += 18 - tierIndex * 2;
+      else if (aIndex >= 0) score += 9 - aIndex;
+      const targets = allies.filter((ally) => includesName(brawler.counters, ally.name) || includesName(ally.counteredBy, brawler.name));
+      score += targets.length * 15;
+      if (input.map.layout === "Abierto" && isLongRange(brawler)) score += 7;
+      if (input.map.layout === "Cerrado" && (isFrontline(brawler) || isThrower(brawler))) score += 6;
+      if (enemies.some(isSupport) && isFrontline(brawler)) score += 5;
+      const target = targets[0]?.name;
+      const response = brawler.counteredBy.find((name) => !excluded.has(norm(name))) || "Reserva un pick seguro que cubra su arquetipo";
+      return {
+        brawler,
+        score: clamp(score),
+        target,
+        reason: target ? `Puede castigar a ${target}` : tierIndex >= 0 ? "Es una prioridad natural del mapa" : "Completa el draft rival con flexibilidad",
+        response,
+      };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
+}
+
+function laneAssignments(candidate: Brawler | undefined, allies: Brawler[], enemies: Brawler[], input: DraftInput): TeamAssignment[] {
+  const team = candidate ? [...allies, candidate].slice(0, 3) : allies.slice(0, 3);
+  if (!team.length) return [];
+  const remaining = [...enemies];
+  const mids = team.filter((ally) => isSupport(ally) || isControl(ally) || (input.map.mode === "Atrapagemas" && isLongRange(ally)));
+  const preferredMid = mids[0];
+  const laneByName = new Map<string, string>();
+  if (preferredMid) laneByName.set(preferredMid.name, "Centro");
+  const sidePlayers = team.filter((ally) => ally.name !== preferredMid?.name);
+  sidePlayers.forEach((ally, index) => laneByName.set(ally.name, index === 0 ? "Izquierda" : "Derecha"));
+  if (!preferredMid && team.length === 3) laneByName.set(team[1].name, "Centro");
+
+  return team.map((ally) => {
+    let bestEnemy: Brawler | undefined;
+    let bestScore = -999;
+    remaining.forEach((enemy) => {
+      let matchup = 0;
+      if (includesName(ally.counters, enemy.name)) matchup += 5;
+      if (includesName(ally.counteredBy, enemy.name)) matchup -= 6;
+      if (isAntitank(ally) && enemy.role === "Tanque") matchup += 4;
+      if (isAntidive(ally) && enemy.role === "Asesino") matchup += 4;
+      if (matchup > bestScore) { bestScore = matchup; bestEnemy = enemy; }
+    });
+    if (bestEnemy) remaining.splice(remaining.indexOf(bestEnemy), 1);
+    const lane = laneByName.get(ally.name) || "Línea flexible";
+    const instruction = bestEnemy
+      ? bestScore >= 3
+        ? `Busca a ${bestEnemy.name} y conserva esa línea.`
+        : bestScore <= -3
+          ? `Evita a ${bestEnemy.name}; cambia con un compañero.`
+          : `Matchup equilibrado contra ${bestEnemy.name}; gana por munición y posición.`
+      : lineFor(ally, input);
+    return { ally: ally.name, enemy: bestEnemy?.name, lane, instruction };
+  });
+}
+
+function compositionScore(allies: Brawler[], candidate: Brawler | undefined, needs: string[]) {
+  const team = candidate ? [...allies, candidate] : allies;
+  if (!team.length) return 50;
+  let score = 60;
+  const roles = new Set(team.map((item) => item.role));
+  score += roles.size * 6;
+  score -= needs.length * 5;
+  if (team.some(isControl)) score += 5;
+  if (team.some(isAntidive)) score += 5;
+  if (team.some(isAntitank)) score += 5;
+  if (team.filter(isSupport).length >= 2) score -= 12;
+  if (team.filter(isLongRange).length === 3) score -= 10;
+  return clamp(score);
 }
 
 export function analyzeDraft(input: DraftInput, roster: Brawler[]): DraftAnalysis {
@@ -346,10 +491,17 @@ export function analyzeDraft(input: DraftInput, roster: Brawler[]): DraftAnalysi
 
   const recommendations = roster
     .filter((brawler) => !unavailable.has(norm(brawler.name)))
+    .filter((brawler) => {
+      if (!input.usePersonalPool) return true;
+      const entry = input.personalPool?.[brawler.slug];
+      if (!entry) return false;
+      return entry.available && !entry.avoid;
+    })
     .map((brawler) => scoreCandidate(brawler, input, allies, enemies, needs))
     .sort((a, b) => b.score - a.score || b.metrics.safety - a.metrics.safety)
-    .slice(0, 12);
+    .slice(0, 16);
 
+  const best = recommendations[0]?.brawler;
   const visiblePicks = input.allies.length + input.enemies.length;
   const draftStage = visiblePicks === 0
     ? "Draft vacío: priorizando picks seguros y meta del mapa"
@@ -364,6 +516,11 @@ export function analyzeDraft(input: DraftInput, roster: Brawler[]): DraftAnalysi
     needs,
     threats,
     strengths,
+    enemyWeaknesses: enemyWeaknesses(input, enemies),
+    banRecommendations: banRecommendations(input, roster, allies),
+    predictedEnemyPicks: predictEnemyPicks(input, roster, allies, enemies),
+    teamAssignments: laneAssignments(best, allies, enemies, input),
+    compositionScore: compositionScore(allies, best, needs),
     draftStage,
     availableCount: roster.length - unavailable.size,
   };

@@ -1,24 +1,30 @@
-# Brawl Draft Lab v0.3
+# Brawl Draft Lab v0.4
 
-Aplicación web competitiva para Brawl Stars Ranked.
+Aplicación web competitiva para Brawl Stars Ranked, centrada en draft, counters y entrenamiento personal.
 
-## Novedades v0.3
+## Novedades v0.4
 
-- Draft Assistant en vivo: recalcula automáticamente al añadir o retirar aliados, rivales y bans.
-- Selectores visuales con buscador, retratos y slots de draft.
-- Detección automática de first pick, pick intermedio y last pick, con control manual opcional.
-- Salidas separadas para mejor pick, pick seguro y counter/cierre.
-- Diagnóstico de carencias, amenazas y fortalezas de composición.
-- Métricas de mapa, counters, sinergia, composición, seguridad y riesgo.
-- Línea y plan de partida específicos para la recomendación principal.
-- Ranking dinámico de ocho alternativas.
+- Draft Coach en vivo con recalculo automático.
+- Recomendaciones separadas: mejor pick, pick seguro y pick de castigo.
+- Comentarios breves sobre qué rival frena cada brawler y quién lo amenaza.
+- Diagnóstico ampliado de composición aliada y rival.
+- Builds contextuales según mapa, modo y arquetipos enemigos.
+- Plan de líneas y emparejamientos previstos.
+- Predicción y simulación del siguiente pick rival.
+- Asistente de bans adaptado al mapa y a tus aliados.
+- Modo ultrarrápido para drafts con temporizador.
+- Pool personal: disponibilidad, fuerza 11, hipercarga, dominio y brawlers a evitar.
+- Historial local y enlaces compartibles de drafts.
+- Comparador de brawlers.
+- Mapas con lectura visual de líneas y puntos de presión.
+- Captura asistida para mantener una imagen del draft visible mientras se completa manualmente.
 
-## Contenido heredado de v0.2
+## Contenido de la base
 
-- Parche oficial del 04/08/2026 incorporado.
-- 106 brawlers con cinco matchups favorables y cinco amenazas cada uno.
-- Sección de counters, retratos e imágenes de mapas.
-- Fichas de brawler y mapa y página de meta.
+- 106 brawlers.
+- 1.060 relaciones editoriales de matchup.
+- 28 mapas.
+- Parche de referencia: 04/08/2026.
 
 ## Desarrollo
 
@@ -34,5 +40,6 @@ npm run build
 npm start
 ```
 
-Los tiers, counters y puntuaciones son editoriales y no equivalen a una probabilidad de victoria.
+Las puntuaciones son de encaje estratégico y no representan una probabilidad de victoria. Las builds contextuales son recomendaciones tácticas; los nombres exactos de gadget y habilidad estelar continúan ampliándose por brawler.
+
 Proyecto independiente no afiliado a Supercell.

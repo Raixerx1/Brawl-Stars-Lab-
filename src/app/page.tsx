@@ -11,10 +11,10 @@ export default function Home() {
       <div>
         <span className="hero-badge">PARCHE 04/08/2026 · RANKED LAB</span>
         <h1>Gana el draft<br /><em>antes de empezar.</em></h1>
-        <p>Mapas, counters, bans y recomendaciones contextualizadas. La base ahora incorpora matchups nominales e imágenes oficiales servidas por BrawlAPI/Brawlify.</p>
+        <p>Draft vivo, counters, builds contextuales, simulación del rival y recomendaciones personalizadas según tu pool competitivo.</p>
         <div className="hero-actions">
           <Link href="/draft" className="primary-button">Abrir Draft Assistant</Link>
-          <Link href="/counters" className="secondary-button">Consultar counters</Link>
+          <Link href="/pool" className="secondary-button">Configurar mi pool</Link>
         </div>
       </div>
       <div className="hero-roster" aria-hidden="true">
@@ -47,5 +47,12 @@ export default function Home() {
       <div><span className="eyebrow">Matchup Lab</span><h2>Selecciona un brawler y consulta sus cinco mejores objetivos y sus cinco amenazas.</h2><p>Los resultados son editoriales y se ajustan al arquetipo, el parche y las interacciones principales.</p></div>
       <Link href="/counters" className="primary-button">Abrir counters</Link>
     </section>
+
+    <div className="section-title spaced"><div><span className="eyebrow">Nuevas herramientas</span><h2>Decide mejor antes y durante el draft</h2></div></div>
+    <div className="feature-grid">
+      <Link href="/draft" className="panel feature-card"><b>◎</b><h3>Draft Coach</h3><p>Build, líneas, bans, simulación del siguiente pick y modo ultrarrápido.</p></Link>
+      <Link href="/pool" className="panel feature-card"><b>◉</b><h3>Mi pool</h3><p>Prioriza fuerza 11, hipercargas y los brawlers que realmente dominas.</p></Link>
+      <Link href="/compare" className="panel feature-card"><b>≍</b><h3>Comparador</h3><p>Compara first pick, carry, counters compartidos y amenazas comunes.</p></Link>
+    </div>
   </div>;
 }
