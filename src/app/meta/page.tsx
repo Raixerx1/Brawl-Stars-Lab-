@@ -52,7 +52,7 @@ export default function MetaPage() {
 
     <section className="panel spaced">
       <span className="eyebrow">Criterio editorial</span>
-      <h2>Cómo interpretar la v0.2</h2>
+      <h2>Cómo interpretar la v0.3</h2>
       <div className="note-list">{meta.notes.map((note: string) => <p key={note}>✓ {note}</p>)}</div>
     </section>
   </div>;

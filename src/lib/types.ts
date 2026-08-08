@@ -30,12 +30,23 @@ export type MapProfile = {
   status: string;
 };
 
+export type DraftPosition = "First pick" | "Pick intermedio" | "Last pick";
+
 export type DraftInput = {
   map: MapProfile;
-  position: "First pick" | "Pick intermedio" | "Last pick";
+  position: DraftPosition;
   allies: string[];
   enemies: string[];
   bans: string[];
+};
+
+export type DraftMetrics = {
+  mapFit: number;
+  counter: number;
+  synergy: number;
+  safety: number;
+  composition: number;
+  risk: number;
 };
 
 export type DraftRecommendation = {
@@ -43,4 +54,18 @@ export type DraftRecommendation = {
   score: number;
   reasons: string[];
   warning?: string;
+  metrics: DraftMetrics;
+  countersHit: string[];
+  exposedTo: string[];
+  suggestedLine: string;
+  plan: string;
+};
+
+export type DraftAnalysis = {
+  recommendations: DraftRecommendation[];
+  needs: string[];
+  threats: string[];
+  strengths: string[];
+  draftStage: string;
+  availableCount: number;
 };

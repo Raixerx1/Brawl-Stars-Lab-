@@ -1,23 +1,22 @@
-# Cómo subir la actualización v0.2 a GitHub
+# Cómo subir la actualización v0.3 a GitHub
 
-No necesitas programar.
-
-1. Descarga `Brawl-Stars-Lab-v0.2-update.zip`.
+1. Descarga `Brawl-Stars-Lab-v0.3-update.zip`.
 2. Descomprime el ZIP.
-3. Abre tu repositorio `Brawl-Stars-Lab-` en GitHub.
+3. Abre el repositorio `Brawl-Stars-Lab-` en GitHub.
 4. Pulsa **Add file → Upload files**.
-5. Arrastra TODO el contenido descomprimido a la zona de subida.
-6. GitHub mostrará archivos nuevos y archivos modificados.
-7. En el mensaje del commit escribe:
+5. Arrastra todo el contenido descomprimido, conservando las carpetas.
+6. En el mensaje del commit escribe:
 
-   `Actualizar Brawl Draft Lab a v0.2`
+   `Mejorar Draft Assistant adaptativo v0.3`
 
-8. Pulsa **Commit changes**.
-9. Vercel iniciará el despliegue automáticamente.
+7. Pulsa **Commit changes**.
+8. Vercel iniciará automáticamente un nuevo despliegue.
 
-## Importante
+## Qué debes comprobar después
 
-- Arrastra el contenido del ZIP, no el ZIP cerrado.
-- Mantén las carpetas `src` y `public` con su estructura.
-- No borres las variables o ajustes de Vercel.
-- Las imágenes dependen de conexión a BrawlAPI/Brawlify; si no cargan, la app mantiene un fallback visual.
+- La página `/draft` debe actualizar las recomendaciones sin pulsar ningún botón.
+- Puedes buscar y añadir brawlers a aliados, rivales y bans.
+- Al retirar un pick, el ranking debe cambiar inmediatamente.
+- En móvil, cada bloque debe aparecer en una sola columna.
+
+No subas el ZIP cerrado: sube los archivos y carpetas que contiene.
