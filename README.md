@@ -1,37 +1,35 @@
-# Brawl Draft Lab
+# Brawl Draft Lab v0.2
 
-Aplicación web estática, instalable y optimizada para móvil para ayudar con drafts de Brawl Stars Ranked.
+Aplicación web competitiva para Brawl Stars Ranked.
 
-## Incluye
-- 106 brawlers registrados.
-- 28 mapas de referencia, incluidos los cuatro mapas destacados en las notas oficiales de junio de 2026.
-- Fichas de mapas y brawlers.
-- Draft Assistant con puntuación heurística explicable.
-- Favoritos y entrenador personal guardados en el navegador.
-- PWA y funcionamiento offline básico.
-- Exportación estática compatible con Vercel.
+## Novedades v0.2
 
-## Ejecutar en local
-Necesita Node.js 20.9 o superior.
+- Parche oficial del 04/08/2026 incorporado.
+- 106 brawlers con cinco matchups favorables y cinco amenazas cada uno.
+- Nueva sección `/counters`.
+- El Draft Assistant cruza counters nominales además de mapa, modo, arquetipo y posición.
+- Retratos de brawlers y mapas cargados desde BrawlAPI/Brawlify con fallback visual.
+- Fichas de brawler y mapa rediseñadas.
+- Página de meta con cambios generales, NanoPowers y correcciones separadas.
+
+## Desarrollo
 
 ```bash
 npm install
 npm run dev
 ```
 
-Abre http://localhost:3000
+## Producción
 
-## Publicar en Vercel
-1. Sube el contenido de esta carpeta a GitHub.
-2. Entra en Vercel con tu cuenta de GitHub.
-3. Pulsa **Add New → Project**.
-4. Elige `Brawl-Stars-Lab-`.
-5. Pulsa **Deploy** sin cambiar la configuración.
+```bash
+npm run build
+npm start
+```
 
-## Principio de datos
-La app no presenta los tiers editoriales como tasas de victoria. Cualquier estadística futura debe incluir fuente, fecha, rango y tamaño muestral.
+## Fuentes
 
-## Fuentes iniciales
-- Supercell: Release Notes June 2026.
-- Brawlify: roster de 106 brawlers.
-- Brawl Time Ninja: estadísticas de terceros, con sus limitaciones metodológicas.
+- Notas oficiales de Supercell.
+- BrawlAPI/Brawlify para assets visuales y roster.
+- Los tiers y counters son editoriales y no equivalen a win rates.
+
+Proyecto independiente no afiliado a Supercell.

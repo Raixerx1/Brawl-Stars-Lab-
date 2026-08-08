@@ -1,3 +1,71 @@
-import {notFound} from "next/navigation";import Link from "next/link";import {brawlers,brawlerBySlug,maps} from "@/lib/data";import MapCard from "@/components/MapCard";import FavoriteButton from "@/components/FavoriteButton";
-export function generateStaticParams(){return brawlers.map(b=>({slug:b.slug}))}
-export default async function BrawlerDetail({params}:{params:Promise<{slug:string}>}){const {slug}=await params;const b=brawlerBySlug(slug);if(!b)notFound();const best=maps.filter(m=>m.tierS.includes(b.name)||m.tierA.includes(b.name)).slice(0,6);return <div className="page"><Link href="/brawlers" className="back-link">← Roster completo</Link><section className="detail-hero brawler-detail"><div className="avatar giant">{b.name.slice(0,2).toUpperCase()}</div><div><div className="card-kicker">{b.rarity} · {b.role}</div><h1>{b.name}</h1><p>{b.range} · dificultad {b.difficulty}/5</p><div className="tag-row">{b.tags.map(t=><span key={t}>{t}</span>)}</div></div><FavoriteButton type="brawler" id={b.slug}/></section><div className="detail-grid"><section className="panel"><span className="eyebrow">Evaluación</span><h2>Tier {b.tier}</h2><p className="large-copy">{b.build}</p>{!b.profileComplete&&<div className="notice">Perfil estructural creado, pendiente de validación táctica completa.</div>}</section><section className="panel"><span className="eyebrow">Matchups</span><h2>Lectura rápida</h2><h3>Funciona bien contra</h3><div className="tag-row">{b.counters.length?b.counters.map(x=><span key={x}>{x}</span>):<span>Pendiente</span>}</div><h3>Lo frena</h3><div className="tag-row danger">{b.counteredBy.length?b.counteredBy.map(x=><span key={x}>{x}</span>):<span>Pendiente</span>}</div></section></div><div className="section-title spaced"><div><span className="eyebrow">Mapa y modo</span><h2>Mejores entornos registrados</h2></div></div>{best.length?<div className="card-grid">{best.map(m=><MapCard map={m} key={m.slug}/>)}</div>:<div className="empty-state">Este brawler aún no tiene mapas priorizados en la base editorial.</div>}</div>}
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { brawlers, brawlerBySlug, maps } from "@/lib/data";
+import MapCard from "@/components/MapCard";
+import FavoriteButton from "@/components/FavoriteButton";
+import { BrawlerPortrait } from "@/components/GameArtwork";
+import MatchupGrid from "@/components/MatchupGrid";
+import PatchBadge from "@/components/PatchBadge";
+
+export function generateStaticParams() {
+  return brawlers.map((brawler) => ({ slug: brawler.slug }));
+}
+
+export default async function BrawlerDetail({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const brawler = brawlerBySlug(slug);
+  if (!brawler) notFound();
+  const bestMaps = maps
+    .filter((map) => map.tierS.includes(brawler.name) || map.tierA.includes(brawler.name))
+    .slice(0, 6);
+
+  return <div className="page">
+    <Link href="/brawlers" className="back-link">← Roster completo</Link>
+    <section className="detail-hero brawler-detail visual-detail-hero">
+      <BrawlerPortrait name={brawler.name} className="detail-portrait" priority />
+      <div className="detail-copy">
+        <div className="card-kicker">{brawler.rarity} · {brawler.role}</div>
+        <h1>{brawler.name}</h1>
+        <p>{brawler.range} · dificultad {brawler.difficulty}/5</p>
+        <div className="tag-row">{brawler.tags.map((tag: string) => <span key={tag}>{tag}</span>)}</div>
+        <PatchBadge name={brawler.name} />
+      </div>
+      <FavoriteButton type="brawler" id={brawler.slug} />
+    </section>
+
+    <div className="detail-grid">
+      <section className="panel">
+        <span className="eyebrow">Evaluación</span>
+        <h2>Tier {brawler.tier}</h2>
+        <p className="large-copy">{brawler.build}</p>
+        {!brawler.profileComplete && <div className="notice">La build continúa pendiente de validación completa, pero los matchups ya están estructurados.</div>}
+      </section>
+      <section className="panel matchup-summary-panel">
+        <span className="eyebrow">Resumen de matchup</span>
+        <h2>{brawler.counters.length + brawler.counteredBy.length} cruces registrados</h2>
+        <p>Los counters son una lectura de draft, no una garantía: cobertura, muros, líneas y supers disponibles modifican cada enfrentamiento.</p>
+        <Link className="secondary-button" href="/counters">Abrir explorador de counters</Link>
+      </section>
+    </div>
+
+    <div className="two-column-matchups spaced">
+      <section className="panel">
+        <span className="eyebrow">Ventaja</span>
+        <h2>Funciona bien contra</h2>
+        <MatchupGrid source={brawler} names={brawler.counters} kind="favorable" />
+      </section>
+      <section className="panel">
+        <span className="eyebrow danger-text">Riesgo</span>
+        <h2>Lo frena</h2>
+        <MatchupGrid source={brawler} names={brawler.counteredBy} kind="threat" />
+      </section>
+    </div>
+
+    <div className="section-title spaced">
+      <div><span className="eyebrow">Mapa y modo</span><h2>Mejores entornos registrados</h2></div>
+    </div>
+    {bestMaps.length
+      ? <div className="card-grid">{bestMaps.map((map) => <MapCard map={map} key={map.slug} />)}</div>
+      : <div className="empty-state">Este brawler aún no tiene mapas priorizados en la base editorial.</div>}
+  </div>;
+}

@@ -11,8 +11,20 @@
       "antitanque"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Bull",
+      "El Primo",
+      "Rosa",
+      "Darryl",
+      "Edgar"
+    ],
+    "counteredBy": [
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Brock",
+      "Nani"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -28,8 +40,20 @@
       "tirador"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "8-Bit",
+      "Pam",
+      "Jessie",
+      "Frank",
+      "Meg"
+    ],
+    "counteredBy": [
+      "Piper",
+      "Nani",
+      "Angelo",
+      "Leon",
+      "Kenji"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -45,8 +69,20 @@
       "tanque"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Barley",
+      "Grom",
+      "Sprout",
+      "Poco"
+    ],
+    "counteredBy": [
+      "Colette",
+      "Shelly",
+      "Gale",
+      "Surge",
+      "Lou"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -62,8 +98,20 @@
       "tirador"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Barley",
+      "Sprout",
+      "8-Bit",
+      "Pam"
+    ],
+    "counteredBy": [
+      "Piper",
+      "Nani",
+      "Angelo",
+      "Max",
+      "Leon"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -79,8 +127,20 @@
       "artillero"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Frank",
+      "Jacky",
+      "Pam",
+      "Jessie",
+      "8-Bit"
+    ],
+    "counteredBy": [
+      "Mortis",
+      "Mico",
+      "Kenji",
+      "Edgar",
+      "Brock"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -96,8 +156,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Edgar",
+      "Mortis",
+      "Poco",
+      "Pam",
+      "Jessie"
+    ],
+    "counteredBy": [
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Colette",
+      "Griff"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -113,8 +185,20 @@
       "tanque"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Barley",
+      "Grom",
+      "Poco",
+      "Byron"
+    ],
+    "counteredBy": [
+      "Colette",
+      "Shelly",
+      "Gale",
+      "Surge",
+      "Lou"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -130,8 +214,20 @@
       "apoyo"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Frank",
+      "Rosa",
+      "Bibi",
+      "Ash",
+      "Sam"
+    ],
+    "counteredBy": [
+      "Crow",
+      "Colette",
+      "Piper",
+      "Belle",
+      "Mortis"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -147,8 +243,20 @@
       "tanque"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Barley",
+      "Poco",
+      "Gene",
+      "Byron"
+    ],
+    "counteredBy": [
+      "Colette",
+      "Shelly",
+      "Gale",
+      "Surge",
+      "Emz"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -171,12 +279,18 @@
       "Atrapagemas": 7
     },
     "counters": [
-      "pasillos",
-      "equipos sin wallbreak"
+      "Jessie",
+      "Penny",
+      "Pam",
+      "8-Bit",
+      "Frank"
     ],
     "counteredBy": [
-      "mapas abiertos",
-      "wallbreak"
+      "Brock",
+      "Colt",
+      "Piper",
+      "Nani",
+      "Kenji"
     ],
     "build": "Daño + recarga; busca ángulos de rebote seguros.",
     "profileComplete": true
@@ -200,12 +314,18 @@
       "Atrapagemas": 7
     },
     "counters": [
-      "equipos agrupados",
-      "objetivos estáticos"
+      "Nita",
+      "Pam",
+      "8-Bit",
+      "Meg",
+      "Frank"
     ],
     "counteredBy": [
-      "snipers",
-      "burst a torreta"
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Brock",
+      "Mortis"
     ],
     "build": "Daño + recarga; coloca la torreta fuera del fuego cruzado.",
     "profileComplete": true
@@ -222,8 +342,20 @@
       "artillero"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Frank",
+      "Jacky",
+      "Pam",
+      "Jessie",
+      "8-Bit"
+    ],
+    "counteredBy": [
+      "Mortis",
+      "Mico",
+      "Kenji",
+      "Edgar",
+      "Stu"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -239,8 +371,20 @@
       "asesino"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Barley",
+      "Piper",
+      "Belle",
+      "Grom"
+    ],
+    "counteredBy": [
+      "Shelly",
+      "Gale",
+      "Surge",
+      "Colette",
+      "Otis"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -256,8 +400,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Pam",
+      "Jessie",
+      "Nita",
+      "8-Bit",
+      "Frank"
+    ],
+    "counteredBy": [
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Mortis",
+      "Brock"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -279,12 +435,18 @@
       "Noqueo": 8
     },
     "counters": [
-      "equipos sin acceso",
-      "zonas estrechas"
+      "Frank",
+      "Jacky",
+      "8-Bit",
+      "Pam",
+      "Jessie"
     ],
     "counteredBy": [
-      "asesinos",
-      "wallbreak"
+      "Mortis",
+      "Mico",
+      "Kenji",
+      "Edgar",
+      "Brock"
     ],
     "build": "Escudo + recarga; solo como último pick seguro.",
     "profileComplete": true
@@ -301,8 +463,20 @@
       "daño"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Barley",
+      "Penny",
+      "Jessie",
+      "Pam"
+    ],
+    "counteredBy": [
+      "Surge",
+      "Gale",
+      "Colette",
+      "Cordelius",
+      "Otis"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -311,17 +485,29 @@
     "name": "8-Bit",
     "rarity": "Super Rare",
     "role": "Tirador",
-    "tier": "Sin evaluar",
-    "range": "Variable",
+    "tier": "B+",
+    "range": "Medio-largo",
     "difficulty": 3,
     "tags": [
       "tirador"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Pam",
+      "Jessie",
+      "Penny",
+      "Frank",
+      "Meg"
+    ],
+    "counteredBy": [
+      "Colette",
+      "Piper",
+      "Angelo",
+      "Brock",
+      "Mortis"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
-    "profileComplete": false
+    "profileComplete": true
   },
   {
     "slug": "jacky",
@@ -335,8 +521,20 @@
       "tanque"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Barley",
+      "Poco",
+      "Byron",
+      "Gene"
+    ],
+    "counteredBy": [
+      "Colette",
+      "Shelly",
+      "Gale",
+      "Surge",
+      "Emz"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -352,8 +550,20 @@
       "apoyo"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Gene",
+      "Byron"
+    ],
+    "counteredBy": [
+      "Mortis",
+      "Kenji",
+      "Mico",
+      "Leon",
+      "Crow"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -369,8 +579,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Rosa",
+      "Bull",
+      "Jacky",
+      "Edgar",
+      "Buzz"
+    ],
+    "counteredBy": [
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Tick",
+      "Sprout"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -393,12 +615,18 @@
       "Atrapagemas": 7
     },
     "counters": [
-      "rangos medios",
-      "objetivos expuestos"
+      "Emz",
+      "Jessie",
+      "Pam",
+      "Penny",
+      "8-Bit"
     ],
     "counteredBy": [
-      "dive",
-      "muros"
+      "Mortis",
+      "Kenji",
+      "Melodie",
+      "Mico",
+      "Leon"
     ],
     "build": "Daño + escudo; elige herramienta defensiva frente a dive.",
     "profileComplete": true
@@ -415,8 +643,20 @@
       "apoyo"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Poco",
+      "Gene",
+      "Byron",
+      "Jessie",
+      "Nita"
+    ],
+    "counteredBy": [
+      "Colette",
+      "Piper",
+      "Belle",
+      "Crow",
+      "Griff"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -432,8 +672,20 @@
       "tanque"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Barley",
+      "Poco",
+      "Gene",
+      "Byron"
+    ],
+    "counteredBy": [
+      "Colette",
+      "Shelly",
+      "Gale",
+      "Surge",
+      "Lou"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -449,8 +701,20 @@
       "tanque"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Barley",
+      "Grom",
+      "Poco",
+      "Gene"
+    ],
+    "counteredBy": [
+      "Colette",
+      "Gale",
+      "Surge",
+      "Shelly",
+      "R-T"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -466,8 +730,20 @@
       "tirador"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Bull",
+      "El Primo",
+      "Rosa",
+      "Frank",
+      "Bibi"
+    ],
+    "counteredBy": [
+      "Mortis",
+      "Kenji",
+      "Mico",
+      "Leon",
+      "Piper"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -483,8 +759,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Bull",
+      "El Primo",
+      "Rosa",
+      "Jacky",
+      "Edgar"
+    ],
+    "counteredBy": [
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Brock",
+      "Tick"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -506,12 +794,18 @@
       "Zona Restringida": 8
     },
     "counters": [
-      "tanques",
-      "asesinos"
+      "Bull",
+      "El Primo",
+      "Rosa",
+      "Edgar",
+      "Buzz"
     ],
     "counteredBy": [
-      "snipers",
-      "sustain"
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Byron",
+      "Rico"
     ],
     "build": "Recarga + daño; conserva el empuje para cortar engages.",
     "profileComplete": true
@@ -535,12 +829,18 @@
       "Caza Estelar": 9
     },
     "counters": [
-      "snipers previsibles",
-      "objetivos quietos"
+      "Piper",
+      "Belle",
+      "Mandy",
+      "8-Bit",
+      "Pam"
     ],
     "counteredBy": [
-      "dive",
-      "presión cercana"
+      "Mortis",
+      "Kenji",
+      "Melodie",
+      "Mico",
+      "Max"
     ],
     "build": "Daño + escudo; maximiza ángulos, no solo disparos frontales.",
     "profileComplete": true
@@ -564,12 +864,18 @@
       "Zona Restringida": 7
     },
     "counters": [
-      "tanques",
-      "mucha vida"
+      "Frank",
+      "Bull",
+      "El Primo",
+      "Rosa",
+      "Meg"
     ],
     "counteredBy": [
-      "snipers",
-      "burst"
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Nani",
+      "Crow"
     ],
     "build": "Daño + escudo; guarda el súper para doble impacto o caja.",
     "profileComplete": true
@@ -586,8 +892,20 @@
       "asesino"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Barley",
+      "Grom",
+      "Sprout",
+      "Piper"
+    ],
+    "counteredBy": [
+      "Shelly",
+      "Gale",
+      "Surge",
+      "Otis",
+      "R-T"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -603,8 +921,20 @@
       "asesino"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Barley",
+      "Piper",
+      "Belle",
+      "Jessie"
+    ],
+    "counteredBy": [
+      "Gale",
+      "R-T",
+      "Otis",
+      "Cordelius",
+      "Sandy"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -627,12 +957,18 @@
       "Atrapagemas": 8
     },
     "counters": [
-      "equipos agrupados",
-      "tanques marcables"
+      "Pam",
+      "8-Bit",
+      "Frank",
+      "Meg",
+      "Poco"
     ],
     "counteredBy": [
-      "asesinos",
-      "presión por muros"
+      "Mortis",
+      "Kenji",
+      "Melodie",
+      "Mico",
+      "Leon"
     ],
     "build": "Recarga/daño y supervivencia; pick seguro de primera rotación.",
     "profileComplete": true
@@ -649,8 +985,20 @@
       "artillero"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Frank",
+      "Jacky",
+      "Pam",
+      "Jessie",
+      "8-Bit"
+    ],
+    "counteredBy": [
+      "Mortis",
+      "Mico",
+      "Kenji",
+      "Edgar",
+      "Brock"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -659,17 +1007,29 @@
     "name": "Griff",
     "rarity": "Epic",
     "role": "Daño",
-    "tier": "Sin evaluar",
-    "range": "Variable",
+    "tier": "B",
+    "range": "Medio-largo",
     "difficulty": 3,
     "tags": [
       "daño"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Bull",
+      "El Primo",
+      "Rosa",
+      "Frank",
+      "Bibi"
+    ],
+    "counteredBy": [
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Nani",
+      "Mortis"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
-    "profileComplete": false
+    "profileComplete": true
   },
   {
     "slug": "ash",
@@ -689,12 +1049,18 @@
       "Zona Restringida": 8
     },
     "counters": [
-      "bajo DPS",
-      "equipos sin antitanque"
+      "Tick",
+      "Barley",
+      "Poco",
+      "Gene",
+      "Byron"
     ],
     "counteredBy": [
-      "antitanque",
-      "control"
+      "Colette",
+      "Gale",
+      "Surge",
+      "Lou",
+      "Shelly"
     ],
     "build": "Velocidad + daño; necesita rutas y apoyo.",
     "profileComplete": true
@@ -711,8 +1077,20 @@
       "daño"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Pam",
+      "Jessie",
+      "Penny",
+      "Frank",
+      "Meg"
+    ],
+    "counteredBy": [
+      "Piper",
+      "Angelo",
+      "Nani",
+      "Mortis",
+      "Kenji"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -728,8 +1106,20 @@
       "asesino"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Piper",
+      "Belle",
+      "Tick",
+      "Barley",
+      "Grom"
+    ],
+    "counteredBy": [
+      "Gale",
+      "Surge",
+      "Shelly",
+      "R-T",
+      "Cordelius"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -745,8 +1135,20 @@
       "tanque"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Barley",
+      "Poco",
+      "Gene",
+      "Byron"
+    ],
+    "counteredBy": [
+      "Colette",
+      "Gale",
+      "Surge",
+      "Lou",
+      "Shelly"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -762,8 +1164,20 @@
       "tirador"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Pam",
+      "Jessie",
+      "8-Bit",
+      "Frank",
+      "Penny"
+    ],
+    "counteredBy": [
+      "Mortis",
+      "Kenji",
+      "Melodie",
+      "Mico",
+      "Leon"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -779,8 +1193,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Bull",
+      "El Primo",
+      "Rosa",
+      "Edgar",
+      "Buzz"
+    ],
+    "counteredBy": [
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Nani",
+      "Tick"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -796,8 +1222,20 @@
       "tanque"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Barley",
+      "Poco",
+      "Gene",
+      "Byron"
+    ],
+    "counteredBy": [
+      "Colette",
+      "Gale",
+      "Surge",
+      "Lou",
+      "Shelly"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -813,8 +1251,20 @@
       "daño"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Bull",
+      "El Primo",
+      "Rosa",
+      "Frank",
+      "Bibi"
+    ],
+    "counteredBy": [
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Nani",
+      "Cordelius"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -830,8 +1280,20 @@
       "artillero"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Frank",
+      "Jacky",
+      "Pam",
+      "Jessie",
+      "8-Bit"
+    ],
+    "counteredBy": [
+      "Mortis",
+      "Mico",
+      "Kenji",
+      "Edgar",
+      "Brock"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -854,12 +1316,18 @@
       "Atrapagemas": 7
     },
     "counters": [
-      "tiradores inmóviles",
-      "composiciones sin acceso"
+      "Piper",
+      "Belle",
+      "Mandy",
+      "Pam",
+      "8-Bit"
     ],
     "counteredBy": [
-      "asesinos",
-      "mapas cerrados"
+      "Mortis",
+      "Kenji",
+      "Melodie",
+      "Mico",
+      "Leon"
     ],
     "build": "Daño + escudo; movilidad si el mapa lo exige.",
     "profileComplete": true
@@ -876,8 +1344,20 @@
       "apoyo"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Frank",
+      "Bibi",
+      "Bo",
+      "Emz",
+      "Pam"
+    ],
+    "counteredBy": [
+      "Buzz",
+      "Fang",
+      "Mico",
+      "Angelo",
+      "Mandy"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -893,8 +1373,20 @@
       "asesino"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Dynamike",
+      "Tick",
+      "Grom",
+      "Nani",
+      "Belle"
+    ],
+    "counteredBy": [
+      "R-T",
+      "Cordelius",
+      "Charlie",
+      "Maisie",
+      "Lou"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -910,8 +1402,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Bibi",
+      "Jacky",
+      "Ash",
+      "Fang",
+      "Mico"
+    ],
+    "counteredBy": [
+      "Piper",
+      "Nani",
+      "Belle",
+      "Barley",
+      "Dynamike"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -927,8 +1431,20 @@
       "tanque"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Dynamike",
+      "Tick",
+      "Grom",
+      "Gene",
+      "Max"
+    ],
+    "counteredBy": [
+      "R-T",
+      "Colette",
+      "Shelly",
+      "Gale",
+      "Surge"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -937,7 +1453,7 @@
     "name": "Bolt",
     "rarity": "Epic",
     "role": "Daño",
-    "tier": "S",
+    "tier": "A",
     "range": "Medio",
     "difficulty": 3,
     "tags": [
@@ -952,12 +1468,18 @@
       "Atraco": 7
     },
     "counters": [
-      "rangos medios",
-      "equipos sin burst"
+      "Rosa",
+      "Frank",
+      "Bibi",
+      "Otis",
+      "Sandy"
     ],
     "counteredBy": [
-      "rango extremo",
-      "control"
+      "Belle",
+      "Angelo",
+      "Mandy",
+      "Stu",
+      "Buzz"
     ],
     "build": "Daño + escudo; presión constante y buena economía de munición.",
     "profileComplete": true
@@ -974,8 +1496,20 @@
       "asesino"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Barley",
+      "Grom",
+      "Sprout",
+      "Piper"
+    ],
+    "counteredBy": [
+      "Shelly",
+      "Gale",
+      "Surge",
+      "Otis",
+      "R-T"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -991,8 +1525,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Meg",
+      "Draco",
+      "Ollie",
+      "Leon",
+      "Kaze"
+    ],
+    "counteredBy": [
+      "Brock",
+      "Bea",
+      "Pierce",
+      "Larry & Lawrie",
+      "Willow"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1017,12 +1563,18 @@
       "Balón Brawl": 7
     },
     "counters": [
-      "equipos frágiles",
-      "composiciones sin movilidad"
+      "Piper",
+      "Belle",
+      "Byron",
+      "Poco",
+      "Pam"
     ],
     "counteredBy": [
-      "presión constante",
-      "asesinos con acceso"
+      "Mortis",
+      "Kenji",
+      "Mico",
+      "Leon",
+      "Crow"
     ],
     "build": "Control central; prioriza supervivencia, visión y recarga.",
     "profileComplete": true
@@ -1039,8 +1591,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "El Primo",
+      "Rosa",
+      "Frank",
+      "Edgar",
+      "Stu"
+    ],
+    "counteredBy": [
+      "Brock",
+      "Bea",
+      "Pierce",
+      "Larry & Lawrie",
+      "Willow"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1049,7 +1613,7 @@
     "name": "Max",
     "rarity": "Mythic",
     "role": "Apoyo",
-    "tier": "A+",
+    "tier": "A",
     "range": "Medio",
     "difficulty": 4,
     "tags": [
@@ -1064,12 +1628,18 @@
       "Zona Restringida": 8
     },
     "counters": [
-      "composiciones lentas",
-      "snipers sin peel"
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Mandy",
+      "Nani"
     ],
     "counteredBy": [
-      "control duro",
-      "burst"
+      "Gale",
+      "Lou",
+      "Sandy",
+      "Otis",
+      "R-T"
     ],
     "build": "Daño + velocidad/escudo; juega para tempo y engages.",
     "profileComplete": true
@@ -1086,8 +1656,20 @@
       "artillero"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Frank",
+      "Meg",
+      "Nita",
+      "El Primo",
+      "Rosa"
+    ],
+    "counteredBy": [
+      "Edgar",
+      "Stu",
+      "Buzz",
+      "Colt",
+      "Griff"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1109,12 +1691,18 @@
       "Balón Brawl": 7
     },
     "counters": [
-      "tanques",
-      "equipos que deben pisar zona"
+      "Bull",
+      "El Primo",
+      "Rosa",
+      "Frank",
+      "Bibi"
     ],
     "counteredBy": [
-      "snipers",
-      "wallbreak"
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Brock",
+      "Tick"
     ],
     "build": "Recarga + daño; encadena control sobre el objetivo.",
     "profileComplete": true
@@ -1138,12 +1726,18 @@
       "Atrapagemas": 7
     },
     "counters": [
-      "poke lento",
-      "composiciones sin burst"
+      "Frank",
+      "Rosa",
+      "Ash",
+      "Sam",
+      "Meg"
     ],
     "counteredBy": [
-      "dive coordinado",
-      "antiheal"
+      "Mortis",
+      "Kenji",
+      "Mico",
+      "Crow",
+      "Leon"
     ],
     "build": "Recarga + escudo; alterna curación y presión.",
     "profileComplete": true
@@ -1160,8 +1754,20 @@
       "apoyo"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Meg",
+      "Draco",
+      "Nita",
+      "Jessie",
+      "Penny"
+    ],
+    "counteredBy": [
+      "Leon",
+      "Kaze",
+      "Shade",
+      "Nani",
+      "Belle"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1177,8 +1783,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Ash",
+      "Sam",
+      "Hank",
+      "Melodie",
+      "Lily"
+    ],
+    "counteredBy": [
+      "Bea",
+      "Pierce",
+      "Piper",
+      "Willow",
+      "Juju"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1194,8 +1812,20 @@
       "asesino"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Grom",
+      "Sprout",
+      "Belle",
+      "Angelo"
+    ],
+    "counteredBy": [
+      "Maisie",
+      "Lou",
+      "Gale",
+      "Surge",
+      "Shelly"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1211,8 +1841,20 @@
       "asesino"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Grom",
+      "Sprout",
+      "Larry & Lawrie",
+      "Angelo",
+      "Mandy"
+    ],
+    "counteredBy": [
+      "R-T",
+      "Cordelius",
+      "Charlie",
+      "Maisie",
+      "Lou"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1228,8 +1870,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Ash",
+      "Sam",
+      "Hank",
+      "Melodie",
+      "Lily"
+    ],
+    "counteredBy": [
+      "Belle",
+      "Angelo",
+      "Mandy",
+      "Tick",
+      "Grom"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1245,8 +1899,20 @@
       "tirador"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Bo",
+      "Emz",
+      "Pam",
+      "8-Bit",
+      "Squeak"
+    ],
+    "counteredBy": [
+      "Leon",
+      "Kaze",
+      "Shade",
+      "Mortis",
+      "Edgar"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1262,8 +1928,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Bibi",
+      "Jacky",
+      "Ash",
+      "Fang",
+      "Mico"
+    ],
+    "counteredBy": [
+      "Mandy",
+      "Brock",
+      "Bea",
+      "Sprout",
+      "Larry & Lawrie"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1279,8 +1957,20 @@
       "tanque"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Juju",
+      "Barley",
+      "Dynamike",
+      "Poco",
+      "Gus"
+    ],
+    "counteredBy": [
+      "Surge",
+      "Lou",
+      "Emz",
+      "Griff",
+      "Clancy"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1296,8 +1986,20 @@
       "apoyo"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Sam",
+      "Hank",
+      "Jessie",
+      "Penny",
+      "Bo"
+    ],
+    "counteredBy": [
+      "Lily",
+      "Kenji",
+      "Leon",
+      "Angelo",
+      "Mandy"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1320,12 +2022,18 @@
       "Atrapagemas": 8
     },
     "counters": [
-      "tanques",
-      "targets marcados"
+      "Edgar",
+      "Mortis",
+      "Buzz",
+      "Bull",
+      "El Primo"
     ],
     "counteredBy": [
-      "poke sostenido",
-      "movilidad"
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Byron",
+      "Sprout"
     ],
     "build": "Daño + escudo; coordina la marca con el burst del equipo.",
     "profileComplete": true
@@ -1342,8 +2050,20 @@
       "artillero"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "8-Bit",
+      "Pam",
+      "Jessie",
+      "Rosa",
+      "Frank"
+    ],
+    "counteredBy": [
+      "Stu",
+      "Buzz",
+      "Fang",
+      "Griff",
+      "Starr Nova"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1359,8 +2079,20 @@
       "apoyo"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Sam",
+      "Hank",
+      "Jessie",
+      "Penny",
+      "Bo"
+    ],
+    "counteredBy": [
+      "Lily",
+      "Kenji",
+      "Leon",
+      "Angelo",
+      "Mandy"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1381,12 +2113,18 @@
       "Atraco": 10
     },
     "counters": [
-      "defensas lentas",
-      "equipos sin control de rutas"
+      "8-Bit",
+      "Pam",
+      "Jessie",
+      "Penny",
+      "Frank"
     ],
     "counteredBy": [
-      "presión temprana",
-      "control de postes"
+      "Cordelius",
+      "Gale",
+      "Colette",
+      "Otis",
+      "R-T"
     ],
     "build": "Configura rutas seguras; no sacrifiques todo el early.",
     "profileComplete": true
@@ -1403,8 +2141,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Bull",
+      "El Primo",
+      "Rosa",
+      "Mortis",
+      "Edgar"
+    ],
+    "counteredBy": [
+      "Piper",
+      "Nani",
+      "Belle",
+      "Barley",
+      "Dynamike"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1420,8 +2170,20 @@
       "asesino"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Juju",
+      "Barley",
+      "Dynamike",
+      "Pierce",
+      "Piper"
+    ],
+    "counteredBy": [
+      "Shelly",
+      "Otis",
+      "R-T",
+      "Cordelius",
+      "Charlie"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1444,12 +2206,18 @@
       "Balón Brawl": 8
     },
     "counters": [
-      "baja defensa",
-      "objetivos abiertos"
+      "Tick",
+      "Barley",
+      "Piper",
+      "Belle",
+      "Grom"
     ],
     "counteredBy": [
-      "control duro",
-      "burst"
+      "Gale",
+      "Surge",
+      "Shelly",
+      "R-T",
+      "Cordelius"
     ],
     "build": "Daño + escudo; entra cuando el rival haya gastado control.",
     "profileComplete": true
@@ -1466,8 +2234,20 @@
       "asesino"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Tick",
+      "Grom",
+      "Sprout",
+      "Belle",
+      "Angelo"
+    ],
+    "counteredBy": [
+      "Lou",
+      "Gale",
+      "Surge",
+      "Shelly",
+      "Otis"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1483,8 +2263,20 @@
       "daño"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Sam",
+      "Hank",
+      "Meg",
+      "Penny",
+      "Bo"
+    ],
+    "counteredBy": [
+      "Pierce",
+      "Piper",
+      "Nani",
+      "Lily",
+      "Kenji"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1500,8 +2292,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Jacky",
+      "Ash",
+      "Sam",
+      "Mico",
+      "Melodie"
+    ],
+    "counteredBy": [
+      "Nani",
+      "Belle",
+      "Angelo",
+      "Dynamike",
+      "Tick"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1517,8 +2321,20 @@
       "artillero"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Penny",
+      "Frank",
+      "Meg",
+      "Jacky",
+      "Ash"
+    ],
+    "counteredBy": [
+      "Mico",
+      "Melodie",
+      "Lily",
+      "Brock",
+      "Colt"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1540,12 +2356,18 @@
       "Zona Restringida": 8
     },
     "counters": [
-      "equipos sin antitanque",
-      "objetivos cerrados"
+      "Tick",
+      "Grom",
+      "Sprout",
+      "Gene",
+      "Max"
     ],
     "counteredBy": [
-      "antitanque",
-      "rango"
+      "Gale",
+      "Surge",
+      "Lou",
+      "Emz",
+      "Griff"
     ],
     "build": "Velocidad + salud; juega por presencia, no por daño bruto.",
     "profileComplete": true
@@ -1562,8 +2384,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Meg",
+      "Draco",
+      "Ollie",
+      "Leon",
+      "Kaze"
+    ],
+    "counteredBy": [
+      "Brock",
+      "Bea",
+      "Pierce",
+      "Larry & Lawrie",
+      "Willow"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1579,8 +2413,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "El Primo",
+      "Rosa",
+      "Frank",
+      "Edgar",
+      "Stu"
+    ],
+    "counteredBy": [
+      "Brock",
+      "Bea",
+      "Pierce",
+      "Larry & Lawrie",
+      "Willow"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1596,8 +2442,20 @@
       "apoyo"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Sam",
+      "Hank",
+      "Tara",
+      "Moe",
+      "Nita"
+    ],
+    "counteredBy": [
+      "Lily",
+      "Kenji",
+      "Leon",
+      "Angelo",
+      "Mandy"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1613,8 +2471,20 @@
       "asesino"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Juju",
+      "Barley",
+      "Dynamike",
+      "Pierce",
+      "Piper"
+    ],
+    "counteredBy": [
+      "Otis",
+      "R-T",
+      "Cordelius",
+      "Charlie",
+      "Maisie"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1630,8 +2500,20 @@
       "daño"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "El Primo",
+      "Rosa",
+      "Frank",
+      "Moe",
+      "Finx"
+    ],
+    "counteredBy": [
+      "Brock",
+      "Bea",
+      "Pierce",
+      "Edgar",
+      "Stu"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1647,8 +2529,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Meg",
+      "Draco",
+      "Ollie",
+      "Leon",
+      "Kaze"
+    ],
+    "counteredBy": [
+      "Nani",
+      "Belle",
+      "Angelo",
+      "Dynamike",
+      "Tick"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1664,8 +2558,20 @@
       "asesino"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Willow",
+      "Juju",
+      "Barley",
+      "Bea",
+      "Pierce"
+    ],
+    "counteredBy": [
+      "Shelly",
+      "Otis",
+      "R-T",
+      "Cordelius",
+      "Charlie"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1681,8 +2587,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Bull",
+      "El Primo",
+      "Rosa",
+      "Mortis",
+      "Edgar"
+    ],
+    "counteredBy": [
+      "Mandy",
+      "Brock",
+      "Bea",
+      "Sprout",
+      "Larry & Lawrie"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1698,8 +2616,20 @@
       "tirador"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Bo",
+      "Emz",
+      "Pam",
+      "Jessie",
+      "Frank"
+    ],
+    "counteredBy": [
+      "Mortis",
+      "Edgar",
+      "Stu",
+      "Buzz",
+      "Fang"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1708,7 +2638,7 @@
     "name": "Damian",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "A",
+    "tier": "B+",
     "range": "Medio",
     "difficulty": 4,
     "tags": [
@@ -1721,12 +2651,18 @@
       "Balón Brawl": 7
     },
     "counters": [
-      "zonas cerradas",
-      "equipos agrupados"
+      "Frank",
+      "Jacky",
+      "Pam",
+      "Jessie",
+      "8-Bit"
     ],
     "counteredBy": [
-      "rango",
-      "movilidad"
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Max",
+      "Kenji"
     ],
     "build": "Daño + escudo; busca encadenar explosiones sobre choke points.",
     "profileComplete": true
@@ -1736,7 +2672,7 @@
     "name": "Starr Nova",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "A+",
+    "tier": "A",
     "range": "Medio",
     "difficulty": 4,
     "tags": [
@@ -1750,12 +2686,18 @@
       "Zona Restringida": 8
     },
     "counters": [
-      "equipos lentos",
-      "composiciones agrupadas"
+      "Frank",
+      "Rosa",
+      "Ash",
+      "Pam",
+      "Jessie"
     ],
     "counteredBy": [
-      "rango",
-      "burst coordinado"
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Nani",
+      "Kenji"
     ],
     "build": "Daño + escudo; administra transformaciones y no sobreextiendas.",
     "profileComplete": true
@@ -1778,11 +2720,18 @@
       "Zona Restringida": 8
     },
     "counters": [
-      "equipos agrupados"
+      "Bull",
+      "El Primo",
+      "Rosa",
+      "Edgar",
+      "Buzz"
     ],
     "counteredBy": [
-      "dive",
-      "rango extremo"
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Mortis",
+      "Kenji"
     ],
     "build": "Build provisional: prioriza supervivencia hasta consolidar datos.",
     "profileComplete": true
@@ -1799,8 +2748,20 @@
       "control"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Bull",
+      "El Primo",
+      "Rosa",
+      "Frank",
+      "Bibi"
+    ],
+    "counteredBy": [
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Nani",
+      "Tick"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1809,17 +2770,29 @@
     "name": "Crow",
     "rarity": "Legendary",
     "role": "Asesino",
-    "tier": "Sin evaluar",
-    "range": "Variable",
+    "tier": "B",
+    "range": "Medio-largo",
     "difficulty": 3,
     "tags": [
       "asesino"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Poco",
+      "Pam",
+      "Byron",
+      "Rosa",
+      "Frank"
+    ],
+    "counteredBy": [
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Nani",
+      "R-T"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
-    "profileComplete": false
+    "profileComplete": true
   },
   {
     "slug": "leon",
@@ -1833,8 +2806,20 @@
       "asesino"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Piper",
+      "Belle",
+      "Tick",
+      "Barley",
+      "Grom"
+    ],
+    "counteredBy": [
+      "Gale",
+      "Surge",
+      "Shelly",
+      "R-T",
+      "Sandy"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1858,12 +2843,18 @@
       "Zona Restringida": 8
     },
     "counters": [
-      "equipos sin visión",
-      "composiciones lentas"
+      "Mortis",
+      "Edgar",
+      "Buzz",
+      "Bull",
+      "El Primo"
     ],
     "counteredBy": [
-      "snipers",
-      "wallbreak"
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Brock",
+      "Tick"
     ],
     "build": "Daño + velocidad; aprovecha el súper para ganar dos líneas.",
     "profileComplete": true
@@ -1873,7 +2864,7 @@
     "name": "Surge",
     "rarity": "Legendary",
     "role": "Antidive",
-    "tier": "A+",
+    "tier": "A",
     "range": "Medio",
     "difficulty": 3,
     "tags": [
@@ -1887,12 +2878,18 @@
       "Atrapagemas": 7
     },
     "counters": [
-      "asesinos",
-      "tanques"
+      "Edgar",
+      "Mortis",
+      "Buzz",
+      "Bull",
+      "El Primo"
     ],
     "counteredBy": [
-      "rango antes de escalar",
-      "control"
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Gene",
+      "Lou"
     ],
     "build": "Daño + escudo; conserva la primera mejora.",
     "profileComplete": true
@@ -1916,12 +2913,18 @@
       "Balón Brawl": 7
     },
     "counters": [
-      "tanques",
-      "rutas estrechas"
+      "Bull",
+      "El Primo",
+      "Rosa",
+      "Frank",
+      "Jacky"
     ],
     "counteredBy": [
-      "burst",
-      "snipers"
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Nani",
+      "Mortis"
     ],
     "build": "Daño + velocidad en arbustos o escudo en abierto.",
     "profileComplete": true
@@ -1938,8 +2941,20 @@
       "tanque"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Sprout",
+      "Larry & Lawrie",
+      "Willow",
+      "Doug",
+      "Kit"
+    ],
+    "counteredBy": [
+      "Lou",
+      "Emz",
+      "Griff",
+      "Clancy",
+      "Bea"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1955,8 +2970,20 @@
       "daño"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Ash",
+      "Sam",
+      "Hank",
+      "Bo",
+      "Emz"
+    ],
+    "counteredBy": [
+      "Belle",
+      "Angelo",
+      "Mandy",
+      "Melodie",
+      "Lily"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -1979,12 +3006,18 @@
       "Zona Restringida": 7
     },
     "counters": [
-      "carries aislados",
-      "supers clave"
+      "Chuck",
+      "Melodie",
+      "Max",
+      "Gene",
+      "Byron"
     ],
     "counteredBy": [
-      "rango",
-      "control de acceso"
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Gale",
+      "R-T"
     ],
     "build": "Daño + velocidad; usa el reino para negar condiciones de victoria.",
     "profileComplete": true
@@ -2001,8 +3034,20 @@
       "apoyo"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Frank",
+      "Rosa",
+      "Ash",
+      "Sam",
+      "Meg"
+    ],
+    "counteredBy": [
+      "Crow",
+      "Colette",
+      "Gale",
+      "R-T",
+      "Cordelius"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -2018,8 +3063,20 @@
       "tanque"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Dynamike",
+      "Tick",
+      "Grom",
+      "Jae-Yong",
+      "Poco"
+    ],
+    "counteredBy": [
+      "Surge",
+      "Lou",
+      "Emz",
+      "Griff",
+      "Clancy"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -2042,13 +3099,18 @@
       "Noqueo": 8
     },
     "counters": [
-      "artilleros",
-      "snipers aislados"
+      "Tick",
+      "Barley",
+      "Grom",
+      "Sprout",
+      "Piper"
     ],
     "counteredBy": [
-      "antidive",
-      "control duro",
-      "antitanque"
+      "Gale",
+      "Surge",
+      "Shelly",
+      "R-T",
+      "Cordelius"
     ],
     "build": "Daño + escudo; úsalo de último pick, no a ciegas.",
     "profileComplete": true
@@ -2065,8 +3127,20 @@
       "tirador"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Nita",
+      "Jessie",
+      "Penny",
+      "Frank",
+      "Gale"
+    ],
+    "counteredBy": [
+      "Melodie",
+      "Lily",
+      "Kenji",
+      "Leon",
+      "Kaze"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -2089,12 +3163,18 @@
       "Atraco": 8
     },
     "counters": [
-      "equipos frágiles",
-      "líneas aisladas"
+      "Piper",
+      "Belle",
+      "Tick",
+      "Barley",
+      "Grom"
     ],
     "counteredBy": [
-      "control duro",
-      "antidive"
+      "Gale",
+      "Surge",
+      "R-T",
+      "Cordelius",
+      "Otis"
     ],
     "build": "Daño + escudo; entra después de forzar recursos.",
     "profileComplete": true
@@ -2111,8 +3191,20 @@
       "asesino"
     ],
     "modes": {},
-    "counters": [],
-    "counteredBy": [],
+    "counters": [
+      "Juju",
+      "Barley",
+      "Dynamike",
+      "Pierce",
+      "Piper"
+    ],
+    "counteredBy": [
+      "Cordelius",
+      "Charlie",
+      "Maisie",
+      "Lou",
+      "Gale"
+    ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
   },
@@ -2135,11 +3227,18 @@
       "Balón Brawl": 7
     },
     "counters": [
-      "composiciones con objetivo copiable"
+      "Frank",
+      "Ash",
+      "Meg",
+      "Pam",
+      "8-Bit"
     ],
     "counteredBy": [
-      "presión temprana",
-      "rango"
+      "Piper",
+      "Belle",
+      "Angelo",
+      "Max",
+      "Kenji"
     ],
     "build": "Build dependiente del rival; prioriza flexibilidad.",
     "profileComplete": true

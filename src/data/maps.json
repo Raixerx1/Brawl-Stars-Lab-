@@ -10,23 +10,23 @@
       "duelos de línea"
     ],
     "tierS": [
-      "Max",
-      "Surge",
-      "Starr Nova",
       "Nori",
-      "Kenji"
-    ],
-    "tierA": [
+      "Kenji",
       "Sandy",
       "Gale",
-      "Rico",
-      "Cordelius",
-      "Ash"
+      "Rico"
     ],
-    "firstPicks": [
+    "tierA": [
       "Max",
       "Surge",
-      "Sandy"
+      "Ash",
+      "Cordelius",
+      "Starr Nova"
+    ],
+    "firstPicks": [
+      "Nori",
+      "Sandy",
+      "Gale"
     ],
     "lastPicks": [
       "Kenji",
@@ -36,11 +36,11 @@
     "bans": [
       "Nori",
       "Kenji",
-      "Surge"
+      "Gale"
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "pinball-dreams",
@@ -53,23 +53,23 @@
       "wallbreak"
     ],
     "tierS": [
-      "Max",
-      "Surge",
-      "Starr Nova",
       "Nori",
-      "Kenji"
-    ],
-    "tierA": [
+      "Kenji",
       "Sandy",
       "Gale",
-      "Rico",
-      "Cordelius",
-      "Ash"
+      "Rico"
     ],
-    "firstPicks": [
+    "tierA": [
       "Max",
       "Surge",
-      "Sandy"
+      "Ash",
+      "Cordelius",
+      "Starr Nova"
+    ],
+    "firstPicks": [
+      "Nori",
+      "Sandy",
+      "Gale"
     ],
     "lastPicks": [
       "Kenji",
@@ -79,11 +79,11 @@
     "bans": [
       "Nori",
       "Kenji",
-      "Surge"
+      "Gale"
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "penalty-kick",
@@ -96,23 +96,23 @@
       "apertura tardía"
     ],
     "tierS": [
-      "Max",
-      "Surge",
-      "Starr Nova",
       "Nori",
-      "Kenji"
-    ],
-    "tierA": [
+      "Kenji",
       "Sandy",
       "Gale",
-      "Rico",
-      "Cordelius",
-      "Ash"
+      "Rico"
     ],
-    "firstPicks": [
+    "tierA": [
       "Max",
       "Surge",
-      "Sandy"
+      "Ash",
+      "Cordelius",
+      "Starr Nova"
+    ],
+    "firstPicks": [
+      "Nori",
+      "Sandy",
+      "Gale"
     ],
     "lastPicks": [
       "Kenji",
@@ -122,11 +122,11 @@
     "bans": [
       "Nori",
       "Kenji",
-      "Surge"
+      "Gale"
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "triple-dribble",
@@ -139,23 +139,23 @@
       "tempo"
     ],
     "tierS": [
-      "Max",
-      "Surge",
-      "Starr Nova",
       "Nori",
-      "Kenji"
-    ],
-    "tierA": [
+      "Kenji",
       "Sandy",
       "Gale",
-      "Rico",
-      "Cordelius",
-      "Ash"
+      "Rico"
     ],
-    "firstPicks": [
+    "tierA": [
       "Max",
       "Surge",
-      "Sandy"
+      "Ash",
+      "Cordelius",
+      "Starr Nova"
+    ],
+    "firstPicks": [
+      "Nori",
+      "Sandy",
+      "Gale"
     ],
     "lastPicks": [
       "Kenji",
@@ -165,11 +165,11 @@
     "bans": [
       "Nori",
       "Kenji",
-      "Surge"
+      "Gale"
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "spiraling-out",
@@ -182,23 +182,23 @@
       "movilidad"
     ],
     "tierS": [
-      "Max",
-      "Surge",
-      "Starr Nova",
       "Nori",
-      "Kenji"
-    ],
-    "tierA": [
+      "Kenji",
       "Sandy",
       "Gale",
-      "Rico",
-      "Cordelius",
-      "Ash"
+      "Rico"
     ],
-    "firstPicks": [
+    "tierA": [
       "Max",
       "Surge",
-      "Sandy"
+      "Ash",
+      "Cordelius",
+      "Starr Nova"
+    ],
+    "firstPicks": [
+      "Nori",
+      "Sandy",
+      "Gale"
     ],
     "lastPicks": [
       "Kenji",
@@ -208,11 +208,11 @@
     "bans": [
       "Nori",
       "Kenji",
-      "Surge"
+      "Gale"
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": true,
-    "status": "Destacado oficial junio 2026"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "beach-ball",
@@ -225,23 +225,23 @@
       "poco refugio"
     ],
     "tierS": [
-      "Max",
-      "Surge",
-      "Starr Nova",
       "Nori",
-      "Kenji"
-    ],
-    "tierA": [
+      "Kenji",
       "Sandy",
       "Gale",
-      "Rico",
-      "Cordelius",
-      "Ash"
+      "Rico"
     ],
-    "firstPicks": [
+    "tierA": [
       "Max",
       "Surge",
-      "Sandy"
+      "Ash",
+      "Cordelius",
+      "Starr Nova"
+    ],
+    "firstPicks": [
+      "Nori",
+      "Sandy",
+      "Gale"
     ],
     "lastPicks": [
       "Kenji",
@@ -251,11 +251,11 @@
     "bans": [
       "Nori",
       "Kenji",
-      "Surge"
+      "Gale"
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": true,
-    "status": "Destacado oficial junio 2026"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "double-swoosh",
@@ -270,35 +270,35 @@
     "tierS": [
       "Gene",
       "Sandy",
-      "Max",
-      "Starr Nova",
-      "Belle"
+      "Belle",
+      "R-T",
+      "Tara"
     ],
     "tierA": [
-      "R-T",
-      "Tara",
+      "Max",
       "Rico",
       "Byron",
-      "Cordelius"
+      "Cordelius",
+      "Starr Nova"
     ],
     "firstPicks": [
       "Gene",
       "Sandy",
-      "Max"
+      "Belle"
     ],
     "lastPicks": [
+      "Tara",
       "Cordelius",
-      "Rico",
-      "Tara"
+      "Rico"
     ],
     "bans": [
       "Gene",
       "Sandy",
-      "Starr Nova"
+      "Belle"
     ],
     "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "hard-rock-mine",
@@ -313,35 +313,35 @@
     "tierS": [
       "Gene",
       "Sandy",
-      "Max",
-      "Starr Nova",
-      "Belle"
+      "Belle",
+      "R-T",
+      "Tara"
     ],
     "tierA": [
-      "R-T",
-      "Tara",
+      "Max",
       "Rico",
       "Byron",
-      "Cordelius"
+      "Cordelius",
+      "Starr Nova"
     ],
     "firstPicks": [
       "Gene",
       "Sandy",
-      "Max"
+      "Belle"
     ],
     "lastPicks": [
+      "Tara",
       "Cordelius",
-      "Rico",
-      "Tara"
+      "Rico"
     ],
     "bans": [
       "Gene",
       "Sandy",
-      "Starr Nova"
+      "Belle"
     ],
     "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "last-stop",
@@ -356,35 +356,35 @@
     "tierS": [
       "Gene",
       "Sandy",
-      "Max",
-      "Starr Nova",
-      "Belle"
+      "Belle",
+      "R-T",
+      "Tara"
     ],
     "tierA": [
-      "R-T",
-      "Tara",
+      "Max",
       "Rico",
       "Byron",
-      "Cordelius"
+      "Cordelius",
+      "Starr Nova"
     ],
     "firstPicks": [
       "Gene",
       "Sandy",
-      "Max"
+      "Belle"
     ],
     "lastPicks": [
+      "Tara",
       "Cordelius",
-      "Rico",
-      "Tara"
+      "Rico"
     ],
     "bans": [
       "Gene",
       "Sandy",
-      "Starr Nova"
+      "Belle"
     ],
     "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "undermine",
@@ -399,35 +399,35 @@
     "tierS": [
       "Gene",
       "Sandy",
-      "Max",
-      "Starr Nova",
-      "Belle"
+      "Belle",
+      "R-T",
+      "Tara"
     ],
     "tierA": [
-      "R-T",
-      "Tara",
+      "Max",
       "Rico",
       "Byron",
-      "Cordelius"
+      "Cordelius",
+      "Starr Nova"
     ],
     "firstPicks": [
       "Gene",
       "Sandy",
-      "Max"
+      "Belle"
     ],
     "lastPicks": [
+      "Tara",
       "Cordelius",
-      "Rico",
-      "Tara"
+      "Rico"
     ],
     "bans": [
       "Gene",
       "Sandy",
-      "Starr Nova"
+      "Belle"
     ],
     "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "rustic-arcade",
@@ -442,35 +442,35 @@
     "tierS": [
       "Gene",
       "Sandy",
-      "Max",
-      "Starr Nova",
-      "Belle"
+      "Belle",
+      "R-T",
+      "Tara"
     ],
     "tierA": [
-      "R-T",
-      "Tara",
+      "Max",
       "Rico",
       "Byron",
-      "Cordelius"
+      "Cordelius",
+      "Starr Nova"
     ],
     "firstPicks": [
       "Gene",
       "Sandy",
-      "Max"
+      "Belle"
     ],
     "lastPicks": [
+      "Tara",
       "Cordelius",
-      "Rico",
-      "Tara"
+      "Rico"
     ],
     "bans": [
       "Gene",
       "Sandy",
-      "Starr Nova"
+      "Belle"
     ],
     "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
     "featuredOfficialJune2026": true,
-    "status": "Destacado oficial junio 2026"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "crystal-arcade",
@@ -485,35 +485,35 @@
     "tierS": [
       "Gene",
       "Sandy",
-      "Max",
-      "Starr Nova",
-      "Belle"
+      "Belle",
+      "R-T",
+      "Tara"
     ],
     "tierA": [
-      "R-T",
-      "Tara",
+      "Max",
       "Rico",
       "Byron",
-      "Cordelius"
+      "Cordelius",
+      "Starr Nova"
     ],
     "firstPicks": [
       "Gene",
       "Sandy",
-      "Max"
+      "Belle"
     ],
     "lastPicks": [
+      "Tara",
       "Cordelius",
-      "Rico",
-      "Tara"
+      "Rico"
     ],
     "bans": [
       "Gene",
       "Sandy",
-      "Starr Nova"
+      "Belle"
     ],
     "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
     "featuredOfficialJune2026": true,
-    "status": "Destacado oficial junio 2026"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "belle-s-rock",
@@ -545,9 +545,9 @@
       "Angelo"
     ],
     "lastPicks": [
-      "Nani",
       "Kenji",
-      "Sirius"
+      "Gray",
+      "Nani"
     ],
     "bans": [
       "Angelo",
@@ -556,7 +556,7 @@
     ],
     "plan": "Prioriza vida y daño seguro. El gas es un recurso; no regales la primera baja por una eliminación improbable.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "flaring-phoenix",
@@ -588,9 +588,9 @@
       "Angelo"
     ],
     "lastPicks": [
-      "Nani",
       "Kenji",
-      "Sirius"
+      "Gray",
+      "Nani"
     ],
     "bans": [
       "Angelo",
@@ -599,7 +599,7 @@
     ],
     "plan": "Prioriza vida y daño seguro. El gas es un recurso; no regales la primera baja por una eliminación improbable.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "goldarm-gulch",
@@ -631,9 +631,9 @@
       "Angelo"
     ],
     "lastPicks": [
-      "Nani",
       "Kenji",
-      "Sirius"
+      "Gray",
+      "Nani"
     ],
     "bans": [
       "Angelo",
@@ -642,7 +642,7 @@
     ],
     "plan": "Prioriza vida y daño seguro. El gas es un recurso; no regales la primera baja por una eliminación improbable.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "out-in-the-open",
@@ -674,9 +674,9 @@
       "Angelo"
     ],
     "lastPicks": [
-      "Nani",
       "Kenji",
-      "Sirius"
+      "Gray",
+      "Nani"
     ],
     "bans": [
       "Angelo",
@@ -685,7 +685,7 @@
     ],
     "plan": "Prioriza vida y daño seguro. El gas es un recurso; no regales la primera baja por una eliminación improbable.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "dueling-beetles",
@@ -700,15 +700,15 @@
     "tierS": [
       "Lou",
       "Amber",
-      "Starr Nova",
       "Sandy",
-      "Jessie"
+      "Jessie",
+      "Gale"
     ],
     "tierA": [
-      "Gale",
       "R-T",
       "Ash",
       "Ollie",
+      "Starr Nova",
       "Damian"
     ],
     "firstPicks": [
@@ -717,18 +717,18 @@
       "Sandy"
     ],
     "lastPicks": [
+      "Gale",
       "Ash",
-      "Ollie",
-      "Gale"
+      "Ollie"
     ],
     "bans": [
       "Lou",
       "Amber",
-      "Starr Nova"
+      "Sandy"
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "open-business",
@@ -743,15 +743,15 @@
     "tierS": [
       "Lou",
       "Amber",
-      "Starr Nova",
       "Sandy",
-      "Jessie"
+      "Jessie",
+      "Gale"
     ],
     "tierA": [
-      "Gale",
       "R-T",
       "Ash",
       "Ollie",
+      "Starr Nova",
       "Damian"
     ],
     "firstPicks": [
@@ -760,18 +760,18 @@
       "Sandy"
     ],
     "lastPicks": [
+      "Gale",
       "Ash",
-      "Ollie",
-      "Gale"
+      "Ollie"
     ],
     "bans": [
       "Lou",
       "Amber",
-      "Starr Nova"
+      "Sandy"
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "parallel-plays",
@@ -786,15 +786,15 @@
     "tierS": [
       "Lou",
       "Amber",
-      "Starr Nova",
       "Sandy",
-      "Jessie"
+      "Jessie",
+      "Gale"
     ],
     "tierA": [
-      "Gale",
       "R-T",
       "Ash",
       "Ollie",
+      "Starr Nova",
       "Damian"
     ],
     "firstPicks": [
@@ -803,18 +803,18 @@
       "Sandy"
     ],
     "lastPicks": [
+      "Gale",
       "Ash",
-      "Ollie",
-      "Gale"
+      "Ollie"
     ],
     "bans": [
       "Lou",
       "Amber",
-      "Starr Nova"
+      "Sandy"
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "ring-of-fire",
@@ -829,15 +829,15 @@
     "tierS": [
       "Lou",
       "Amber",
-      "Starr Nova",
       "Sandy",
-      "Jessie"
+      "Jessie",
+      "Gale"
     ],
     "tierA": [
-      "Gale",
       "R-T",
       "Ash",
       "Ollie",
+      "Starr Nova",
       "Damian"
     ],
     "firstPicks": [
@@ -846,18 +846,18 @@
       "Sandy"
     ],
     "lastPicks": [
+      "Gale",
       "Ash",
-      "Ollie",
-      "Gale"
+      "Ollie"
     ],
     "bans": [
       "Lou",
       "Amber",
-      "Starr Nova"
+      "Sandy"
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "bridge-too-far",
@@ -891,16 +891,16 @@
     "lastPicks": [
       "Chuck",
       "Melodie",
-      "Nori"
+      "Nita"
     ],
     "bans": [
       "Chuck",
       "Colette",
-      "Nori"
+      "Melodie"
     ],
     "plan": "Compara daño potencial a caja y defensa. No persigas bajas lejos del objetivo cuando exista una ventana de daño.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "hot-potato",
@@ -934,16 +934,16 @@
     "lastPicks": [
       "Chuck",
       "Melodie",
-      "Nori"
+      "Nita"
     ],
     "bans": [
       "Chuck",
       "Colette",
-      "Nori"
+      "Melodie"
     ],
     "plan": "Compara daño potencial a caja y defensa. No persigas bajas lejos del objetivo cuando exista una ventana de daño.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "kaboom-canyon",
@@ -977,16 +977,16 @@
     "lastPicks": [
       "Chuck",
       "Melodie",
-      "Nori"
+      "Nita"
     ],
     "bans": [
       "Chuck",
       "Colette",
-      "Nori"
+      "Melodie"
     ],
     "plan": "Compara daño potencial a caja y defensa. No persigas bajas lejos del objetivo cuando exista una ventana de daño.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "safe-zone",
@@ -1020,16 +1020,16 @@
     "lastPicks": [
       "Chuck",
       "Melodie",
-      "Nori"
+      "Nita"
     ],
     "bans": [
       "Chuck",
       "Colette",
-      "Nori"
+      "Melodie"
     ],
     "plan": "Compara daño potencial a caja y defensa. No persigas bajas lejos del objetivo cuando exista una ventana de daño.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "canal-grande",
@@ -1072,7 +1072,7 @@
     ],
     "plan": "Con ventaja de estrellas, obliga al rival a cruzar espacio abierto y evita intercambios uno por uno innecesarios.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "hideout",
@@ -1115,7 +1115,7 @@
     ],
     "plan": "Con ventaja de estrellas, obliga al rival a cruzar espacio abierto y evita intercambios uno por uno innecesarios.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "shooting-star",
@@ -1158,7 +1158,7 @@
     ],
     "plan": "Con ventaja de estrellas, obliga al rival a cruzar espacio abierto y evita intercambios uno por uno innecesarios.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   },
   {
     "slug": "snake-prairie",
@@ -1201,6 +1201,6 @@
     ],
     "plan": "Con ventaja de estrellas, obliga al rival a cruzar espacio abierto y evita intercambios uno por uno innecesarios.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa de referencia competitivo; comprobar rotación"
+    "status": "Revisado tras el mantenimiento y balance del 04/08/2026."
   }
 ]

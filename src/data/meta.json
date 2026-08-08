@@ -1,23 +1,131 @@
 {
   "updated": "2026-08-06",
-  "officialPatch": "Release Notes June 2026",
-  "officialPatchDate": "2026-06-29",
+  "officialPatch": "Mantenimiento y balance del 4 de agosto de 2026",
+  "officialPatchDate": "04/08/2026",
   "rosterCount": 106,
   "newestBrawler": "Wendy",
   "notes": [
-    "La última nota oficial de actualización localizada es la del 29/06/2026.",
-    "La actualización oficial destacó Rustic Arcade y Crystal Arcade para Atrapagemas, y Spiraling Out y Beach Ball para Balón Brawl.",
-    "Los tiers de la app son editoriales y no se presentan como win rates.",
-    "Las cifras de terceros deben mostrar fuente, periodo, rango y tamaño muestral."
+    "La base se ha revisado con los cambios generales publicados para el mantenimiento del 04/08/2026.",
+    "Los cambios de NanoPowers se muestran por separado porque pertenecen al evento y no deben trasladarse automáticamente al meta Ranked estándar.",
+    "Los tiers y counters son editoriales; no se presentan como porcentajes de victoria.",
+    "Las imágenes se cargan desde BrawlAPI/Brawlify con fallback local si la red no está disponible."
+  ],
+  "generalNerfs": [
+    {
+      "brawler": "Crow",
+      "changes": [
+        "Daño del ataque principal: 380 → 320",
+        "Daño de Slowing Toxin: 800 → 600"
+      ],
+      "impact": "Pierde presión de poke y capacidad de rematar; baja su prioridad como pick generalista."
+    },
+    {
+      "brawler": "Griff",
+      "changes": [
+        "Radio de Piggy Bank: 800 → 600",
+        "Keep the Change aumenta un 55 % la dispersión"
+      ],
+      "impact": "Menos fiable para abrir mapa y castigar a media distancia."
+    },
+    {
+      "brawler": "Starr Nova",
+      "changes": [
+        "Salud: 4000 → 3700",
+        "Recarga: 1400 → 1600",
+        "Floaty Time: duración máxima 10 s → 7 s",
+        "Power Level Maximum: máximo 30 % → 20 %"
+      ],
+      "impact": "Nerf amplio a supervivencia, tempo y escalado; deja de ser first pick universal."
+    },
+    {
+      "brawler": "Damian",
+      "changes": [
+        "Puño y explosión: 1000 → 800",
+        "Rebote del súper: 800 → 400",
+        "Salud del altavoz: 2000 → 1500"
+      ],
+      "impact": "Menor burst y menor control persistente; pasa a ser más situacional."
+    },
+    {
+      "brawler": "Max",
+      "changes": [
+        "Segunda carga de Phase Shift Buffie: 3 s → 2 s",
+        "Carga del súper: 92 → 80"
+      ],
+      "impact": "Pierde parte del ciclo de tempo y del valor como pick ciego."
+    },
+    {
+      "brawler": "Bolt",
+      "changes": [
+        "Escudo del súper: 40 % → 30 %",
+        "Carga del súper al moverse reducida un 23 %"
+      ],
+      "impact": "Tarda más en alcanzar su pico y es menos resistente al entrar."
+    },
+    {
+      "brawler": "8-Bit",
+      "changes": [
+        "Carga del súper: 99 → 80",
+        "Extra Credits: 15 s → 18 s",
+        "Plugged In Buffie para aliados: 15 % → 10 %"
+      ],
+      "impact": "Menor frecuencia de torreta y menos valor de apoyo."
+    },
+    {
+      "brawler": "Surge",
+      "changes": [
+        "Velocidad de descarga: 400 → 470",
+        "Power Shield devuelve 1 munición en vez de 2"
+      ],
+      "impact": "Peor respuesta inmediata frente a dive y menor capacidad de giro."
+    }
+  ],
+  "nanoNerfs": [
+    "Sirius: salud de sombra 40 % → 30 % y aparición 8 s → 16 s",
+    "Frank: bonus de salud 50 % → 35 %",
+    "Alli: recarga en furia 60 % → 45 %",
+    "Ziggy: área del súper 50 % → 35 %",
+    "Damian: tamaño del puño 0,5 → 0,3",
+    "Max: velocidad del súper 150 % → 100 %",
+    "Tick: minas extra 2 → 1",
+    "Starr Nova: alcance del corte 1,5 → 1"
+  ],
+  "nanoBuffs": [
+    "Belle: rebote 50 % → 120 %",
+    "Tara: salud de sombra 8500 → 10000",
+    "Fang: palomitas cada 3 s → 1,5 s",
+    "Mr. P: tamaño del ataque 40 % → 50 %",
+    "Sprout: tamaño del ataque 30 % → 40 %",
+    "Buzz: carga de hipercarga 50 % → 100 %",
+    "Bo: carga del súper 25 % → 40 %",
+    "Edgar: autocarga del súper 100 % → 150 %",
+    "8-Bit: área del súper 35 % → 50 %",
+    "Mortis: curación 30 % → 40 %",
+    "Rico: gumballs 3 s → 1,5 s",
+    "Penny: alcance de proyectiles 50 % → 100 %",
+    "Barley: tamaño del ataque 20 % → 30 %",
+    "Angelo: velocidad de carga 40 % → 50 %"
+  ],
+  "bugFixes": [
+    "Los efectos de habilidades se aplican durante la protección de reaparición.",
+    "Heavy Metal de Meg solo cura si el súper golpea a un rival.",
+    "Extra Credits de 8-Bit ya no dispara por encima de muros.",
+    "Nori puede saltar obstáculos con el ataque cargado y su súper ya no se cancela durante el dash.",
+    "El dash de Nori ya no rompe el súper de Gene."
   ],
   "sources": [
     {
-      "name": "Supercell — Release Notes June 2026",
+      "name": "Supercell — Release Notes June 2026, mantenimiento del 4 de agosto",
       "url": "https://supercell.com/en/games/brawlstars/blog/release-notes/release-notes-june-2026/",
       "kind": "Oficial"
     },
     {
-      "name": "Brawlify — roster de 106 brawlers",
+      "name": "BrawlAPI — assets y datos visuales",
+      "url": "https://brawlapi.com/",
+      "kind": "API de terceros"
+    },
+    {
+      "name": "Brawlify — roster y assets",
       "url": "https://brawlify.com/brawlers",
       "kind": "Roster"
     },
