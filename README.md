@@ -1,6 +1,24 @@
-# Brawl Draft Lab v0.4.5
+# Brawl Draft Lab v0.5
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.5
+
+- Tres políticas de pool:
+  - no usar;
+  - priorizar brawlers preparados;
+  - limitarse estrictamente al pool disponible.
+- Favoritos dentro del pool con bonificación específica.
+- Acciones masivas, importación y exportación del pool.
+- Build contextual del pick principal:
+  - gadget;
+  - habilidad estelar;
+  - engranajes;
+  - uso de hipercarga;
+  - motivo táctico.
+- Modo ultrarrápido para drafts con temporizador.
+- Estado del pool visible en cada recomendación.
+- El motor pondera Fuerza 11, hipercarga, favoritos y dominio personal.
 
 ## Novedades v0.4.5
 

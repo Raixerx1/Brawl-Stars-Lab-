@@ -9,6 +9,8 @@ import type {
   DraftRecommendation,
   MapProfile,
   PlayerPool,
+  PlayerPoolEntry,
+  PoolPolicy,
 } from "@/lib/types";
 import { analyzeDraft } from "@/lib/draft-engine";
 import { loadPool } from "@/lib/pool";
@@ -57,10 +59,12 @@ function RecommendationCard({
   result,
   label,
   tone,
+  poolEntry,
 }: {
   result?: DraftRecommendation;
   label: string;
   tone: "best" | "safe" | "counter";
+  poolEntry?: PlayerPoolEntry;
 }) {
   if (!result) return null;
   return <article className={`simple-rec-card simple-rec-${tone}`}>
@@ -71,6 +75,13 @@ function RecommendationCard({
       <strong>{result.score}</strong>
     </div>
     <p className="simple-rec-brief">{result.brief}</p>
+    {poolEntry && <div className="rec-pool-status">
+      {poolEntry.favorite && <span>★ Prioritario</span>}
+      {poolEntry.power11 && <span>F11</span>}
+      {poolEntry.hypercharge && <span>HC</span>}
+      <span>Dominio {poolEntry.mastery}/5</span>
+      {!poolEntry.available && <span className="bad">No disponible</span>}
+    </div>}
     <div className="simple-rec-tags">
       {result.countersHit.slice(0, 3).map((name) => <span className="good" key={name}>Frena {name}</span>)}
       {result.softCounters.slice(0, 2).map((name) => <span className="soft" key={name}>Favorable vs {name}</span>)}
@@ -103,7 +114,8 @@ export default function DraftAssistant({
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
   const [personalPool, setPersonalPool] = useState<PlayerPool>({});
-  const [usePersonalPool, setUsePersonalPool] = useState(false);
+  const [poolPolicy, setPoolPolicy] = useState<PoolPolicy>("Off");
+  const [quickMode, setQuickMode] = useState(false);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -112,6 +124,8 @@ export default function DraftAssistant({
     const sharedMap = params.get("map");
     const sharedFirst = params.get("first") as DraftFirstPickOwner | null;
     const sharedPicks = params.get("picks")?.split("|").map((pick) => pick || null) || [];
+    const sharedPoolPolicy = params.get("pool") as PoolPolicy | null;
+    const sharedQuick = params.get("quick");
 
     if (sharedMap) {
       const found = maps.find((item) => item.slug === sharedMap);
@@ -125,6 +139,8 @@ export default function DraftAssistant({
       const normalized = Array.from({ length: 6 }, (_, index) => sharedPicks[index] || null);
       setOrderedPicks(normalized);
     }
+    if (sharedPoolPolicy && ["Off", "Preferir", "Solo pool"].includes(sharedPoolPolicy)) setPoolPolicy(sharedPoolPolicy);
+    if (sharedQuick === "1") setQuickMode(true);
   }, [brawlers, maps]);
 
   const map = maps.find((item) => item.slug === mapSlug) || availableMaps[0];
@@ -153,9 +169,9 @@ export default function DraftAssistant({
       bans: [],
       priority,
       personalPool,
-      usePersonalPool,
+      poolPolicy,
     }, brawlers);
-  }, [map, position, allies, enemies, priority, personalPool, usePersonalPool, brawlers]);
+  }, [map, position, allies, enemies, priority, personalPool, poolPolicy, brawlers]);
 
   const selectedNames = useMemo(
     () => new Set(orderedPicks.filter(Boolean).map((name) => normalize(name as string))),
@@ -217,6 +233,8 @@ export default function DraftAssistant({
       map: map.slug,
       first: firstPickOwner,
       picks: orderedPicks.map((pick) => pick || "").join("|"),
+      pool: poolPolicy,
+      quick: quickMode ? "1" : "0",
     });
     const url = `${window.location.origin}/draft?${params.toString()}`;
     try {
@@ -246,6 +264,11 @@ export default function DraftAssistant({
     [best?.brawler.name, safe?.brawler.name].filter(Boolean) as string[],
   );
 
+  const poolEntryFor = (result?: DraftRecommendation) =>
+    result ? personalPool[result.brawler.slug] : undefined;
+
+  const bestPoolEntry = poolEntryFor(best);
+
   const bestLabel = position === "First pick"
     ? "Mejor brawler del mapa"
     : position === "Last pick"
@@ -257,7 +280,7 @@ export default function DraftAssistant({
   return <div className="ordered-draft-assistant">
     <section className="panel ordered-draft-panel">
       <div className="section-title">
-        <div><span className="eyebrow">Draft Coach v0.4.5</span><h2>Introduce los picks en orden</h2></div>
+        <div><span className="eyebrow">Draft Coach v0.5</span><h2>Introduce los picks en orden</h2></div>
         <div className="draft-action-row">
           <button type="button" className="secondary-button compact-button" onClick={shareDraft}>Compartir</button>
           <button type="button" className="secondary-button compact-button" onClick={resetDraft}>Reiniciar</button>
@@ -265,11 +288,12 @@ export default function DraftAssistant({
       </div>
       {message && <div className="draft-toast">{message}</div>}
 
-      <div className="ordered-draft-context">
+      <div className="ordered-draft-context ordered-draft-context-v5">
         <label>Modo<select value={mode} onChange={(event) => changeMode(event.target.value)}>{modes.map((item) => <option key={item}>{item}</option>)}</select></label>
         <label>Mapa<select value={mapSlug} onChange={(event) => { setMapSlug(event.target.value); setOrderedPicks(Array(6).fill(null)); }}>{availableMaps.map((item) => <option value={item.slug} key={item.slug}>{item.name}{item.rotationStatus === "Histórico" ? " · histórico" : ""}</option>)}</select></label>
         <label>First pick<select value={firstPickOwner} onChange={(event) => { setFirstPickOwner(event.target.value as DraftFirstPickOwner); setOrderedPicks(Array(6).fill(null)); }}><option value="Aliado">Mi equipo</option><option value="Rival">Equipo rival</option></select></label>
-        <label className="auto-position-toggle"><input type="checkbox" checked={usePersonalPool} onChange={(event) => setUsePersonalPool(event.target.checked)} /><span><b>Usar mi pool</b><small>Fuerza, HC y dominio</small></span></label>
+        <label>Política de pool<select value={poolPolicy} onChange={(event) => setPoolPolicy(event.target.value as PoolPolicy)}><option value="Off">No usar pool</option><option value="Preferir">Priorizar mi pool</option><option value="Solo pool">Solo brawlers disponibles</option></select></label>
+        <label className="auto-position-toggle"><input type="checkbox" checked={quickMode} onChange={(event) => setQuickMode(event.target.checked)} /><span><b>Modo ultrarrápido</b><small>Pick, línea y build</small></span></label>
       </div>
 
       <div className="ordered-phase-labels">
@@ -326,7 +350,7 @@ export default function DraftAssistant({
       <small className="ordered-edit-hint">Pulsa un pick ya introducido para corregirlo; se borrarán también los picks posteriores.</small>
     </section>
 
-    <section className="panel ordered-recommendations">
+    <section className={`panel ordered-recommendations ${quickMode ? "quick-v5" : ""}`}>
       <div className="section-title">
         <div>
           <span className="eyebrow">{nextTeam === "enemy" ? "Recomendación provisional para tu próximo turno" : analysis.draftStage}</span>
@@ -334,14 +358,28 @@ export default function DraftAssistant({
         </div>
         <span className="status-pill">{position}</span>
       </div>
-      <div className="simple-rec-grid">
-        <RecommendationCard result={best} label={bestLabel} tone="best" />
-        <RecommendationCard result={safe} label={safeLabel} tone="safe" />
-        <RecommendationCard result={counter} label={counterLabel} tone="counter" />
+      <div className={`simple-rec-grid ${quickMode ? "quick-rec-grid" : ""}`}>
+        <RecommendationCard result={best} label={bestLabel} tone="best" poolEntry={poolEntryFor(best)} />
+        <RecommendationCard result={safe} label={safeLabel} tone="safe" poolEntry={poolEntryFor(safe)} />
+        <RecommendationCard result={counter} label={counterLabel} tone="counter" poolEntry={poolEntryFor(counter)} />
       </div>
+      {best && <div className="contextual-build-panel">
+        <div className="contextual-build-title">
+          <BrawlerPortrait name={best.brawler.name} className="contextual-build-avatar" />
+          <div><span className="eyebrow">Build contextual · {best.brawler.name}</span><h3>{best.lanePlan.lane}{best.lanePlan.target ? ` → busca a ${best.lanePlan.target}` : ""}</h3><p>{best.lanePlan.instruction}</p></div>
+          {bestPoolEntry && poolPolicy !== "Off" && <strong>{bestPoolEntry.favorite ? "★ " : ""}{bestPoolEntry.mastery}/5</strong>}
+        </div>
+        <div className="contextual-build-grid">
+          <div><span>Gadget</span><b>{best.build.gadget}</b></div>
+          <div><span>Habilidad estelar</span><b>{best.build.starPower}</b></div>
+          <div><span>Engranajes</span><b>{best.build.gears.join(" + ")}</b></div>
+          <div><span>Hipercarga</span><b>{best.build.hypercharge}</b></div>
+        </div>
+        <small>{best.build.reason}</small>
+      </div>}
     </section>
 
-    {analysis.winEstimate ? <section className="panel ordered-win-panel">
+    {!quickMode && (analysis.winEstimate ? <section className="panel ordered-win-panel">
       <div className="ordered-win-head">
         <div><span className="eyebrow">Probabilidad estimada</span><h2>{analysis.winEstimate.title}</h2><p>{analysis.winEstimate.completeness < 100 ? "Se actualiza con cada pick introducido." : "Draft 3v3 completo."}</p></div>
         <div><strong>{analysis.winEstimate.percentage}%</strong><span>{analysis.winEstimate.lower}–{analysis.winEstimate.upper}% · confianza {analysis.winEstimate.confidence}</span></div>
@@ -357,9 +395,9 @@ export default function DraftAssistant({
       <span className="eyebrow">Probabilidad estimada</span>
       <h2>Añade al menos un pick de cada equipo</h2>
       <p>El cálculo aparecerá cuando exista información de ambos lados y ganará precisión al completar el draft.</p>
-    </section>}
+    </section>)}
 
-    <section className="ordered-coaching-grid">
+    {!quickMode && <section className="ordered-coaching-grid">
       <article className="panel">
         <span className="eyebrow">Consejos rápidos</span>
         <h3>Qué necesita tu composición</h3>
@@ -393,6 +431,6 @@ export default function DraftAssistant({
           {best?.exposedTo.slice(0, 3).map((name) => <span className="danger" key={name}>{name} puede frenar al pick recomendado.</span>)}
         </div>
       </article>
-    </section>
+    </section>}
   </div>;
 }

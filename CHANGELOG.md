@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.5 — Draft personalizado
+
+- Pool desactivado, preferente o estricto.
+- Favoritos y ponderación de dominio.
+- Builds contextuales.
+- Modo ultrarrápido.
+- Importación, exportación y acciones masivas en Mi pool.
+- Estado de preparación visible en las recomendaciones.
+
 ## v0.4.5 — Barra única de picks
 
 - Flujo cronológico único para los seis picks.

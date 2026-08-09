@@ -1,35 +1,87 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Brawler, PlayerPool as PlayerPoolType, PlayerPoolEntry } from "@/lib/types";
-import { loadPool, savePool } from "@/lib/pool";
+import { createDefaultPool, loadPool, mergePool, savePool } from "@/lib/pool";
 import { BrawlerPortrait } from "./GameArtwork";
 
-const normalize = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+const normalize = (value: string) =>
+  value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
 export default function PlayerPool({ brawlers }: { brawlers: Brawler[] }) {
   const [pool, setPool] = useState<PlayerPoolType>({});
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("Todos");
   const [loaded, setLoaded] = useState(false);
+  const [message, setMessage] = useState("");
+  const importRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setPool(loadPool(brawlers));
     setLoaded(true);
   }, [brawlers]);
 
+  const commit = (next: PlayerPoolType, message?: string) => {
+    setPool(next);
+    savePool(next);
+    if (message) setMessage(message);
+  };
+
   const update = (slug: string, patch: Partial<PlayerPoolEntry>) => {
-    setPool((current) => {
-      const next = { ...current, [slug]: { ...current[slug], ...patch } };
-      savePool(next);
-      return next;
-    });
+    const currentEntry = pool[slug];
+    if (!currentEntry) return;
+    commit({ ...pool, [slug]: { ...currentEntry, ...patch } });
+  };
+
+  const bulkUpdate = (patch: Partial<PlayerPoolEntry>, label: string) => {
+    const next = Object.fromEntries(
+      (Object.entries(pool) as [string, PlayerPoolEntry][]).map(([slug, entry]) => [slug, { ...entry, ...patch }]),
+    );
+    commit(next, label);
+  };
+
+  const markPower11Only = () => {
+    const next = Object.fromEntries(
+      (Object.entries(pool) as [string, PlayerPoolEntry][]).map(([slug, entry]) => [
+        slug,
+        { ...entry, available: entry.power11 && !entry.avoid },
+      ]),
+    );
+    commit(next, "Disponibles limitados a Fuerza 11");
+  };
+
+  const exportPool = () => {
+    const blob = new Blob([JSON.stringify(pool, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "brawl-draft-lab-pool.json";
+    anchor.click();
+    URL.revokeObjectURL(url);
+    setMessage("Pool exportado");
+  };
+
+  const importPool = async (file?: File) => {
+    if (!file) return;
+    try {
+      const parsed = JSON.parse(await file.text()) as PlayerPoolType;
+      commit(mergePool(brawlers, parsed), "Pool importado correctamente");
+    } catch {
+      setMessage("El archivo no contiene un pool válido");
+    } finally {
+      if (importRef.current) importRef.current.value = "";
+    }
+  };
+
+  const resetPool = () => {
+    commit(createDefaultPool(brawlers), "Pool restaurado");
   };
 
   const visible = useMemo(() => brawlers.filter((brawler) => {
     const entry = pool[brawler.slug];
     const matches = normalize(`${brawler.name} ${brawler.role}`).includes(normalize(query));
     if (!matches) return false;
+    if (filter === "Favoritos") return entry?.favorite;
     if (filter === "Fuerza 11") return entry?.power11;
     if (filter === "Hipercarga") return entry?.hypercharge;
     if (filter === "Confort") return (entry?.mastery || 0) >= 4;
@@ -39,36 +91,58 @@ export default function PlayerPool({ brawlers }: { brawlers: Brawler[] }) {
   }), [brawlers, pool, query, filter]);
 
   const summary = useMemo(() => {
-    const entries = Object.values(pool);
+    const entries = Object.values(pool) as PlayerPoolEntry[];
     return {
       available: entries.filter((entry) => entry.available && !entry.avoid).length,
       power11: entries.filter((entry) => entry.power11).length,
       hypercharge: entries.filter((entry) => entry.hypercharge).length,
       comfort: entries.filter((entry) => entry.mastery >= 4 && !entry.avoid).length,
+      favorite: entries.filter((entry) => entry.favorite && !entry.avoid).length,
     };
   }, [pool]);
 
   if (!loaded) return <div className="panel">Cargando tu pool…</div>;
 
-  return <div className="pool-page">
-    <div className="stats-grid pool-stats">
+  return <div className="pool-page pool-page-v5">
+    {message && <div className="draft-toast">{message}</div>}
+
+    <div className="stats-grid pool-stats pool-stats-v5">
       <div className="stat-card"><b>{summary.available}</b><span>disponibles</span></div>
+      <div className="stat-card"><b>{summary.favorite}</b><span>prioritarios</span></div>
       <div className="stat-card"><b>{summary.power11}</b><span>fuerza 11</span></div>
       <div className="stat-card"><b>{summary.hypercharge}</b><span>con hipercarga</span></div>
       <div className="stat-card"><b>{summary.comfort}</b><span>dominio 4–5</span></div>
     </div>
 
-    <section className="panel pool-toolbar">
-      <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar brawler…" />
-      <select value={filter} onChange={(event) => setFilter(event.target.value)}>
-        {['Todos', 'Fuerza 11', 'Hipercarga', 'Confort', 'Evitar', 'No disponibles'].map((item) => <option key={item}>{item}</option>)}
-      </select>
-      <p>El Draft Assistant puede limitarse a este pool y ponderar tu dominio, fuerza 11 e hipercarga.</p>
+    <section className="panel pool-toolbar pool-toolbar-v5">
+      <div className="pool-search-row">
+        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar brawler…" />
+        <select value={filter} onChange={(event) => setFilter(event.target.value)}>
+          {["Todos", "Favoritos", "Fuerza 11", "Hipercarga", "Confort", "Evitar", "No disponibles"].map((item) => <option key={item}>{item}</option>)}
+        </select>
+      </div>
+      <div className="pool-bulk-actions">
+        <button type="button" onClick={() => bulkUpdate({ available: true }, "Todos marcados como disponibles")}>Todos disponibles</button>
+        <button type="button" onClick={markPower11Only}>Solo Fuerza 11</button>
+        <button type="button" onClick={() => bulkUpdate({ favorite: false }, "Prioridades eliminadas")}>Limpiar favoritos</button>
+        <button type="button" onClick={exportPool}>Exportar</button>
+        <button type="button" onClick={() => importRef.current?.click()}>Importar</button>
+        <button type="button" onClick={resetPool}>Restaurar</button>
+        <input ref={importRef} hidden type="file" accept="application/json,.json" onChange={(event) => importPool(event.target.files?.[0])} />
+      </div>
+      <p>En el Draft Assistant podrás ignorar el pool, usarlo como preferencia o limitar las recomendaciones exclusivamente a tus brawlers disponibles.</p>
     </section>
 
     <div className="pool-grid">{visible.map((brawler) => {
       const entry = pool[brawler.slug];
-      return <article className={`pool-card ${entry.avoid ? "pool-card-avoid" : ""}`} key={brawler.slug}>
+      if (!entry) return null;
+      return <article className={`pool-card ${entry.avoid ? "pool-card-avoid" : ""} ${entry.favorite ? "pool-card-favorite" : ""}`} key={brawler.slug}>
+        <button
+          type="button"
+          className={`pool-favorite-button ${entry.favorite ? "active" : ""}`}
+          onClick={() => update(brawler.slug, { favorite: !entry.favorite })}
+          title={entry.favorite ? "Quitar prioridad" : "Marcar como prioritario"}
+        >★</button>
         <div className="pool-card-head">
           <BrawlerPortrait name={brawler.name} className="pool-avatar" />
           <div><h3>{brawler.name}</h3><p>{brawler.role} · Tier {brawler.tier}</p></div>

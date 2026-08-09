@@ -9,7 +9,7 @@ export default function PoolPage() {
     <div className="page-heading">
       <span className="eyebrow">Personalización</span>
       <h1>Mi pool competitivo</h1>
-      <p>Marca qué brawlers puedes jugar, cuáles están a fuerza 11, tienen hipercarga y cuánto confías en cada uno. Los datos se guardan únicamente en tu navegador.</p>
+      <p>Configura disponibilidad, Fuerza 11, hipercarga, favoritos y dominio personal. Puedes exportar el pool y usarlo como preferencia o filtro estricto del Draft Coach. Los datos se guardan únicamente en tu navegador.</p>
     </div>
     <PlayerPool brawlers={brawlers} />
   </div>;

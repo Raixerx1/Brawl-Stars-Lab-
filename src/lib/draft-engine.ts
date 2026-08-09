@@ -474,12 +474,16 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
   }
 
   const poolEntry = input.personalPool?.[brawler.slug];
-  if (input.usePersonalPool && poolEntry) {
-    if (poolEntry.power11) { score += 4; personal += 12; reasons.push("Fuerza 11 en tu pool"); }
-    if (poolEntry.hypercharge) { score += 3; personal += 8; reasons.push("Hipercarga disponible"); }
-    if (poolEntry.mastery > 3) { score += (poolEntry.mastery - 3) * 3; personal += (poolEntry.mastery - 3) * 12; reasons.push(`Dominio personal ${poolEntry.mastery}/5`); }
-    if (poolEntry.mastery <= 2) { score -= 5; personal -= 15; warnings.push("Dominio personal bajo"); }
-    if (poolEntry.avoid) { score -= 30; personal = 0; warnings.push("Marcado para evitar en tu pool"); }
+  const poolPolicy = input.poolPolicy || (input.usePersonalPool ? "Solo pool" : "Off");
+  if (poolPolicy !== "Off" && poolEntry) {
+    if (poolEntry.available) { score += 2; personal += 7; }
+    else { score -= poolPolicy === "Solo pool" ? 45 : 13; personal -= 20; warnings.push("No disponible en tu pool"); }
+    if (poolEntry.power11) { score += 5; personal += 13; reasons.push("Fuerza 11 en tu pool"); }
+    if (poolEntry.hypercharge) { score += 4; personal += 9; reasons.push("Hipercarga disponible"); }
+    if (poolEntry.favorite) { score += 5; personal += 12; reasons.push("Brawler prioritario de tu pool"); }
+    if (poolEntry.mastery > 3) { score += (poolEntry.mastery - 3) * 4; personal += (poolEntry.mastery - 3) * 13; reasons.push(`Dominio personal ${poolEntry.mastery}/5`); }
+    if (poolEntry.mastery <= 2) { score -= 6; personal -= 16; warnings.push("Dominio personal bajo"); }
+    if (poolEntry.avoid) { score -= poolPolicy === "Solo pool" ? 55 : 28; personal = 0; warnings.push("Marcado para evitar en tu pool"); }
   }
 
   if (hasTag(brawler, "safe")) safety += 13;
@@ -727,10 +731,13 @@ function estimateWinProbability(input: DraftInput, allies: Brawler[], enemies: B
 
   const selected = allies.find((brawler) => norm(brawler.name) === norm(input.myPick || ""));
   const poolEntry = selected ? input.personalPool?.[selected.slug] : undefined;
-  if (input.usePersonalPool && poolEntry) {
+  const poolPolicy = input.poolPolicy || (input.usePersonalPool ? "Solo pool" : "Off");
+  if (poolPolicy !== "Off" && poolEntry) {
     if (poolEntry.power11) alliedScore += 1.5;
     if (poolEntry.hypercharge) alliedScore += 1.2;
+    if (poolEntry.favorite) alliedScore += .8;
     alliedScore += (poolEntry.mastery - 3) * 1.1;
+    if (!poolEntry.available) alliedScore -= 2.5;
     if (poolEntry.avoid) alliedScore -= 5;
   }
 
@@ -806,7 +813,8 @@ export function analyzeDraft(input: DraftInput, roster: Brawler[]): DraftAnalysi
   const recommendations = roster
     .filter((brawler) => !unavailable.has(norm(brawler.name)))
     .filter((brawler) => {
-      if (!input.usePersonalPool) return true;
+      const poolPolicy = input.poolPolicy || (input.usePersonalPool ? "Solo pool" : "Off");
+      if (poolPolicy !== "Solo pool") return true;
       const entry = input.personalPool?.[brawler.slug];
       if (!entry) return false;
       return entry.available && !entry.avoid;

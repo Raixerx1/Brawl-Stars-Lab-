@@ -39,12 +39,15 @@ export type DraftPriority = "Counter" | "Equilibrado" | "Seguro";
 
 export type DraftFirstPickOwner = "Aliado" | "Rival";
 
+export type PoolPolicy = "Off" | "Preferir" | "Solo pool";
+
 export type PlayerPoolEntry = {
   available: boolean;
   power11: boolean;
   hypercharge: boolean;
   mastery: number;
   avoid: boolean;
+  favorite: boolean;
 };
 
 export type PlayerPool = Record<string, PlayerPoolEntry>;
@@ -74,6 +77,7 @@ export type DraftInput = {
   priority?: DraftPriority;
   personalPool?: PlayerPool;
   usePersonalPool?: boolean;
+  poolPolicy?: PoolPolicy;
 };
 
 export type DraftMetrics = {

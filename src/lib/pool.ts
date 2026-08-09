@@ -8,6 +8,7 @@ export const defaultPoolEntry = (): PlayerPoolEntry => ({
   hypercharge: false,
   mastery: 3,
   avoid: false,
+  favorite: false,
 });
 
 export function createDefaultPool(roster: Brawler[]): PlayerPool {
