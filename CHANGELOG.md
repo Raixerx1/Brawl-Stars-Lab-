@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.4.4 — Orden competitivo real
+
+- Secuencia 1–2–2–1 del draft competitivo.
+- First pick aliado o rival configurable.
+- Detección automática de turno y posición.
+- First pick orientado a solidez del mapa.
+- Picks intermedios orientados a counter y composición.
+- Last pick orientado al máximo castigo.
+- Timeline visual de las cuatro fases.
+
 ## v0.4.3 — Counter primero
 
 - Reponderación completa del motor hacia counters directos.

@@ -37,6 +37,8 @@ export type DraftPosition = "First pick" | "Pick intermedio" | "Last pick";
 
 export type DraftPriority = "Counter" | "Equilibrado" | "Seguro";
 
+export type DraftFirstPickOwner = "Aliado" | "Rival";
+
 export type PlayerPoolEntry = {
   available: boolean;
   power11: boolean;

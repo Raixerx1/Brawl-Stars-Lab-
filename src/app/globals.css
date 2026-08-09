@@ -85,3 +85,37 @@
 .counter-neutral small{color:var(--muted)}
 .ranking-counter-label{display:inline-flex;margin-left:7px;padding:3px 6px;border-radius:6px;background:rgba(255,214,74,.08);color:var(--yellow);font-size:7px;font-style:normal;font-weight:850;text-transform:uppercase;letter-spacing:.05em}
 @media(max-width:760px){.counter-response-grid{grid-template-columns:1fr}.featured-matchups{display:grid}}
+
+
+/* v0.4.4 — Orden competitivo real */
+.draft-context-grid-v44{grid-template-columns:repeat(7,minmax(0,1fr))}
+.competitive-draft-flow{margin:14px 0;padding:16px;border:1px solid rgba(69,183,255,.19);border-radius:17px;background:linear-gradient(135deg,rgba(69,183,255,.055),rgba(124,108,255,.04),rgba(8,11,22,.2))}
+.competitive-flow-head{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:12px}
+.competitive-flow-head h3{font-size:16px;margin:4px 0 0}
+.turn-chip{display:inline-flex;align-items:center;padding:8px 11px;border-radius:999px;font-size:10px;font-weight:850;border:1px solid var(--line);white-space:nowrap}
+.turn-chip.my-turn{color:var(--green);border-color:rgba(80,223,160,.28);background:rgba(80,223,160,.1)}
+.turn-chip.enemy-turn{color:var(--red);border-color:rgba(255,104,123,.27);background:rgba(255,104,123,.09)}
+.turn-chip.complete{color:var(--yellow);border-color:rgba(255,214,74,.25);background:rgba(255,214,74,.09)}
+.competitive-flow-grid{display:grid;grid-template-columns:.72fr 1.25fr 1.25fr .72fr;gap:9px}
+.competitive-phase{position:relative;display:grid;grid-template-columns:auto 1fr;gap:8px;padding:11px;border:1px solid var(--line);border-radius:13px;background:rgba(8,11,22,.35);min-width:0}
+.competitive-phase.phase-current{border-color:rgba(255,214,74,.42);box-shadow:inset 0 0 0 1px rgba(255,214,74,.09)}
+.competitive-phase.phase-done{opacity:.72;border-color:rgba(80,223,160,.22)}
+.phase-number{width:24px;height:24px;display:grid;place-items:center;border-radius:8px;background:var(--panel2);font-size:10px;font-weight:900}
+.phase-current .phase-number{background:rgba(255,214,74,.17);color:var(--yellow)}
+.phase-done .phase-number{background:rgba(80,223,160,.13);color:var(--green)}
+.phase-copy{min-width:0}
+.phase-copy b,.phase-copy small{display:block}
+.phase-copy b{font-size:10px}
+.phase-copy small{font-size:8px;color:var(--muted);margin-top:2px}
+.phase-slots{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+.competitive-phase:first-child .phase-slots,.competitive-phase:last-child .phase-slots{grid-template-columns:1fr}
+.phase-slot{min-width:0;padding:7px 8px;border-radius:9px;border:1px dashed var(--line);background:rgba(17,23,42,.55)}
+.phase-slot span,.phase-slot small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.phase-slot span{font-size:9px;font-weight:750;color:var(--muted)}
+.phase-slot small{font-size:7px;margin-top:2px;color:#64708d}
+.phase-slot.team-ally.filled{border-style:solid;border-color:rgba(80,223,160,.25);background:rgba(80,223,160,.07)}
+.phase-slot.team-enemy.filled{border-style:solid;border-color:rgba(255,104,123,.25);background:rgba(255,104,123,.07)}
+.phase-slot.filled span{color:white}
+@media(max-width:1240px){.draft-context-grid-v44{grid-template-columns:repeat(4,minmax(0,1fr))}.competitive-flow-grid{grid-template-columns:1fr 1.35fr 1.35fr 1fr}}
+@media(max-width:850px){.draft-context-grid-v44{grid-template-columns:1fr 1fr}.competitive-flow-head{align-items:flex-start;flex-direction:column}.competitive-flow-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.draft-context-grid-v44,.competitive-flow-grid{grid-template-columns:1fr}.competitive-phase{grid-template-columns:auto 1fr}.turn-chip{white-space:normal;line-height:1.35}}

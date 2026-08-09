@@ -232,33 +232,50 @@ function finalCounterWeightedScore(
   softCount: number,
   exposedCount: number,
 ) {
-  if (!enemies.length) {
+  // First pick: mapa, seguridad y flexibilidad. No buscamos un counter a ciegas.
+  if (input.position === "First pick") {
     return clamp(
-      metrics.mapFit * .29 +
-      metrics.safety * .21 +
-      metrics.composition * .19 +
-      metrics.synergy * .15 +
-      metrics.personal * .08 +
-      metrics.counter * .08 -
-      metrics.risk * .10 +
+      metrics.mapFit * .34 +
+      metrics.safety * .28 +
+      metrics.composition * .14 +
+      metrics.synergy * .10 +
+      metrics.personal * .06 +
+      metrics.counter * .03 -
+      metrics.risk * .14 +
       rawScore * .08
     );
   }
 
-  const priority = input.priority || "Counter";
-  const weights = priority === "Seguro"
-    ? { counter: .25, map: .18, composition: .16, synergy: .10, safety: .26, personal: .05, risk: .13, raw: .06 }
-    : priority === "Equilibrado"
-      ? { counter: .34, map: .20, composition: .17, synergy: .12, safety: .12, personal: .05, risk: .11, raw: .07 }
-      : { counter: .50, map: .14, composition: .13, synergy: .08, safety: .10, personal: .05, risk: .13, raw: .05 };
+  if (!enemies.length) {
+    return clamp(
+      metrics.mapFit * .30 +
+      metrics.safety * .23 +
+      metrics.composition * .18 +
+      metrics.synergy * .14 +
+      metrics.personal * .07 +
+      metrics.counter * .05 -
+      metrics.risk * .11 +
+      rawScore * .07
+    );
+  }
 
-  const coverageBonus =
-    directCount >= 3 ? 13 :
-    directCount === 2 ? 9 :
-    directCount === 1 ? 4 :
-    softCount >= 2 ? 3 : 0;
-  const exposurePenalty = exposedCount * (priority === "Counter" ? 7 : 5);
-  const noAnswerPenalty = directCount === 0 && softCount === 0 && enemies.length >= 2 ? 8 : 0;
+  const priority = input.priority || "Counter";
+  const isLastPick = input.position === "Last pick";
+  const weights = isLastPick
+    ? { counter: .59, map: .10, composition: .11, synergy: .06, safety: .05, personal: .03, risk: .17, raw: .04 }
+    : priority === "Seguro"
+      ? { counter: .31, map: .18, composition: .17, synergy: .10, safety: .20, personal: .04, risk: .13, raw: .06 }
+      : priority === "Equilibrado"
+        ? { counter: .40, map: .17, composition: .17, synergy: .11, safety: .10, personal: .04, risk: .12, raw: .06 }
+        : { counter: .46, map: .14, composition: .16, synergy: .09, safety: .08, personal: .04, risk: .14, raw: .05 };
+
+  const coverageBonus = isLastPick
+    ? directCount >= 3 ? 18 : directCount === 2 ? 13 : directCount === 1 ? 7 : softCount >= 2 ? 4 : 0
+    : directCount >= 3 ? 14 : directCount === 2 ? 10 : directCount === 1 ? 5 : softCount >= 2 ? 3 : 0;
+  const exposurePenalty = exposedCount * (isLastPick ? 10 : priority === "Counter" ? 8 : 6);
+  const noAnswerPenalty = directCount === 0 && softCount === 0 && enemies.length >= 2
+    ? isLastPick ? 15 : 9
+    : 0;
 
   return clamp(
     metrics.counter * weights.counter +
@@ -291,6 +308,15 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
   let personal = 50;
   let risk = 35;
 
+  const matchupMultiplier =
+    input.position === "Last pick" ? 1.28 :
+    input.position === "Pick intermedio" ? 1 :
+    .62;
+  const exposureMultiplier =
+    input.position === "Last pick" ? 1.22 :
+    input.position === "Pick intermedio" ? 1 :
+    .72;
+
   const modeScore = brawler.modes[input.map.mode] ?? 0;
   score += modeScore * 1.55;
   mapFit += modeScore * 4;
@@ -310,9 +336,14 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
 
   if (input.position === "First pick") {
     if (hasTag(brawler, "safe") || isControl(brawler) || isLongRange(brawler)) {
-      score += 7;
-      safety += 18;
-      reasons.push("Pick estable a ciegas");
+      score += 10;
+      safety += 22;
+      reasons.push("Pick sólido y difícil de castigar");
+    }
+    if (sIndex >= 0) {
+      score += 6;
+      mapFit += 8;
+      reasons.push("Prioridad alta como first pick del mapa");
     }
     if (hasTag(brawler, "lastpick", "assassin") || brawler.role === "Asesino") {
       score -= 8;
@@ -338,37 +369,37 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
     const enemyClaimsCounter = includesName(enemy.counters, brawler.name);
 
     if (directCounter) {
-      score += 24;
-      counter += 32;
+      score += Math.round(24 * matchupMultiplier);
+      counter += Math.round(32 * matchupMultiplier);
       countersHit.push(enemy.name);
       reasons.push(`Counter directo de ${enemy.name}`);
     } else if (reciprocalCounter) {
-      score += 11;
-      counter += 16;
+      score += Math.round(11 * matchupMultiplier);
+      counter += Math.round(16 * matchupMultiplier);
       countersHit.push(enemy.name);
       reasons.push(`Matchup favorable contra ${enemy.name}`);
     } else {
       const softReason = softCounterReason(brawler, enemy, input);
       if (softReason) {
-        score += 8;
-        counter += 12;
+        score += Math.round(8 * matchupMultiplier);
+        counter += Math.round(12 * matchupMultiplier);
         softCounters.push(enemy.name);
         reasons.push(`${softReason} frente a ${enemy.name}`);
       }
     }
 
     if (directlyExposed) {
-      score -= 27;
-      counter -= 38;
-      safety -= 18;
-      risk += 34;
+      score -= Math.round(27 * exposureMultiplier);
+      counter -= Math.round(38 * exposureMultiplier);
+      safety -= Math.round(18 * exposureMultiplier);
+      risk += Math.round(34 * exposureMultiplier);
       exposedTo.push(enemy.name);
       warnings.push(`${enemy.name} lo frena claramente`);
     } else if (enemyClaimsCounter) {
-      score -= 13;
-      counter -= 19;
-      safety -= 8;
-      risk += 16;
+      score -= Math.round(13 * exposureMultiplier);
+      counter -= Math.round(19 * exposureMultiplier);
+      safety -= Math.round(8 * exposureMultiplier);
+      risk += Math.round(16 * exposureMultiplier);
       exposedTo.push(enemy.name);
       warnings.push(`${enemy.name} tiene ventaja`);
     }
@@ -377,14 +408,21 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
   const directCoverage = unique(countersHit).length;
   const softCoverage = unique(softCounters).filter((name) => !includesName(countersHit, name)).length;
   if (directCoverage >= 2) {
-    score += directCoverage === 3 ? 22 : 14;
-    counter += directCoverage === 3 ? 24 : 16;
+    const stageBonus = input.position === "Last pick" ? 1.35 : 1;
+    score += Math.round((directCoverage === 3 ? 22 : 14) * stageBonus);
+    counter += Math.round((directCoverage === 3 ? 24 : 16) * stageBonus);
     reasons.push(`Counterea ${directCoverage} picks rivales`);
   }
+  if (input.position === "Last pick" && directCoverage >= 1) {
+    score += 8;
+    counter += 10;
+    reasons.push("Aprovecha la información completa del last pick");
+  }
   if (directCoverage === 0 && softCoverage === 0 && enemies.length >= 2) {
-    score -= 9;
-    counter -= 12;
-    warnings.push("No castiga directamente la composición rival");
+    const penalty = input.position === "Last pick" ? 16 : 9;
+    score -= penalty;
+    counter -= input.position === "Last pick" ? 20 : 12;
+    warnings.push(input.position === "Last pick" ? "Desaprovecha el last pick: no castiga al rival" : "No castiga directamente la composición rival");
   }
 
   const enemyHasTank = enemies.some((enemy) => enemy.role === "Tanque" || hasTag(enemy, "tank", "tanque"));
@@ -776,12 +814,22 @@ export function analyzeDraft(input: DraftInput, roster: Brawler[]): DraftAnalysi
     .map((brawler) => scoreCandidate(brawler, input, otherAllies, enemies, recommendationNeeds))
     .sort((a, b) => {
       const priority = input.priority || "Counter";
-      if (enemies.length && priority === "Counter") {
-        const aCoverage = a.countersHit.length * 2 + a.softCounters.length;
-        const bCoverage = b.countersHit.length * 2 + b.softCounters.length;
-        return bCoverage - aCoverage || b.metrics.counter - a.metrics.counter || b.score - a.score || a.metrics.risk - b.metrics.risk;
+      if (input.position === "First pick") {
+        const aFirst = a.metrics.mapFit * .52 + a.metrics.safety * .38 - a.metrics.risk * .18 + a.score * .16;
+        const bFirst = b.metrics.mapFit * .52 + b.metrics.safety * .38 - b.metrics.risk * .18 + b.score * .16;
+        return bFirst - aFirst || b.score - a.score;
       }
-      if (priority === "Seguro") return b.metrics.safety - a.metrics.safety || b.score - a.score;
+      if (input.position === "Last pick" && enemies.length) {
+        const aCoverage = a.countersHit.length * 4 + a.softCounters.length * 1.4 - a.exposedTo.length * 3;
+        const bCoverage = b.countersHit.length * 4 + b.softCounters.length * 1.4 - b.exposedTo.length * 3;
+        return bCoverage - aCoverage || b.metrics.counter - a.metrics.counter || a.metrics.risk - b.metrics.risk || b.score - a.score;
+      }
+      if (enemies.length && priority === "Counter") {
+        const aCoverage = a.countersHit.length * 2.5 + a.softCounters.length - a.exposedTo.length * 1.5;
+        const bCoverage = b.countersHit.length * 2.5 + b.softCounters.length - b.exposedTo.length * 1.5;
+        return bCoverage - aCoverage || b.metrics.counter - a.metrics.counter || b.metrics.composition - a.metrics.composition || b.score - a.score;
+      }
+      if (priority === "Seguro") return b.metrics.safety - a.metrics.safety || b.metrics.mapFit - a.metrics.mapFit || b.score - a.score;
       return b.score - a.score || b.metrics.counter - a.metrics.counter || b.metrics.safety - a.metrics.safety;
     })
     .slice(0, 16);
@@ -793,17 +841,15 @@ export function analyzeDraft(input: DraftInput, roster: Brawler[]): DraftAnalysi
   const visiblePicks = fullAllies.length + enemies.length;
   const draftStage = selectedProfile
     ? visiblePicks >= 6
-      ? "Draft completo: evaluando ambos equipos y la probabilidad estimada"
-      : "Tu pick está seleccionado: estimación provisional mientras completas los equipos"
-    : visiblePicks === 0
-      ? "Draft vacío: priorizando picks seguros y meta del mapa"
-      : input.enemies.length === 0
-        ? "Solo hay información aliada: priorizando equilibrio y flexibilidad"
-        : input.position === "Last pick"
-          ? "Cierre de draft: priorizando counters y castigo de debilidades"
-          : (input.priority || "Counter") === "Counter"
-          ? "Draft en curso: priorizando counters directos y castigo de arquetipos"
-          : "Draft en curso: equilibrando mapa, sinergias y matchups";
+      ? "Draft completo: evaluando los dos equipos"
+      : "Tu pick está seleccionado: evaluación provisional"
+    : input.position === "First pick"
+      ? "First pick: priorizando solidez, meta del mapa y baja exposición"
+      : input.position === "Last pick"
+        ? "Last pick: buscando el máximo castigo contra la composición completa"
+        : input.enemies.length
+          ? "Picks intermedios: counterear al rival sin romper la composición"
+          : "Picks intermedios: esperando información rival y manteniendo flexibilidad";
 
   return {
     recommendations,

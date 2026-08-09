@@ -1,6 +1,17 @@
-# Brawl Draft Lab v0.4.3
+# Brawl Draft Lab v0.4.4
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.4.4
+
+- Orden competitivo real: **1 first pick → 2 picks → 2 picks → last pick**.
+- Selector para indicar si el first pick pertenece a tu equipo o al rival.
+- El asistente detecta automáticamente el turno y la posición de tu siguiente selección.
+- First pick: prioriza solidez, tier del mapa, flexibilidad y baja exposición.
+- Picks intermedios: priorizan counters y equilibrio de composición.
+- Last pick: maximiza el castigo contra los tres picks rivales.
+- Durante el turno rival anticipa la siguiente respuesta sin fingir que te toca seleccionar.
+- Nueva línea temporal visual con las cuatro fases del draft.
 
 ## Novedades v0.4.3
 

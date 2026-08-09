@@ -5,11 +5,12 @@ import type {
   Brawler,
   DraftPosition,
   DraftPriority,
+  DraftFirstPickOwner,
   DraftRecommendation,
   MapProfile,
   PlayerPool,
 } from "@/lib/types";
-import { analyzeDraft, inferDraftPosition } from "@/lib/draft-engine";
+import { analyzeDraft } from "@/lib/draft-engine";
 import { loadPool } from "@/lib/pool";
 import { BrawlerPortrait, MapArtwork } from "./GameArtwork";
 import BrawlerDraftPicker from "./BrawlerDraftPicker";
@@ -27,6 +28,8 @@ type DraftSnapshot = {
   bans: string[];
   myPick?: string;
   priority?: DraftPriority;
+  firstPickOwner?: DraftFirstPickOwner;
+  myPickSlot?: number;
 };
 
 function selectDistinct(results: DraftRecommendation[], sorter: (a: DraftRecommendation, b: DraftRecommendation) => number, excluded: string[]) {
@@ -60,6 +63,127 @@ function FeaturedPick({ result, label, tone }: { result?: DraftRecommendation; l
   </article>;
 }
 
+
+type DraftTeam = "ally" | "enemy";
+
+type DraftFlowSlot = {
+  index: number;
+  team: DraftTeam;
+  pick?: string;
+  phase: number;
+  slotLabel: string;
+};
+
+function buildCompetitiveDraftFlow(
+  firstPickOwner: DraftFirstPickOwner,
+  allyPicks: string[],
+  enemyPicks: string[],
+  myPick?: string,
+  myPickSlot?: number | null,
+) {
+  const firstTeam: DraftTeam = firstPickOwner === "Aliado" ? "ally" : "enemy";
+  const otherTeam: DraftTeam = firstTeam === "ally" ? "enemy" : "ally";
+  const sequence: DraftTeam[] = [firstTeam, otherTeam, otherTeam, firstTeam, firstTeam, otherTeam];
+
+  const slots: DraftFlowSlot[] = sequence.map((team, index) => ({
+    index,
+    team,
+    phase: index === 0 ? 1 : index <= 2 ? 2 : index <= 4 ? 3 : 4,
+    slotLabel: index === 0 ? "First pick" : index === 5 ? "Last pick" : `Pick ${index + 1}`,
+  }));
+
+  if (myPick) {
+    const validOwnSlot = typeof myPickSlot === "number" && slots[myPickSlot]?.team === "ally"
+      ? myPickSlot
+      : slots.findIndex((slot) => slot.team === "ally");
+    if (validOwnSlot >= 0) slots[validOwnSlot].pick = myPick;
+  }
+
+  let allyIndex = 0;
+  let enemyIndex = 0;
+  for (const slot of slots) {
+    if (slot.pick) continue;
+    if (slot.team === "ally" && allyPicks[allyIndex]) slot.pick = allyPicks[allyIndex++];
+    if (slot.team === "enemy" && enemyPicks[enemyIndex]) slot.pick = enemyPicks[enemyIndex++];
+  }
+
+  const currentIndex = slots.findIndex((slot) => !slot.pick);
+  const currentSlot = currentIndex >= 0 ? slots[currentIndex] : undefined;
+  const nextOwnIndex = currentSlot?.team === "ally"
+    ? currentIndex
+    : slots.findIndex((slot, index) => index > currentIndex && slot.team === "ally" && !slot.pick);
+  const recommendationIndex = nextOwnIndex >= 0
+    ? nextOwnIndex
+    : slots.findIndex((slot) => slot.team === "ally" && !slot.pick);
+
+  const position: DraftPosition =
+    recommendationIndex === 0 ? "First pick" :
+    recommendationIndex === 5 ? "Last pick" :
+    "Pick intermedio";
+  const recommendedPriority: DraftPriority = position === "First pick" ? "Seguro" : "Counter";
+
+  const phaseLabels = [
+    { phase: 1, title: "First pick", subtitle: firstTeam === "ally" ? "Tu equipo" : "Rival" },
+    { phase: 2, title: "Doble respuesta", subtitle: otherTeam === "ally" ? "Tu equipo · picks 2–3" : "Rival · picks 2–3" },
+    { phase: 3, title: "Doble respuesta", subtitle: firstTeam === "ally" ? "Tu equipo · picks 4–5" : "Rival · picks 4–5" },
+    { phase: 4, title: "Last pick", subtitle: otherTeam === "ally" ? "Tu equipo" : "Rival" },
+  ];
+
+  return {
+    slots,
+    phases: phaseLabels.map((phase) => ({
+      ...phase,
+      slots: slots.filter((slot) => slot.phase === phase.phase),
+      status:
+        slots.filter((slot) => slot.phase === phase.phase).every((slot) => Boolean(slot.pick))
+          ? "done"
+          : slots.some((slot) => slot.phase === phase.phase && slot.index === currentIndex)
+            ? "current"
+            : "pending",
+    })),
+    currentIndex,
+    currentTeam: currentSlot?.team,
+    isMyTurn: currentSlot?.team === "ally",
+    isComplete: currentIndex === -1,
+    position,
+    recommendedPriority,
+    statusText: currentIndex === -1
+      ? "Draft completo"
+      : currentSlot?.team === "ally"
+        ? position === "First pick"
+          ? "Tu turno: elige un first pick sólido del mapa"
+          : position === "Last pick"
+            ? "Tu turno: last pick de máximo castigo"
+            : "Tu turno: counterea al rival y completa la composición"
+        : "Turno rival: anticipando sus picks y preparando tu respuesta",
+  };
+}
+
+function DraftOrderTimeline({
+  flow,
+}: {
+  flow: ReturnType<typeof buildCompetitiveDraftFlow>;
+}) {
+  return <section className="competitive-draft-flow">
+    <div className="competitive-flow-head">
+      <div><span className="eyebrow">Orden competitivo 3v3</span><h3>1 pick → 2 picks → 2 picks → last pick</h3></div>
+      <span className={`turn-chip ${flow.isComplete ? "complete" : flow.isMyTurn ? "my-turn" : "enemy-turn"}`}>{flow.statusText}</span>
+    </div>
+    <div className="competitive-flow-grid">
+      {flow.phases.map((phase) => <article className={`competitive-phase phase-${phase.status}`} key={phase.phase}>
+        <span className="phase-number">{phase.phase}</span>
+        <div className="phase-copy"><b>{phase.title}</b><small>{phase.subtitle}</small></div>
+        <div className="phase-slots">
+          {phase.slots.map((slot) => <div className={`phase-slot team-${slot.team} ${slot.pick ? "filled" : ""}`} key={slot.index}>
+            <span>{slot.pick || slot.slotLabel}</span>
+            <small>{slot.team === "ally" ? "Aliado" : "Rival"}</small>
+          </div>)}
+        </div>
+      </article>)}
+    </div>
+  </section>;
+}
+
 function readHistory(): DraftSnapshot[] {
   if (typeof window === "undefined") return [];
   try { return JSON.parse(window.localStorage.getItem(HISTORY_KEY) || "[]") as DraftSnapshot[]; } catch { return []; }
@@ -71,12 +195,14 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
   const availableMaps = useMemo(() => maps.filter((map) => map.mode === mode).sort((a, b) => Number(b.rotationStatus === "Actual") - Number(a.rotationStatus === "Actual") || a.name.localeCompare(b.name)), [maps, mode]);
   const [mapSlug, setMapSlug] = useState(availableMaps[0]?.slug || "");
   const [manualPosition, setManualPosition] = useState<DraftPosition>("First pick");
+  const [firstPickOwner, setFirstPickOwner] = useState<DraftFirstPickOwner>("Aliado");
   const [priority, setPriority] = useState<DraftPriority>("Counter");
   const [autoPosition, setAutoPosition] = useState(true);
   const [allies, setAllies] = useState<string[]>([]);
   const [enemies, setEnemies] = useState<string[]>([]);
   const [bans, setBans] = useState<string[]>([]);
   const [myPick, setMyPick] = useState<string[]>([]);
+  const [myPickSlot, setMyPickSlot] = useState<number | null>(null);
   const [quickMode, setQuickMode] = useState(false);
   const [personalPool, setPersonalPool] = useState<PlayerPool>({});
   const [usePersonalPool, setUsePersonalPool] = useState(false);
@@ -95,6 +221,8 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
     const sharedBans = params.get("bans")?.split("|").filter(Boolean) || [];
     const sharedPick = params.get("pick");
     const sharedPriority = params.get("priority") as DraftPriority | null;
+    const sharedFirstPickOwner = params.get("first") as DraftFirstPickOwner | null;
+    const sharedPickSlot = params.get("pickSlot");
     if (sharedMap) {
       const found = maps.find((item) => item.slug === sharedMap);
       if (found) { setMode(found.mode); setMapSlug(found.slug); }
@@ -104,17 +232,23 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
     if (sharedBans.length) setBans(sharedBans.slice(0, 6));
     if (sharedPick) setMyPick([sharedPick]);
     if (sharedPriority && ["Counter", "Equilibrado", "Seguro"].includes(sharedPriority)) setPriority(sharedPriority);
+    if (sharedFirstPickOwner && ["Aliado", "Rival"].includes(sharedFirstPickOwner)) setFirstPickOwner(sharedFirstPickOwner);
+    if (sharedPickSlot !== null && !Number.isNaN(Number(sharedPickSlot))) setMyPickSlot(Number(sharedPickSlot));
   }, [brawlers, maps]);
 
   const map = maps.find((item) => item.slug === mapSlug) || availableMaps[0];
-  const inferredPosition = inferDraftPosition(allies.length, enemies.length);
-  const position = autoPosition ? inferredPosition : manualPosition;
   const activeEnemies = useMemo(() => scenarioEnemy && !enemies.includes(scenarioEnemy) && enemies.length < 3 ? [...enemies, scenarioEnemy] : enemies, [enemies, scenarioEnemy]);
+  const draftFlow = useMemo(
+    () => buildCompetitiveDraftFlow(firstPickOwner, allies, enemies, myPick[0], myPickSlot),
+    [firstPickOwner, allies, enemies, myPick, myPickSlot],
+  );
+  const position = autoPosition ? draftFlow.position : manualPosition;
+  const effectivePriority = autoPosition ? draftFlow.recommendedPriority : priority;
 
   const analysis = useMemo(() => {
     if (!map) return null;
-    return analyzeDraft({ map, position, allies, enemies: activeEnemies, bans, myPick: myPick[0], priority, personalPool, usePersonalPool }, brawlers);
-  }, [map, position, allies, activeEnemies, bans, myPick, priority, personalPool, usePersonalPool, brawlers]);
+    return analyzeDraft({ map, position, allies, enemies: activeEnemies, bans, myPick: myPick[0], priority: effectivePriority, personalPool, usePersonalPool }, brawlers);
+  }, [map, position, allies, activeEnemies, bans, myPick, effectivePriority, personalPool, usePersonalPool, brawlers]);
 
   const unavailable = useMemo(() => new Set([...allies, ...enemies, ...bans, ...myPick, scenarioEnemy].filter(Boolean).map(normalize)), [allies, enemies, bans, myPick, scenarioEnemy]);
   const recommendedBest = analysis?.recommendations[0];
@@ -132,16 +266,31 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
     [primaryPick?.brawler.name, secondPick?.brawler.name].filter(Boolean) as string[],
   ) : undefined;
 
+  const handleMyPickChange = (values: string[]) => {
+    if (!values.length) {
+      setMyPick([]);
+      setMyPickSlot(null);
+      return;
+    }
+    if (!myPick.length) {
+      const suggestedSlot = draftFlow.currentTeam === "ally"
+        ? draftFlow.currentIndex
+        : draftFlow.slots.find((slot, index) => index > draftFlow.currentIndex && slot.team === "ally" && !slot.pick)?.index;
+      setMyPickSlot(typeof suggestedSlot === "number" && suggestedSlot >= 0 ? suggestedSlot : null);
+    }
+    setMyPick(values);
+  };
+
   const changeMode = (nextMode: string) => {
     setMode(nextMode);
     const first = maps.find((item) => item.mode === nextMode && item.rotationStatus === "Actual") || maps.find((item) => item.mode === nextMode);
     if (first) setMapSlug(first.slug);
-    setAllies([]); setEnemies([]); setBans([]); setMyPick([]); setScenarioEnemy("");
+    setAllies([]); setEnemies([]); setBans([]); setMyPick([]); setMyPickSlot(null); setScenarioEnemy("");
   };
 
   const resetDraft = () => {
-    setAllies([]); setEnemies([]); setBans([]); setMyPick([]); setScenarioEnemy("");
-    setAutoPosition(true); setManualPosition("First pick"); setPriority("Counter"); setMessage("");
+    setAllies([]); setEnemies([]); setBans([]); setMyPick([]); setMyPickSlot(null); setScenarioEnemy("");
+    setAutoPosition(true); setManualPosition("First pick"); setPriority("Counter"); setFirstPickOwner("Aliado"); setMessage("");
   };
 
   const shareDraft = async () => {
@@ -150,7 +299,9 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
     if (enemies.length) params.set("enemies", enemies.join("|"));
     if (bans.length) params.set("bans", bans.join("|"));
     if (myPick[0]) params.set("pick", myPick[0]);
-    params.set("priority", priority);
+    params.set("priority", effectivePriority);
+    params.set("first", firstPickOwner);
+    if (typeof myPickSlot === "number") params.set("pickSlot", String(myPickSlot));
     const url = `${window.location.origin}/draft?${params.toString()}`;
     try {
       const nav = navigator as Navigator & { share?: (data: { title?: string; text?: string; url?: string }) => Promise<void> };
@@ -162,7 +313,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
   };
 
   const saveDraft = () => {
-    const snapshot: DraftSnapshot = { id: crypto.randomUUID(), createdAt: new Date().toISOString(), mode, mapSlug: map.slug, allies, enemies, bans, myPick: myPick[0], priority };
+    const snapshot: DraftSnapshot = { id: crypto.randomUUID(), createdAt: new Date().toISOString(), mode, mapSlug: map.slug, allies, enemies, bans, myPick: myPick[0], priority: effectivePriority, firstPickOwner, myPickSlot: myPickSlot ?? undefined };
     const next = [snapshot, ...history].slice(0, 8);
     setHistory(next);
     window.localStorage.setItem(HISTORY_KEY, JSON.stringify(next));
@@ -170,7 +321,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
   };
 
   const loadSnapshot = (snapshot: DraftSnapshot) => {
-    setMode(snapshot.mode); setMapSlug(snapshot.mapSlug); setAllies(snapshot.allies); setEnemies(snapshot.enemies); setBans(snapshot.bans); setMyPick(snapshot.myPick ? [snapshot.myPick] : []); setPriority(snapshot.priority || "Counter"); setScenarioEnemy("");
+    setMode(snapshot.mode); setMapSlug(snapshot.mapSlug); setAllies(snapshot.allies); setEnemies(snapshot.enemies); setBans(snapshot.bans); setMyPick(snapshot.myPick ? [snapshot.myPick] : []); setPriority(snapshot.priority || "Counter"); setFirstPickOwner(snapshot.firstPickOwner || "Aliado"); setMyPickSlot(typeof snapshot.myPickSlot === "number" ? snapshot.myPickSlot : null); setScenarioEnemy("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -185,7 +336,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
   return <div className={`live-draft ${quickMode ? "quick-mode" : "analysis-mode"}`}>
     <section className="panel draft-control-panel">
       <div className="section-title">
-        <div><span className="eyebrow">Draft Coach v0.4.3</span><h2>Introduce los picks en orden</h2></div>
+        <div><span className="eyebrow">Draft Coach v0.4.4</span><h2>Introduce los picks en orden</h2></div>
         <div className="draft-action-row">
           <button type="button" className={`secondary-button compact-button ${quickMode ? "is-active" : ""}`} onClick={() => setQuickMode(!quickMode)}>{quickMode ? "Modo análisis" : "Modo rápido"}</button>
           <button type="button" className="secondary-button compact-button" onClick={shareDraft}>Compartir</button>
@@ -195,19 +346,22 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
       </div>
       {message && <div className="draft-toast">{message}</div>}
 
-      <div className="draft-context-grid draft-context-grid-v4">
+      <div className="draft-context-grid draft-context-grid-v44">
         <label>Modo<select value={mode} onChange={(event) => changeMode(event.target.value)}>{modes.map((item) => <option key={item}>{item}</option>)}</select></label>
         <label>Mapa<select value={mapSlug} onChange={(event) => { setMapSlug(event.target.value); setScenarioEnemy(""); }}>{availableMaps.map((item) => <option value={item.slug} key={item.slug}>{item.name}{item.rotationStatus === "Histórico" ? " · histórico" : ""}</option>)}</select></label>
-        <label>Posición<select value={position} disabled={autoPosition} onChange={(event) => setManualPosition(event.target.value as DraftPosition)}><option>First pick</option><option>Pick intermedio</option><option>Last pick</option></select></label>
-        <label>Prioridad<select value={priority} onChange={(event) => setPriority(event.target.value as DraftPriority)}><option value="Counter">Counter primero</option><option value="Equilibrado">Equilibrado</option><option value="Seguro">Pick seguro</option></select></label>
-        <label className="auto-position-toggle"><input type="checkbox" checked={autoPosition} onChange={(event) => setAutoPosition(event.target.checked)} /><span><b>Detectar turno</b><small>Ahora: {position}</small></span></label>
+        <label>Quién tiene first pick<select value={firstPickOwner} onChange={(event) => { setFirstPickOwner(event.target.value as DraftFirstPickOwner); setMyPickSlot(null); setScenarioEnemy(""); }}><option value="Aliado">Mi equipo</option><option value="Rival">Equipo rival</option></select></label>
+        <label>Posición calculada<select value={position} disabled={autoPosition} onChange={(event) => setManualPosition(event.target.value as DraftPosition)}><option>First pick</option><option>Pick intermedio</option><option>Last pick</option></select></label>
+        <label>Criterio calculado<select value={effectivePriority} disabled={autoPosition} onChange={(event) => setPriority(event.target.value as DraftPriority)}><option value="Counter">Counter primero</option><option value="Equilibrado">Equilibrado</option><option value="Seguro">Pick seguro</option></select></label>
+        <label className="auto-position-toggle"><input type="checkbox" checked={autoPosition} onChange={(event) => setAutoPosition(event.target.checked)} /><span><b>Orden competitivo automático</b><small>{position} · {effectivePriority}</small></span></label>
         <label className="auto-position-toggle pool-draft-toggle"><input type="checkbox" checked={usePersonalPool} onChange={(event) => setUsePersonalPool(event.target.checked)} /><span><b>Usar mi pool</b><small>Fuerza, HC y dominio</small></span></label>
       </div>
+
+      <DraftOrderTimeline flow={draftFlow} />
 
       <div className="draft-board draft-board-four">
         <BrawlerDraftPicker title="Mis aliados" subtitle="Los otros dos picks de tu equipo" values={allies} max={2} roster={brawlers} unavailable={unavailable} tone="ally" onChange={setAllies} />
         <BrawlerDraftPicker title="Rivales" subtitle="Añádelos conforme aparecen" values={enemies} max={3} roster={brawlers} unavailable={unavailable} tone="enemy" onChange={(values) => { setEnemies(values); setScenarioEnemy(""); }} />
-        <BrawlerDraftPicker title="Mi pick" subtitle="El brawler que vas a jugar" values={myPick} max={1} roster={brawlers} unavailable={unavailable} tone="self" onChange={setMyPick} />
+        <BrawlerDraftPicker title="Mi pick" subtitle="El brawler que vas a jugar" values={myPick} max={1} roster={brawlers} unavailable={unavailable} tone="self" onChange={handleMyPickChange} />
         <BrawlerDraftPicker title="Bans" subtitle="Bloqueados o descartados" values={bans} max={6} roster={brawlers} unavailable={unavailable} tone="ban" onChange={setBans} />
       </div>
 
@@ -217,12 +371,12 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
         {screenshot && <div className="capture-preview"><img src={screenshot} alt="Captura del draft" /><button type="button" onClick={() => setScreenshot(null)}>×</button></div>}
       </div>
 
-      <div className="live-status"><span className="live-dot" /><div><b>Recalculando automáticamente</b><small>{analysis.draftStage}{scenarioEnemy ? ` · simulando ${scenarioEnemy}` : ""}</small></div><strong>{analysis.availableCount} disponibles</strong></div>
+      <div className="live-status"><span className="live-dot" /><div><b>Recalculando automáticamente</b><small>{draftFlow.statusText} · {analysis.draftStage}{scenarioEnemy ? ` · simulando ${scenarioEnemy}` : ""}</small></div><strong>{analysis.availableCount} disponibles</strong></div>
     </section>
 
     {quickMode && primaryPick && <section className="quick-coach panel">
       <BrawlerPortrait name={primaryPick.brawler.name} className="quick-coach-avatar" priority />
-      <div><span className="eyebrow">{selectedPick ? "Evaluación de mi pick" : enemies.length && priority === "Counter" ? "Counter inmediato" : "Pick inmediato"}</span><h2>{primaryPick.brawler.name}</h2><p>{primaryPick.brief}</p><b>{primaryPick.lanePlan.lane}{primaryPick.lanePlan.target ? ` → busca a ${primaryPick.lanePlan.target}` : ""}</b><small>{primaryPick.warning || `Alternativas: ${secondPick?.brawler.name || "—"} / ${counter?.brawler.name || "—"}`}</small></div>
+      <div><span className="eyebrow">{selectedPick ? "Evaluación de mi pick" : position === "First pick" ? "First pick sólido" : position === "Last pick" ? "Last pick de castigo" : enemies.length && effectivePriority === "Counter" ? "Counter inmediato" : "Pick inmediato"}</span><h2>{primaryPick.brawler.name}</h2><p>{primaryPick.brief}</p><b>{primaryPick.lanePlan.lane}{primaryPick.lanePlan.target ? ` → busca a ${primaryPick.lanePlan.target}` : ""}</b><small>{primaryPick.warning || `Alternativas: ${secondPick?.brawler.name || "—"} / ${counter?.brawler.name || "—"}`}</small></div>
       <strong>{analysis.winEstimate ? `${analysis.winEstimate.percentage}%` : primaryPick.score}</strong>
     </section>}
 
@@ -240,8 +394,8 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
 
       <section className="draft-output-grid">
         <div className="panel live-recommendation-panel">
-          <div className="section-title"><div><span className="eyebrow">{selectedPick ? "Evaluación del pick" : enemies.length && priority === "Counter" ? "Respuesta al rival" : "Recomendación actual"}</span><h2>{selectedPick ? "Tu pick y mejores alternativas" : enemies.length && priority === "Counter" ? "Counter principal, seguro y alternativo" : "Mejor, seguro y castigo"}</h2></div><span className="status-pill">Composición {analysis.compositionScore}/100</span></div>
-          <div className="featured-picks-grid"><FeaturedPick result={primaryPick} label={selectedPick ? "Tu pick" : enemies.length && priority === "Counter" ? "Mejor counter" : "Mejor pick"} tone="best" /><FeaturedPick result={secondPick} label={selectedPick ? "Mejor alternativa" : "Pick seguro"} tone="safe" /><FeaturedPick result={counter} label={enemies.length ? "Counter alternativo" : "Alternativa flexible"} tone="counter" /></div>
+          <div className="section-title"><div><span className="eyebrow">{selectedPick ? "Evaluación del pick" : position === "First pick" ? "First pick del mapa" : position === "Last pick" ? "Cierre del draft" : enemies.length && effectivePriority === "Counter" ? "Respuesta al rival" : "Recomendación actual"}</span><h2>{selectedPick ? "Tu pick y mejores alternativas" : position === "First pick" ? "Sólido, seguro y flexible" : position === "Last pick" ? "Máximo counter, alternativa y seguro" : enemies.length && effectivePriority === "Counter" ? "Counter principal, seguro y alternativo" : "Mejor, seguro y castigo"}</h2></div><span className="status-pill">Composición {analysis.compositionScore}/100</span></div>
+          <div className="featured-picks-grid"><FeaturedPick result={primaryPick} label={selectedPick ? "Tu pick" : position === "First pick" ? "First pick sólido" : position === "Last pick" ? "Mejor last pick" : enemies.length && effectivePriority === "Counter" ? "Mejor counter" : "Mejor pick"} tone="best" /><FeaturedPick result={secondPick} label={selectedPick ? "Mejor alternativa" : "Pick seguro"} tone="safe" /><FeaturedPick result={counter} label={enemies.length ? "Counter alternativo" : "Alternativa flexible"} tone="counter" /></div>
 
           {primaryPick && <article className="coach-callout">
             <BrawlerPortrait name={primaryPick.brawler.name} className="coach-avatar" />
