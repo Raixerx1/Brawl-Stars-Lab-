@@ -1,6 +1,23 @@
-# Brawl Draft Lab v0.8
+# Brawl Draft Lab v0.8.1
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.8.1
+
+- Auditoría completa de la sección Counters.
+- Bolt confirmado dentro del roster interno.
+- 106 brawlers visibles, sin depender de que el perfil táctico esté completo.
+- Buscador por nombre y rol.
+- Filtro específico por rol.
+- Listado alfabético completo y desplazable.
+- Contador visible de brawlers mostrados frente al total.
+- Indicadores de cobertura:
+  - brawlers con counters;
+  - brawlers con amenazas;
+  - referencias de matchup rotas.
+- Acceso directo mediante `?brawler=slug`.
+- Nuevo comando `npm run audit:roster`.
+- Informe técnico `ROSTER_AUDIT.md`.
 
 ## Novedades v0.8
 

@@ -1,13 +1,14 @@
 {
   "name": "brawl-stars-lab",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "audit:roster": "node scripts/audit-roster.mjs"
   },
   "dependencies": {
     "next": "16.2.12",

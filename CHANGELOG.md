@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.8.1 — Roster completo en Counters
+
+- Sustituido el selector nativo por buscador y listado completo.
+- Añadido filtro por rol.
+- Los 106 brawlers internos aparecen aunque tengan un perfil base.
+- Bolt verificado con counters y amenazas.
+- Auditoría automática de duplicados, perfiles vacíos y referencias rotas.
+- Añadidos contador de cobertura, URL directa e informe técnico.
+
 ## v0.8 — Live Review
 
 - Captura local de pantalla o ventana.
