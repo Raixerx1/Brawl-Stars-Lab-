@@ -34,7 +34,14 @@ export default async function MapDetail({ params }: { params: Promise<{ slug: st
         <span className="eyebrow">Draft</span>
         <h2>Prioridades</h2>
         <div className="draft-columns">
-          <div><h3>First picks</h3>{map.firstPicks.map((name: string, index: number) => <p key={name}><b>{index + 1}.</b> {name}</p>)}</div>
+          <div className="map-first-picks-v12"><h3>First picks</h3>{map.firstPicks.map((name: string, index: number) => {
+            const candidate = map.firstPickCandidates?.find((item) => item.name === name);
+            return <article key={name}>
+              <b>{index + 1}.</b>
+              <span><strong>{name}</strong><small>{candidate?.reasons[0] || "Pick ciego auditado"}</small></span>
+              {candidate && <em>{candidate.score}</em>}
+            </article>;
+          })}</div>
           <div><h3>Last picks</h3>{map.lastPicks.map((name: string, index: number) => <p key={name}><b>{index + 1}.</b> {name}</p>)}</div>
           <div><h3>Bans</h3>{map.bans.map((name: string, index: number) => <p key={name}><b>{index + 1}.</b> {name}</p>)}</div>
         </div>
@@ -47,12 +54,28 @@ export default async function MapDetail({ params }: { params: Promise<{ slug: st
       </section>
     </div>
 
+    {map.firstPickCandidates && <section className="panel map-first-pick-model-v12">
+      <div className="section-title">
+        <div><span className="eyebrow">Modelo {map.firstPickModelVersion || "estructural"}</span><h2>Por qué estos first picks</h2></div>
+        <span className="status-pill">Confianza {map.firstPickConfidence || "Media"}</span>
+      </div>
+      <p>{map.firstPickNotes}</p>
+      <div className="map-first-pick-candidates-v12">
+        {map.firstPickCandidates.slice(0, 6).map((candidate, index) => <article className={index < 3 ? "primary" : "alternative"} key={candidate.name}>
+          <div><b>{index < 3 ? `Top ${index + 1}` : "Alternativa"}</b><strong>{candidate.name}</strong></div>
+          <em>{candidate.score}/100</em>
+          <p>{candidate.reasons.join(" · ") || "Encaje global con la estructura del mapa."}</p>
+          {candidate.risks.length > 0 && <small>Riesgo: {candidate.risks.join(" · ")}</small>}
+        </article>)}
+      </div>
+    </section>}
+
     <MapTactics map={map} />
 
     <div className="section-title spaced"><div><span className="eyebrow">Tier S</span><h2>Mejores opciones</h2></div></div>
     <div className="card-grid brawler-grid">{map.tierS.map((name: string) => brawlerByName(name)).filter(Boolean).map((brawler) => <BrawlerCard key={brawler!.slug} brawler={brawler!} />)}</div>
     <div className="section-title spaced"><div><span className="eyebrow">Tier A</span><h2>Alternativas sólidas</h2></div></div>
     <div className="card-grid brawler-grid">{map.tierA.map((name: string) => brawlerByName(name)).filter(Boolean).map((brawler) => <BrawlerCard key={brawler!.slug} brawler={brawler!} />)}</div>
-    <div className="notice">Pool comprobado el {map.poolCheckedAt}. Tier editorial revisado tras el balance general del 04/08/2026; no se muestran porcentajes sin una muestra verificable.</div>
+    <div className="notice">Pool comprobado el {map.poolCheckedAt}. La puntuación de first pick es estructural y editorial: no representa un win rate observado.</div>
   </div>;
 }

@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.12 — Modelo estructural de first picks
+
+- Perfiles físicos para los 39 mapas.
+- Perfiles de first pick para los 106 brawlers.
+- Cálculo de estado inicial y posterior al wallbreak.
+- Modelo de seguridad ciega, rango, visión, antidive y dependencia del equipo.
+- Tres picks auditados y cinco alternativas por mapa.
+- Razones y riesgos visibles en Draft Assistant y fichas de mapa.
+- Revisión de picks frágiles frente a wallbreak.
+- Nuevas auditorías de geometría y cobertura universal.
+
 ## v0.11 — Tier list, counters y first picks
 
 - Tier list visual actual con vistas 24 h y 30 d.

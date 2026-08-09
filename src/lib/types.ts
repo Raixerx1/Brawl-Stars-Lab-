@@ -1,3 +1,46 @@
+export type BrawlerFirstPickProfile = {
+  blindSafety: number;
+  openFit: number;
+  closedFit: number;
+  bushFit: number;
+  wallReliance: number;
+  postBreakFit: number;
+  vision: number;
+  wallBreak: number;
+  antiDive: number;
+  mobility: number;
+  objective: number;
+  control: number;
+  chokeControl: number;
+  teamDependence: number;
+  counterRisk: number;
+};
+
+export type MapGeometryProfile = {
+  openness: number;
+  bushDensity: number;
+  wallDensity: number;
+  destructibility: number;
+  chokeDensity: number;
+  laneWidth: number;
+  waterInfluence: number;
+  afterBreakOpenness: number;
+  afterBreakWalls: number;
+  visionImportance: "Baja" | "Media" | "Alta";
+  wallBreakImpact: "Baja" | "Media" | "Alta";
+};
+
+export type FirstPickEvaluation = {
+  score: number;
+  initialFit: number;
+  afterBreakFit: number;
+  blindQuality: number;
+  modeFit: number;
+  modeUtility: number;
+  strengths: string[];
+  risks: string[];
+};
+
 export type Brawler = {
   slug: string;
   name: string;
@@ -17,6 +60,9 @@ export type Brawler = {
     favorable?: Record<string, string>;
     threats?: Record<string, string>;
   };
+  firstPickProfile?: BrawlerFirstPickProfile;
+  firstPickProfileReviewedAt?: string;
+  firstPickProfileVersion?: string;
 };
 
 export type MapProfile = {
@@ -39,6 +85,15 @@ export type MapProfile = {
   firstPickReviewedAt?: string;
   firstPickConfidence?: "Baja" | "Media" | "Alta";
   firstPickNotes?: string;
+  geometry?: MapGeometryProfile;
+  geometryReviewedAt?: string;
+  firstPickModelVersion?: string;
+  firstPickCandidates?: Array<{
+    name: string;
+    score: number;
+    reasons: string[];
+    risks: string[];
+  }>;
 };
 
 export type DraftPosition = "First pick" | "Pick intermedio" | "Last pick";
@@ -231,6 +286,7 @@ export type DraftRecommendation = {
   personalAdjustment?: number;
   build: TacticalBuild;
   lanePlan: LanePlan;
+  firstPickEvaluation?: FirstPickEvaluation;
 };
 
 export type BanRecommendation = {

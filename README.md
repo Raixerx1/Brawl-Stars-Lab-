@@ -1,6 +1,52 @@
-# Brawl Draft Lab v0.11
+# Brawl Draft Lab v0.12
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.12
+
+- Modelo estructural universal para first picks.
+- Los **39 mapas** tienen perfil numérico de:
+  - apertura;
+  - arbustos;
+  - muros;
+  - destructibilidad;
+  - pasillos;
+  - anchura de líneas;
+  - agua.
+- Se calcula cómo cambia cada mapa después del wallbreak.
+- Los **106 brawlers** tienen perfil propio de first pick:
+  - seguridad ciega;
+  - abierto/cerrado;
+  - arbustos;
+  - dependencia de muros;
+  - rendimiento tras ruptura;
+  - visión;
+  - wallbreak;
+  - antidive;
+  - movilidad;
+  - objetivo;
+  - control;
+  - dependencia del equipo;
+  - riesgo de counter.
+- Cada mapa guarda:
+  - tres first picks auditados;
+  - cinco alternativas estructurales;
+  - puntuación editorial 0–100;
+  - fortalezas y riesgos.
+- El top 3 auditado prevalece cuando no está baneado.
+- `Solo pool` sigue excluyendo brawlers no disponibles.
+- Cuando el draft avanza, counters y composición vuelven a tener prioridad.
+- La ficha del mapa muestra estado inicial y estado estimado tras romper muros.
+- El Draft Assistant muestra apertura, arbustos, muros, ruptura y pasillos.
+- Las recomendaciones muestran encaje inicial, robustez tras wallbreak, seguridad ciega y utilidad del modo.
+- Revisión específica de first picks que dependían demasiado de muros:
+  - Rico deja de ser prioridad ciega en Pinball Dreams, Penalty Kick, Gem Fort, Hot Potato y Pit Stop.
+  - Sprout deja de ser first pick en Layer Cake por su pérdida de valor tras wallbreak.
+- Rustic Arcade mantiene **Piper, 8-Bit y Brock**; Sandy continúa como opción situacional.
+- Nueva auditoría:
+  - `npm run audit:first-pick-model`
+- Informe técnico:
+  - `FIRST_PICK_MODEL.md`
 
 ## Novedades v0.11
 

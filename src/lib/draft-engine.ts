@@ -1,4 +1,5 @@
 import { personalAdjustment } from "./performance";
+import { evaluateFirstPick } from "./first-pick-model";
 import type {
   BanRecommendation,
   Brawler,
@@ -330,6 +331,9 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
   const sIndex = input.map.tierS.indexOf(brawler.name);
   const aIndex = input.map.tierA.indexOf(brawler.name);
   const firstPickIndex = input.map.firstPicks.indexOf(brawler.name);
+  const firstPickEvaluation = input.position === "First pick"
+    ? evaluateFirstPick(brawler, input.map)
+    : undefined;
   if (sIndex >= 0) {
     score += 17 - sIndex * 1.4;
     mapFit += 24 - sIndex * 2;
@@ -340,59 +344,26 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
     reasons.push("Tier A editorial del mapa");
   }
 
-  if (input.position === "First pick") {
-    const openMap = input.map.layout === "Abierto";
-    const explicitFirstPick = firstPickIndex >= 0;
-    const naturallySafe =
-      hasTag(brawler, "safe") ||
-      isLongRange(brawler) ||
-      (isControl(brawler) && !openMap);
+  if (firstPickEvaluation) {
+    const modelBonus = (firstPickEvaluation.score - 50) * .72;
+    score += modelBonus;
+    mapFit = Math.round(firstPickEvaluation.initialFit * .62 + firstPickEvaluation.afterBreakFit * .38);
+    safety = Math.round(firstPickEvaluation.blindQuality * .82 + safety * .18);
+    risk = clamp(
+      100 - firstPickEvaluation.blindQuality +
+      (brawler.firstPickProfile?.counterRisk || 50) * .18
+    );
 
-    if (naturallySafe) {
-      score += 10;
-      safety += 22;
-      reasons.push("Pick sólido y difícil de castigar");
+    reasons.push(...firstPickEvaluation.strengths);
+    warnings.push(...firstPickEvaluation.risks);
+
+    if (firstPickIndex >= 0) {
+      score += Math.max(0, 4 - firstPickIndex);
+      reasons.push(`Top estructural ${firstPickIndex + 1} del mapa`);
     }
 
-    if (explicitFirstPick) {
-      score += 20 - firstPickIndex * 3;
-      mapFit += 22 - firstPickIndex * 3;
-      safety += 12;
-      risk -= 8;
-      reasons.push(`First pick revisado del mapa${input.map.firstPickReviewedAt ? ` · ${input.map.firstPickReviewedAt}` : ""}`);
-    } else if (sIndex >= 0) {
-      score += 3;
-      mapFit += 5;
-      reasons.push("Buen rendimiento editorial en el mapa, pero no es la prioridad ciega principal");
-    }
-
-    if (openMap && !isLongRange(brawler) && !hasTag(brawler, "open")) {
-      score -= explicitFirstPick ? 6 : 17;
-      mapFit -= explicitFirstPick ? 8 : 22;
-      safety -= explicitFirstPick ? 6 : 18;
-      risk += explicitFirstPick ? 5 : 17;
-      warnings.push("Alcance limitado para un first pick en mapa abierto");
-    }
-
-    if ((hasTag(brawler, "lastpick", "assassin") || brawler.role === "Asesino") && !explicitFirstPick) {
-      score -= 11;
-      safety -= 20;
-      risk += 22;
-      warnings.push("Expone demasiado el draft como primera selección");
-    }
-
-    if ((brawler.role === "Tanque" || hasTag(brawler, "tank")) && openMap && !explicitFirstPick) {
-      score -= 10;
-      safety -= 13;
-      risk += 16;
-      warnings.push("Tanque vulnerable a counters a ciegas en mapa abierto");
-    }
-
-    if (brawler.role === "Apoyo" && !hasTag(brawler, "carry") && !explicitFirstPick) {
-      score -= 4;
-      safety -= 4;
-      risk += 6;
-      warnings.push("First pick con dependencia elevada del equipo");
+    if (firstPickEvaluation.afterBreakFit >= 76 && input.map.geometry?.destructibility && input.map.geometry.destructibility >= 65) {
+      reasons.push("Conserva valor aunque se abra el mapa");
     }
   }
   if (input.position === "Pick intermedio" && (hasTag(brawler, "safe", "control") || isControl(brawler))) {
@@ -607,6 +578,7 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
     personalAdjustment: Math.round(learned.adjustment * 10) / 10,
     build: tacticalBuild(brawler, input, enemies),
     lanePlan: lanePlanFor(brawler, direct.length ? direct : soft, exposed, input),
+    firstPickEvaluation,
   };
 }
 
@@ -929,17 +901,21 @@ export function analyzeDraft(input: DraftInput, roster: Brawler[]): DraftAnalysi
     .sort((a, b) => {
       const priority = input.priority || "Counter";
       if (input.position === "First pick") {
-        const aReviewed = input.map.firstPicks.indexOf(a.brawler.name);
-        const bReviewed = input.map.firstPicks.indexOf(b.brawler.name);
+        const aCurated = input.map.firstPicks.indexOf(a.brawler.name);
+        const bCurated = input.map.firstPicks.indexOf(b.brawler.name);
 
-        // The audited map list is authoritative for blind first picks.
-        // Bans and strict personal-pool filters are applied before this sort.
-        if (aReviewed >= 0 && bReviewed < 0) return -1;
-        if (bReviewed >= 0 && aReviewed < 0) return 1;
-        if (aReviewed >= 0 && bReviewed >= 0) return aReviewed - bReviewed;
+        // El top 3 auditado del mapa prevalece. Los bans y "Solo pool"
+        // ya han filtrado los brawlers no disponibles antes de ordenar.
+        if (aCurated >= 0 && bCurated < 0) return -1;
+        if (bCurated >= 0 && aCurated < 0) return 1;
+        if (aCurated >= 0 && bCurated >= 0) return aCurated - bCurated;
 
-        const aFirst = a.metrics.mapFit * .50 + a.metrics.safety * .36 - a.metrics.risk * .20 + a.score * .14;
-        const bFirst = b.metrics.mapFit * .50 + b.metrics.safety * .36 - b.metrics.risk * .20 + b.score * .14;
+        const aModel = a.firstPickEvaluation?.score || 0;
+        const bModel = b.firstPickEvaluation?.score || 0;
+        const aPrepared = (a.metrics.personal - 50) * .10;
+        const bPrepared = (b.metrics.personal - 50) * .10;
+        const aFirst = aModel + aPrepared - a.metrics.risk * .025;
+        const bFirst = bModel + bPrepared - b.metrics.risk * .025;
         return bFirst - aFirst || b.score - a.score;
       }
       if (input.position === "Last pick" && enemies.length) {

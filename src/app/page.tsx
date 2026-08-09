@@ -11,7 +11,7 @@ export default function Home() {
       <div>
         <span className="hero-badge">PARCHE 04/08/2026 · RANKED LAB</span>
         <h1>Gana el draft<br /><em>antes de empezar.</em></h1>
-        <p>Draft vivo, counters, simulación del rival y Auto Review que aprende de tus correcciones.</p>
+        <p>Draft vivo, counters, simulación del rival y first picks calculados según apertura, arbustos, muros y wallbreak.</p>
         <div className="hero-actions">
           <Link href="/draft" className="primary-button">Abrir Draft Assistant</Link>
           <Link href="/live" className="secondary-button">Abrir Auto Review</Link>

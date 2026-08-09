@@ -25,8 +25,8 @@
     ],
     "firstPicks": [
       "Surge",
-      "Bibi",
-      "Max"
+      "Max",
+      "Gale"
     ],
     "lastPicks": [
       "Kenji",
@@ -47,8 +47,94 @@
       "Palco central"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: Surge, Bibi, Max. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: mixto · arbustos relevantes. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 48,
+      "bushDensity": 48,
+      "wallDensity": 55,
+      "destructibility": 68,
+      "chokeDensity": 55,
+      "laneWidth": 52,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 73,
+      "afterBreakWalls": 30,
+      "visionImportance": "Media",
+      "wallBreakImpact": "Media"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Surge",
+        "score": 81,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 76,
+        "reasons": [
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 75,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Colette",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Lou",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 69,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Nori",
+        "score": 69,
+        "reasons": [
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Damian",
+        "score": 68,
+        "reasons": [
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "pinball-dreams",
@@ -75,9 +161,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Rico",
       "Surge",
-      "Bibi"
+      "Gale",
+      "Max"
     ],
     "lastPicks": [
       "Kenji",
@@ -99,7 +185,104 @@
     ],
     "firstPickReviewedAt": "09/08/2026",
     "firstPickConfidence": "Alta",
-    "firstPickNotes": "First picks revisados para mapa cerrado: Rico, Surge, Bibi. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
+    "firstPickNotes": "Perfil estructural: muy cerrado · muchos muros · wallbreak decisivo · pasillos estrechos. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 28,
+      "bushDensity": 20,
+      "wallDensity": 82,
+      "destructibility": 88,
+      "chokeDensity": 86,
+      "laneWidth": 30,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 74,
+      "afterBreakWalls": 33,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Alta"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Surge",
+        "score": 81,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 76,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 75,
+        "reasons": [
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Lou",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 71,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Colette",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Damian",
+        "score": 70,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Starr Nova",
+        "score": 70,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": [
+          "Expone counters claros si se elige demasiado pronto",
+          "Mejor como counterpick que como first pick"
+        ]
+      }
+    ]
   },
   {
     "name": "Sneaky Fields",
@@ -125,9 +308,9 @@
       "Bibi"
     ],
     "firstPicks": [
-      "Bibi",
+      "Gale",
       "Rosa",
-      "Gale"
+      "Bibi"
     ],
     "lastPicks": [
       "Jacky",
@@ -150,7 +333,97 @@
     ],
     "firstPickReviewedAt": "09/08/2026",
     "firstPickConfidence": "Alta",
-    "firstPickNotes": "First picks revisados para mapa cerrado: Bibi, Rosa, Gale. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
+    "firstPickNotes": "Perfil estructural: muy cerrado · mucho arbusto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 20,
+      "bushDensity": 88,
+      "wallDensity": 42,
+      "destructibility": 45,
+      "chokeDensity": 58,
+      "laneWidth": 34,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 46,
+      "afterBreakWalls": 29,
+      "visionImportance": "Alta",
+      "wallBreakImpact": "Media"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Gale",
+        "score": 78,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Rosa",
+        "score": 66,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Aprovecha la cobertura de arbustos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Bibi",
+        "score": 66,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Aprovecha la cobertura de arbustos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 81,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 76,
+        "reasons": [
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Bo",
+        "score": 74,
+        "reasons": [
+          "Aporta visión en un mapa de arbustos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Sandy",
+        "score": 74,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Aprovecha la cobertura de arbustos",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Damian",
+        "score": 73,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "triple-dribble",
@@ -178,8 +451,8 @@
     ],
     "firstPicks": [
       "Surge",
-      "Bibi",
-      "Max"
+      "Max",
+      "Gale"
     ],
     "lastPicks": [
       "Kenji",
@@ -200,8 +473,97 @@
       "Triple drible"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: Surge, Bibi, Max. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: mixto · arbustos relevantes. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 48,
+      "bushDensity": 58,
+      "wallDensity": 48,
+      "destructibility": 58,
+      "chokeDensity": 42,
+      "laneWidth": 58,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 70,
+      "afterBreakWalls": 29,
+      "visionImportance": "Media",
+      "wallBreakImpact": "Media"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Surge",
+        "score": 81,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 76,
+        "reasons": [
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 75,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Colette",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Lou",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 69,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Starr Nova",
+        "score": 69,
+        "reasons": [
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": [
+          "Expone counters claros si se elige demasiado pronto",
+          "Mejor como counterpick que como first pick"
+        ]
+      },
+      {
+        "name": "Nori",
+        "score": 69,
+        "reasons": [
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "beach-ball",
@@ -229,8 +591,8 @@
     ],
     "firstPicks": [
       "Brock",
-      "Piper",
-      "Max"
+      "Max",
+      "Surge"
     ],
     "lastPicks": [
       "Kenji",
@@ -251,8 +613,97 @@
       "Pelota de playa"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa abierto: Brock, Piper y Max. Se prioriza alcance para ganar la primera línea y movilidad para convertir el control en avance con balón."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: muy abierto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 78,
+      "bushDensity": 12,
+      "wallDensity": 24,
+      "destructibility": 32,
+      "chokeDensity": 20,
+      "laneWidth": 82,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 83,
+      "afterBreakWalls": 19,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Baja"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Brock",
+        "score": 72,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 77,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 79,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 73,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Colette",
+        "score": 73,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rango y presión adaptados a líneas abiertas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Piper",
+        "score": 72,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Lou",
+        "score": 69,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 68,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "penalty-kick",
@@ -279,9 +730,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Rico",
       "Surge",
-      "Bibi"
+      "Gale",
+      "Max"
     ],
     "lastPicks": [
       "Kenji",
@@ -303,8 +754,97 @@
       "Tiro penal"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: Rico, Surge, Bibi. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: semiabierto · wallbreak decisivo. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 55,
+      "bushDensity": 28,
+      "wallDensity": 62,
+      "destructibility": 80,
+      "chokeDensity": 55,
+      "laneWidth": 58,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 81,
+      "afterBreakWalls": 28,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Alta"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Surge",
+        "score": 80,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 74,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 76,
+        "reasons": [
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Colette",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Lou",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 69,
+        "reasons": [
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Brock",
+        "score": 68,
+        "reasons": [
+          "Puede abrir el mapa a su favor",
+          "Mantiene valor después del wallbreak"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Nori",
+        "score": 68,
+        "reasons": [
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "spiraling-out",
@@ -333,7 +873,7 @@
     "firstPicks": [
       "Surge",
       "Max",
-      "Bibi"
+      "Gale"
     ],
     "lastPicks": [
       "Kenji",
@@ -354,8 +894,94 @@
       "Efecto envolvente"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: Surge, Max, Bibi. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: mixto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 50,
+      "bushDensity": 35,
+      "wallDensity": 55,
+      "destructibility": 55,
+      "chokeDensity": 64,
+      "laneWidth": 46,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 70,
+      "afterBreakWalls": 34,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Media"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Surge",
+        "score": 81,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 76,
+        "reasons": [
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 75,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Colette",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Lou",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 69,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Nori",
+        "score": 69,
+        "reasons": [
+          "Buen historial editorial para Balón Brawl"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Damian",
+        "score": 68,
+        "reasons": [
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "crystal-arcade",
@@ -405,8 +1031,86 @@
       "Arcade de cristal"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: 8-Bit, Max, Rico. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: semiabierto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 58,
+      "bushDensity": 32,
+      "wallDensity": 42,
+      "destructibility": 45,
+      "chokeDensity": 36,
+      "laneWidth": 64,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 72,
+      "afterBreakWalls": 29,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Media"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "8-Bit",
+        "score": 66,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 75,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Rico",
+        "score": 66,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 76,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 71,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 70,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Piper",
+        "score": 69,
+        "reasons": [],
+        "risks": []
+      }
+    ]
   },
   {
     "name": "Deathcap Trap",
@@ -433,8 +1137,8 @@
     ],
     "firstPicks": [
       "8-Bit",
-      "Brock",
-      "Max"
+      "Max",
+      "Brock"
     ],
     "lastPicks": [
       "Buster",
@@ -454,8 +1158,86 @@
     "poolCheckedAt": "09/08/2026",
     "aliases": [],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: 8-Bit, Brock, Max. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: semiabierto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 60,
+      "bushDensity": 30,
+      "wallDensity": 50,
+      "destructibility": 48,
+      "chokeDensity": 50,
+      "laneWidth": 58,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 74,
+      "afterBreakWalls": 34,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Media"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "8-Bit",
+        "score": 66,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 75,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Brock",
+        "score": 68,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 76,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 71,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Piper",
+        "score": 70,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 70,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "double-swoosh",
@@ -482,9 +1264,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Rosa",
       "Tara",
-      "Gene"
+      "Gene",
+      "Bo"
     ],
     "lastPicks": [
       "Tara",
@@ -506,7 +1288,98 @@
     ],
     "firstPickReviewedAt": "09/08/2026",
     "firstPickConfidence": "Alta",
-    "firstPickNotes": "First picks revisados para mapa cerrado: Rosa, Tara, Gene. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
+    "firstPickNotes": "Perfil estructural: muy cerrado · mucho arbusto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 24,
+      "bushDensity": 85,
+      "wallDensity": 45,
+      "destructibility": 40,
+      "chokeDensity": 65,
+      "laneWidth": 32,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 46,
+      "afterBreakWalls": 33,
+      "visionImportance": "Alta",
+      "wallBreakImpact": "Baja"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Tara",
+        "score": 70,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Aporta visión en un mapa de arbustos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 78,
+        "reasons": [
+          "Aporta visión en un mapa de arbustos",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Bo",
+        "score": 74,
+        "reasons": [
+          "Aporta visión en un mapa de arbustos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 77,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Sandy",
+        "score": 75,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Aprovecha la cobertura de arbustos",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 74,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "name": "Flooded Mine",
@@ -533,8 +1406,8 @@
     ],
     "firstPicks": [
       "Rico",
-      "Rosa",
-      "Tara"
+      "Tara",
+      "Gene"
     ],
     "lastPicks": [
       "Tara",
@@ -557,7 +1430,99 @@
     ],
     "firstPickReviewedAt": "09/08/2026",
     "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa cerrado: Rico, Rosa, Tara. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
+    "firstPickNotes": "Perfil estructural: muy cerrado · arbustos relevantes · muchos muros · pasillos estrechos. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 30,
+      "bushDensity": 65,
+      "wallDensity": 70,
+      "destructibility": 65,
+      "chokeDensity": 78,
+      "laneWidth": 28,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 63,
+      "afterBreakWalls": 39,
+      "visionImportance": "Media",
+      "wallBreakImpact": "Media"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Rico",
+        "score": 67,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Tara",
+        "score": 64,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Aporta visión en un mapa de arbustos",
+          "Controla pasillos y accesos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 72,
+        "reasons": [
+          "Aporta visión en un mapa de arbustos",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 77,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 74,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Controla pasillos y accesos",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 69,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Amber",
+        "score": 69,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Controla pasillos y accesos",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "name": "Gem Fort",
@@ -585,7 +1550,7 @@
     "firstPicks": [
       "8-Bit",
       "Max",
-      "Rico"
+      "Gene"
     ],
     "lastPicks": [
       "Sprout",
@@ -608,7 +1573,91 @@
     ],
     "firstPickReviewedAt": "09/08/2026",
     "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: 8-Bit, Max, Rico. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickNotes": "Perfil estructural: cerrado · wallbreak decisivo. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 45,
+      "bushDensity": 28,
+      "wallDensity": 68,
+      "destructibility": 72,
+      "chokeDensity": 62,
+      "laneWidth": 48,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 74,
+      "afterBreakWalls": 35,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Alta"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "8-Bit",
+        "score": 64,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 74,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 70,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 77,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 69,
+        "reasons": [
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Amber",
+        "score": 68,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 67,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "hard-rock-mine",
@@ -659,7 +1708,86 @@
     ],
     "firstPickReviewedAt": "09/08/2026",
     "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: 8-Bit, Max, Rico. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickNotes": "Perfil estructural: mixto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 50,
+      "bushDensity": 35,
+      "wallDensity": 58,
+      "destructibility": 62,
+      "chokeDensity": 50,
+      "laneWidth": 52,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 72,
+      "afterBreakWalls": 34,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Media"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "8-Bit",
+        "score": 65,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 74,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Rico",
+        "score": 66,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 76,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 71,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Amber",
+        "score": 68,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 68,
+        "reasons": [],
+        "risks": []
+      }
+    ]
   },
   {
     "name": "Lilygear Lake",
@@ -685,8 +1813,8 @@
       "Moe"
     ],
     "firstPicks": [
-      "8-Bit",
       "Piper",
+      "8-Bit",
       "Brock"
     ],
     "lastPicks": [
@@ -707,8 +1835,95 @@
     "poolCheckedAt": "09/08/2026",
     "aliases": [],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa abierto: 8-Bit, Piper, Brock. Se prioriza alcance, presión estable y herramientas de escape."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: muy abierto · agua condicionante. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 75,
+      "bushDensity": 15,
+      "wallDensity": 18,
+      "destructibility": 15,
+      "chokeDensity": 20,
+      "laneWidth": 76,
+      "waterInfluence": 75,
+      "afterBreakOpenness": 78,
+      "afterBreakWalls": 16,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Baja"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Piper",
+        "score": 76,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "8-Bit",
+        "score": 67,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Brock",
+        "score": 72,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 79,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Movilidad útil alrededor del agua",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 77,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 74,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 72,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Angelo",
+        "score": 72,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Movilidad útil alrededor del agua"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "rustic-arcade",
@@ -759,7 +1974,94 @@
     ],
     "firstPickReviewedAt": "09/08/2026",
     "firstPickConfidence": "Alta",
-    "firstPickNotes": "Mapa reclasificado como abierto: prioriza alcance, control estable del centro y baja exposición. Piper, 8-Bit y Brock ofrecen líneas largas; Sandy queda como pick situacional, no como first pick."
+    "firstPickNotes": "Perfil estructural: semiabierto · arbustos relevantes · estructura poco modificable. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 68,
+      "bushDensity": 48,
+      "wallDensity": 42,
+      "destructibility": 18,
+      "chokeDensity": 40,
+      "laneWidth": 70,
+      "waterInfluence": 15,
+      "afterBreakOpenness": 72,
+      "afterBreakWalls": 37,
+      "visionImportance": "Media",
+      "wallBreakImpact": "Baja"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Piper",
+        "score": 71,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "8-Bit",
+        "score": 66,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Brock",
+        "score": 69,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 77,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 76,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 73,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 71,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "undermine",
@@ -786,9 +2088,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Rico",
       "Max",
-      "8-Bit"
+      "8-Bit",
+      "Rico"
     ],
     "lastPicks": [
       "Tara",
@@ -810,7 +2112,85 @@
     ],
     "firstPickReviewedAt": "09/08/2026",
     "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: Rico, Max, 8-Bit. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickNotes": "Perfil estructural: semiabierto · arbustos relevantes. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 58,
+      "bushDensity": 55,
+      "wallDensity": 34,
+      "destructibility": 35,
+      "chokeDensity": 42,
+      "laneWidth": 64,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 69,
+      "afterBreakWalls": 26,
+      "visionImportance": "Media",
+      "wallBreakImpact": "Baja"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Max",
+        "score": 75,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "8-Bit",
+        "score": 65,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Rico",
+        "score": 66,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 77,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 73,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Piper",
+        "score": 69,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 69,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "last-stop",
@@ -861,7 +2241,86 @@
     ],
     "firstPickReviewedAt": "09/08/2026",
     "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: 8-Bit, Max, Rico. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickNotes": "Perfil estructural: mixto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 48,
+      "bushDensity": 30,
+      "wallDensity": 58,
+      "destructibility": 60,
+      "chokeDensity": 55,
+      "laneWidth": 50,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 70,
+      "afterBreakWalls": 34,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Media"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "8-Bit",
+        "score": 64,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 74,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Rico",
+        "score": 66,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 77,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 70,
+        "reasons": [
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Amber",
+        "score": 68,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Buen historial editorial para Atrapagemas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 68,
+        "reasons": [],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "belle-s-rock",
@@ -888,9 +2347,9 @@
       "Sirius"
     ],
     "firstPicks": [
-      "Brock",
       "Piper",
-      "Mandy"
+      "Brock",
+      "R-T"
     ],
     "lastPicks": [
       "Kenji",
@@ -911,8 +2370,94 @@
       "Roca de Belle"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: Brock, Piper, Mandy. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: mixto · muchos muros · wallbreak decisivo · pasillos estrechos. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 52,
+      "bushDensity": 10,
+      "wallDensity": 70,
+      "destructibility": 72,
+      "chokeDensity": 78,
+      "laneWidth": 42,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 77,
+      "afterBreakWalls": 36,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Alta"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Piper",
+        "score": 74,
+        "reasons": [
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Brock",
+        "score": 68,
+        "reasons": [
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Controla pasillos y accesos",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 74,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 70,
+        "reasons": [
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 70,
+        "reasons": [
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 69,
+        "reasons": [
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 68,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Controla pasillos y accesos",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "flaring-phoenix",
@@ -939,9 +2484,9 @@
       "Sirius"
     ],
     "firstPicks": [
-      "Brock",
       "Piper",
-      "Mandy"
+      "Brock",
+      "R-T"
     ],
     "lastPicks": [
       "Kenji",
@@ -962,8 +2507,86 @@
       "Fénix en llamas"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: Brock, Piper, Mandy. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: semiabierto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 58,
+      "bushDensity": 20,
+      "wallDensity": 50,
+      "destructibility": 48,
+      "chokeDensity": 45,
+      "laneWidth": 58,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 73,
+      "afterBreakWalls": 34,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Media"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Piper",
+        "score": 75,
+        "reasons": [
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Brock",
+        "score": 69,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 73,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 72,
+        "reasons": [
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 70,
+        "reasons": [
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 69,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 69,
+        "reasons": [],
+        "risks": []
+      }
+    ]
   },
   {
     "name": "Flowing Springs",
@@ -989,9 +2612,9 @@
       "Nani"
     ],
     "firstPicks": [
-      "Brock",
       "Piper",
-      "Angelo"
+      "Angelo",
+      "Brock"
     ],
     "lastPicks": [
       "Piper",
@@ -1014,8 +2637,99 @@
       "Manantial caudaloso"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa abierto: Brock, Piper, Angelo. Se prioriza alcance, presión estable y herramientas de escape."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: muy abierto · agua condicionante. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 82,
+      "bushDensity": 8,
+      "wallDensity": 18,
+      "destructibility": 15,
+      "chokeDensity": 18,
+      "laneWidth": 84,
+      "waterInfluence": 70,
+      "afterBreakOpenness": 84,
+      "afterBreakWalls": 16,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Baja"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Piper",
+        "score": 84,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Angelo",
+        "score": 80,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Movilidad útil alrededor del agua",
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Brock",
+        "score": 75,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 79,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 74,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Byron",
+        "score": 74,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": [
+          "Depende demasiado de coordinación aliada"
+        ]
+      },
+      {
+        "name": "Max",
+        "score": 73,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Movilidad útil alrededor del agua"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Nani",
+        "score": 73,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "goldarm-gulch",
@@ -1042,9 +2756,9 @@
       "Sirius"
     ],
     "firstPicks": [
-      "Brock",
-      "Mandy",
-      "Gray"
+      "R-T",
+      "Gale",
+      "Griff"
     ],
     "lastPicks": [
       "Kenji",
@@ -1065,8 +2779,98 @@
       "Barranco del brazo de oro"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa cerrado: Brock, Mandy, Gray. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: cerrado · mucho arbusto · pasillos estrechos. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 32,
+      "bushDensity": 70,
+      "wallDensity": 62,
+      "destructibility": 58,
+      "chokeDensity": 75,
+      "laneWidth": 34,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 60,
+      "afterBreakWalls": 38,
+      "visionImportance": "Alta",
+      "wallBreakImpact": "Media"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "R-T",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Controla pasillos y accesos",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 70,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 75,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 70,
+        "reasons": [
+          "Aporta visión en un mapa de arbustos",
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 68,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Lou",
+        "score": 67,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Damian",
+        "score": 66,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "name": "New Horizons",
@@ -1093,8 +2897,8 @@
     ],
     "firstPicks": [
       "Brock",
-      "Surge",
-      "Piper"
+      "Piper",
+      "R-T"
     ],
     "lastPicks": [
       "Sirius",
@@ -1116,8 +2920,95 @@
       "Nuevos horizontes"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: Brock, Surge, Piper. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: mixto · muchos muros · wallbreak decisivo. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 48,
+      "bushDensity": 38,
+      "wallDensity": 74,
+      "destructibility": 88,
+      "chokeDensity": 68,
+      "laneWidth": 44,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 81,
+      "afterBreakWalls": 30,
+      "visionImportance": "Media",
+      "wallBreakImpact": "Alta"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Brock",
+        "score": 68,
+        "reasons": [
+          "Puede abrir el mapa a su favor",
+          "Mantiene valor después del wallbreak"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Piper",
+        "score": 72,
+        "reasons": [
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Controla pasillos y accesos",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 74,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 70,
+        "reasons": [
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 69,
+        "reasons": [
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 69,
+        "reasons": [
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 68,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Controla pasillos y accesos",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "out-in-the-open",
@@ -1144,9 +3035,9 @@
       "Sirius"
     ],
     "firstPicks": [
-      "Brock",
       "Piper",
-      "Angelo"
+      "Angelo",
+      "Brock"
     ],
     "lastPicks": [
       "Kenji",
@@ -1169,7 +3060,97 @@
     ],
     "firstPickReviewedAt": "09/08/2026",
     "firstPickConfidence": "Alta",
-    "firstPickNotes": "First picks revisados para mapa abierto: Brock, Piper, Angelo. Se prioriza alcance, presión estable y herramientas de escape."
+    "firstPickNotes": "Perfil estructural: muy abierto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 90,
+      "bushDensity": 5,
+      "wallDensity": 12,
+      "destructibility": 10,
+      "chokeDensity": 10,
+      "laneWidth": 90,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 91,
+      "afterBreakWalls": 11,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Baja"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Piper",
+        "score": 87,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Angelo",
+        "score": 80,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Brock",
+        "score": 77,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 81,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Nani",
+        "score": 76,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Byron",
+        "score": 75,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": [
+          "Depende demasiado de coordinación aliada"
+        ]
+      },
+      {
+        "name": "Surge",
+        "score": 72,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 72,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Noqueo"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "dueling-beetles",
@@ -1197,8 +3178,8 @@
     ],
     "firstPicks": [
       "Surge",
-      "Max",
-      "Lou"
+      "Lou",
+      "Max"
     ],
     "lastPicks": [
       "Gale",
@@ -1219,8 +3200,98 @@
       "Duelo de escarabajos"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: Surge, Max, Lou. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: mixto · pasillos estrechos. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 48,
+      "bushDensity": 22,
+      "wallDensity": 64,
+      "destructibility": 58,
+      "chokeDensity": 72,
+      "laneWidth": 46,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 70,
+      "afterBreakWalls": 39,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Media"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Surge",
+        "score": 80,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Zona Restringida"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Lou",
+        "score": 77,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Controla pasillos y accesos",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 73,
+        "reasons": [
+          "Buen historial editorial para Zona Restringida"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 75,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Controla pasillos y accesos",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Colette",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Amber",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Controla pasillos y accesos",
+          "Buen historial editorial para Zona Restringida"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Damian",
+        "score": 71,
+        "reasons": [
+          "Controla pasillos y accesos",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Zona Restringida"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 70,
+        "reasons": [],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "open-business",
@@ -1248,8 +3319,8 @@
     ],
     "firstPicks": [
       "Brock",
-      "8-Bit",
-      "Max"
+      "Max",
+      "8-Bit"
     ],
     "lastPicks": [
       "Gale",
@@ -1268,8 +3339,98 @@
     "poolCheckedAt": "09/08/2026",
     "aliases": [],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa abierto: Brock, 8-Bit, Max. Se prioriza alcance, presión estable y herramientas de escape."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: muy abierto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 80,
+      "bushDensity": 10,
+      "wallDensity": 25,
+      "destructibility": 30,
+      "chokeDensity": 25,
+      "laneWidth": 80,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 84,
+      "afterBreakWalls": 20,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Baja"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Brock",
+        "score": 73,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 74,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Zona Restringida"
+        ],
+        "risks": []
+      },
+      {
+        "name": "8-Bit",
+        "score": 69,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 78,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Zona Restringida"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Lou",
+        "score": 74,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Zona Restringida"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Colette",
+        "score": 73,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rango y presión adaptados a líneas abiertas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Piper",
+        "score": 73,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 72,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Zona Restringida"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "parallel-plays",
@@ -1297,8 +3458,8 @@
     ],
     "firstPicks": [
       "Surge",
-      "Bibi",
-      "Lou"
+      "Lou",
+      "Gale"
     ],
     "lastPicks": [
       "Gale",
@@ -1319,8 +3480,101 @@
       "Estrategias paralelas"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa cerrado: Surge, Bibi, Lou. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: muy cerrado · muchos muros · wallbreak decisivo · pasillos estrechos. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 30,
+      "bushDensity": 25,
+      "wallDensity": 78,
+      "destructibility": 70,
+      "chokeDensity": 80,
+      "laneWidth": 30,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 65,
+      "afterBreakWalls": 41,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Media"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Surge",
+        "score": 80,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Lou",
+        "score": 77,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 76,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Damian",
+        "score": 73,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 72,
+        "reasons": [
+          "Buen historial editorial para Zona Restringida"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Amber",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Controla pasillos y accesos",
+          "Buen historial editorial para Zona Restringida"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 71,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Colette",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "ring-of-fire",
@@ -1347,9 +3601,9 @@
       "Damian"
     ],
     "firstPicks": [
-      "8-Bit",
-      "Brock",
-      "Max"
+      "Lou",
+      "Max",
+      "Brock"
     ],
     "lastPicks": [
       "Gale",
@@ -1372,8 +3626,99 @@
       "Ring of Fire"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa abierto: 8-Bit, Brock, Max. Se prioriza alcance, presión estable y herramientas de escape."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: muy abierto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 78,
+      "bushDensity": 12,
+      "wallDensity": 32,
+      "destructibility": 35,
+      "chokeDensity": 38,
+      "laneWidth": 78,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 84,
+      "afterBreakWalls": 24,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Baja"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Lou",
+        "score": 74,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Zona Restringida"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 74,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Zona Restringida"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Brock",
+        "score": 73,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 78,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Zona Restringida"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 73,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Zona Restringida"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Colette",
+        "score": 73,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rango y presión adaptados a líneas abiertas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Piper",
+        "score": 72,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Amber",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Buen historial editorial para Zona Restringida"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "bridge-too-far",
@@ -1401,8 +3746,8 @@
     ],
     "firstPicks": [
       "Brock",
-      "8-Bit",
-      "Colt"
+      "Colette",
+      "8-Bit"
     ],
     "lastPicks": [
       "Chuck",
@@ -1422,7 +3767,91 @@
     "aliases": [],
     "firstPickReviewedAt": "09/08/2026",
     "firstPickConfidence": "Alta",
-    "firstPickNotes": "First picks revisados para mapa abierto: Brock, 8-Bit, Colt. Se prioriza alcance, presión estable y herramientas de escape."
+    "firstPickNotes": "Perfil estructural: muy abierto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 88,
+      "bushDensity": 5,
+      "wallDensity": 12,
+      "destructibility": 18,
+      "chokeDensity": 10,
+      "laneWidth": 92,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 90,
+      "afterBreakWalls": 11,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Baja"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Brock",
+        "score": 76,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Colette",
+        "score": 77,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rango y presión adaptados a líneas abiertas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "8-Bit",
+        "score": 70,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Piper",
+        "score": 76,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 72,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Angelo",
+        "score": 71,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 69,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "hot-potato",
@@ -1449,9 +3878,9 @@
       "8-Bit"
     ],
     "firstPicks": [
-      "Rico",
-      "Bibi",
-      "Colt"
+      "Colette",
+      "Griff",
+      "Brock"
     ],
     "lastPicks": [
       "Chuck",
@@ -1473,7 +3902,101 @@
     ],
     "firstPickReviewedAt": "09/08/2026",
     "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa cerrado: Rico, Bibi, Colt. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
+    "firstPickNotes": "Perfil estructural: muy cerrado · muchos muros · wallbreak decisivo · pasillos estrechos. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 25,
+      "bushDensity": 15,
+      "wallDensity": 82,
+      "destructibility": 90,
+      "chokeDensity": 80,
+      "laneWidth": 28,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 74,
+      "afterBreakWalls": 32,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Alta"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Colette",
+        "score": 74,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Atraco"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 73,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Brock",
+        "score": 65,
+        "reasons": [
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 73,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Nori",
+        "score": 70,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Buen historial editorial para Atraco"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 69,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Rico",
+        "score": 69,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Buen historial editorial para Atraco"
+        ],
+        "risks": [
+          "Pierde mucho valor si el rival rompe los muros"
+        ]
+      },
+      {
+        "name": "Lou",
+        "score": 67,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "kaboom-canyon",
@@ -1501,7 +4024,7 @@
     ],
     "firstPicks": [
       "Brock",
-      "Colt",
+      "Colette",
       "8-Bit"
     ],
     "lastPicks": [
@@ -1521,8 +4044,90 @@
     "poolCheckedAt": "09/08/2026",
     "aliases": [],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: Brock, Colt, 8-Bit. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: mixto · wallbreak decisivo. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 52,
+      "bushDensity": 20,
+      "wallDensity": 58,
+      "destructibility": 82,
+      "chokeDensity": 52,
+      "laneWidth": 56,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 80,
+      "afterBreakWalls": 26,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Alta"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Brock",
+        "score": 70,
+        "reasons": [
+          "Puede abrir el mapa a su favor",
+          "Mantiene valor después del wallbreak"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Colette",
+        "score": 75,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Atraco"
+        ],
+        "risks": []
+      },
+      {
+        "name": "8-Bit",
+        "score": 67,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 72,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 71,
+        "reasons": [
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 68,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 67,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Rico",
+        "score": 67,
+        "reasons": [
+          "Buen historial editorial para Atraco"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "name": "Pit Stop",
@@ -1548,9 +4153,9 @@
       "Jacky"
     ],
     "firstPicks": [
-      "Bibi",
-      "Bull",
-      "Rico"
+      "Colette",
+      "Griff",
+      "Bibi"
     ],
     "lastPicks": [
       "Edgar",
@@ -1572,8 +4177,106 @@
       "Parada en boxes"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa cerrado: Bibi, Bull, Rico. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: muy cerrado · mucho arbusto · wallbreak decisivo · pasillos estrechos. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 22,
+      "bushDensity": 72,
+      "wallDensity": 65,
+      "destructibility": 70,
+      "chokeDensity": 72,
+      "laneWidth": 30,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 61,
+      "afterBreakWalls": 34,
+      "visionImportance": "Alta",
+      "wallBreakImpact": "Media"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Colette",
+        "score": 72,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Atraco"
+        ],
+        "risks": [
+          "Poca información en un mapa de arbustos"
+        ]
+      },
+      {
+        "name": "Griff",
+        "score": 72,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Bibi",
+        "score": 66,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Aprovecha la cobertura de arbustos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 74,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Nori",
+        "score": 70,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Buen historial editorial para Atraco"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 69,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Rico",
+        "score": 69,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Buen historial editorial para Atraco"
+        ],
+        "risks": [
+          "Poca información en un mapa de arbustos",
+          "Pierde mucho valor si el rival rompe los muros"
+        ]
+      },
+      {
+        "name": "Lou",
+        "score": 68,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "safe-zone",
@@ -1601,7 +4304,7 @@
     ],
     "firstPicks": [
       "Brock",
-      "Colt",
+      "Colette",
       "8-Bit"
     ],
     "lastPicks": [
@@ -1624,7 +4327,91 @@
     ],
     "firstPickReviewedAt": "09/08/2026",
     "firstPickConfidence": "Alta",
-    "firstPickNotes": "First picks revisados para mapa abierto: Brock, Colt, 8-Bit. Se prioriza alcance, presión estable y herramientas de escape."
+    "firstPickNotes": "Perfil estructural: muy abierto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 88,
+      "bushDensity": 5,
+      "wallDensity": 20,
+      "destructibility": 25,
+      "chokeDensity": 16,
+      "laneWidth": 88,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 90,
+      "afterBreakWalls": 17,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Baja"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Brock",
+        "score": 76,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Colette",
+        "score": 77,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rango y presión adaptados a líneas abiertas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "8-Bit",
+        "score": 70,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Piper",
+        "score": 76,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 72,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Angelo",
+        "score": 70,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 69,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "name": "Safe(r) Zone",
@@ -1650,9 +4437,9 @@
       "Mico"
     ],
     "firstPicks": [
-      "8-Bit",
       "Brock",
-      "Colt"
+      "Colette",
+      "8-Bit"
     ],
     "lastPicks": [
       "Chuck",
@@ -1674,8 +4461,86 @@
       "Zona más segura"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: 8-Bit, Brock, Colt. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: semiabierto · wallbreak decisivo. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 58,
+      "bushDensity": 12,
+      "wallDensity": 52,
+      "destructibility": 70,
+      "chokeDensity": 46,
+      "laneWidth": 62,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 79,
+      "afterBreakWalls": 27,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Media"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Brock",
+        "score": 71,
+        "reasons": [
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Colette",
+        "score": 75,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Atraco"
+        ],
+        "risks": []
+      },
+      {
+        "name": "8-Bit",
+        "score": 67,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 72,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 71,
+        "reasons": [
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 68,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Piper",
+        "score": 67,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Rico",
+        "score": 67,
+        "reasons": [
+          "Buen historial editorial para Atraco"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "name": "Dry Season",
@@ -1701,9 +4566,9 @@
       "Mandy"
     ],
     "firstPicks": [
-      "Brock",
       "Piper",
-      "Mandy"
+      "Brock",
+      "Belle"
     ],
     "lastPicks": [
       "Tick",
@@ -1725,8 +4590,94 @@
       "Sequía sanguinaria"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: Brock, Piper, Mandy. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: semiabierto · muchos muros · wallbreak decisivo. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 58,
+      "bushDensity": 15,
+      "wallDensity": 72,
+      "destructibility": 78,
+      "chokeDensity": 68,
+      "laneWidth": 52,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 82,
+      "afterBreakWalls": 34,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Alta"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Piper",
+        "score": 75,
+        "reasons": [
+          "Mantiene valor después del wallbreak",
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Brock",
+        "score": 70,
+        "reasons": [
+          "Puede abrir el mapa a su favor",
+          "Mantiene valor después del wallbreak"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 72,
+        "reasons": [
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 72,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Controla pasillos y accesos",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 69,
+        "reasons": [
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 69,
+        "reasons": [
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Angelo",
+        "score": 69,
+        "reasons": [
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "hideout",
@@ -1776,8 +4727,95 @@
       "Escondite"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: Piper, Brock, Belle. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: semiabierto · wallbreak decisivo. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 58,
+      "bushDensity": 25,
+      "wallDensity": 65,
+      "destructibility": 85,
+      "chokeDensity": 58,
+      "laneWidth": 56,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 84,
+      "afterBreakWalls": 27,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Alta"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Piper",
+        "score": 75,
+        "reasons": [
+          "Mantiene valor después del wallbreak",
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Brock",
+        "score": 70,
+        "reasons": [
+          "Puede abrir el mapa a su favor",
+          "Mantiene valor después del wallbreak"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 72,
+        "reasons": [
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 72,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 70,
+        "reasons": [
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 69,
+        "reasons": [
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Angelo",
+        "score": 69,
+        "reasons": [
+          "Mantiene valor después del wallbreak",
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "name": "Layer Cake",
@@ -1803,9 +4841,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
+      "R-T",
       "Brock",
-      "Mandy",
-      "R-T"
+      "Griff"
     ],
     "lastPicks": [
       "Tick",
@@ -1826,7 +4864,95 @@
     "aliases": [],
     "firstPickReviewedAt": "09/08/2026",
     "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa cerrado: Brock, Mandy, R-T. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
+    "firstPickNotes": "Perfil estructural: muy cerrado · muchos muros · wallbreak decisivo · pasillos estrechos. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 30,
+      "bushDensity": 10,
+      "wallDensity": 88,
+      "destructibility": 72,
+      "chokeDensity": 90,
+      "laneWidth": 25,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 66,
+      "afterBreakWalls": 45,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Alta"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "R-T",
+        "score": 69,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Controla pasillos y accesos",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Brock",
+        "score": 63,
+        "reasons": [
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Griff",
+        "score": 70,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Puede abrir el mapa a su favor"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 73,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 68,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Lou",
+        "score": 66,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Controla pasillos y accesos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 66,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 66,
+        "reasons": [
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "shooting-star",
@@ -1854,8 +4980,8 @@
     ],
     "firstPicks": [
       "Piper",
-      "Brock",
-      "Angelo"
+      "Angelo",
+      "Brock"
     ],
     "lastPicks": [
       "Nani",
@@ -1877,7 +5003,96 @@
     ],
     "firstPickReviewedAt": "09/08/2026",
     "firstPickConfidence": "Alta",
-    "firstPickNotes": "First picks revisados para mapa abierto: Piper, Brock, Angelo. Se prioriza alcance, presión estable y herramientas de escape."
+    "firstPickNotes": "Perfil estructural: muy abierto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 94,
+      "bushDensity": 3,
+      "wallDensity": 8,
+      "destructibility": 8,
+      "chokeDensity": 5,
+      "laneWidth": 96,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 94,
+      "afterBreakWalls": 8,
+      "visionImportance": "Baja",
+      "wallBreakImpact": "Baja"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Piper",
+        "score": 88,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Angelo",
+        "score": 81,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Brock",
+        "score": 77,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 82,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Nani",
+        "score": 78,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Byron",
+        "score": 76,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": [
+          "Depende demasiado de coordinación aliada"
+        ]
+      },
+      {
+        "name": "Gene",
+        "score": 72,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas",
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "8-Bit",
+        "score": 72,
+        "reasons": [
+          "Rango y presión adaptados a líneas abiertas"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "canal-grande",
@@ -1927,8 +5142,91 @@
       "Gran Canal"
     ],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa mixto: Piper, Brock, Belle. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: semiabierto · arbustos relevantes · agua condicionante. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 55,
+      "bushDensity": 55,
+      "wallDensity": 40,
+      "destructibility": 30,
+      "chokeDensity": 62,
+      "laneWidth": 48,
+      "waterInfluence": 65,
+      "afterBreakOpenness": 65,
+      "afterBreakWalls": 32,
+      "visionImportance": "Media",
+      "wallBreakImpact": "Baja"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Piper",
+        "score": 72,
+        "reasons": [
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Brock",
+        "score": 66,
+        "reasons": [],
+        "risks": []
+      },
+      {
+        "name": "Belle",
+        "score": 69,
+        "reasons": [
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 74,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 72,
+        "reasons": [
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 71,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Max",
+        "score": 71,
+        "reasons": [
+          "Movilidad útil alrededor del agua"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 68,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      }
+    ]
   },
   {
     "slug": "snake-prairie",
@@ -1976,7 +5274,98 @@
     "poolCheckedAt": "09/08/2026",
     "aliases": [],
     "firstPickReviewedAt": "09/08/2026",
-    "firstPickConfidence": "Media",
-    "firstPickNotes": "First picks revisados para mapa cerrado: Bo, Tara, Gene. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Perfil estructural: muy cerrado · mucho arbusto. El top 3 combina seguridad a ciegas, utilidad del modo, estado inicial y resistencia tras romper muros.",
+    "geometry": {
+      "openness": 10,
+      "bushDensity": 98,
+      "wallDensity": 8,
+      "destructibility": 5,
+      "chokeDensity": 25,
+      "laneWidth": 30,
+      "waterInfluence": 0,
+      "afterBreakOpenness": 13,
+      "afterBreakWalls": 8,
+      "visionImportance": "Alta",
+      "wallBreakImpact": "Baja"
+    },
+    "geometryReviewedAt": "09/08/2026",
+    "firstPickModelVersion": "v0.12",
+    "firstPickCandidates": [
+      {
+        "name": "Bo",
+        "score": 74,
+        "reasons": [
+          "Aporta visión en un mapa de arbustos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Tara",
+        "score": 71,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Aporta visión en un mapa de arbustos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gene",
+        "score": 77,
+        "reasons": [
+          "Aporta visión en un mapa de arbustos",
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Surge",
+        "score": 73,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Gale",
+        "score": 70,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Rinde en pasillos y distancias cortas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Sandy",
+        "score": 70,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Aprovecha la cobertura de arbustos"
+        ],
+        "risks": []
+      },
+      {
+        "name": "R-T",
+        "score": 69,
+        "reasons": [
+          "Seguridad alta como pick ciego",
+          "Difícil de castigar con dive",
+          "Buen historial editorial para Caza Estelar"
+        ],
+        "risks": []
+      },
+      {
+        "name": "Damian",
+        "score": 68,
+        "reasons": [
+          "Rinde en pasillos y distancias cortas",
+          "Difícil de castigar con dive"
+        ],
+        "risks": []
+      }
+    ]
   }
 ]

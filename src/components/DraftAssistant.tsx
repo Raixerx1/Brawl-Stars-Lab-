@@ -80,6 +80,12 @@ function RecommendationCard({
       <strong>{result.score}</strong>
     </div>
     <p className="simple-rec-brief">{result.brief}</p>
+    {result.firstPickEvaluation && <div className="first-pick-evaluation-v12">
+      <span><b>{result.firstPickEvaluation.initialFit}</b>Mapa inicial</span>
+      <span><b>{result.firstPickEvaluation.afterBreakFit}</b>Tras wallbreak</span>
+      <span><b>{result.firstPickEvaluation.blindQuality}</b>Seguridad ciega</span>
+      <span><b>{result.firstPickEvaluation.modeUtility}</b>Utilidad del modo</span>
+    </div>}
     {poolEntry && <div className="rec-pool-status">
       {poolEntry.favorite && <span>★ Prioritario</span>}
       {poolEntry.power11 && <span>F11</span>}
@@ -434,7 +440,7 @@ export default function DraftAssistant({
   return <div className="ordered-draft-assistant">
     <section className="panel ordered-draft-panel">
       <div className="section-title">
-        <div><span className="eyebrow">Draft Coach v0.11</span><h2>Introduce los picks en orden</h2></div>
+        <div><span className="eyebrow">Draft Coach v0.12</span><h2>Introduce los picks en orden</h2></div>
         <div className="draft-action-row">
           <button type="button" className="secondary-button compact-button" onClick={shareDraft}>Compartir</button>
           <button type="button" className="secondary-button compact-button" onClick={resetDraft}>Reiniciar</button>
@@ -451,16 +457,28 @@ export default function DraftAssistant({
         <label className="auto-position-toggle learning-toggle-v7"><input type="checkbox" checked={learnFromHistory} onChange={(event) => setLearnFromHistory(event.target.checked)} /><span><b>Aprender de mi historial</b><small>{personalPerformance?.overall.games || 0} partidas registradas</small></span></label>
       </div>
 
-      <div className="first-pick-audit-v11">
-        <div>
-          <span className="eyebrow">First picks revisados</span>
-          <small>{map.firstPickReviewedAt || "Revisión editorial"} · confianza {map.firstPickConfidence || "Media"}</small>
+      <div className="first-pick-audit-v11 first-pick-audit-v12">
+        <div className="first-pick-audit-heading">
+          <div>
+            <span className="eyebrow">First picks estructurales</span>
+            <small>{map.firstPickReviewedAt || "Revisión editorial"} · confianza {map.firstPickConfidence || "Media"} · {map.firstPickModelVersion || "modelo editorial"}</small>
+          </div>
+          {map.geometry && <div className="map-geometry-chips-v12">
+            <span><b>{map.geometry.openness}</b>Apertura</span>
+            <span><b>{map.geometry.bushDensity}</b>Arbustos</span>
+            <span><b>{map.geometry.wallDensity}</b>Muros</span>
+            <span><b>{map.geometry.destructibility}</b>Ruptura</span>
+            <span><b>{map.geometry.chokeDensity}</b>Pasillos</span>
+          </div>}
         </div>
         <div className="first-pick-audit-brawlers">
-          {map.firstPicks.map((name, index) => <span key={name}>
-            <BrawlerPortrait name={name} className="first-pick-audit-avatar" />
-            <b>{index + 1}. {name}</b>
-          </span>)}
+          {map.firstPicks.map((name, index) => {
+            const candidate = map.firstPickCandidates?.find((item) => item.name === name);
+            return <span key={name}>
+              <BrawlerPortrait name={name} className="first-pick-audit-avatar" />
+              <span><b>{index + 1}. {name}</b><small>{candidate ? `${candidate.score}/100 · ${candidate.reasons[0] || "Pick ciego estable"}` : "Pick ciego auditado"}</small></span>
+            </span>;
+          })}
         </div>
         {map.firstPickNotes && <p>{map.firstPickNotes}</p>}
       </div>
