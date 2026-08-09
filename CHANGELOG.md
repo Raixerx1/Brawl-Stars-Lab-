@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.4.3 — Counter primero
+
+- Reponderación completa del motor hacia counters directos.
+- Bonus por counterear dos o tres picks rivales.
+- Penalizaciones mayores por matchups desfavorables.
+- Selector Counter / Equilibrado / Seguro.
+- Matriz visual de matchup contra cada rival.
+- Respuestas de arquetipo y etiquetas de cobertura.
+- Estimación de victoria más sensible a counters.
+- Nueva caché PWA con navegación network-first.
+
 ## v0.4.2 — Mi pick y estimación de victoria
 
 - Cuarto bloque para introducir el pick propio.

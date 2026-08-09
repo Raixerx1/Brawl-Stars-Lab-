@@ -1,6 +1,18 @@
-# Brawl Draft Lab v0.4.2
+# Brawl Draft Lab v0.4.3
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.4.3
+
+- Motor **Counter primero** activado por defecto.
+- Selector de prioridad: Counter primero, Equilibrado o Pick seguro.
+- Los counters directos y múltiples pesan mucho más que el tier general del mapa.
+- Penalización fuerte cuando un rival counterea al candidato.
+- Respuestas por arquetipo: antidive, antitanque, acceso a artilleros, wallbreak y ventaja de rango.
+- Matriz visual contra cada pick rival.
+- Etiquetas Counter directo, Counter múltiple, Respuesta favorable o Matchup arriesgado.
+- El estimador de victoria da más peso a los matchups.
+- Service worker actualizado para evitar versiones antiguas en escritorio.
 
 ## Novedades v0.4.2
 

@@ -35,6 +35,8 @@ export type MapProfile = {
 
 export type DraftPosition = "First pick" | "Pick intermedio" | "Last pick";
 
+export type DraftPriority = "Counter" | "Equilibrado" | "Seguro";
+
 export type PlayerPoolEntry = {
   available: boolean;
   power11: boolean;
@@ -67,6 +69,7 @@ export type DraftInput = {
   enemies: string[];
   bans: string[];
   myPick?: string;
+  priority?: DraftPriority;
   personalPool?: PlayerPool;
   usePersonalPool?: boolean;
 };
@@ -89,7 +92,10 @@ export type DraftRecommendation = {
   warning?: string;
   metrics: DraftMetrics;
   countersHit: string[];
+  softCounters: string[];
   exposedTo: string[];
+  uncoveredEnemies: string[];
+  counterLabel: string;
   suggestedLine: string;
   plan: string;
   build: TacticalBuild;

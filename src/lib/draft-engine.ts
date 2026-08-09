@@ -212,11 +212,75 @@ function coversNeed(brawler: Brawler, need: string) {
   );
 }
 
+
+function softCounterReason(candidate: Brawler, enemy: Brawler, input: DraftInput) {
+  if (isAntitank(candidate) && (enemy.role === "Tanque" || hasTag(enemy, "tank", "tanque"))) return "antitanque";
+  if (isAntidive(candidate) && (enemy.role === "Asesino" || hasTag(enemy, "assassin", "asesino", "mobile"))) return "antidive";
+  if ((candidate.role === "Asesino" || hasTag(candidate, "mobile")) && isThrower(enemy)) return "acceso contra artillero";
+  if (hasWallbreak(candidate) && isThrower(enemy) && input.map.traits.some((trait) => trait.includes("muro") || trait.includes("cobertura"))) return "rompe su cobertura";
+  if (input.map.layout === "Abierto" && isLongRange(candidate) && isShortRange(enemy)) return "ventaja de rango";
+  if (["Zona Restringida", "Balón Brawl"].includes(input.map.mode) && isControl(candidate) && isShortRange(enemy)) return "controla su entrada";
+  return undefined;
+}
+
+function finalCounterWeightedScore(
+  rawScore: number,
+  input: DraftInput,
+  metrics: DraftRecommendation["metrics"],
+  enemies: Brawler[],
+  directCount: number,
+  softCount: number,
+  exposedCount: number,
+) {
+  if (!enemies.length) {
+    return clamp(
+      metrics.mapFit * .29 +
+      metrics.safety * .21 +
+      metrics.composition * .19 +
+      metrics.synergy * .15 +
+      metrics.personal * .08 +
+      metrics.counter * .08 -
+      metrics.risk * .10 +
+      rawScore * .08
+    );
+  }
+
+  const priority = input.priority || "Counter";
+  const weights = priority === "Seguro"
+    ? { counter: .25, map: .18, composition: .16, synergy: .10, safety: .26, personal: .05, risk: .13, raw: .06 }
+    : priority === "Equilibrado"
+      ? { counter: .34, map: .20, composition: .17, synergy: .12, safety: .12, personal: .05, risk: .11, raw: .07 }
+      : { counter: .50, map: .14, composition: .13, synergy: .08, safety: .10, personal: .05, risk: .13, raw: .05 };
+
+  const coverageBonus =
+    directCount >= 3 ? 13 :
+    directCount === 2 ? 9 :
+    directCount === 1 ? 4 :
+    softCount >= 2 ? 3 : 0;
+  const exposurePenalty = exposedCount * (priority === "Counter" ? 7 : 5);
+  const noAnswerPenalty = directCount === 0 && softCount === 0 && enemies.length >= 2 ? 8 : 0;
+
+  return clamp(
+    metrics.counter * weights.counter +
+    metrics.mapFit * weights.map +
+    metrics.composition * weights.composition +
+    metrics.synergy * weights.synergy +
+    metrics.safety * weights.safety +
+    metrics.personal * weights.personal -
+    metrics.risk * weights.risk +
+    rawScore * weights.raw +
+    coverageBonus -
+    exposurePenalty -
+    noAnswerPenalty
+  );
+}
+
 function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], enemies: Brawler[], needs: string[]): DraftRecommendation {
   let score = tierScore[brawler.tier] ?? 41;
   const reasons: string[] = [];
   const warnings: string[] = [];
   const countersHit: string[] = [];
+  const softCounters: string[] = [];
   const exposedTo: string[] = [];
 
   let mapFit = 45;
@@ -268,29 +332,59 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
   }
 
   for (const enemy of enemies) {
-    if (includesName(brawler.counters, enemy.name)) {
-      score += 13;
-      counter += 20;
+    const directCounter = includesName(brawler.counters, enemy.name);
+    const reciprocalCounter = includesName(enemy.counteredBy, brawler.name);
+    const directlyExposed = includesName(brawler.counteredBy, enemy.name);
+    const enemyClaimsCounter = includesName(enemy.counters, brawler.name);
+
+    if (directCounter) {
+      score += 24;
+      counter += 32;
       countersHit.push(enemy.name);
       reasons.push(`Counter directo de ${enemy.name}`);
+    } else if (reciprocalCounter) {
+      score += 11;
+      counter += 16;
+      countersHit.push(enemy.name);
+      reasons.push(`Matchup favorable contra ${enemy.name}`);
+    } else {
+      const softReason = softCounterReason(brawler, enemy, input);
+      if (softReason) {
+        score += 8;
+        counter += 12;
+        softCounters.push(enemy.name);
+        reasons.push(`${softReason} frente a ${enemy.name}`);
+      }
     }
-    if (includesName(brawler.counteredBy, enemy.name)) {
-      score -= 15;
-      counter -= 24;
-      safety -= 12;
-      risk += 24;
+
+    if (directlyExposed) {
+      score -= 27;
+      counter -= 38;
+      safety -= 18;
+      risk += 34;
       exposedTo.push(enemy.name);
-      warnings.push(`${enemy.name} lo frena`);
+      warnings.push(`${enemy.name} lo frena claramente`);
+    } else if (enemyClaimsCounter) {
+      score -= 13;
+      counter -= 19;
+      safety -= 8;
+      risk += 16;
+      exposedTo.push(enemy.name);
+      warnings.push(`${enemy.name} tiene ventaja`);
     }
-    if (includesName(enemy.counteredBy, brawler.name)) {
-      score += 5;
-      counter += 7;
-    }
-    if (includesName(enemy.counters, brawler.name)) {
-      score -= 6;
-      counter -= 8;
-      risk += 8;
-    }
+  }
+
+  const directCoverage = unique(countersHit).length;
+  const softCoverage = unique(softCounters).filter((name) => !includesName(countersHit, name)).length;
+  if (directCoverage >= 2) {
+    score += directCoverage === 3 ? 22 : 14;
+    counter += directCoverage === 3 ? 24 : 16;
+    reasons.push(`Counterea ${directCoverage} picks rivales`);
+  }
+  if (directCoverage === 0 && softCoverage === 0 && enemies.length >= 2) {
+    score -= 9;
+    counter -= 12;
+    warnings.push("No castiga directamente la composición rival");
   }
 
   const enemyHasTank = enemies.some((enemy) => enemy.role === "Tanque" || hasTag(enemy, "tank", "tanque"));
@@ -298,13 +392,13 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
   const enemyHasThrower = enemies.some(isThrower);
 
   if (enemyHasTank && isAntitank(brawler)) {
-    score += 10; counter += 15; composition += 10; reasons.push("Cubre antitanque");
+    score += 15; counter += 21; composition += 10; reasons.push("Cubre antitanque");
   }
   if (enemyHasDive && isAntidive(brawler)) {
-    score += 11; counter += 15; composition += 12; reasons.push("Protege frente a dive");
+    score += 17; counter += 23; composition += 12; reasons.push("Protege frente a dive");
   }
   if (enemyHasThrower && (brawler.role === "Asesino" || hasTag(brawler, "mobile"))) {
-    score += 8; counter += 12; reasons.push("Acceso contra artilleros");
+    score += 13; counter += 18; reasons.push("Acceso contra artilleros");
   }
 
   if (input.map.layout === "Abierto" && isLongRange(brawler)) {
@@ -355,29 +449,61 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
   if (brawler.profileComplete) safety += 4;
   if (!brawler.profileComplete) { score -= 4; safety -= 6; risk += 6; }
 
-  const warning = warnings.length ? unique(warnings).slice(0, 2).join(" · ") : !brawler.profileComplete ? "Build exacta pendiente de validación; se muestra una recomendación táctica" : undefined;
-  const brief = countersHit.length
-    ? `Frena a ${countersHit.slice(0, 2).join(" y ")}. ${exposedTo.length ? `Evita a ${exposedTo[0]}.` : "Encaja bien en el cierre."}`
-    : exposedTo.length
-      ? `Aporta ${reasons[0]?.toLowerCase() || "equilibrio"}, pero ${exposedTo[0]} lo frena.`
-      : `${reasons[0] || "Pick flexible"}. ${reasons[1] || "Mantiene opciones abiertas."}`;
+  const direct = unique(countersHit);
+  const soft = unique(softCounters).filter((name) => !includesName(direct, name));
+  const exposed = unique(exposedTo);
+  const covered = new Set([...direct, ...soft].map(norm));
+  const uncoveredEnemies = enemies
+    .map((enemy) => enemy.name)
+    .filter((name) => !covered.has(norm(name)) && !includesName(exposed, name));
+
+  const metrics = {
+    mapFit: clamp(mapFit),
+    counter: clamp(counter),
+    synergy: clamp(synergy),
+    safety: clamp(safety),
+    composition: clamp(composition),
+    personal: clamp(personal),
+    risk: clamp(risk),
+  };
+  const finalScore = finalCounterWeightedScore(score, input, metrics, enemies, direct.length, soft.length, exposed.length);
+  const counterLabel =
+    direct.length >= 2 ? `Counter múltiple · ${direct.length}/${enemies.length}` :
+    direct.length === 1 ? "Counter directo" :
+    soft.length >= 2 ? "Respuesta favorable múltiple" :
+    soft.length === 1 ? "Respuesta de arquetipo" :
+    exposed.length ? "Matchup arriesgado" :
+    enemies.length ? "Neutral frente al rival" : "Pick flexible";
+
+  const warning = warnings.length
+    ? unique(warnings).slice(0, 2).join(" · ")
+    : !brawler.profileComplete
+      ? "Build exacta pendiente de validación; se muestra una recomendación táctica"
+      : undefined;
+  const brief = direct.length
+    ? `Frena a ${direct.slice(0, 2).join(" y ")}${direct.length > 2 ? ` y ${direct.length - 2} más` : ""}. ${exposed.length ? `Evita a ${exposed[0]}.` : "Busca su línea."}`
+    : soft.length
+      ? `Respuesta favorable contra ${soft.slice(0, 2).join(" y ")}. ${exposed.length ? `${exposed[0]} puede frenarlo.` : "Gana valor por arquetipo."}`
+      : exposed.length
+        ? `No es un counter limpio: ${exposed[0]} lo frena.`
+        : `${reasons[0] || "Pick flexible"}. ${enemies.length ? "No obtiene ventaja directa de matchup." : reasons[1] || "Mantiene opciones abiertas."}`;
 
   return {
     brawler,
-    score: clamp(score),
-    reasons: unique(reasons).slice(0, 7),
+    score: finalScore,
+    reasons: unique(reasons).slice(0, 8),
     brief,
     warning,
-    metrics: {
-      mapFit: clamp(mapFit), counter: clamp(counter), synergy: clamp(synergy), safety: clamp(safety),
-      composition: clamp(composition), personal: clamp(personal), risk: clamp(risk),
-    },
-    countersHit: unique(countersHit),
-    exposedTo: unique(exposedTo),
+    metrics,
+    countersHit: direct,
+    softCounters: soft,
+    exposedTo: exposed,
+    uncoveredEnemies,
+    counterLabel,
     suggestedLine: lineFor(brawler, input),
-    plan: planFor(brawler, countersHit, exposedTo, input),
+    plan: planFor(brawler, direct.length ? direct : soft, exposed, input),
     build: tacticalBuild(brawler, input, enemies),
-    lanePlan: lanePlanFor(brawler, countersHit, exposedTo, input),
+    lanePlan: lanePlanFor(brawler, direct.length ? direct : soft, exposed, input),
   };
 }
 
@@ -558,8 +684,8 @@ function estimateWinProbability(input: DraftInput, allies: Brawler[], enemies: B
   const allyMatchups = matchupQuality(allies, enemies);
   const enemyMatchups = matchupQuality(enemies, allies);
 
-  let alliedScore = allyBase * 0.46 + allyComposition * 0.24 + allyMatchups * 0.30;
-  let enemyScore = enemyBase * 0.46 + enemyComposition * 0.24 + enemyMatchups * 0.30;
+  let alliedScore = allyBase * 0.34 + allyComposition * 0.24 + allyMatchups * 0.42;
+  let enemyScore = enemyBase * 0.34 + enemyComposition * 0.24 + enemyMatchups * 0.42;
 
   const selected = allies.find((brawler) => norm(brawler.name) === norm(input.myPick || ""));
   const poolEntry = selected ? input.personalPool?.[selected.slug] : undefined;
@@ -648,7 +774,16 @@ export function analyzeDraft(input: DraftInput, roster: Brawler[]): DraftAnalysi
       return entry.available && !entry.avoid;
     })
     .map((brawler) => scoreCandidate(brawler, input, otherAllies, enemies, recommendationNeeds))
-    .sort((a, b) => b.score - a.score || b.metrics.safety - a.metrics.safety)
+    .sort((a, b) => {
+      const priority = input.priority || "Counter";
+      if (enemies.length && priority === "Counter") {
+        const aCoverage = a.countersHit.length * 2 + a.softCounters.length;
+        const bCoverage = b.countersHit.length * 2 + b.softCounters.length;
+        return bCoverage - aCoverage || b.metrics.counter - a.metrics.counter || b.score - a.score || a.metrics.risk - b.metrics.risk;
+      }
+      if (priority === "Seguro") return b.metrics.safety - a.metrics.safety || b.score - a.score;
+      return b.score - a.score || b.metrics.counter - a.metrics.counter || b.metrics.safety - a.metrics.safety;
+    })
     .slice(0, 16);
 
   const selectedPick = selectedProfile
@@ -666,6 +801,8 @@ export function analyzeDraft(input: DraftInput, roster: Brawler[]): DraftAnalysi
         ? "Solo hay información aliada: priorizando equilibrio y flexibilidad"
         : input.position === "Last pick"
           ? "Cierre de draft: priorizando counters y castigo de debilidades"
+          : (input.priority || "Counter") === "Counter"
+          ? "Draft en curso: priorizando counters directos y castigo de arquetipos"
           : "Draft en curso: equilibrando mapa, sinergias y matchups";
 
   return {

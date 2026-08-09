@@ -66,3 +66,22 @@
 .win-estimate-placeholder>span{color:var(--green);font-weight:900;font-size:13px;white-space:nowrap}
 @media(max-width:1180px){.draft-board-four{grid-template-columns:1fr 1fr}.draft-picker-ban{grid-column:1/-1}.draft-picker-self{grid-column:auto}}
 @media(max-width:760px){.draft-board-four,.win-team-scores,.win-factors{grid-template-columns:1fr}.win-estimate-summary{align-items:flex-start}.win-percentage strong{font-size:38px}.win-estimate-placeholder{align-items:flex-start;flex-direction:column}.draft-picker-ban{grid-column:auto}}
+
+/* v0.4.3 — Counter-first */
+.counter-grade{display:inline-flex;margin:1px 0 8px;padding:5px 8px;border-radius:999px;background:rgba(255,214,74,.1);border:1px solid rgba(255,214,74,.2);color:var(--yellow);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.featured-matchups{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.featured-matchups small{padding:5px 7px;border-radius:7px;font-size:8px;font-weight:750}
+.matchup-good{background:rgba(80,223,160,.1);color:var(--green)}
+.matchup-soft{background:rgba(69,183,255,.1);color:var(--blue)}
+.matchup-bad{background:rgba(255,104,123,.1);color:var(--red)}
+.counter-response-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 14px}
+.counter-response-grid>div{display:flex;align-items:center;gap:8px;padding:9px;border:1px solid var(--line);border-radius:12px;background:rgba(8,11,22,.24)}
+.counter-target-avatar{width:38px;height:38px;border-radius:10px}
+.counter-response-grid b,.counter-response-grid small{display:block}
+.counter-response-grid b{font-size:11px}.counter-response-grid small{font-size:8px;margin-top:2px}
+.counter-win{border-color:rgba(80,223,160,.28)!important}.counter-win small{color:var(--green)}
+.counter-soft{border-color:rgba(69,183,255,.25)!important}.counter-soft small{color:var(--blue)}
+.counter-loss{border-color:rgba(255,104,123,.3)!important}.counter-loss small{color:var(--red)}
+.counter-neutral small{color:var(--muted)}
+.ranking-counter-label{display:inline-flex;margin-left:7px;padding:3px 6px;border-radius:6px;background:rgba(255,214,74,.08);color:var(--yellow);font-size:7px;font-style:normal;font-weight:850;text-transform:uppercase;letter-spacing:.05em}
+@media(max-width:760px){.counter-response-grid{grid-template-columns:1fr}.featured-matchups{display:grid}}

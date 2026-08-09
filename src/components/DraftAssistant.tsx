@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type {
   Brawler,
   DraftPosition,
+  DraftPriority,
   DraftRecommendation,
   MapProfile,
   PlayerPool,
@@ -25,6 +26,7 @@ type DraftSnapshot = {
   enemies: string[];
   bans: string[];
   myPick?: string;
+  priority?: DraftPriority;
 };
 
 function selectDistinct(results: DraftRecommendation[], sorter: (a: DraftRecommendation, b: DraftRecommendation) => number, excluded: string[]) {
@@ -47,7 +49,13 @@ function FeaturedPick({ result, label, tone }: { result?: DraftRecommendation; l
       <div><h3>{result.brawler.name}</h3><p>{result.brawler.role} · {result.suggestedLine}</p></div>
       <strong>{result.score}</strong>
     </div>
+    <span className="counter-grade">{result.counterLabel}</span>
     <p className="featured-reason">{result.brief}</p>
+    {(result.countersHit.length > 0 || result.softCounters.length > 0 || result.exposedTo.length > 0) && <div className="featured-matchups">
+      {result.countersHit.length > 0 && <small className="matchup-good">Counter: {result.countersHit.join(", ")}</small>}
+      {result.softCounters.length > 0 && <small className="matchup-soft">Favorable: {result.softCounters.join(", ")}</small>}
+      {result.exposedTo.length > 0 && <small className="matchup-bad">Lo frena: {result.exposedTo.join(", ")}</small>}
+    </div>}
     {result.warning && <small className="featured-warning">⚠ {result.warning}</small>}
   </article>;
 }
@@ -63,6 +71,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
   const availableMaps = useMemo(() => maps.filter((map) => map.mode === mode).sort((a, b) => Number(b.rotationStatus === "Actual") - Number(a.rotationStatus === "Actual") || a.name.localeCompare(b.name)), [maps, mode]);
   const [mapSlug, setMapSlug] = useState(availableMaps[0]?.slug || "");
   const [manualPosition, setManualPosition] = useState<DraftPosition>("First pick");
+  const [priority, setPriority] = useState<DraftPriority>("Counter");
   const [autoPosition, setAutoPosition] = useState(true);
   const [allies, setAllies] = useState<string[]>([]);
   const [enemies, setEnemies] = useState<string[]>([]);
@@ -85,6 +94,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
     const sharedEnemies = params.get("enemies")?.split("|").filter(Boolean) || [];
     const sharedBans = params.get("bans")?.split("|").filter(Boolean) || [];
     const sharedPick = params.get("pick");
+    const sharedPriority = params.get("priority") as DraftPriority | null;
     if (sharedMap) {
       const found = maps.find((item) => item.slug === sharedMap);
       if (found) { setMode(found.mode); setMapSlug(found.slug); }
@@ -93,6 +103,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
     if (sharedEnemies.length) setEnemies(sharedEnemies.slice(0, 3));
     if (sharedBans.length) setBans(sharedBans.slice(0, 6));
     if (sharedPick) setMyPick([sharedPick]);
+    if (sharedPriority && ["Counter", "Equilibrado", "Seguro"].includes(sharedPriority)) setPriority(sharedPriority);
   }, [brawlers, maps]);
 
   const map = maps.find((item) => item.slug === mapSlug) || availableMaps[0];
@@ -102,8 +113,8 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
 
   const analysis = useMemo(() => {
     if (!map) return null;
-    return analyzeDraft({ map, position, allies, enemies: activeEnemies, bans, myPick: myPick[0], personalPool, usePersonalPool }, brawlers);
-  }, [map, position, allies, activeEnemies, bans, myPick, personalPool, usePersonalPool, brawlers]);
+    return analyzeDraft({ map, position, allies, enemies: activeEnemies, bans, myPick: myPick[0], priority, personalPool, usePersonalPool }, brawlers);
+  }, [map, position, allies, activeEnemies, bans, myPick, priority, personalPool, usePersonalPool, brawlers]);
 
   const unavailable = useMemo(() => new Set([...allies, ...enemies, ...bans, ...myPick, scenarioEnemy].filter(Boolean).map(normalize)), [allies, enemies, bans, myPick, scenarioEnemy]);
   const recommendedBest = analysis?.recommendations[0];
@@ -117,7 +128,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
   const secondPick = selectedPick ? recommendedBest : safe;
   const counter = analysis ? selectDistinct(
     analysis.recommendations,
-    (a, b) => (b.metrics.counter * .65 + b.score * .35) - (a.metrics.counter * .65 + a.score * .35),
+    (a, b) => ((b.countersHit.length * 30 + b.softCounters.length * 12 + b.metrics.counter * .5 + b.score * .25) - (a.countersHit.length * 30 + a.softCounters.length * 12 + a.metrics.counter * .5 + a.score * .25)),
     [primaryPick?.brawler.name, secondPick?.brawler.name].filter(Boolean) as string[],
   ) : undefined;
 
@@ -130,7 +141,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
 
   const resetDraft = () => {
     setAllies([]); setEnemies([]); setBans([]); setMyPick([]); setScenarioEnemy("");
-    setAutoPosition(true); setManualPosition("First pick"); setMessage("");
+    setAutoPosition(true); setManualPosition("First pick"); setPriority("Counter"); setMessage("");
   };
 
   const shareDraft = async () => {
@@ -139,6 +150,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
     if (enemies.length) params.set("enemies", enemies.join("|"));
     if (bans.length) params.set("bans", bans.join("|"));
     if (myPick[0]) params.set("pick", myPick[0]);
+    params.set("priority", priority);
     const url = `${window.location.origin}/draft?${params.toString()}`;
     try {
       const nav = navigator as Navigator & { share?: (data: { title?: string; text?: string; url?: string }) => Promise<void> };
@@ -150,7 +162,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
   };
 
   const saveDraft = () => {
-    const snapshot: DraftSnapshot = { id: crypto.randomUUID(), createdAt: new Date().toISOString(), mode, mapSlug: map.slug, allies, enemies, bans, myPick: myPick[0] };
+    const snapshot: DraftSnapshot = { id: crypto.randomUUID(), createdAt: new Date().toISOString(), mode, mapSlug: map.slug, allies, enemies, bans, myPick: myPick[0], priority };
     const next = [snapshot, ...history].slice(0, 8);
     setHistory(next);
     window.localStorage.setItem(HISTORY_KEY, JSON.stringify(next));
@@ -158,7 +170,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
   };
 
   const loadSnapshot = (snapshot: DraftSnapshot) => {
-    setMode(snapshot.mode); setMapSlug(snapshot.mapSlug); setAllies(snapshot.allies); setEnemies(snapshot.enemies); setBans(snapshot.bans); setMyPick(snapshot.myPick ? [snapshot.myPick] : []); setScenarioEnemy("");
+    setMode(snapshot.mode); setMapSlug(snapshot.mapSlug); setAllies(snapshot.allies); setEnemies(snapshot.enemies); setBans(snapshot.bans); setMyPick(snapshot.myPick ? [snapshot.myPick] : []); setPriority(snapshot.priority || "Counter"); setScenarioEnemy("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -173,7 +185,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
   return <div className={`live-draft ${quickMode ? "quick-mode" : "analysis-mode"}`}>
     <section className="panel draft-control-panel">
       <div className="section-title">
-        <div><span className="eyebrow">Draft Coach v0.4.2</span><h2>Introduce los picks en orden</h2></div>
+        <div><span className="eyebrow">Draft Coach v0.4.3</span><h2>Introduce los picks en orden</h2></div>
         <div className="draft-action-row">
           <button type="button" className={`secondary-button compact-button ${quickMode ? "is-active" : ""}`} onClick={() => setQuickMode(!quickMode)}>{quickMode ? "Modo análisis" : "Modo rápido"}</button>
           <button type="button" className="secondary-button compact-button" onClick={shareDraft}>Compartir</button>
@@ -187,6 +199,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
         <label>Modo<select value={mode} onChange={(event) => changeMode(event.target.value)}>{modes.map((item) => <option key={item}>{item}</option>)}</select></label>
         <label>Mapa<select value={mapSlug} onChange={(event) => { setMapSlug(event.target.value); setScenarioEnemy(""); }}>{availableMaps.map((item) => <option value={item.slug} key={item.slug}>{item.name}{item.rotationStatus === "Histórico" ? " · histórico" : ""}</option>)}</select></label>
         <label>Posición<select value={position} disabled={autoPosition} onChange={(event) => setManualPosition(event.target.value as DraftPosition)}><option>First pick</option><option>Pick intermedio</option><option>Last pick</option></select></label>
+        <label>Prioridad<select value={priority} onChange={(event) => setPriority(event.target.value as DraftPriority)}><option value="Counter">Counter primero</option><option value="Equilibrado">Equilibrado</option><option value="Seguro">Pick seguro</option></select></label>
         <label className="auto-position-toggle"><input type="checkbox" checked={autoPosition} onChange={(event) => setAutoPosition(event.target.checked)} /><span><b>Detectar turno</b><small>Ahora: {position}</small></span></label>
         <label className="auto-position-toggle pool-draft-toggle"><input type="checkbox" checked={usePersonalPool} onChange={(event) => setUsePersonalPool(event.target.checked)} /><span><b>Usar mi pool</b><small>Fuerza, HC y dominio</small></span></label>
       </div>
@@ -209,7 +222,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
 
     {quickMode && primaryPick && <section className="quick-coach panel">
       <BrawlerPortrait name={primaryPick.brawler.name} className="quick-coach-avatar" priority />
-      <div><span className="eyebrow">{selectedPick ? "Evaluación de mi pick" : "Pick inmediato"}</span><h2>{primaryPick.brawler.name}</h2><p>{primaryPick.brief}</p><b>{primaryPick.lanePlan.lane}{primaryPick.lanePlan.target ? ` → busca a ${primaryPick.lanePlan.target}` : ""}</b><small>{primaryPick.warning || `Alternativas: ${secondPick?.brawler.name || "—"} / ${counter?.brawler.name || "—"}`}</small></div>
+      <div><span className="eyebrow">{selectedPick ? "Evaluación de mi pick" : enemies.length && priority === "Counter" ? "Counter inmediato" : "Pick inmediato"}</span><h2>{primaryPick.brawler.name}</h2><p>{primaryPick.brief}</p><b>{primaryPick.lanePlan.lane}{primaryPick.lanePlan.target ? ` → busca a ${primaryPick.lanePlan.target}` : ""}</b><small>{primaryPick.warning || `Alternativas: ${secondPick?.brawler.name || "—"} / ${counter?.brawler.name || "—"}`}</small></div>
       <strong>{analysis.winEstimate ? `${analysis.winEstimate.percentage}%` : primaryPick.score}</strong>
     </section>}
 
@@ -227,13 +240,25 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
 
       <section className="draft-output-grid">
         <div className="panel live-recommendation-panel">
-          <div className="section-title"><div><span className="eyebrow">{selectedPick ? "Evaluación del pick" : "Recomendación actual"}</span><h2>{selectedPick ? "Tu pick y mejores alternativas" : "Mejor, seguro y castigo"}</h2></div><span className="status-pill">Composición {analysis.compositionScore}/100</span></div>
-          <div className="featured-picks-grid"><FeaturedPick result={primaryPick} label={selectedPick ? "Tu pick" : "Mejor pick"} tone="best" /><FeaturedPick result={secondPick} label={selectedPick ? "Mejor alternativa" : "Pick seguro"} tone="safe" /><FeaturedPick result={counter} label={enemies.length ? "Pick de castigo" : "Alternativa flexible"} tone="counter" /></div>
+          <div className="section-title"><div><span className="eyebrow">{selectedPick ? "Evaluación del pick" : enemies.length && priority === "Counter" ? "Respuesta al rival" : "Recomendación actual"}</span><h2>{selectedPick ? "Tu pick y mejores alternativas" : enemies.length && priority === "Counter" ? "Counter principal, seguro y alternativo" : "Mejor, seguro y castigo"}</h2></div><span className="status-pill">Composición {analysis.compositionScore}/100</span></div>
+          <div className="featured-picks-grid"><FeaturedPick result={primaryPick} label={selectedPick ? "Tu pick" : enemies.length && priority === "Counter" ? "Mejor counter" : "Mejor pick"} tone="best" /><FeaturedPick result={secondPick} label={selectedPick ? "Mejor alternativa" : "Pick seguro"} tone="safe" /><FeaturedPick result={counter} label={enemies.length ? "Counter alternativo" : "Alternativa flexible"} tone="counter" /></div>
 
           {primaryPick && <article className="coach-callout">
             <BrawlerPortrait name={primaryPick.brawler.name} className="coach-avatar" />
             <div><span className="eyebrow">Llamada del coach</span><h3>{primaryPick.brawler.name} — {primaryPick.suggestedLine}</h3><p>{primaryPick.plan}</p><b className="lane-instruction">{primaryPick.lanePlan.instruction}</b>{primaryPick.warning && <small>⚠ {primaryPick.warning}</small>}</div>
           </article>}
+
+          {primaryPick && enemies.length > 0 && <div className="counter-response-grid">
+            {enemies.map((enemy) => {
+              const direct = primaryPick.countersHit.includes(enemy);
+              const soft = primaryPick.softCounters.includes(enemy);
+              const exposed = primaryPick.exposedTo.includes(enemy);
+              return <div key={enemy} className={direct ? "counter-win" : soft ? "counter-soft" : exposed ? "counter-loss" : "counter-neutral"}>
+                <BrawlerPortrait name={enemy} className="counter-target-avatar" />
+                <span><b>{enemy}</b><small>{direct ? "Counter directo" : soft ? "Respuesta favorable" : exposed ? "Te counterea" : "Matchup neutral"}</small></span>
+              </div>;
+            })}
+          </div>}
 
           {primaryPick && <div className="metrics-grid metrics-grid-v4"><Metric label="Mapa" value={primaryPick.metrics.mapFit} /><Metric label="Counters" value={primaryPick.metrics.counter} /><Metric label="Sinergia" value={primaryPick.metrics.synergy} /><Metric label="Composición" value={primaryPick.metrics.composition} /><Metric label="Seguridad" value={primaryPick.metrics.safety} /><Metric label="Tu pool" value={primaryPick.metrics.personal} /><Metric label="Riesgo" value={primaryPick.metrics.risk} danger /></div>}
         </div>
@@ -265,7 +290,7 @@ export default function DraftAssistant({ maps, brawlers }: { maps: MapProfile[];
         <div className="section-title"><div><span className="eyebrow">Ranking adaptativo</span><h2>Opciones restantes</h2></div><span className="helper">Puntuación de encaje, no probabilidad de victoria.</span></div>
         <div className="recommendations live-ranking">{analysis.recommendations.slice(0, 10).map((result, index) => <article key={result.brawler.slug} className={`recommendation rank-${index + 1}`}>
           <div className="rank">#{index + 1}</div><BrawlerPortrait name={result.brawler.name} className="recommendation-avatar" />
-          <div className="rec-copy"><div><h3>{result.brawler.name}</h3><span>{result.brawler.role} · {result.suggestedLine}</span></div><p className="ranking-brief">{result.brief}</p><ul>{result.reasons.slice(0, 3).map((reason) => <li key={reason}>{reason}</li>)}</ul>{result.exposedTo.length > 0 && <small>Evita: {result.exposedTo.join(", ")}</small>}{result.countersHit.length > 0 && <small className="positive-warning">Castiga: {result.countersHit.join(", ")}</small>}</div>
+          <div className="rec-copy"><div><h3>{result.brawler.name}</h3><span>{result.brawler.role} · {result.suggestedLine}</span><em className="ranking-counter-label">{result.counterLabel}</em></div><p className="ranking-brief">{result.brief}</p><ul>{result.reasons.slice(0, 3).map((reason) => <li key={reason}>{reason}</li>)}</ul>{result.exposedTo.length > 0 && <small>Evita: {result.exposedTo.join(", ")}</small>}{result.countersHit.length > 0 && <small className="positive-warning">Castiga: {result.countersHit.join(", ")}</small>}</div>
           <div className="score"><b>{result.score}</b><span>/100</span></div>
         </article>)}</div>
       </section>
