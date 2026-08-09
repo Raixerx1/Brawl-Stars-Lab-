@@ -1,6 +1,23 @@
-# Brawl Draft Lab v0.5.2
+# Brawl Draft Lab v0.6
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.6
+
+- Simulador **“¿Qué pasa si el rival elige…?”**.
+- Predicción de los siguientes picks enemigos según:
+  - mapa;
+  - composición actual;
+  - counters a tus aliados;
+  - necesidades de control, antitanque y antidive.
+- Simulación mediante los picks previstos o cualquier brawler del roster.
+- La recomendación, la build, las líneas y el porcentaje se recalculan con el escenario hipotético.
+- Comparación del porcentaje estimado frente al draft actual.
+- Confirmación directa del pick simulado cuando realmente es el turno rival.
+- Posibilidad de convertir una amenaza simulada en ban.
+- Bans sugeridos automáticamente según mapa y picks aliados.
+- El pick simulado aparece como una ficha diferenciada en la barra cronológica.
+- Los enlaces compartidos pueden conservar el escenario activo.
 
 ## Novedades v0.5.2
 

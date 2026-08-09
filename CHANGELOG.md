@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.6 — Simulación del rival
+
+- Predicción de hasta seis picks rivales probables.
+- Simulación de cualquier brawler enemigo.
+- Respuesta recomendada y alternativas.
+- Comparación del impacto sobre la probabilidad estimada.
+- Confirmación del escenario como pick real.
+- Conversión rápida de una amenaza en ban.
+- Bans sugeridos por mapa y protección de aliados.
+- Mejorada la predicción para cubrir necesidades de composición rival.
+
 ## v0.5.2 — Pool agrupado por rol
 
 - Opción para agrupar o desagrupar el pool.

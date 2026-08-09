@@ -572,31 +572,76 @@ function banRecommendations(input: DraftInput, roster: Brawler[], allies: Brawle
 
 function predictEnemyPicks(input: DraftInput, roster: Brawler[], allies: Brawler[], enemies: Brawler[]): EnemyPickPrediction[] {
   const excluded = new Set([...input.allies, ...input.enemies, ...input.bans, input.myPick || ""].filter(Boolean).map(norm));
+  const enemyRoles = enemies.map((enemy) => enemy.role);
+  const alliedTank = allies.some((ally) => ally.role === "Tanque" || hasTag(ally, "tank", "tanque"));
+  const alliedDive = allies.some((ally) => ally.role === "Asesino" || hasTag(ally, "assassin", "asesino", "mobile"));
+  const enemyNeedsControl = !enemies.some(isControl);
+  const enemyNeedsAntitank = alliedTank && !enemies.some(isAntitank);
+  const enemyNeedsAntidive = alliedDive && !enemies.some(isAntidive);
+
   return roster
     .filter((brawler) => !excluded.has(norm(brawler.name)))
     .map((brawler) => {
       let score = tierScore[brawler.tier] ?? 40;
+      const reasons: string[] = [];
       const tierIndex = input.map.tierS.indexOf(brawler.name);
       const aIndex = input.map.tierA.indexOf(brawler.name);
-      if (tierIndex >= 0) score += 18 - tierIndex * 2;
-      else if (aIndex >= 0) score += 9 - aIndex;
-      const targets = allies.filter((ally) => includesName(brawler.counters, ally.name) || includesName(ally.counteredBy, brawler.name));
-      score += targets.length * 15;
+
+      if (tierIndex >= 0) {
+        score += 18 - tierIndex * 2;
+        reasons.push("Prioridad natural del mapa");
+      } else if (aIndex >= 0) {
+        score += 9 - aIndex;
+        reasons.push("Buen encaje con el mapa");
+      }
+
+      const targets = allies.filter((ally) =>
+        includesName(brawler.counters, ally.name) ||
+        includesName(ally.counteredBy, brawler.name)
+      );
+      if (targets.length) {
+        score += targets.length * 16;
+        reasons.unshift(`Puede castigar a ${targets.map((ally) => ally.name).slice(0, 2).join(" y ")}`);
+      }
+
+      if (enemyNeedsAntitank && isAntitank(brawler)) {
+        score += 12;
+        reasons.push("Completa el antitanque rival");
+      }
+      if (enemyNeedsAntidive && isAntidive(brawler)) {
+        score += 11;
+        reasons.push("Protege su backline");
+      }
+      if (enemyNeedsControl && isControl(brawler) && ["Zona Restringida", "Atrapagemas", "Balón Brawl"].includes(input.map.mode)) {
+        score += 8;
+        reasons.push("Añade control de espacio");
+      }
+      if (input.map.mode === "Atraco" && isObjective(brawler)) {
+        score += 8;
+        reasons.push("Aporta presión a la caja");
+      }
       if (input.map.layout === "Abierto" && isLongRange(brawler)) score += 7;
       if (input.map.layout === "Cerrado" && (isFrontline(brawler) || isThrower(brawler))) score += 6;
       if (enemies.some(isSupport) && isFrontline(brawler)) score += 5;
+
+      const repeatedRole = enemyRoles.filter((role) => role === brawler.role).length;
+      if (repeatedRole >= 2) score -= 10;
+      else if (repeatedRole === 1 && ["Apoyo", "Artillero"].includes(brawler.role)) score -= 5;
+
       const target = targets[0]?.name;
-      const response = brawler.counteredBy.find((name) => !excluded.has(norm(name))) || "Reserva un pick seguro que cubra su arquetipo";
+      const response = brawler.counteredBy.find((name) => !excluded.has(norm(name)))
+        || "Reserva un pick seguro que cubra su arquetipo";
+
       return {
         brawler,
         score: clamp(score),
         target,
-        reason: target ? `Puede castigar a ${target}` : tierIndex >= 0 ? "Es una prioridad natural del mapa" : "Completa el draft rival con flexibilidad",
+        reason: unique(reasons)[0] || "Completa el draft rival con flexibilidad",
         response,
       };
     })
     .sort((a, b) => b.score - a.score)
-    .slice(0, 5);
+    .slice(0, 6);
 }
 
 function laneAssignments(candidate: Brawler | undefined, allies: Brawler[], enemies: Brawler[], input: DraftInput): TeamAssignment[] {

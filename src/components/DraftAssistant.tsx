@@ -118,6 +118,7 @@ export default function DraftAssistant({
   const [personalPool, setPersonalPool] = useState<PlayerPool>({});
   const [poolPolicy, setPoolPolicy] = useState<PoolPolicy>("Off");
   const [quickMode, setQuickMode] = useState(false);
+  const [scenarioEnemy, setScenarioEnemy] = useState("");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -129,6 +130,7 @@ export default function DraftAssistant({
     const sharedBans = params.get("bans")?.split("|").filter(Boolean) || [];
     const sharedPoolPolicy = params.get("pool") as PoolPolicy | null;
     const sharedQuick = params.get("quick");
+    const sharedScenario = params.get("scenario");
 
     if (sharedMap) {
       const found = maps.find((item) => item.slug === sharedMap);
@@ -145,6 +147,7 @@ export default function DraftAssistant({
     if (sharedBans.length) setBans(sharedBans.slice(0, 6));
     if (sharedPoolPolicy && ["Off", "Preferir", "Solo pool"].includes(sharedPoolPolicy)) setPoolPolicy(sharedPoolPolicy);
     if (sharedQuick === "1") setQuickMode(true);
+    if (sharedScenario) setScenarioEnemy(sharedScenario);
   }, [brawlers, maps]);
 
   const map = maps.find((item) => item.slug === mapSlug) || availableMaps[0];
@@ -177,12 +180,57 @@ export default function DraftAssistant({
     }, brawlers);
   }, [map, position, allies, enemies, bans, priority, personalPool, poolPolicy, brawlers]);
 
-  const selectedNames = useMemo(
+  const nextEnemyIndex = useMemo(() => {
+    const start = nextIndex < 0 ? 0 : nextIndex;
+    return sequence.findIndex((team, index) => index >= start && team === "enemy" && !orderedPicks[index]);
+  }, [sequence, orderedPicks, nextIndex]);
+
+  const scenarioPicks = useMemo(() => {
+    if (!scenarioEnemy || nextEnemyIndex < 0) return orderedPicks;
+    return orderedPicks.map((pick, index) => index === nextEnemyIndex ? scenarioEnemy : pick);
+  }, [orderedPicks, scenarioEnemy, nextEnemyIndex]);
+
+  const scenarioAllies = useMemo(
+    () => scenarioPicks.filter((pick, index): pick is string => Boolean(pick) && sequence[index] === "ally"),
+    [scenarioPicks, sequence],
+  );
+  const scenarioEnemies = useMemo(
+    () => scenarioPicks.filter((pick, index): pick is string => Boolean(pick) && sequence[index] === "enemy"),
+    [scenarioPicks, sequence],
+  );
+  const scenarioPosition = recommendationPosition(sequence, scenarioPicks);
+
+  const scenarioAnalysis = useMemo(() => {
+    if (!map || !scenarioEnemy || nextEnemyIndex < 0) return null;
+    return analyzeDraft({
+      map,
+      position: scenarioPosition,
+      allies: scenarioAllies,
+      enemies: scenarioEnemies,
+      bans,
+      priority: scenarioPosition === "First pick" ? "Seguro" : "Counter",
+      personalPool,
+      poolPolicy,
+    }, brawlers);
+  }, [map, scenarioEnemy, nextEnemyIndex, scenarioPosition, scenarioAllies, scenarioEnemies, bans, personalPool, poolPolicy, brawlers]);
+
+  const displayAnalysis = scenarioAnalysis || analysis;
+  const displayPosition = scenarioAnalysis ? scenarioPosition : position;
+
+  const unavailableNames = useMemo(
     () => new Set([
       ...orderedPicks.filter(Boolean).map((name) => normalize(name as string)),
       ...bans.map(normalize),
     ]),
     [orderedPicks, bans],
+  );
+
+  const selectedNames = useMemo(
+    () => new Set([
+      ...unavailableNames,
+      ...(scenarioEnemy ? [normalize(scenarioEnemy)] : []),
+    ]),
+    [unavailableNames, scenarioEnemy],
   );
 
   const suggestions = useMemo(() => {
@@ -200,12 +248,14 @@ export default function DraftAssistant({
   const addNextPick = (name: string) => {
     if (nextIndex < 0) return;
     setOrderedPicks((current) => current.map((pick, index) => index === nextIndex ? name : pick));
+    setScenarioEnemy("");
     setQuery("");
     setFocused(false);
   };
 
   const clearFrom = (index: number) => {
     setOrderedPicks((current) => current.map((pick, pickIndex) => pickIndex >= index ? null : pick));
+    setScenarioEnemy("");
     setQuery("");
   };
 
@@ -227,11 +277,13 @@ export default function DraftAssistant({
     if (first) setMapSlug(first.slug);
     setOrderedPicks(Array(6).fill(null));
     setBans([]);
+    setScenarioEnemy("");
   };
 
   const resetDraft = () => {
     setOrderedPicks(Array(6).fill(null));
     setBans([]);
+    setScenarioEnemy("");
     setQuery("");
     setMessage("");
   };
@@ -245,6 +297,7 @@ export default function DraftAssistant({
       bans: bans.join("|"),
       pool: poolPolicy,
       quick: quickMode ? "1" : "0",
+      scenario: scenarioEnemy,
     });
     const url = `${window.location.origin}/draft?${params.toString()}`;
     try {
@@ -255,17 +308,17 @@ export default function DraftAssistant({
     }
   };
 
-  if (!map || !analysis) return null;
+  if (!map || !analysis || !displayAnalysis) return null;
 
-  const best = analysis.recommendations[0];
+  const best = displayAnalysis.recommendations[0];
   const safe = selectDistinct(
-    analysis.recommendations,
+    displayAnalysis.recommendations,
     (a, b) => (b.metrics.safety * .62 + b.metrics.mapFit * .25 + b.score * .25)
       - (a.metrics.safety * .62 + a.metrics.mapFit * .25 + a.score * .25),
     best ? [best.brawler.name] : [],
   );
   const counter = selectDistinct(
-    analysis.recommendations,
+    displayAnalysis.recommendations,
     (a, b) => (
       b.countersHit.length * 32 + b.softCounters.length * 12 + b.metrics.counter * .6 + b.score * .2
     ) - (
@@ -274,23 +327,57 @@ export default function DraftAssistant({
     [best?.brawler.name, safe?.brawler.name].filter(Boolean) as string[],
   );
 
+  const predictedEnemyPicks = analysis.predictedEnemyPicks
+    .filter((prediction) => !unavailableNames.has(normalize(prediction.brawler.name)))
+    .slice(0, 4);
+  const scenarioCandidates = brawlers
+    .filter((brawler) => !unavailableNames.has(normalize(brawler.name)))
+    .sort((a, b) => a.name.localeCompare(b.name, "es"));
+  const scenarioPrediction = analysis.predictedEnemyPicks.find(
+    (prediction) => normalize(prediction.brawler.name) === normalize(scenarioEnemy),
+  );
+  const baselineWin = analysis.winEstimate?.percentage;
+  const scenarioWin = scenarioAnalysis?.winEstimate?.percentage;
+  const scenarioDelta = typeof baselineWin === "number" && typeof scenarioWin === "number"
+    ? scenarioWin - baselineWin
+    : undefined;
+
+  const scenarioResponse = scenarioAnalysis?.recommendations[0];
+  const scenarioAlternatives = scenarioAnalysis?.recommendations.slice(1, 3) || [];
+  const suggestedBans = analysis.banRecommendations
+    .filter((item) => !bans.some((ban) => normalize(ban) === normalize(item.brawler.name)))
+    .filter((item) => normalize(item.brawler.name) !== normalize(scenarioEnemy))
+    .slice(0, 3);
+
+  const addSuggestedBan = (name: string) => {
+    if (bans.length >= 6 || bans.some((ban) => normalize(ban) === normalize(name))) return;
+    setBans((current) => [...current, name]);
+    if (normalize(scenarioEnemy) === normalize(name)) setScenarioEnemy("");
+  };
+
+  const confirmScenario = () => {
+    if (!scenarioEnemy || nextEnemyIndex < 0 || nextEnemyIndex !== nextIndex || nextTeam !== "enemy") return;
+    setOrderedPicks((current) => current.map((pick, index) => index === nextEnemyIndex ? scenarioEnemy : pick));
+    setScenarioEnemy("");
+  };
+
   const poolEntryFor = (result?: DraftRecommendation) =>
     result ? personalPool[result.brawler.slug] : undefined;
 
   const bestPoolEntry = poolEntryFor(best);
 
-  const bestLabel = position === "First pick"
+  const bestLabel = displayPosition === "First pick"
     ? "Mejor brawler del mapa"
-    : position === "Last pick"
+    : displayPosition === "Last pick"
       ? "Mejor last pick"
       : "Mejor counter";
-  const safeLabel = position === "First pick" ? "Alternativa segura" : "Counter seguro";
-  const counterLabel = position === "First pick" ? "Opción flexible" : "Counter alternativo";
+  const safeLabel = displayPosition === "First pick" ? "Alternativa segura" : "Counter seguro";
+  const counterLabel = displayPosition === "First pick" ? "Opción flexible" : "Counter alternativo";
 
   return <div className="ordered-draft-assistant">
     <section className="panel ordered-draft-panel">
       <div className="section-title">
-        <div><span className="eyebrow">Draft Coach v0.5.1</span><h2>Introduce los picks en orden</h2></div>
+        <div><span className="eyebrow">Draft Coach v0.6</span><h2>Introduce los picks en orden</h2></div>
         <div className="draft-action-row">
           <button type="button" className="secondary-button compact-button" onClick={shareDraft}>Compartir</button>
           <button type="button" className="secondary-button compact-button" onClick={resetDraft}>Reiniciar</button>
@@ -300,8 +387,8 @@ export default function DraftAssistant({
 
       <div className="ordered-draft-context ordered-draft-context-v5">
         <label>Modo<select value={mode} onChange={(event) => changeMode(event.target.value)}>{modes.map((item) => <option key={item}>{item}</option>)}</select></label>
-        <label>Mapa<select value={mapSlug} onChange={(event) => { setMapSlug(event.target.value); setOrderedPicks(Array(6).fill(null)); setBans([]); }}>{availableMaps.map((item) => <option value={item.slug} key={item.slug}>{item.name}{item.rotationStatus === "Histórico" ? " · histórico" : ""}</option>)}</select></label>
-        <label>First pick<select value={firstPickOwner} onChange={(event) => { setFirstPickOwner(event.target.value as DraftFirstPickOwner); setOrderedPicks(Array(6).fill(null)); }}><option value="Aliado">Mi equipo</option><option value="Rival">Equipo rival</option></select></label>
+        <label>Mapa<select value={mapSlug} onChange={(event) => { setMapSlug(event.target.value); setOrderedPicks(Array(6).fill(null)); setBans([]); setScenarioEnemy(""); }}>{availableMaps.map((item) => <option value={item.slug} key={item.slug}>{item.name}{item.rotationStatus === "Histórico" ? " · histórico" : ""}</option>)}</select></label>
+        <label>First pick<select value={firstPickOwner} onChange={(event) => { setFirstPickOwner(event.target.value as DraftFirstPickOwner); setOrderedPicks(Array(6).fill(null)); setScenarioEnemy(""); }}><option value="Aliado">Mi equipo</option><option value="Rival">Equipo rival</option></select></label>
         <label>Política de pool<select value={poolPolicy} onChange={(event) => setPoolPolicy(event.target.value as PoolPolicy)}><option value="Off">No usar pool</option><option value="Preferir">Priorizar mi pool</option><option value="Solo pool">Solo brawlers disponibles</option></select></label>
         <label className="auto-position-toggle"><input type="checkbox" checked={quickMode} onChange={(event) => setQuickMode(event.target.checked)} /><span><b>Modo ultrarrápido</b><small>Pick, línea y build</small></span></label>
       </div>
@@ -315,8 +402,24 @@ export default function DraftAssistant({
           roster={brawlers}
           unavailable={selectedNames}
           tone="ban"
-          onChange={setBans}
+          onChange={(values) => {
+            setBans(values);
+            if (scenarioEnemy && values.some((ban) => normalize(ban) === normalize(scenarioEnemy))) setScenarioEnemy("");
+          }}
         />
+        {suggestedBans.length > 0 && <div className="suggested-ban-row">
+          <div><span className="eyebrow">Bans sugeridos</span><small>Según mapa, amenazas y tus picks</small></div>
+          {suggestedBans.map((item) => <button
+            type="button"
+            key={item.brawler.slug}
+            onClick={() => addSuggestedBan(item.brawler.name)}
+            disabled={bans.length >= 6}
+          >
+            <BrawlerPortrait name={item.brawler.name} className="suggested-ban-avatar" />
+            <span><b>{item.brawler.name}</b><small>{item.reasons[0] || "Amenaza prioritaria"}</small></span>
+            <strong>Ban</strong>
+          </button>)}
+        </div>}
       </div>
 
       <div className="ordered-phase-labels">
@@ -327,15 +430,17 @@ export default function DraftAssistant({
         {orderedPicks.map((pick, index) => {
           const team = sequence[index];
           const isNext = index === nextIndex;
+          const simulatedPick = !pick && scenarioEnemy && index === nextEnemyIndex ? scenarioEnemy : "";
+          const visiblePick = pick || simulatedPick;
           return <button
             type="button"
             key={index}
-            className={`ordered-pick-slot ${team === "ally" ? "ally" : "enemy"} ${pick ? "filled" : ""} ${isNext ? "next" : ""}`}
+            className={`ordered-pick-slot ${team === "ally" ? "ally" : "enemy"} ${pick ? "filled" : ""} ${simulatedPick ? "simulated" : ""} ${isNext ? "next" : ""}`}
             onClick={() => pick && clearFrom(index)}
-            title={pick ? `Corregir desde ${pick}` : `${phaseLabel(index)} · ${team === "ally" ? "Aliado" : "Rival"}`}
+            title={pick ? `Corregir desde ${pick}` : simulatedPick ? `Simulación: ${simulatedPick}` : `${phaseLabel(index)} · ${team === "ally" ? "Aliado" : "Rival"}`}
           >
             <small>{index + 1}</small>
-            {pick ? <><BrawlerPortrait name={pick} className="ordered-pick-avatar" /><b>{pick}</b></> : <><span>+</span><b>{team === "ally" ? "Aliado" : "Rival"}</b></>}
+            {visiblePick ? <><BrawlerPortrait name={visiblePick} className="ordered-pick-avatar" /><b>{visiblePick}</b>{simulatedPick && <em>Simulado</em>}</> : <><span>+</span><b>{team === "ally" ? "Aliado" : "Rival"}</b></>}
           </button>;
         })}
       </div>
@@ -373,13 +478,97 @@ export default function DraftAssistant({
       <small className="ordered-edit-hint">Pulsa un pick ya introducido para corregirlo; se borrarán también los picks posteriores.</small>
     </section>
 
+    {nextEnemyIndex >= 0 && <section className={`panel draft-simulator-v6 ${scenarioEnemy ? "scenario-active" : ""}`}>
+      <div className="section-title">
+        <div>
+          <span className="eyebrow">Simulador del rival</span>
+          <h2>¿Qué pasa si el rival elige…?</h2>
+        </div>
+        {scenarioEnemy && <button type="button" className="secondary-button compact-button" onClick={() => setScenarioEnemy("")}>Cerrar simulación</button>}
+      </div>
+
+      <div className="prediction-strip">
+        {predictedEnemyPicks.map((prediction, index) => <button
+          type="button"
+          className={normalize(scenarioEnemy) === normalize(prediction.brawler.name) ? "active" : ""}
+          key={prediction.brawler.slug}
+          onClick={() => setScenarioEnemy(prediction.brawler.name)}
+        >
+          <span className="prediction-rank">{index + 1}</span>
+          <BrawlerPortrait name={prediction.brawler.name} className="prediction-avatar" />
+          <div><b>{prediction.brawler.name}</b><small>{prediction.reason}</small></div>
+          <strong>{prediction.score}</strong>
+        </button>)}
+      </div>
+
+      <div className="scenario-selector-row">
+        <label>Simular otro brawler<select value={scenarioEnemy} onChange={(event) => setScenarioEnemy(event.target.value)}>
+          <option value="">Seleccionar…</option>
+          {scenarioCandidates.map((brawler) => <option value={brawler.name} key={brawler.slug}>{brawler.name} · {brawler.role}</option>)}
+        </select></label>
+        <div>
+          <span>Próximo hueco rival</span>
+          <b>{nextEnemyIndex + 1} · {phaseLabel(nextEnemyIndex)}</b>
+        </div>
+      </div>
+
+      {scenarioEnemy && scenarioAnalysis && scenarioResponse && <div className="scenario-result-grid">
+        <article className="scenario-threat-card">
+          <span className="eyebrow">Amenaza simulada</span>
+          <div className="scenario-brawler-head">
+            <BrawlerPortrait name={scenarioEnemy} className="scenario-main-avatar" />
+            <div><h3>{scenarioEnemy}</h3><p>{scenarioPrediction?.reason || "Escenario manual seleccionado"}</p></div>
+          </div>
+          {scenarioPrediction?.target && <strong>Puede castigar a {scenarioPrediction.target}</strong>}
+          <small>{scenarioPrediction?.response || "El asistente recalcula la respuesta óptima con el draft actual."}</small>
+          <div className="scenario-actions">
+            {nextEnemyIndex === nextIndex && nextTeam === "enemy" && <button type="button" className="primary-button" onClick={confirmScenario}>Confirmar pick rival</button>}
+            <button type="button" className="secondary-button" disabled={bans.length >= 6} onClick={() => addSuggestedBan(scenarioEnemy)}>Añadir a bans</button>
+          </div>
+        </article>
+
+        <article className="scenario-response-card">
+          <span className="eyebrow">Respuesta recomendada</span>
+          <div className="scenario-brawler-head">
+            <BrawlerPortrait name={scenarioResponse.brawler.name} className="scenario-main-avatar" />
+            <div><h3>{scenarioResponse.brawler.name}</h3><p>{scenarioResponse.brief}</p></div>
+            <strong>{scenarioResponse.score}</strong>
+          </div>
+          <div className="scenario-response-details">
+            <span><b>Línea</b>{scenarioResponse.lanePlan.lane}</span>
+            <span><b>Objetivo</b>{scenarioResponse.lanePlan.target || "Completar composición"}</span>
+            <span><b>Build</b>{scenarioResponse.build.gears.join(" + ")}</span>
+          </div>
+          {scenarioAlternatives.length > 0 && <div className="scenario-alternatives">
+            <b>Alternativas</b>
+            {scenarioAlternatives.map((item) => <span key={item.brawler.slug}>{item.brawler.name} · {item.counterLabel}</span>)}
+          </div>}
+        </article>
+
+        <article className="scenario-impact-card">
+          <span className="eyebrow">Impacto estimado</span>
+          {typeof scenarioWin === "number" ? <>
+            <strong>{scenarioWin}%</strong>
+            <p>Probabilidad aliada con {scenarioEnemy}</p>
+            {typeof scenarioDelta === "number" && <span className={scenarioDelta < 0 ? "negative" : scenarioDelta > 0 ? "positive" : ""}>
+              {scenarioDelta > 0 ? "+" : ""}{scenarioDelta} puntos frente al escenario actual
+            </span>}
+          </> : <>
+            <strong>—</strong>
+            <p>Añade al menos un pick aliado para estimar el impacto.</p>
+          </>}
+          <small>Es una estimación heurística, no un win rate observado.</small>
+        </article>
+      </div>}
+    </section>}
+
     <section className={`panel ordered-recommendations ${quickMode ? "quick-v5" : ""}`}>
       <div className="section-title">
         <div>
-          <span className="eyebrow">{nextTeam === "enemy" ? "Recomendación provisional para tu próximo turno" : analysis.draftStage}</span>
-          <h2>{position === "First pick" ? "Prioridad de mapa" : position === "Last pick" ? "Castigo final" : "Counters a los picks rivales"}</h2>
+          <span className="eyebrow">{scenarioEnemy ? `Simulación activa · ${scenarioEnemy}` : nextTeam === "enemy" ? "Recomendación provisional para tu próximo turno" : displayAnalysis.draftStage}</span>
+          <h2>{scenarioEnemy ? `Respuesta si rival elige ${scenarioEnemy}` : displayPosition === "First pick" ? "Prioridad de mapa" : displayPosition === "Last pick" ? "Castigo final" : "Counters a los picks rivales"}</h2>
         </div>
-        <span className="status-pill">{position}</span>
+        <span className="status-pill">{displayPosition}</span>
       </div>
       <div className={`simple-rec-grid ${quickMode ? "quick-rec-grid" : ""}`}>
         <RecommendationCard result={best} label={bestLabel} tone="best" poolEntry={poolEntryFor(best)} />
@@ -402,18 +591,18 @@ export default function DraftAssistant({
       </div>}
     </section>
 
-    {!quickMode && (analysis.winEstimate ? <section className="panel ordered-win-panel">
+    {!quickMode && (displayAnalysis.winEstimate ? <section className="panel ordered-win-panel">
       <div className="ordered-win-head">
-        <div><span className="eyebrow">Probabilidad estimada</span><h2>{analysis.winEstimate.title}</h2><p>{analysis.winEstimate.completeness < 100 ? "Se actualiza con cada pick introducido." : "Draft 3v3 completo."}</p></div>
-        <div><strong>{analysis.winEstimate.percentage}%</strong><span>{analysis.winEstimate.lower}–{analysis.winEstimate.upper}% · confianza {analysis.winEstimate.confidence}</span></div>
+        <div><span className="eyebrow">{scenarioEnemy ? `Probabilidad con ${scenarioEnemy}` : "Probabilidad estimada"}</span><h2>{displayAnalysis.winEstimate.title}</h2><p>{displayAnalysis.winEstimate.completeness < 100 ? "Se actualiza con cada pick introducido." : "Draft 3v3 completo."}</p></div>
+        <div><strong>{displayAnalysis.winEstimate.percentage}%</strong><span>{displayAnalysis.winEstimate.lower}–{displayAnalysis.winEstimate.upper}% · confianza {displayAnalysis.winEstimate.confidence}</span></div>
       </div>
-      <div className="win-meter"><span style={{ width: `${analysis.winEstimate.percentage}%` }} /></div>
+      <div className="win-meter"><span style={{ width: `${displayAnalysis.winEstimate.percentage}%` }} /></div>
       <div className="ordered-win-scores">
-        <span>Aliados <b>{analysis.winEstimate.alliedScore}/100</b></span>
-        <span>Rivales <b>{analysis.winEstimate.enemyScore}/100</b></span>
-        <span>Draft <b>{analysis.winEstimate.completeness}%</b></span>
+        <span>Aliados <b>{displayAnalysis.winEstimate.alliedScore}/100</b></span>
+        <span>Rivales <b>{displayAnalysis.winEstimate.enemyScore}/100</b></span>
+        <span>Draft <b>{displayAnalysis.winEstimate.completeness}%</b></span>
       </div>
-      <small>{analysis.winEstimate.disclaimer}</small>
+      <small>{displayAnalysis.winEstimate.disclaimer}</small>
     </section> : <section className="panel ordered-win-empty">
       <span className="eyebrow">Probabilidad estimada</span>
       <h2>Añade al menos un pick de cada equipo</h2>
@@ -425,9 +614,9 @@ export default function DraftAssistant({
         <span className="eyebrow">Consejos rápidos</span>
         <h3>Qué necesita tu composición</h3>
         <div className="quick-advice-list">
-          {analysis.needs.length ? analysis.needs.slice(0, 5).map((item) => <span key={item}>Cubrir: {item}</span>) : <span>La composición está equilibrada.</span>}
-          {analysis.threats.slice(0, 3).map((item) => <span className="danger" key={item}>{item}</span>)}
-          {analysis.strengths.slice(0, 3).map((item) => <span className="good" key={item}>{item}</span>)}
+          {displayAnalysis.needs.length ? displayAnalysis.needs.slice(0, 5).map((item) => <span key={item}>Cubrir: {item}</span>) : <span>La composición está equilibrada.</span>}
+          {displayAnalysis.threats.slice(0, 3).map((item) => <span className="danger" key={item}>{item}</span>)}
+          {displayAnalysis.strengths.slice(0, 3).map((item) => <span className="good" key={item}>{item}</span>)}
         </div>
       </article>
 
@@ -435,8 +624,8 @@ export default function DraftAssistant({
         <span className="eyebrow">Matchups y líneas</span>
         <h3>Emparejamientos que debes buscar</h3>
         <div className="line-matchup-list">
-          {analysis.teamAssignments.length
-            ? analysis.teamAssignments.map((assignment, index) => <div key={`${assignment.ally}-${index}`}>
+          {displayAnalysis.teamAssignments.length
+            ? displayAnalysis.teamAssignments.map((assignment, index) => <div key={`${assignment.ally}-${index}`}>
               <b>{assignment.ally}</b>
               <span>{assignment.lane}</span>
               <strong>{assignment.enemy ? `Busca a ${assignment.enemy}` : "Mantén tu línea"}</strong>
@@ -450,7 +639,7 @@ export default function DraftAssistant({
         <span className="eyebrow">Lectura rival</span>
         <h3>Debilidades y amenazas</h3>
         <div className="quick-advice-list">
-          {analysis.enemyWeaknesses.length ? analysis.enemyWeaknesses.slice(0, 5).map((item) => <span className="good" key={item}>{item}</span>) : <span>Faltan picks rivales para detectar una debilidad clara.</span>}
+          {displayAnalysis.enemyWeaknesses.length ? displayAnalysis.enemyWeaknesses.slice(0, 5).map((item) => <span className="good" key={item}>{item}</span>) : <span>Faltan picks rivales para detectar una debilidad clara.</span>}
           {best?.exposedTo.slice(0, 3).map((name) => <span className="danger" key={name}>{name} puede frenar al pick recomendado.</span>)}
         </div>
       </article>
