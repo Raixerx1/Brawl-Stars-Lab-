@@ -8,16 +8,37 @@ import { BrawlerPortrait } from "./GameArtwork";
 const normalize = (value: string) =>
   value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
+const GROUP_BY_ROLE_KEY = "brawl-pool-group-by-role-v1";
+const ROLE_ORDER = [
+  "Tirador",
+  "Control",
+  "Daño",
+  "Antitanque",
+  "Antidive",
+  "Asesino",
+  "Tanque",
+  "Artillero",
+  "Apoyo",
+  "Especialista",
+];
+
 export default function PlayerPool({ brawlers }: { brawlers: Brawler[] }) {
   const [pool, setPool] = useState<PlayerPoolType>({});
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("Todos");
+  const [groupByRole, setGroupByRole] = useState(true);
   const [loaded, setLoaded] = useState(false);
   const [message, setMessage] = useState("");
   const importRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setPool(loadPool(brawlers));
+    try {
+      const storedGrouping = window.localStorage.getItem(GROUP_BY_ROLE_KEY);
+      if (storedGrouping !== null) setGroupByRole(storedGrouping === "true");
+    } catch {
+      // Mantener agrupación por defecto si el navegador bloquea localStorage.
+    }
     setLoaded(true);
   }, [brawlers]);
 
@@ -25,6 +46,15 @@ export default function PlayerPool({ brawlers }: { brawlers: Brawler[] }) {
     setPool(next);
     savePool(next);
     if (message) setMessage(message);
+  };
+
+  const toggleGrouping = (enabled: boolean) => {
+    setGroupByRole(enabled);
+    try {
+      window.localStorage.setItem(GROUP_BY_ROLE_KEY, String(enabled));
+    } catch {
+      // La vista sigue funcionando aunque no pueda guardarse la preferencia.
+    }
   };
 
   const update = (slug: string, patch: Partial<PlayerPoolEntry>) => {
@@ -90,6 +120,23 @@ export default function PlayerPool({ brawlers }: { brawlers: Brawler[] }) {
     return true;
   }), [brawlers, pool, query, filter]);
 
+  const groupedVisible = useMemo(() => {
+    const groups = new Map<string, Brawler[]>();
+    for (const brawler of visible) {
+      const current = groups.get(brawler.role) || [];
+      current.push(brawler);
+      groups.set(brawler.role, current);
+    }
+    return [...groups.entries()].sort(([roleA], [roleB]) => {
+      const indexA = ROLE_ORDER.indexOf(roleA);
+      const indexB = ROLE_ORDER.indexOf(roleB);
+      if (indexA === -1 && indexB === -1) return roleA.localeCompare(roleB, "es");
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+      return indexA - indexB;
+    });
+  }, [visible]);
+
   const summary = useMemo(() => {
     const entries = Object.values(pool) as PlayerPoolEntry[];
     return {
@@ -100,6 +147,30 @@ export default function PlayerPool({ brawlers }: { brawlers: Brawler[] }) {
       favorite: entries.filter((entry) => entry.favorite && !entry.avoid).length,
     };
   }, [pool]);
+
+  const renderCard = (brawler: Brawler) => {
+    const entry = pool[brawler.slug];
+    if (!entry) return null;
+    return <article className={`pool-card ${entry.avoid ? "pool-card-avoid" : ""} ${entry.favorite ? "pool-card-favorite" : ""}`} key={brawler.slug}>
+      <button
+        type="button"
+        className={`pool-favorite-button ${entry.favorite ? "active" : ""}`}
+        onClick={() => update(brawler.slug, { favorite: !entry.favorite })}
+        title={entry.favorite ? "Quitar prioridad" : "Marcar como prioritario"}
+      >★</button>
+      <div className="pool-card-head">
+        <BrawlerPortrait name={brawler.name} className="pool-avatar" />
+        <div><h3>{brawler.name}</h3><p>{brawler.role} · Tier {brawler.tier}</p></div>
+      </div>
+      <div className="pool-toggles">
+        <label><input type="checkbox" checked={entry.available} onChange={(event) => update(brawler.slug, { available: event.target.checked })} /> Disponible</label>
+        <label><input type="checkbox" checked={entry.power11} onChange={(event) => update(brawler.slug, { power11: event.target.checked })} /> Fuerza 11</label>
+        <label><input type="checkbox" checked={entry.hypercharge} onChange={(event) => update(brawler.slug, { hypercharge: event.target.checked })} /> Hipercarga</label>
+        <label><input type="checkbox" checked={entry.avoid} onChange={(event) => update(brawler.slug, { avoid: event.target.checked })} /> Evitar</label>
+      </div>
+      <label className="mastery-control"><span>Dominio personal <b>{entry.mastery}/5</b></span><input type="range" min="1" max="5" value={entry.mastery} onChange={(event) => update(brawler.slug, { mastery: Number(event.target.value) })} /></label>
+    </article>;
+  };
 
   if (!loaded) return <div className="panel">Cargando tu pool…</div>;
 
@@ -115,11 +186,15 @@ export default function PlayerPool({ brawlers }: { brawlers: Brawler[] }) {
     </div>
 
     <section className="panel pool-toolbar pool-toolbar-v5">
-      <div className="pool-search-row">
+      <div className="pool-search-row pool-search-row-v52">
         <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar brawler…" />
         <select value={filter} onChange={(event) => setFilter(event.target.value)}>
           {["Todos", "Favoritos", "Fuerza 11", "Hipercarga", "Confort", "Evitar", "No disponibles"].map((item) => <option key={item}>{item}</option>)}
         </select>
+        <label className="pool-group-toggle">
+          <input type="checkbox" checked={groupByRole} onChange={(event) => toggleGrouping(event.target.checked)} />
+          <span><b>Agrupar por rol</b><small>{groupByRole ? "Secciones por categoría" : "Vista única"}</small></span>
+        </label>
       </div>
       <div className="pool-bulk-actions">
         <button type="button" onClick={() => bulkUpdate({ available: true }, "Todos marcados como disponibles")}>Todos disponibles</button>
@@ -133,28 +208,20 @@ export default function PlayerPool({ brawlers }: { brawlers: Brawler[] }) {
       <p>En el Draft Assistant podrás ignorar el pool, usarlo como preferencia o limitar las recomendaciones exclusivamente a tus brawlers disponibles.</p>
     </section>
 
-    <div className="pool-grid">{visible.map((brawler) => {
-      const entry = pool[brawler.slug];
-      if (!entry) return null;
-      return <article className={`pool-card ${entry.avoid ? "pool-card-avoid" : ""} ${entry.favorite ? "pool-card-favorite" : ""}`} key={brawler.slug}>
-        <button
-          type="button"
-          className={`pool-favorite-button ${entry.favorite ? "active" : ""}`}
-          onClick={() => update(brawler.slug, { favorite: !entry.favorite })}
-          title={entry.favorite ? "Quitar prioridad" : "Marcar como prioritario"}
-        >★</button>
-        <div className="pool-card-head">
-          <BrawlerPortrait name={brawler.name} className="pool-avatar" />
-          <div><h3>{brawler.name}</h3><p>{brawler.role} · Tier {brawler.tier}</p></div>
-        </div>
-        <div className="pool-toggles">
-          <label><input type="checkbox" checked={entry.available} onChange={(event) => update(brawler.slug, { available: event.target.checked })} /> Disponible</label>
-          <label><input type="checkbox" checked={entry.power11} onChange={(event) => update(brawler.slug, { power11: event.target.checked })} /> Fuerza 11</label>
-          <label><input type="checkbox" checked={entry.hypercharge} onChange={(event) => update(brawler.slug, { hypercharge: event.target.checked })} /> Hipercarga</label>
-          <label><input type="checkbox" checked={entry.avoid} onChange={(event) => update(brawler.slug, { avoid: event.target.checked })} /> Evitar</label>
-        </div>
-        <label className="mastery-control"><span>Dominio personal <b>{entry.mastery}/5</b></span><input type="range" min="1" max="5" value={entry.mastery} onChange={(event) => update(brawler.slug, { mastery: Number(event.target.value) })} /></label>
-      </article>;
-    })}</div>
+    {visible.length === 0 ? <section className="panel pool-empty-state"><h3>No hay brawlers con estos filtros</h3><p>Cambia el filtro o el texto de búsqueda.</p></section> : groupByRole ? <div className="pool-role-groups">
+      {groupedVisible.map(([role, roleBrawlers]) => {
+        const roleAvailable = roleBrawlers.filter((brawler) => {
+          const entry = pool[brawler.slug];
+          return entry?.available && !entry.avoid;
+        }).length;
+        return <details className="pool-role-group" key={role} open>
+          <summary>
+            <div><span className="pool-role-icon">{role.slice(0, 1)}</span><div><h2>{role}</h2><p>{roleAvailable} disponibles de {roleBrawlers.length}</p></div></div>
+            <strong>{roleBrawlers.length}</strong>
+          </summary>
+          <div className="pool-grid">{roleBrawlers.map(renderCard)}</div>
+        </details>;
+      })}
+    </div> : <div className="pool-grid">{visible.map(renderCard)}</div>}
   </div>;
 }

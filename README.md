@@ -1,6 +1,15 @@
-# Brawl Draft Lab v0.5.1
+# Brawl Draft Lab v0.5.2
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.5.2
+
+- Interruptor **Agrupar por rol** dentro de Mi pool.
+- Agrupación activada por defecto y preferencia guardada en el navegador.
+- Vista alternativa única, sin secciones.
+- Secciones plegables para Tiradores, Control, Asesinos, Tanques, Apoyo y el resto de roles.
+- Cada grupo muestra brawlers disponibles y total de integrantes.
+- Los filtros y el buscador funcionan en ambas vistas.
 
 ## Novedades v0.5.1
 

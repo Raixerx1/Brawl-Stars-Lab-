@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.2 — Pool agrupado por rol
+
+- Opción para agrupar o desagrupar el pool.
+- Secciones plegables por rol.
+- Contador de disponibles por categoría.
+- Preferencia de visualización persistente.
+
 ## v0.5.1 — Panel de bans
 
 - Panel compacto de hasta seis bans.

@@ -238,3 +238,27 @@
 .draft-ban-panel-v51 .draft-search-wrap{margin-top:9px}
 @media(max-width:900px){.draft-ban-panel-v51 .draft-slots{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:560px){.draft-ban-panel-v51 .draft-slots{grid-template-columns:repeat(2,1fr)}}
+
+
+/* v0.5.2 — Agrupación opcional del pool por rol */
+.pool-search-row-v52{grid-template-columns:minmax(260px,1fr) 190px 210px}
+.pool-group-toggle{display:flex!important;align-items:center;gap:9px;padding:8px 11px;border:1px solid var(--line);border-radius:11px;background:#0b1020;cursor:pointer}
+.pool-group-toggle input{width:16px;height:16px;margin:0;accent-color:var(--blue)}
+.pool-group-toggle span,.pool-group-toggle b,.pool-group-toggle small{display:block}
+.pool-group-toggle b{font-size:9px;color:white}
+.pool-group-toggle small{font-size:8px;color:var(--muted);margin-top:2px}
+.pool-role-groups{display:grid;gap:15px}
+.pool-role-group{border:1px solid var(--line);border-radius:18px;background:rgba(17,23,42,.48);overflow:hidden}
+.pool-role-group>summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 17px;cursor:pointer;list-style:none;background:linear-gradient(90deg,rgba(69,183,255,.055),rgba(124,108,255,.025))}
+.pool-role-group>summary::-webkit-details-marker{display:none}
+.pool-role-group>summary>div{display:flex;align-items:center;gap:11px}
+.pool-role-group>summary h2{font-size:18px;margin:0}
+.pool-role-group>summary p{font-size:9px;color:var(--muted);margin:3px 0 0}
+.pool-role-group>summary>strong{display:grid;place-items:center;min-width:31px;height:31px;padding:0 8px;border-radius:10px;background:var(--panel2);font-size:11px;color:var(--blue)}
+.pool-role-icon{width:35px;height:35px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(135deg,rgba(69,183,255,.24),rgba(124,108,255,.18));font-size:14px;font-weight:900;color:white}
+.pool-role-group>.pool-grid{padding:14px}
+.pool-empty-state{text-align:center;padding:36px}
+.pool-empty-state h3{margin:0 0 6px}
+.pool-empty-state p{margin:0;color:var(--muted);font-size:10px}
+@media(max-width:900px){.pool-search-row-v52{grid-template-columns:1fr 1fr}.pool-group-toggle{grid-column:1/-1}}
+@media(max-width:560px){.pool-search-row-v52{grid-template-columns:1fr}.pool-group-toggle{grid-column:auto}.pool-role-group>.pool-grid{padding:10px}.pool-role-group>summary{padding:13px}}
