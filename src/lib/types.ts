@@ -92,6 +92,17 @@ export type LiveEventTone = "good" | "bad" | "neutral" | "objective";
 
 export type LiveEventSource = "Manual" | "Auto";
 
+export type AutoFeedbackVerdict = "accepted" | "rejected";
+
+export type AutoFeedbackStat = {
+  accepted: number;
+  rejected: number;
+};
+
+export type AutoFeedbackProfile = Record<string, AutoFeedbackStat>;
+
+export type AutoReviewHealth = "Calibrando" | "Buena" | "Estática" | "Inestable";
+
 export type LiveMatchEvent = {
   id: string;
   second: number;
@@ -101,6 +112,9 @@ export type LiveMatchEvent = {
   note?: string;
   source?: LiveEventSource;
   confidence?: number;
+  autoKey?: string;
+  feedback?: AutoFeedbackVerdict;
+  sequenceKey?: string;
 };
 
 export type AutoReviewSensitivity = "Baja" | "Media" | "Alta";
@@ -114,6 +128,9 @@ export type AutoLiveComment = {
   confidence: number;
   tone: LiveEventTone;
   eventLabel?: string;
+  autoKey?: string;
+  feedback?: AutoFeedbackVerdict;
+  kind?: "frame" | "sequence";
 };
 
 export type LiveReviewSummary = {
@@ -139,6 +156,9 @@ export type LiveReviewSession = {
     enabled: boolean;
     sensitivity: AutoReviewSensitivity;
     detections: number;
+    accepted?: number;
+    rejected?: number;
+    sequenceInsights?: number;
   };
   note: string;
   summary: LiveReviewSummary;

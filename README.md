@@ -1,6 +1,40 @@
-# Brawl Draft Lab v0.9
+# Brawl Draft Lab v0.10
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.10
+
+- Aprendizaje local de detecciones automáticas.
+- Botones **Correcto** y **Falso** en cada comentario.
+- Las correcciones ajustan gradualmente la confianza de futuras detecciones del mismo tipo.
+- Priors conservadores para evitar que una única corrección modifique demasiado el sistema.
+- Supresión progresiva de detecciones con historial repetidamente negativo.
+- Indicador de precisión revisada, pendientes, correctas y falsas.
+- Botón para restaurar el aprendizaje visual.
+- Detección de salud de la captura:
+  - calibrando;
+  - buena;
+  - estática;
+  - inestable.
+- Recalibración manual sin reiniciar la partida.
+- Nuevo análisis temporal por secuencias:
+  - interacción intensa seguida de muerte;
+  - super seguida de muerte;
+  - muerte seguida de cambio de objetivo;
+  - super seguida de cambio de objetivo;
+  - muerte poco después de reaparecer;
+  - dos muertes en una ventana corta.
+- Los comentarios de secuencia se diferencian de los derivados de un solo fotograma.
+- El resumen postpartida incorpora entradas castigadas, muertes costosas y supers sin conversión.
+- Las sesiones guardan número de secuencias y estadísticas de feedback.
+
+### Cómo entrenar Auto Review
+
+1. Mantén sensibilidad **Media**.
+2. Marca como **Correcto** las detecciones útiles.
+3. Marca como **Falso** los errores; se eliminan del resumen.
+4. Acumula varias correcciones antes de cambiar la sensibilidad.
+5. Usa **Restaurar aprendizaje visual** si cambias radicalmente la forma de compartir la pantalla.
 
 ## Novedades v0.9
 

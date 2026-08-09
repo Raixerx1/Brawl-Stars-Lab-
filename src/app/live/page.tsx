@@ -10,9 +10,9 @@ export const metadata: Metadata = {
 export default function LiveReviewPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Brawl Draft Lab v0.9</span>
+      <span className="eyebrow">Brawl Draft Lab v0.10</span>
       <h1>Auto Review Beta</h1>
-      <p>Comparte una pantalla o ventana. La web analiza fotogramas localmente, genera eventos y comentarios automáticos y mantiene los marcadores manuales para corregir el análisis.</p>
+      <p>Comparte una pantalla o ventana. La web analiza fotogramas localmente, aprende de tus correcciones y combina eventos cercanos para generar comentarios tácticos más útiles.</p>
     </div>
     <LiveMatchAnalyzer maps={maps} brawlers={brawlers} />
   </div>;

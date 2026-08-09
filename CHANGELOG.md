@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.10 — Auto Review adaptativo
+
+- Feedback correcto/falso por detección.
+- Ajuste local de confianza por tipo de evento.
+- Supresión de falsos positivos recurrentes.
+- Indicadores de precisión revisada.
+- Restauración del aprendizaje visual.
+- Salud de la captura y recalibración manual.
+- Motor de inferencia temporal por secuencias.
+- Nuevos comentarios sobre muertes costosas, reentradas y supers sin conversión.
+- Resumen y sesiones ampliados con métricas de secuencia.
+
 ## v0.9 — Auto Review Beta
 
 - Motor local de análisis de fotogramas.

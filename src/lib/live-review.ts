@@ -34,6 +34,12 @@ export function buildLiveSummary(events: LiveMatchEvent[], duration: number): Li
   const detectedObjectiveChanges = count(events, "Cambio de objetivo");
   const detectedSupers = countAny(events, ["Super utilizada", "Super decisiva", "Super desperdiciada"]);
   const phaseChanges = count(events, "Cambio de fase");
+  const punishedEntries = count(events, "Entrada castigada");
+  const supersWithoutConversion = count(events, "Super sin conversión");
+  const costlyDeaths = count(events, "Muerte con coste de objetivo");
+  const chainedDeaths = countAny(events, ["Muerte encadenada", "Cadena de muertes"]);
+  const impactfulSupers = count(events, "Super con impacto");
+  const sequenceInsights = events.filter((event) => Boolean(event.sequenceKey)).length;
   const favorableMatchups = count(events, "Matchup favorable");
   const badMatchups = count(events, "Matchup desfavorable");
   const laneChanges = count(events, "Cambio de línea");
@@ -49,6 +55,7 @@ export function buildLiveSummary(events: LiveMatchEvent[], duration: number): Li
   if (objectives) strengths.push(`${objectives} momentos de objetivo ganados.`);
   if (favorableMatchups) strengths.push(`Conservaste ${favorableMatchups} matchups favorables.`);
   if (detectedObjectiveChanges && objectives >= lostObjectives) strengths.push(`${detectedObjectiveChanges} cambios de objetivo detectados y registrados para revisión.`);
+  if (impactfulSupers) strengths.push(`${impactfulSupers} secuencias compatibles con una super que generó impacto sobre el objetivo.`);
 
   if (deaths > eliminations) mistakes.push(`Balance negativo de interacciones: ${deaths} muertes frente a ${eliminations} eliminaciones.`);
   if (overextensions) mistakes.push(`${overextensions} sobreextensiones marcadas.`);
@@ -56,6 +63,10 @@ export function buildLiveSummary(events: LiveMatchEvent[], duration: number): Li
   if (wastedHypercharges) mistakes.push(`${wastedHypercharges} hipercargas mal aprovechadas.`);
   if (lostObjectives) mistakes.push(`${lostObjectives} momentos de objetivo perdidos.`);
   if (badMatchups) mistakes.push(`Quedaste ${badMatchups} veces en un matchup desfavorable.`);
+  if (punishedEntries) mistakes.push(`${punishedEntries} entradas intensas terminaron en una muerte rápida.`);
+  if (supersWithoutConversion) mistakes.push(`${supersWithoutConversion} usos de super pudieron terminar sin conversión.`);
+  if (costlyDeaths) mistakes.push(`${costlyDeaths} muertes coincidieron con un cambio de objetivo posterior.`);
+  if (chainedDeaths) mistakes.push(`${chainedDeaths} secuencias de muertes o reentradas rápidas detectadas.`);
 
   if (overextensions || deaths >= 3) recommendations.push("Reduce la profundidad de la entrada cuando no tengas munición, super o apoyo cercano.");
   if (wastedSupers) recommendations.push("Retrasa la super hasta tener confirmación de objetivo, control de zona o posibilidad real de eliminación.");
@@ -65,6 +76,10 @@ export function buildLiveSummary(events: LiveMatchEvent[], duration: number): Li
   if (!laneChanges && badMatchups) recommendations.push("Usa más cambios de línea para corregir emparejamientos desfavorables.");
   if (detectedSupers && !goodSupers && !wastedSupers) recommendations.push(`Revisa el valor de los ${detectedSupers} usos de super detectados automáticamente.`);
   if (phaseChanges) recommendations.push("Compara tu posición y recursos antes y después de cada cambio de fase detectado.");
+  if (punishedEntries) recommendations.push("Después de una interacción intensa, corta la entrada antes y conserva una ruta de retirada.");
+  if (supersWithoutConversion) recommendations.push("Antes de usar la super, define qué obtienes: eliminación, control, objetivo o escape.");
+  if (costlyDeaths) recommendations.push("Evita asumir un intercambio si tu muerte abre directamente la condición de victoria rival.");
+  if (chainedDeaths) recommendations.push("Tras reaparecer, sincroniza la reentrada y no intentes recuperar solo toda la posición.");
   if (!events.length) recommendations.push("Activa Auto Review o registra eventos durante la partida para generar una revisión específica.");
   if (!recommendations.length) recommendations.push("Mantén el plan actual y revisa especialmente la primera muerte y el último uso de super.");
 
@@ -77,7 +92,8 @@ export function buildLiveSummary(events: LiveMatchEvent[], duration: number): Li
     "Muestra limitada: revisa los momentos decisivos";
 
   if (duration < 30 && events.length) recommendations.push("La sesión fue muy breve; confirma que la captura cubrió la partida completa.");
-  if (autoEvents) recommendations.push(`${autoEvents} eventos fueron detectados automáticamente; elimina los falsos positivos antes de guardar.`);
+  if (autoEvents) recommendations.push(`${autoEvents} eventos fueron detectados automáticamente; revisa los pendientes antes de guardar.`);
+  if (sequenceInsights) recommendations.push(`${sequenceInsights} conclusiones proceden de secuencias temporales, no de un único fotograma.`);
 
   return {
     headline,
