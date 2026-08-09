@@ -9,6 +9,9 @@ export const LIVE_REVIEW_KEY = "brawl-lab:live-reviews";
 const count = (events: LiveMatchEvent[], label: string) =>
   events.filter((event) => event.label === label).length;
 
+const countAny = (events: LiveMatchEvent[], labels: string[]) =>
+  events.filter((event) => labels.includes(event.label)).length;
+
 export function formatLiveTime(totalSeconds: number) {
   const safe = Math.max(0, Math.floor(totalSeconds));
   const minutes = Math.floor(safe / 60);
@@ -19,6 +22,7 @@ export function formatLiveTime(totalSeconds: number) {
 export function buildLiveSummary(events: LiveMatchEvent[], duration: number): LiveReviewSummary {
   const eliminations = count(events, "Eliminación");
   const deaths = count(events, "Muerte");
+  const autoEvents = events.filter((event) => event.source === "Auto").length;
   const goodRotations = count(events, "Buena rotación");
   const overextensions = count(events, "Sobreextensión");
   const goodSupers = count(events, "Super decisiva");
@@ -27,6 +31,9 @@ export function buildLiveSummary(events: LiveMatchEvent[], duration: number): Li
   const wastedHypercharges = count(events, "Hipercarga desperdiciada");
   const objectives = count(events, "Objetivo ganado");
   const lostObjectives = count(events, "Objetivo perdido");
+  const detectedObjectiveChanges = count(events, "Cambio de objetivo");
+  const detectedSupers = countAny(events, ["Super utilizada", "Super decisiva", "Super desperdiciada"]);
+  const phaseChanges = count(events, "Cambio de fase");
   const favorableMatchups = count(events, "Matchup favorable");
   const badMatchups = count(events, "Matchup desfavorable");
   const laneChanges = count(events, "Cambio de línea");
@@ -41,6 +48,7 @@ export function buildLiveSummary(events: LiveMatchEvent[], duration: number): Li
   if (goodHypercharges) strengths.push(`${goodHypercharges} hipercargas decisivas.`);
   if (objectives) strengths.push(`${objectives} momentos de objetivo ganados.`);
   if (favorableMatchups) strengths.push(`Conservaste ${favorableMatchups} matchups favorables.`);
+  if (detectedObjectiveChanges && objectives >= lostObjectives) strengths.push(`${detectedObjectiveChanges} cambios de objetivo detectados y registrados para revisión.`);
 
   if (deaths > eliminations) mistakes.push(`Balance negativo de interacciones: ${deaths} muertes frente a ${eliminations} eliminaciones.`);
   if (overextensions) mistakes.push(`${overextensions} sobreextensiones marcadas.`);
@@ -55,7 +63,9 @@ export function buildLiveSummary(events: LiveMatchEvent[], duration: number): Li
   if (lostObjectives > objectives) recommendations.push("Prioriza control del objetivo sobre perseguir eliminaciones fuera de la zona útil.");
   if (badMatchups > favorableMatchups) recommendations.push("Solicita o ejecuta el cambio de línea en la primera pausa segura.");
   if (!laneChanges && badMatchups) recommendations.push("Usa más cambios de línea para corregir emparejamientos desfavorables.");
-  if (!events.length) recommendations.push("Registra eventos durante la partida para generar una revisión específica.");
+  if (detectedSupers && !goodSupers && !wastedSupers) recommendations.push(`Revisa el valor de los ${detectedSupers} usos de super detectados automáticamente.`);
+  if (phaseChanges) recommendations.push("Compara tu posición y recursos antes y después de cada cambio de fase detectado.");
+  if (!events.length) recommendations.push("Activa Auto Review o registra eventos durante la partida para generar una revisión específica.");
   if (!recommendations.length) recommendations.push("Mantén el plan actual y revisa especialmente la primera muerte y el último uso de super.");
 
   const interactions = eliminations + deaths;
@@ -67,6 +77,7 @@ export function buildLiveSummary(events: LiveMatchEvent[], duration: number): Li
     "Muestra limitada: revisa los momentos decisivos";
 
   if (duration < 30 && events.length) recommendations.push("La sesión fue muy breve; confirma que la captura cubrió la partida completa.");
+  if (autoEvents) recommendations.push(`${autoEvents} eventos fueron detectados automáticamente; elimina los falsos positivos antes de guardar.`);
 
   return {
     headline,

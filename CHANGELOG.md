@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.9 — Auto Review Beta
+
+- Motor local de análisis de fotogramas.
+- Calibración adaptativa y tres niveles de sensibilidad.
+- Detección probable de muerte, reaparición, super, objetivo, fase y combate.
+- Comentarios automáticos con confianza.
+- Síntesis de voz opcional.
+- Eventos automáticos integrados en cronología y resumen.
+- Eliminación conjunta de comentarios y falsos positivos.
+- Metadatos de análisis guardados en cada Live Review.
+- Sin transmisión automática del vídeo.
+
 ## v0.8.1 — Roster completo en Counters
 
 - Sustituido el selector nativo por buscador y listado completo.

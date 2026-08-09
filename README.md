@@ -1,6 +1,39 @@
-# Brawl Draft Lab v0.8.1
+# Brawl Draft Lab v0.9
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.9
+
+- **Auto Review Beta** dentro de la sección de análisis en directo.
+- Muestreo local de la pantalla cada 650 ms.
+- Calibración automática inicial de ocho fotogramas.
+- Detección heurística de:
+  - oscurecimiento central compatible con muerte;
+  - recuperación compatible con reaparición;
+  - uso probable de super;
+  - cambios relevantes en el HUD del objetivo;
+  - cambios de fase o ronda;
+  - interacciones de combate intensas.
+- Eventos automáticos añadidos a la cronología con porcentaje de confianza.
+- Comentarios tácticos generados en directo.
+- Opción de reproducir comentarios mediante voz del navegador.
+- Sensibilidad baja, media o alta.
+- Los falsos positivos pueden descartarse y se eliminan también de la cronología.
+- El resumen postpartida incorpora los eventos detectados automáticamente.
+- Live Reviews guardados con configuración y número de detecciones automáticas.
+- Procesamiento completamente local sin subida automática de vídeo o fotogramas.
+
+### Alcance de Auto Review Beta
+
+La v0.9 utiliza diferencias entre fotogramas, luminosidad, saturación y actividad en regiones de la interfaz. No emplea todavía un modelo entrenado para reconocer personajes, texto o posiciones exactas. Por ello, los eventos se presentan como detecciones probables y deben revisarse antes de guardar la sesión.
+
+La precisión mejora cuando:
+
+- se comparte únicamente la ventana del juego;
+- la imagen mantiene la misma escala;
+- no hay notificaciones superpuestas;
+- la calibración comienza con la partida visible;
+- se utiliza sensibilidad media como configuración inicial.
 
 ## Novedades v0.8.1
 

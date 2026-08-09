@@ -3,16 +3,16 @@ import LiveMatchAnalyzer from "@/components/LiveMatchAnalyzer";
 import { brawlers, maps } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Live Review",
-  description: "Captura local de pantalla, marcadores temporales y revisión postpartida.",
+  title: "Auto Review Beta",
+  description: "Análisis heurístico local de fotogramas, comentarios automáticos y revisión postpartida.",
 };
 
 export default function LiveReviewPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Brawl Draft Lab v0.8</span>
-      <h1>Live Review</h1>
-      <p>Comparte una pantalla o ventana, marca los momentos decisivos y genera una revisión estructurada sin grabar ni subir automáticamente el vídeo.</p>
+      <span className="eyebrow">Brawl Draft Lab v0.9</span>
+      <h1>Auto Review Beta</h1>
+      <p>Comparte una pantalla o ventana. La web analiza fotogramas localmente, genera eventos y comentarios automáticos y mantiene los marcadores manuales para corregir el análisis.</p>
     </div>
     <LiveMatchAnalyzer maps={maps} brawlers={brawlers} />
   </div>;

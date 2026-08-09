@@ -90,6 +90,8 @@ export type PersonalPerformance = {
 
 export type LiveEventTone = "good" | "bad" | "neutral" | "objective";
 
+export type LiveEventSource = "Manual" | "Auto";
+
 export type LiveMatchEvent = {
   id: string;
   second: number;
@@ -97,6 +99,21 @@ export type LiveMatchEvent = {
   category: string;
   tone: LiveEventTone;
   note?: string;
+  source?: LiveEventSource;
+  confidence?: number;
+};
+
+export type AutoReviewSensitivity = "Baja" | "Media" | "Alta";
+
+export type AutoReviewStatus = "idle" | "calibrating" | "active" | "paused";
+
+export type AutoLiveComment = {
+  id: string;
+  second: number;
+  text: string;
+  confidence: number;
+  tone: LiveEventTone;
+  eventLabel?: string;
 };
 
 export type LiveReviewSummary = {
@@ -117,6 +134,12 @@ export type LiveReviewSession = {
   result?: MatchResult;
   duration: number;
   events: LiveMatchEvent[];
+  comments?: AutoLiveComment[];
+  autoAnalysis?: {
+    enabled: boolean;
+    sensitivity: AutoReviewSensitivity;
+    detections: number;
+  };
   note: string;
   summary: LiveReviewSummary;
 };

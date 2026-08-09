@@ -2,6 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type {
+  AutoLiveComment,
+  AutoReviewSensitivity,
+  AutoReviewStatus,
   Brawler,
   LiveEventTone,
   LiveMatchEvent,
@@ -20,6 +23,12 @@ import {
   readMatchHistory,
   saveMatchHistory,
 } from "@/lib/performance";
+import {
+  analyzeFrame,
+  createAutoDetectorState,
+  detectFrameEvents,
+  type FrameMetrics,
+} from "@/lib/auto-vision";
 import { BrawlerPortrait } from "./GameArtwork";
 
 type CaptureStatus = "idle" | "sharing" | "review";
@@ -30,6 +39,11 @@ type EventTemplate = {
   tone: LiveEventTone;
   shortcut: string;
 };
+
+const AUTO_SETTINGS_KEY = "brawl-lab:auto-review-settings-v1";
+const AUTO_FRAME_WIDTH = 160;
+const AUTO_FRAME_HEIGHT = 90;
+const AUTO_SAMPLE_MS = 650;
 
 const EVENT_TEMPLATES: EventTemplate[] = [
   { label: "Eliminación", category: "Combate", tone: "good", shortcut: "E" },
@@ -65,8 +79,12 @@ export default function LiveMatchAnalyzer({
   brawlers: Brawler[];
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const analysisCanvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const startedAtRef = useRef<number | null>(null);
+  const elapsedRef = useRef(0);
+  const detectorStateRef = useRef(createAutoDetectorState());
+  const voiceCommentsRef = useRef(false);
 
   const [status, setStatus] = useState<CaptureStatus>("idle");
   const [elapsed, setElapsed] = useState(0);
@@ -81,17 +99,54 @@ export default function LiveMatchAnalyzer({
   const [message, setMessage] = useState("");
   const [savedToLearning, setSavedToLearning] = useState(false);
   const [captureSupported, setCaptureSupported] = useState(false);
+  const [autoAnalysis, setAutoAnalysis] = useState(true);
+  const [autoSensitivity, setAutoSensitivity] = useState<AutoReviewSensitivity>("Media");
+  const [voiceComments, setVoiceComments] = useState(false);
+  const [autoStatus, setAutoStatus] = useState<AutoReviewStatus>("idle");
+  const [calibration, setCalibration] = useState(0);
+  const [autoComments, setAutoComments] = useState<AutoLiveComment[]>([]);
+  const [lastMetrics, setLastMetrics] = useState<FrameMetrics | null>(null);
 
   useEffect(() => {
     setSessions(readLiveReviews());
     setCaptureSupported(Boolean(navigator.mediaDevices?.getDisplayMedia));
+    try {
+      const stored = JSON.parse(window.localStorage.getItem(AUTO_SETTINGS_KEY) || "{}") as {
+        autoAnalysis?: boolean;
+        autoSensitivity?: AutoReviewSensitivity;
+        voiceComments?: boolean;
+      };
+      if (typeof stored.autoAnalysis === "boolean") setAutoAnalysis(stored.autoAnalysis);
+      if (stored.autoSensitivity && ["Baja", "Media", "Alta"].includes(stored.autoSensitivity)) setAutoSensitivity(stored.autoSensitivity);
+      if (typeof stored.voiceComments === "boolean") setVoiceComments(stored.voiceComments);
+    } catch {
+      // Mantener la configuración por defecto.
+    }
   }, []);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(AUTO_SETTINGS_KEY, JSON.stringify({
+        autoAnalysis,
+        autoSensitivity,
+        voiceComments,
+      }));
+    } catch {
+      // El análisis sigue funcionando aunque no se guarden las preferencias.
+    }
+  }, [autoAnalysis, autoSensitivity, voiceComments]);
+
+  useEffect(() => {
+    voiceCommentsRef.current = voiceComments;
+  }, [voiceComments]);
 
   useEffect(() => {
     if (status !== "sharing") return;
     const interval = window.setInterval(() => {
       if (!startedAtRef.current) return;
-      setElapsed(Math.max(0, Math.floor((Date.now() - startedAtRef.current) / 1000)));
+      const nextElapsed = Math.max(0, Math.floor((Date.now() - startedAtRef.current) / 1000));
+      elapsedRef.current = nextElapsed;
+      setElapsed(nextElapsed);
     }, 250);
     return () => window.clearInterval(interval);
   }, [status]);
@@ -108,6 +163,7 @@ export default function LiveMatchAnalyzer({
         label: template.label,
         category: template.category,
         tone: template.tone,
+        source: "Manual",
       }]);
     };
     window.addEventListener("keydown", onKeyDown);
@@ -121,6 +177,112 @@ export default function LiveMatchAnalyzer({
   const selectedMap = maps.find((map) => map.slug === mapSlug) || maps[0];
   const selectedBrawler = brawlers.find((brawler) => brawler.name === brawlerName) || brawlers[0];
   const summary = useMemo(() => buildLiveSummary(events, elapsed), [events, elapsed]);
+
+
+  const speakAutoComment = (text: string, confidence: number) => {
+    if (!voiceCommentsRef.current || confidence < .68 || typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    if (window.speechSynthesis.speaking) return;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "es-ES";
+    utterance.rate = 1.08;
+    utterance.pitch = .96;
+    utterance.volume = .88;
+    window.speechSynthesis.speak(utterance);
+  };
+
+  useEffect(() => {
+    if (status !== "sharing") {
+      setAutoStatus(status === "idle" ? "idle" : "paused");
+      return;
+    }
+
+    if (!autoAnalysis) {
+      setAutoStatus("paused");
+      return;
+    }
+
+    detectorStateRef.current = createAutoDetectorState();
+    setCalibration(0);
+    setAutoStatus("calibrating");
+
+    const canvas = analysisCanvasRef.current;
+    const video = videoRef.current;
+    if (!canvas || !video) return;
+
+    canvas.width = AUTO_FRAME_WIDTH;
+    canvas.height = AUTO_FRAME_HEIGHT;
+    const context = canvas.getContext("2d", { willReadFrequently: true });
+    if (!context) return;
+
+    const processFrame = () => {
+      if (
+        video.readyState < video.HAVE_CURRENT_DATA ||
+        !video.videoWidth ||
+        !video.videoHeight
+      ) return;
+
+      context.drawImage(video, 0, 0, AUTO_FRAME_WIDTH, AUTO_FRAME_HEIGHT);
+      const image = context.getImageData(0, 0, AUTO_FRAME_WIDTH, AUTO_FRAME_HEIGHT);
+      const detectorState = detectorStateRef.current;
+      const { metrics, gray } = analyzeFrame(image, detectorState.previousGray);
+      detectorState.previousGray = gray;
+      setLastMetrics(metrics);
+
+      const result = detectFrameEvents(
+        detectorState,
+        metrics,
+        elapsedRef.current,
+        selectedMap?.mode || "",
+        autoSensitivity,
+      );
+
+      setCalibration(result.calibration);
+      setAutoStatus(result.status);
+
+      if (!result.detections.length) return;
+
+      const detectedEvents: LiveMatchEvent[] = [];
+      const detectedComments: AutoLiveComment[] = [];
+
+      for (const detection of result.detections) {
+        const comment: AutoLiveComment = {
+          id: crypto.randomUUID(),
+          second: elapsedRef.current,
+          text: detection.comment,
+          confidence: Math.round(detection.confidence * 100),
+          tone: detection.tone,
+          eventLabel: detection.eventLabel,
+        };
+        detectedComments.push(comment);
+
+        if (detection.eventLabel) {
+          detectedEvents.push({
+            id: crypto.randomUUID(),
+            second: elapsedRef.current,
+            label: detection.eventLabel,
+            category: detection.category,
+            tone: detection.tone,
+            source: "Auto",
+            confidence: Math.round(detection.confidence * 100),
+            note: detection.comment,
+          });
+        }
+
+        speakAutoComment(detection.comment, detection.confidence);
+      }
+
+      if (detectedComments.length) {
+        setAutoComments((current) => [...detectedComments, ...current].slice(0, 40));
+      }
+      if (detectedEvents.length) {
+        setEvents((current) => [...current, ...detectedEvents]);
+      }
+    };
+
+    processFrame();
+    const interval = window.setInterval(processFrame, AUTO_SAMPLE_MS);
+    return () => window.clearInterval(interval);
+  }, [status, autoAnalysis, autoSensitivity, selectedMap?.mode]);
 
   const captureFrame = (download = false) => {
     const video = videoRef.current;
@@ -154,8 +316,9 @@ export default function LiveMatchAnalyzer({
     captureFrame(false);
     streamRef.current?.getTracks().forEach((track) => track.stop());
     streamRef.current = null;
+    setAutoStatus("paused");
     setStatus("review");
-    setMessage("Captura finalizada; revisa los eventos y guarda la sesión");
+    setMessage("Captura finalizada; revisa los eventos automáticos antes de guardar");
   };
 
   const startCapture = async () => {
@@ -186,14 +349,21 @@ export default function LiveMatchAnalyzer({
       track.addEventListener("ended", () => {
         captureFrame(false);
         streamRef.current = null;
+        setAutoStatus("paused");
         setStatus("review");
         setMessage("El navegador ha detenido la pantalla compartida");
       });
 
       startedAtRef.current = Date.now();
+      elapsedRef.current = 0;
+      detectorStateRef.current = createAutoDetectorState();
       setElapsed(0);
       setEvents([]);
+      setAutoComments([]);
+      setCalibration(0);
+      setLastMetrics(null);
       setNote("");
+      setAutoStatus(autoAnalysis ? "calibrating" : "paused");
       setStatus("sharing");
     } catch (error) {
       const name = error instanceof DOMException ? error.name : "";
@@ -209,12 +379,19 @@ export default function LiveMatchAnalyzer({
     startedAtRef.current = null;
     if (videoRef.current) videoRef.current.srcObject = null;
     setStatus("idle");
+    setAutoStatus("idle");
     setElapsed(0);
+    elapsedRef.current = 0;
+    detectorStateRef.current = createAutoDetectorState();
     setEvents([]);
+    setAutoComments([]);
+    setCalibration(0);
+    setLastMetrics(null);
     setNote("");
     setCustomEvent("");
     setLastFrame(null);
     setSavedToLearning(false);
+    if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
     setMessage("");
   };
 
@@ -225,6 +402,7 @@ export default function LiveMatchAnalyzer({
       label: template.label,
       category: template.category,
       tone: template.tone,
+      source: "Manual",
     }]);
   };
 
@@ -237,11 +415,29 @@ export default function LiveMatchAnalyzer({
       label: value,
       category: "Nota",
       tone: "neutral",
+      source: "Manual",
     }]);
     setCustomEvent("");
   };
 
-  const removeEvent = (id: string) => setEvents((current) => current.filter((event) => event.id !== id));
+  const removeEvent = (id: string) => {
+    const target = events.find((event) => event.id === id);
+    setEvents((current) => current.filter((event) => event.id !== id));
+    if (target?.source === "Auto") {
+      setAutoComments((current) => current.filter(
+        (comment) => !(comment.second === target.second && comment.eventLabel === target.label),
+      ));
+    }
+  };
+
+  const dismissAutoComment = (comment: AutoLiveComment) => {
+    setAutoComments((current) => current.filter((item) => item.id !== comment.id));
+    if (comment.eventLabel) {
+      setEvents((current) => current.filter(
+        (event) => !(event.source === "Auto" && event.second === comment.second && event.label === comment.eventLabel),
+      ));
+    }
+  };
 
   const currentSession = (): LiveReviewSession | null => {
     if (!selectedMap || !selectedBrawler) return null;
@@ -256,6 +452,12 @@ export default function LiveMatchAnalyzer({
       result,
       duration: elapsed,
       events,
+      comments: autoComments,
+      autoAnalysis: {
+        enabled: autoAnalysis,
+        sensitivity: autoSensitivity,
+        detections: events.filter((event) => event.source === "Auto").length,
+      },
       note,
       summary,
     };
@@ -314,13 +516,23 @@ export default function LiveMatchAnalyzer({
     saveLiveReviews(next);
   };
 
-  return <div className="live-review-v8">
+  const autoEventCount = events.filter((event) => event.source === "Auto").length;
+  const autoStatusText =
+    autoStatus === "calibrating" ? `Calibrando ${calibration}%` :
+    autoStatus === "active" ? "Analizando fotogramas" :
+    autoStatus === "paused" ? "Análisis pausado" :
+    "Preparado";
+  const motionLevel = lastMetrics ? Math.round(lastMetrics.motion * 100) : 0;
+  const latestAutoComment = autoComments[0];
+
+  return <div className="live-review-v8 live-review-v9">
+    <canvas ref={analysisCanvasRef} className="auto-analysis-canvas" aria-hidden="true" />
     {message && <div className="draft-toast">{message}</div>}
 
     <section className="panel live-setup-v8">
       <div className="section-title">
-        <div><span className="eyebrow">Live Review v0.8</span><h2>Preparar sesión</h2></div>
-        <span className={`live-privacy-chip ${status}`}>{status === "sharing" ? "● Captura activa" : "Procesamiento local"}</span>
+        <div><span className="eyebrow">Auto Review Beta v0.9</span><h2>Preparar sesión</h2></div>
+        <span className={`live-privacy-chip ${status}`}>{status === "sharing" ? `● ${autoStatusText}` : "Procesamiento local"}</span>
       </div>
 
       <div className="live-setup-grid">
@@ -335,13 +547,32 @@ export default function LiveMatchAnalyzer({
         </select></label>
       </div>
 
+      <div className="auto-review-controls-v9">
+        <label className="auto-review-toggle">
+          <input type="checkbox" checked={autoAnalysis} onChange={(event) => setAutoAnalysis(event.target.checked)} />
+          <span><b>Detección automática</b><small>Analiza fotogramas localmente cada 650 ms</small></span>
+        </label>
+        <label>Sensibilidad<select value={autoSensitivity} onChange={(event) => setAutoSensitivity(event.target.value as AutoReviewSensitivity)}>
+          <option>Baja</option><option>Media</option><option>Alta</option>
+        </select></label>
+        <label className="auto-review-toggle">
+          <input type="checkbox" checked={voiceComments} onChange={(event) => setVoiceComments(event.target.checked)} />
+          <span><b>Comentarios por voz</b><small>Solo detecciones con confianza suficiente</small></span>
+        </label>
+        <div className={`auto-review-status status-${autoStatus}`}>
+          <span>{autoStatusText}</span>
+          <b>{autoEventCount} eventos auto</b>
+          <small>Movimiento {motionLevel}%</small>
+        </div>
+      </div>
+
       <div className="live-main-actions">
         {status === "idle" && <button type="button" className="primary-button" onClick={startCapture} disabled={!captureSupported}>Compartir pantalla o ventana</button>}
         {status === "sharing" && <button type="button" className="live-stop-button" onClick={finishCapture}>Detener captura</button>}
         {status !== "idle" && <button type="button" className="secondary-button" onClick={() => captureFrame(true)}>Guardar fotograma</button>}
         {status !== "idle" && <button type="button" className="secondary-button" onClick={resetSession}>Nueva sesión</button>}
       </div>
-      <p className="live-privacy-note">La imagen se muestra únicamente en tu navegador. La aplicación no graba ni envía automáticamente el vídeo. Los eventos y resúmenes se guardan solo cuando pulsas guardar.</p>
+      <p className="live-privacy-note">La imagen y el análisis de fotogramas permanecen en tu navegador. La aplicación no graba ni envía automáticamente el vídeo. Las detecciones son heurísticas: revisa y elimina los falsos positivos antes de guardar.</p>
     </section>
 
     <section className="live-workspace-v8">
@@ -359,6 +590,7 @@ export default function LiveMatchAnalyzer({
           </div>}
           {status === "review" && !lastFrame && <div className="live-video-placeholder"><b>Captura finalizada</b><span>Revisa la cronología y guarda el resultado.</span></div>}
           {status === "sharing" && <span className="live-recording-dot">LIVE</span>}
+          {status === "sharing" && autoAnalysis && <span className={`auto-vision-badge ${autoStatus}`}>{autoStatusText}</span>}
         </div>
       </article>
 
@@ -388,12 +620,38 @@ export default function LiveMatchAnalyzer({
       </article>
     </section>
 
+    <section className="panel auto-comments-panel-v9">
+      <div className="section-title">
+        <div><span className="eyebrow">Coach automático</span><h2>Comentarios generados en directo</h2></div>
+        <span>{autoComments.length} comentarios</span>
+      </div>
+
+      {latestAutoComment ? <div className={`auto-latest-comment tone-${latestAutoComment.tone}`}>
+        <div>
+          <span>{formatLiveTime(latestAutoComment.second)} · confianza {latestAutoComment.confidence}%</span>
+          <b>{latestAutoComment.text}</b>
+        </div>
+        <button type="button" onClick={() => dismissAutoComment(latestAutoComment)}>Descartar</button>
+      </div> : <div className="auto-comment-empty">
+        <b>{autoStatus === "calibrating" ? `Calibrando la imagen: ${calibration}%` : autoAnalysis ? "Esperando un cambio relevante" : "Detección automática desactivada"}</b>
+        <span>El sistema busca oscurecimiento central, recuperación, cambios del HUD, uso probable de super, cambios de fase e interacciones intensas.</span>
+      </div>}
+
+      {autoComments.length > 1 && <div className="auto-comment-history">
+        {autoComments.slice(1, 8).map((comment) => <article className={`tone-${comment.tone}`} key={comment.id}>
+          <time>{formatLiveTime(comment.second)}</time>
+          <div><b>{comment.text}</b><small>{comment.eventLabel || "Comentario"} · {comment.confidence}%</small></div>
+          <button type="button" onClick={() => dismissAutoComment(comment)} aria-label="Descartar comentario">×</button>
+        </article>)}
+      </div>}
+    </section>
+
     <section className="panel live-timeline-panel">
       <div className="section-title"><div><span className="eyebrow">Cronología</span><h2>Momentos de la partida</h2></div><span>{formatLiveTime(elapsed)}</span></div>
       <div className="live-timeline-list">
         {events.length ? [...events].reverse().map((event) => <article className={`tone-${event.tone}`} key={event.id}>
           <time>{formatLiveTime(event.second)}</time>
-          <div><b>{event.label}</b><small>{event.category}</small></div>
+          <div><b>{event.label}</b><small>{event.category}{event.source === "Auto" ? ` · Auto ${event.confidence || 0}%` : " · Manual"}</small></div>
           <button type="button" onClick={() => removeEvent(event.id)} aria-label={`Eliminar ${event.label}`}>×</button>
         </article>) : <div className="empty-state">Los marcadores aparecerán aquí con el segundo exacto de la sesión.</div>}
       </div>
@@ -427,7 +685,7 @@ export default function LiveMatchAnalyzer({
       <div className="live-session-list">
         {sessions.slice(0, 10).map((session) => <article key={session.id}>
           <BrawlerPortrait name={session.brawler} className="live-history-avatar" />
-          <div><b>{session.brawler} · {session.mapName}</b><small>{session.result || "Sin resultado"} · {formatLiveTime(session.duration)} · {session.events.length} eventos</small><p>{session.summary.headline}</p></div>
+          <div><b>{session.brawler} · {session.mapName}</b><small>{session.result || "Sin resultado"} · {formatLiveTime(session.duration)} · {session.events.length} eventos{session.autoAnalysis?.detections ? ` · ${session.autoAnalysis.detections} auto` : ""}</small><p>{session.summary.headline}</p></div>
           <button type="button" onClick={() => removeSession(session.id)} aria-label={`Eliminar revisión de ${session.brawler}`}>×</button>
         </article>)}
         {!sessions.length && <div className="empty-state">Las revisiones guardadas aparecerán aquí y permanecerán en este dispositivo.</div>}
