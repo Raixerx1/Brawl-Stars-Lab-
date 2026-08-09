@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.13 — Cola Ranked y doble pick
+
+- Modos SoloQ, Dúo y Trío.
+- Ajustes de autonomía y coordinación en el motor.
+- Recomendaciones de pareja para fases de dos picks.
+- Métricas de sinergia, cobertura y coordinación.
+- Plan de líneas para cada pareja.
+- Aplicación o simulación automática de ambos picks.
+- Auditoría de diversidad y progresión de soportes por cola.
+
 ## v0.12.1 — Recomendación inmediata y equilibrio
 
 - Recomendación principal colocada justo debajo de los picks.

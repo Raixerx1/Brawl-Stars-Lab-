@@ -11,7 +11,7 @@ export default function Home() {
       <div>
         <span className="hero-badge">PARCHE 04/08/2026 · RANKED LAB</span>
         <h1>Gana el draft<br /><em>antes de empezar.</em></h1>
-        <p>Draft vivo, counters, simulación del rival y first picks calculados según apertura, arbustos, muros y wallbreak.</p>
+        <p>Draft vivo adaptado a SoloQ, Dúo o Trío, con recomendaciones de doble pick y perfiles estructurales por mapa.</p>
         <div className="hero-actions">
           <Link href="/draft" className="primary-button">Abrir Draft Assistant</Link>
           <Link href="/live" className="secondary-button">Abrir Auto Review</Link>
@@ -50,7 +50,7 @@ export default function Home() {
 
     <div className="section-title spaced"><div><span className="eyebrow">Nuevas herramientas</span><h2>Decide mejor antes y durante el draft</h2></div></div>
     <div className="feature-grid feature-grid-v8">
-      <Link href="/draft" className="panel feature-card"><b>◎</b><h3>Draft Coach</h3><p>Build, líneas, bans, simulación del siguiente pick y modo ultrarrápido.</p></Link>
+      <Link href="/draft" className="panel feature-card"><b>◎</b><h3>Draft Coach</h3><p>SoloQ, Dúo o Trío, parejas para doble pick, líneas, bans y modo ultrarrápido.</p></Link>
       <Link href="/live" className="panel feature-card"><b>▶</b><h3>Auto Review</h3><p>Analiza fotogramas, combina secuencias y ajusta la confianza con tus confirmaciones y falsos positivos.</p></Link>
       <Link href="/pool" className="panel feature-card"><b>◉</b><h3>Mi pool</h3><p>Prioriza fuerza 11, hipercargas y los brawlers que realmente dominas.</p></Link>
       <Link href="/tracker" className="panel feature-card"><b>▥</b><h3>Aprendizaje</h3><p>Convierte resultados y Live Reviews en ajustes personales moderados del Draft Coach.</p></Link>

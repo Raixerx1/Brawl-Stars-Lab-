@@ -1,6 +1,40 @@
-# Brawl Draft Lab v0.12.1
+# Brawl Draft Lab v0.13
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.13
+
+- Selector de cola Ranked:
+  - SoloQ;
+  - Dúo;
+  - Trío premade.
+- La selección se conserva localmente y también se comparte mediante la URL.
+- El motor adapta el valor de cada brawler al nivel de coordinación.
+- SoloQ prioriza picks autosuficientes y penaliza soportes puros.
+- Dúo valora sinergias coordinables entre dos jugadores.
+- Trío aumenta el valor de soporte, frontline y composiciones planificadas.
+- Nueva recomendación de **doble pick** cuando el equipo tiene dos selecciones consecutivas.
+- Cada pareja muestra:
+  - dos brawlers;
+  - puntuación;
+  - sinergia;
+  - cobertura;
+  - coordinación;
+  - plan de líneas;
+  - razones;
+  - riesgos.
+- Botones:
+  - Usar primero;
+  - Simular pareja en SoloQ;
+  - Aplicar pareja en Dúo/Trío.
+- Tres parejas alternativas para comparar.
+- Penalización de roles frágiles duplicados.
+- Penalización de parejas sin ancla estable.
+- Control de R-T dentro de las parejas para evitar un nuevo sesgo.
+- Nueva auditoría:
+  - `npm run audit:queue-pairs`
+- Informe técnico:
+  - `QUEUE_AND_PAIRS.md`
 
 ## Novedades v0.12.1
 

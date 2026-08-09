@@ -655,3 +655,35 @@
 .live-pick-alternatives-v121 b{display:block;margin-bottom:3px;color:var(--muted);font-size:6px;text-transform:uppercase;letter-spacing:.06em}
 @media(max-width:760px){.live-pick-recommendation-main-v121{grid-template-columns:auto 1fr auto}.live-pick-recommendation-main-v121>button{grid-column:1/-1}.live-pick-alternatives-v121{grid-template-columns:1fr}}
 @media(max-width:480px){.live-pick-recommendation-main-v121{grid-template-columns:auto 1fr}.live-pick-recommendation-main-v121>strong{grid-row:1;grid-column:2;justify-self:end}.live-pick-recommendation-main-v121>div{grid-column:1/-1}.live-pick-recommendation-avatar-v121{width:50px;height:50px}}
+
+
+/* v0.13 — Cola Ranked y recomendaciones de doble pick */
+.ordered-draft-context-v5{grid-template-columns:1fr 1.35fr .9fr 1.05fr .9fr 1.05fr 1.05fr}
+.double-pick-panel-v13{margin:10px 0 12px;padding:14px;border:1px solid rgba(124,108,255,.27);border-radius:16px;background:linear-gradient(135deg,rgba(124,108,255,.09),rgba(69,183,255,.045),rgba(8,11,22,.20))}
+.double-pick-heading-v13{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start}
+.double-pick-heading-v13 h3{margin:4px 0 4px;font-size:21px}
+.double-pick-heading-v13 p{margin:0;color:var(--muted);font-size:8px;line-height:1.45}
+.double-pick-heading-v13>strong{display:grid;place-items:center;min-width:48px;height:48px;border-radius:12px;background:rgba(124,108,255,.13);color:#c8c1ff;font-size:17px}
+.double-pick-brawlers-v13{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px}
+.double-pick-brawlers-v13 article{display:grid;grid-template-columns:auto auto 1fr;gap:9px;align-items:center;padding:9px;border:1px solid var(--line);border-radius:11px;background:rgba(8,11,22,.30)}
+.double-pick-brawlers-v13 article>span{display:grid;place-items:center;width:24px;height:24px;border-radius:7px;background:rgba(255,255,255,.06);color:var(--muted);font-size:8px;font-weight:900}
+.double-pick-avatar-v13{width:43px;height:43px;border-radius:11px;object-fit:cover}
+.double-pick-brawlers-v13 b,.double-pick-brawlers-v13 small{display:block}
+.double-pick-brawlers-v13 b{font-size:11px}
+.double-pick-brawlers-v13 small{margin-top:3px;color:var(--muted);font-size:7px}
+.double-pick-metrics-v13{display:grid;grid-template-columns:.7fr .7fr .8fr 2fr;gap:6px;margin-top:8px}
+.double-pick-metrics-v13 span{padding:8px 9px;border:1px solid var(--line);border-radius:9px;background:rgba(8,11,22,.25);font-size:7px;color:var(--muted)}
+.double-pick-metrics-v13 b{display:block;margin-bottom:3px;color:white;font-size:10px;line-height:1.35}
+.double-pick-metrics-v13 span:last-child b{font-size:8px}
+.double-pick-risk-v13{display:block;margin-top:8px;color:var(--red);font-size:7px;line-height:1.45}
+.double-pick-actions-v13{display:flex;gap:7px;margin-top:10px}
+.double-pick-actions-v13 button{padding:9px 12px;border-radius:9px;border:1px solid rgba(124,108,255,.28);background:rgba(124,108,255,.10);color:#ddd9ff;font-size:8px;font-weight:850;cursor:pointer}
+.double-pick-actions-v13 button:first-child{border-color:rgba(80,223,160,.26);background:rgba(80,223,160,.08);color:var(--green)}
+.double-pick-alternatives-v13{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+.double-pick-alternatives-v13 button{padding:8px;border:1px solid var(--line);border-radius:9px;background:rgba(8,11,22,.24);color:white;text-align:left;cursor:pointer}
+.double-pick-alternatives-v13 b,.double-pick-alternatives-v13 small{display:block}
+.double-pick-alternatives-v13 b{font-size:8px}
+.double-pick-alternatives-v13 small{margin-top:3px;color:var(--muted);font-size:7px;line-height:1.35}
+@media(max-width:1280px){.ordered-draft-context-v5{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:900px){.ordered-draft-context-v5{grid-template-columns:1fr 1fr}.double-pick-metrics-v13{grid-template-columns:1fr 1fr}.double-pick-metrics-v13 span:last-child{grid-column:1/-1}.double-pick-alternatives-v13{grid-template-columns:1fr}}
+@media(max-width:620px){.ordered-draft-context-v5,.double-pick-brawlers-v13,.double-pick-metrics-v13{grid-template-columns:1fr}.double-pick-metrics-v13 span:last-child{grid-column:auto}.double-pick-actions-v13{display:grid}.double-pick-actions-v13 button{width:100%}}

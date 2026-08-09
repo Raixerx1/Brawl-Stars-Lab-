@@ -104,6 +104,8 @@ export type DraftFirstPickOwner = "Aliado" | "Rival";
 
 export type PoolPolicy = "Off" | "Preferir" | "Solo pool";
 
+export type QueueMode = "SoloQ" | "Dúo" | "Trío";
+
 export type PlayerPoolEntry = {
   available: boolean;
   power11: boolean;
@@ -255,6 +257,7 @@ export type DraftInput = {
   poolPolicy?: PoolPolicy;
   personalPerformance?: PersonalPerformance;
   learnFromHistory?: boolean;
+  queueMode?: QueueMode;
 };
 
 export type DraftMetrics = {
@@ -287,6 +290,18 @@ export type DraftRecommendation = {
   build: TacticalBuild;
   lanePlan: LanePlan;
   firstPickEvaluation?: FirstPickEvaluation;
+};
+
+export type PairRecommendation = {
+  first: DraftRecommendation;
+  second: DraftRecommendation;
+  score: number;
+  synergy: number;
+  coverage: number;
+  coordination: number;
+  reasons: string[];
+  risks: string[];
+  lanePlan: string;
 };
 
 export type BanRecommendation = {

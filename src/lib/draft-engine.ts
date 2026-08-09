@@ -535,6 +535,54 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
     warnings.push("Cubre muchas funciones, pero no debe desplazar un counter más específico");
   }
 
+  const queueMode = input.queueMode || "SoloQ";
+  const teamDependence = brawler.firstPickProfile?.teamDependence
+    ?? (isSupport(brawler) ? 72 : hasTag(brawler, "carry", "safe") ? 30 : 48);
+  const autonomy = 100 - teamDependence;
+
+  if (queueMode === "SoloQ") {
+    const autonomyAdjustment = Math.round((autonomy - 50) * .12);
+    score += autonomyAdjustment;
+    safety += Math.round((autonomy - 50) * .16);
+    risk += Math.round((teamDependence - 50) * .14);
+
+    if (isSupport(brawler) && !hasTag(brawler, "carry", "damage")) {
+      score -= allies.length ? 5 : 9;
+      composition -= allies.length ? 2 : 7;
+      warnings.push("En SoloQ depende de que los aliados conviertan su utilidad");
+    }
+    if (hasTag(brawler, "carry", "safe") || brawler.firstPickProfile?.blindSafety && brawler.firstPickProfile.blindSafety >= 76) {
+      score += 4;
+      safety += 6;
+      reasons.push("Autosuficiente para SoloQ");
+    }
+  } else if (queueMode === "Dúo") {
+    score += Math.round((autonomy - 50) * .04);
+    if (allies.length && isSupport(brawler)) {
+      score += 3;
+      synergy += 6;
+      reasons.push("Puede coordinarse con tu compañero de dúo");
+    }
+  } else {
+    if (isSupport(brawler)) {
+      score += allies.length ? 8 : 4;
+      synergy += allies.length ? 14 : 8;
+      composition += 7;
+      reasons.push("La coordinación de trío aumenta su valor");
+    }
+    if (teamDependence >= 65) {
+      score += 4;
+      synergy += 7;
+      risk -= 6;
+      reasons.push("La premade reduce su dependencia de coordinación");
+    }
+    if (allies.some(isSupport) && (isFrontline(brawler) || hasTag(brawler, "carry", "damage"))) {
+      score += 5;
+      synergy += 10;
+      reasons.push("Convierte la utilidad del soporte coordinado");
+    }
+  }
+
   const poolEntry = input.personalPool?.[brawler.slug];
   const poolPolicy = input.poolPolicy || (input.usePersonalPool ? "Solo pool" : "Off");
   if (poolPolicy !== "Off" && poolEntry) {

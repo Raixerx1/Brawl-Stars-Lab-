@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Counters" };
 export default function CountersPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Matchup Lab v0.12.1</span>
+      <span className="eyebrow">Matchup Lab v0.13</span>
       <h1>Counters y amenazas</h1>
       <p>Roster completo con búsqueda, razones específicas para brawlers recientes y auditoría de cobertura. El mapa y la composición pueden invertir un matchup teórico.</p>
     </div>
