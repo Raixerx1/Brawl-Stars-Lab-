@@ -1,6 +1,34 @@
-# Brawl Draft Lab v0.12
+# Brawl Draft Lab v0.12.1
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.12.1
+
+- La recomendación principal aparece **inmediatamente debajo de la barra cronológica de picks**.
+- El panel muestra:
+  - retrato y nombre;
+  - puntuación;
+  - explicación breve;
+  - dos razones principales;
+  - línea recomendada;
+  - alternativa segura;
+  - alternativa de counter.
+- Cuando es tu turno aparece el botón **Usar pick**.
+- Durante el turno rival se muestra como recomendación provisional para tu siguiente selección.
+- Recalibración del motor para evitar que un brawler generalista acumule varias veces la misma ventaja.
+- R-T pasa de aparecer como principal en el 19,5% de los escenarios auditados al 3,0%.
+- R-T pasa del 15,8% al 3,1% como alternativa segura en la auditoría completa.
+- El motor mantiene R-T cuando realmente counterea dos amenazas compatibles.
+- Tier S/A de mapa dependiente de la fase:
+  - fuerte en first pick;
+  - moderado en picks intermedios;
+  - secundario en last pick.
+- Rendimiento decreciente para antidive, antitanque y necesidades de composición superpuestas.
+- Se retira R-T de ocho Tier S/A antiguos donde no estaba entre los ocho mejores candidatos estructurales.
+- Nueva auditoría:
+  - `npm run audit:recommendations`
+- Informe:
+  - `RECOMMENDATION_AUDIT.md`
 
 ## Novedades v0.12
 

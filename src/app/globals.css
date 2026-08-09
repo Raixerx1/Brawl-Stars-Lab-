@@ -638,3 +638,20 @@
 @media(max-width:1000px){.first-pick-audit-heading{grid-template-columns:1fr}.map-first-pick-candidates-v12{grid-template-columns:1fr 1fr}}
 @media(max-width:720px){.map-geometry-chips-v12{grid-template-columns:1fr 1fr}.first-pick-evaluation-v12,.map-geometry-bars-v12,.map-first-pick-candidates-v12{grid-template-columns:1fr 1fr}.map-transformation-v12{display:grid;grid-template-columns:1fr}.map-transformation-v12 span:nth-child(2){display:none}}
 @media(max-width:480px){.map-geometry-chips-v12,.first-pick-evaluation-v12,.map-geometry-bars-v12,.map-first-pick-candidates-v12{grid-template-columns:1fr}}
+
+
+/* v0.12.1 — Recomendación inmediata bajo la barra de picks */
+.live-pick-recommendation-v121{margin:10px 0 12px;border:1px solid rgba(80,223,160,.24);border-radius:14px;background:linear-gradient(135deg,rgba(80,223,160,.075),rgba(69,183,255,.045));overflow:hidden}
+.live-pick-recommendation-v121.provisional{border-color:rgba(69,183,255,.22);background:linear-gradient(135deg,rgba(69,183,255,.065),rgba(124,108,255,.035))}
+.live-pick-recommendation-main-v121{display:grid;grid-template-columns:auto 1fr auto auto;gap:11px;align-items:center;padding:12px}
+.live-pick-recommendation-avatar-v121{width:58px;height:58px;border-radius:13px;object-fit:cover}
+.live-pick-recommendation-main-v121 h3{margin:2px 0 3px;font-size:21px}
+.live-pick-recommendation-main-v121 p{margin:0;color:#dce4f2;font-size:9px;line-height:1.4}
+.live-pick-recommendation-main-v121 small{display:block;margin-top:5px;color:var(--muted);font-size:7px;line-height:1.35}
+.live-pick-recommendation-main-v121>strong{display:grid;place-items:center;min-width:44px;height:44px;border-radius:11px;background:rgba(80,223,160,.11);color:var(--green);font-size:16px}
+.live-pick-recommendation-main-v121>button{padding:10px 13px;border:1px solid rgba(80,223,160,.34);border-radius:10px;background:rgba(80,223,160,.12);color:var(--green);font-size:8px;font-weight:900;cursor:pointer}
+.live-pick-alternatives-v121{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;border-top:1px solid var(--line);background:var(--line)}
+.live-pick-alternatives-v121 span{padding:8px 10px;background:rgba(8,11,22,.88);font-size:8px;color:white}
+.live-pick-alternatives-v121 b{display:block;margin-bottom:3px;color:var(--muted);font-size:6px;text-transform:uppercase;letter-spacing:.06em}
+@media(max-width:760px){.live-pick-recommendation-main-v121{grid-template-columns:auto 1fr auto}.live-pick-recommendation-main-v121>button{grid-column:1/-1}.live-pick-alternatives-v121{grid-template-columns:1fr}}
+@media(max-width:480px){.live-pick-recommendation-main-v121{grid-template-columns:auto 1fr}.live-pick-recommendation-main-v121>strong{grid-row:1;grid-column:2;justify-self:end}.live-pick-recommendation-main-v121>div{grid-column:1/-1}.live-pick-recommendation-avatar-v121{width:50px;height:50px}}

@@ -335,12 +335,28 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
     ? evaluateFirstPick(brawler, input.map)
     : undefined;
   if (sIndex >= 0) {
-    score += 17 - sIndex * 1.4;
-    mapFit += 24 - sIndex * 2;
+    const mapBonus =
+      input.position === "First pick" ? 17 - sIndex * 1.4 :
+      input.position === "Pick intermedio" ? 8 - sIndex * .7 :
+      4 - sIndex * .35;
+    score += Math.max(1, mapBonus);
+    mapFit += input.position === "First pick"
+      ? 24 - sIndex * 2
+      : input.position === "Pick intermedio"
+        ? 13 - sIndex
+        : 8 - sIndex * .6;
     reasons.push("Tier S editorial del mapa");
   } else if (aIndex >= 0) {
-    score += 10 - aIndex;
-    mapFit += 14 - aIndex;
+    const mapBonus =
+      input.position === "First pick" ? 10 - aIndex :
+      input.position === "Pick intermedio" ? 4 - aIndex * .35 :
+      2 - aIndex * .18;
+    score += Math.max(.5, mapBonus);
+    mapFit += input.position === "First pick"
+      ? 14 - aIndex
+      : input.position === "Pick intermedio"
+        ? 7 - aIndex * .5
+        : 4 - aIndex * .25;
     reasons.push("Tier A editorial del mapa");
   }
 
@@ -383,8 +399,14 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
     const enemyClaimsCounter = includesName(enemy.counters, brawler.name);
 
     if (directCounter) {
-      score += Math.round(24 * matchupMultiplier);
-      counter += Math.round(32 * matchupMultiplier);
+      const counterBreadth = brawler.counters.length;
+      const specificity =
+        counterBreadth >= 8 ? .70 :
+        counterBreadth >= 6 ? .82 :
+        counterBreadth >= 4 ? .92 :
+        1;
+      score += Math.round(24 * matchupMultiplier * specificity);
+      counter += Math.round(32 * matchupMultiplier * specificity);
       countersHit.push(enemy.name);
       reasons.push(`Counter directo de ${enemy.name}`);
     } else if (reciprocalCounter) {
@@ -444,13 +466,33 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
   const enemyHasThrower = enemies.some(isThrower);
 
   if (enemyHasTank && isAntitank(brawler)) {
-    score += 15; counter += 21; composition += 10; reasons.push("Cubre antitanque");
+    const alreadyCountersTank = countersHit.some((name) => {
+      const enemy = enemies.find((item) => item.name === name);
+      return enemy?.role === "Tanque" || Boolean(enemy && hasTag(enemy, "tank", "tanque"));
+    });
+    score += alreadyCountersTank ? 5 : 12;
+    counter += alreadyCountersTank ? 7 : 17;
+    composition += 8;
+    reasons.push("Cubre antitanque");
   }
   if (enemyHasDive && isAntidive(brawler)) {
-    score += 17; counter += 23; composition += 12; reasons.push("Protege frente a dive");
+    const alreadyCountersDive = countersHit.some((name) => {
+      const enemy = enemies.find((item) => item.name === name);
+      return enemy?.role === "Asesino" || Boolean(enemy && hasTag(enemy, "assassin", "asesino", "mobile"));
+    });
+    score += alreadyCountersDive ? 5 : 13;
+    counter += alreadyCountersDive ? 7 : 18;
+    composition += 9;
+    reasons.push("Protege frente a dive");
   }
   if (enemyHasThrower && (brawler.role === "Asesino" || hasTag(brawler, "mobile"))) {
-    score += 13; counter += 18; reasons.push("Acceso contra artilleros");
+    const alreadyCountersThrower = countersHit.some((name) => {
+      const enemy = enemies.find((item) => item.name === name);
+      return Boolean(enemy && isThrower(enemy));
+    });
+    score += alreadyCountersThrower ? 4 : 10;
+    counter += alreadyCountersThrower ? 6 : 14;
+    reasons.push("Acceso contra artilleros");
   }
 
   if (input.map.layout === "Abierto" && isLongRange(brawler)) {
@@ -481,10 +523,16 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
     score += 6; synergy += 11; reasons.push("Protege al artillero aliado");
   }
 
-  for (const need of needs) {
-    if (coversNeed(brawler, need)) {
-      score += 7; composition += 15; reasons.push(`Cubre: ${need}`);
-    }
+  const coveredNeeds = needs.filter((need) => coversNeed(brawler, need));
+  coveredNeeds.forEach((need, index) => {
+    const scoreBonus = index === 0 ? 7 : index === 1 ? 4 : index === 2 ? 2 : 0;
+    const compositionBonus = index === 0 ? 15 : index === 1 ? 9 : index === 2 ? 4 : 0;
+    score += scoreBonus;
+    composition += compositionBonus;
+    if (index < 3) reasons.push(`Cubre: ${need}`);
+  });
+  if (coveredNeeds.length >= 4) {
+    warnings.push("Cubre muchas funciones, pero no debe desplazar un counter más específico");
   }
 
   const poolEntry = input.personalPool?.[brawler.slug];

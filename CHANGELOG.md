@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.12.1 — Recomendación inmediata y equilibrio
+
+- Recomendación principal colocada justo debajo de los picks.
+- Acción rápida para confirmar el brawler recomendado.
+- Alternativas y línea visibles sin desplazarse por la página.
+- Bonificaciones de counter y composición con rendimiento decreciente.
+- Tier editorial ponderado según la fase del draft.
+- Corrección del exceso de recomendaciones de R-T.
+- Auditoría automática de diversidad de recomendaciones.
+
 ## v0.12 — Modelo estructural de first picks
 
 - Perfiles físicos para los 39 mapas.

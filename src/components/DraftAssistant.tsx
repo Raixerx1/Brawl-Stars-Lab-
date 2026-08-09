@@ -26,6 +26,19 @@ type OrderedPick = string | null;
 
 const normalize = (value: string) => value.trim().toLowerCase();
 
+const alternativeTierBonus: Record<string, number> = {
+  "S+": 9,
+  S: 8,
+  "A+": 6,
+  A: 5,
+  "B+": 3,
+  B: 2,
+  C: 0,
+  D: -7,
+  F: -11,
+  "Sin evaluar": -4,
+};
+
 function sequenceFor(firstPickOwner: DraftFirstPickOwner): DraftTeam[] {
   return firstPickOwner === "Aliado"
     ? ["ally", "enemy", "enemy", "ally", "ally", "enemy"]
@@ -348,8 +361,23 @@ export default function DraftAssistant({
   const best = displayAnalysis.recommendations[0];
   const safe = selectDistinct(
     displayAnalysis.recommendations,
-    (a, b) => (b.metrics.safety * .62 + b.metrics.mapFit * .25 + b.score * .25)
-      - (a.metrics.safety * .62 + a.metrics.mapFit * .25 + a.score * .25),
+    (a, b) => {
+      const aValue =
+        a.score * .42 +
+        a.metrics.safety * .32 +
+        a.metrics.mapFit * .15 +
+        a.metrics.composition * .08 -
+        a.metrics.risk * .20 +
+        (alternativeTierBonus[a.brawler.tier] || 0);
+      const bValue =
+        b.score * .42 +
+        b.metrics.safety * .32 +
+        b.metrics.mapFit * .15 +
+        b.metrics.composition * .08 -
+        b.metrics.risk * .20 +
+        (alternativeTierBonus[b.brawler.tier] || 0);
+      return bValue - aValue;
+    },
     best ? [best.brawler.name] : [],
   );
   const counter = selectDistinct(
@@ -440,7 +468,7 @@ export default function DraftAssistant({
   return <div className="ordered-draft-assistant">
     <section className="panel ordered-draft-panel">
       <div className="section-title">
-        <div><span className="eyebrow">Draft Coach v0.12</span><h2>Introduce los picks en orden</h2></div>
+        <div><span className="eyebrow">Draft Coach v0.12.1</span><h2>Introduce los picks en orden</h2></div>
         <div className="draft-action-row">
           <button type="button" className="secondary-button compact-button" onClick={shareDraft}>Compartir</button>
           <button type="button" className="secondary-button compact-button" onClick={resetDraft}>Reiniciar</button>
@@ -534,6 +562,25 @@ export default function DraftAssistant({
           </button>;
         })}
       </div>
+
+      {nextIndex >= 0 && best && <div className={`live-pick-recommendation-v121 ${nextTeam === "ally" ? "ready" : "provisional"}`}>
+        <div className="live-pick-recommendation-main-v121">
+          <BrawlerPortrait name={best.brawler.name} className="live-pick-recommendation-avatar-v121" priority />
+          <div>
+            <span className="eyebrow">{nextTeam === "ally" ? "Pick recomendado ahora" : "Recomendación para tu próximo turno"}</span>
+            <h3>{best.brawler.name}</h3>
+            <p>{best.brief}</p>
+            <small>{best.reasons.slice(0, 2).join(" · ") || best.counterLabel}</small>
+          </div>
+          <strong>{best.score}</strong>
+          {nextTeam === "ally" && <button type="button" onClick={() => addNextPick(best.brawler.name)}>Usar pick</button>}
+        </div>
+        <div className="live-pick-alternatives-v121">
+          {safe && <span><b>Seguro</b>{safe.brawler.name}</span>}
+          {counter && <span><b>Alternativa</b>{counter.brawler.name}</span>}
+          <span><b>Línea</b>{best.suggestedLine}</span>
+        </div>
+      </div>}
 
       <div className={`common-pick-entry ${nextTeam === "ally" ? "ally" : "enemy"}`}>
         <div>

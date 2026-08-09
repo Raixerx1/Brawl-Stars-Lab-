@@ -302,10 +302,10 @@
     ],
     "tierA": [
       "Starr Nova",
-      "R-T",
       "Rosa",
       "Sandy",
-      "Bibi"
+      "Bibi",
+      "Gale"
     ],
     "firstPicks": [
       "Gale",
@@ -325,7 +325,7 @@
     "plan": "Controla los arbustos antes de conducir el balón. Conserva una respuesta antidive y rompe únicamente los muros que abran la portería rival.",
     "slug": "sneaky-fields",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
+    "status": "Pool Ranked vigente · recomendaciones recalibradas en v0.12.1.",
     "rotationStatus": "Actual",
     "poolCheckedAt": "09/08/2026",
     "aliases": [
@@ -2608,8 +2608,8 @@
       "Angelo",
       "Mandy",
       "Gene",
-      "R-T",
-      "Nani"
+      "Nani",
+      "Belle"
     ],
     "firstPicks": [
       "Piper",
@@ -2629,7 +2629,7 @@
     "plan": "Juega por daño seguro y control del agua. No cruces el centro sin ventaja de vida o munición y conserva movilidad para el cierre del gas.",
     "slug": "flowing-springs",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
+    "status": "Pool Ranked vigente · recomendaciones recalibradas en v0.12.1.",
     "rotationStatus": "Actual",
     "poolCheckedAt": "09/08/2026",
     "aliases": [
@@ -3029,10 +3029,10 @@
     ],
     "tierA": [
       "Byron",
-      "R-T",
       "Gray",
       "Kenji",
-      "Sirius"
+      "Sirius",
+      "Brock"
     ],
     "firstPicks": [
       "Piper",
@@ -3051,7 +3051,7 @@
     ],
     "plan": "Prioriza vida y daño seguro. El gas es un recurso; no regales la primera baja por una eliminación improbable.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
+    "status": "Pool Ranked vigente · recomendaciones recalibradas en v0.12.1.",
     "rotationStatus": "Actual",
     "poolCheckedAt": "09/08/2026",
     "aliases": [
@@ -3170,11 +3170,11 @@
       "Gale"
     ],
     "tierA": [
-      "R-T",
       "Ash",
       "Ollie",
       "Starr Nova",
-      "Damian"
+      "Damian",
+      "Surge"
     ],
     "firstPicks": [
       "Surge",
@@ -3193,7 +3193,7 @@
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
+    "status": "Pool Ranked vigente · recomendaciones recalibradas en v0.12.1.",
     "rotationStatus": "Actual",
     "poolCheckedAt": "09/08/2026",
     "aliases": [
@@ -3311,11 +3311,11 @@
       "Gale"
     ],
     "tierA": [
-      "R-T",
       "Ash",
       "Ollie",
       "Starr Nova",
-      "Damian"
+      "Damian",
+      "Brock"
     ],
     "firstPicks": [
       "Brock",
@@ -3334,7 +3334,7 @@
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
+    "status": "Pool Ranked vigente · recomendaciones recalibradas en v0.12.1.",
     "rotationStatus": "Actual",
     "poolCheckedAt": "09/08/2026",
     "aliases": [],
@@ -3450,11 +3450,11 @@
       "Gale"
     ],
     "tierA": [
-      "R-T",
       "Ash",
       "Ollie",
       "Starr Nova",
-      "Damian"
+      "Damian",
+      "Surge"
     ],
     "firstPicks": [
       "Surge",
@@ -3473,7 +3473,7 @@
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
+    "status": "Pool Ranked vigente · recomendaciones recalibradas en v0.12.1.",
     "rotationStatus": "Actual",
     "poolCheckedAt": "09/08/2026",
     "aliases": [
@@ -3594,11 +3594,11 @@
       "Gale"
     ],
     "tierA": [
-      "R-T",
       "Ash",
       "Ollie",
       "Starr Nova",
-      "Damian"
+      "Damian",
+      "Max"
     ],
     "firstPicks": [
       "Lou",
@@ -3617,7 +3617,7 @@
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
+    "status": "Pool Ranked vigente · recomendaciones recalibradas en v0.12.1.",
     "rotationStatus": "Actual",
     "poolCheckedAt": "09/08/2026",
     "aliases": [
@@ -4974,9 +4974,9 @@
     "tierA": [
       "Mandy",
       "Byron",
-      "R-T",
       "Tick",
-      "Brock"
+      "Brock",
+      "8-Bit"
     ],
     "firstPicks": [
       "Piper",
@@ -4995,7 +4995,7 @@
     ],
     "plan": "Con ventaja de estrellas, obliga al rival a cruzar espacio abierto y evita intercambios uno por uno innecesarios.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
+    "status": "Pool Ranked vigente · recomendaciones recalibradas en v0.12.1.",
     "rotationStatus": "Actual",
     "poolCheckedAt": "09/08/2026",
     "aliases": [
