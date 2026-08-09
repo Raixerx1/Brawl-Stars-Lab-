@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.7 — Aprendizaje personal
+
+- Historial de partidas tipado y compatible con registros anteriores.
+- Ajuste del motor mediante rendimiento personal con regularización por muestra.
+- Guardado de resultados desde el Draft Coach.
+- Dashboard por brawler, rol y mapa.
+- Importación, exportación y borrado de partidas.
+- Indicadores personales dentro de las recomendaciones.
+
 ## v0.6 — Simulación del rival
 
 - Predicción de hasta seis picks rivales probables.

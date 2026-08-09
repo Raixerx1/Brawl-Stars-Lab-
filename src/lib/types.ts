@@ -52,6 +52,40 @@ export type PlayerPoolEntry = {
 
 export type PlayerPool = Record<string, PlayerPoolEntry>;
 
+export type MatchResult = "Victoria" | "Derrota";
+
+export type PersonalMatch = {
+  id: string;
+  date: string;
+  mapSlug: string;
+  mapName: string;
+  mode: string;
+  brawler: string;
+  brawlerSlug?: string;
+  role?: string;
+  result: MatchResult;
+  draftPosition?: DraftPosition;
+  allies?: string[];
+  enemies?: string[];
+  note: string;
+  source: "Manual" | "Draft Coach";
+};
+
+export type PersonalStat = {
+  games: number;
+  wins: number;
+  losses: number;
+  winRate: number;
+};
+
+export type PersonalPerformance = {
+  overall: PersonalStat;
+  brawlers: Record<string, PersonalStat>;
+  maps: Record<string, PersonalStat>;
+  roles: Record<string, PersonalStat>;
+  brawlerMaps: Record<string, PersonalStat>;
+};
+
 export type TacticalBuild = {
   gadget: string;
   starPower: string;
@@ -78,6 +112,8 @@ export type DraftInput = {
   personalPool?: PlayerPool;
   usePersonalPool?: boolean;
   poolPolicy?: PoolPolicy;
+  personalPerformance?: PersonalPerformance;
+  learnFromHistory?: boolean;
 };
 
 export type DraftMetrics = {
@@ -104,6 +140,9 @@ export type DraftRecommendation = {
   counterLabel: string;
   suggestedLine: string;
   plan: string;
+  personalHistory?: PersonalStat;
+  personalMapHistory?: PersonalStat;
+  personalAdjustment?: number;
   build: TacticalBuild;
   lanePlan: LanePlan;
 };

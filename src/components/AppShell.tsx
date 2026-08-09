@@ -13,7 +13,7 @@ const nav = [
   ["/pool", "Mi pool", "◉"],
   ["/compare", "Comparador", "≍"],
   ["/favorites", "Favoritos", "★"],
-  ["/tracker", "Entrenador", "▥"],
+  ["/tracker", "Aprendizaje", "▥"],
   ["/meta", "Meta", "↗"],
   ["/sources", "Fuentes", "i"],
 ];
@@ -25,12 +25,12 @@ export default function AppShell({ children }: { children: ReactNode }) {
     <aside className={`sidebar ${open ? "open" : ""}`}>
       <div className="brand"><div className="brand-mark">★</div><div><strong>Brawl Draft Lab</strong><small>Ranked Intelligence</small></div></div>
       <nav>{nav.map(([href, label, icon]) => <Link key={href} className={path === href || (href !== "/" && path.startsWith(href)) ? "active" : ""} href={href} onClick={() => setOpen(false)}><span>{icon}</span>{label}</Link>)}</nav>
-      <div className="sidebar-note"><b>Base v0.6</b><span>Parche: 04/08/2026</span><span>106 brawlers · 1.060 matchups</span></div>
+      <div className="sidebar-note"><b>Base v0.7</b><span>Parche: 04/08/2026</span><span>106 brawlers · 1.060 matchups</span></div>
     </aside>
     <main>
       <header className="topbar">
         <button className="menu-button" onClick={() => setOpen(!open)}>☰</button>
-        <div><b>De Mítico a Legendario</b><span>Draft Coach con simulación rival</span></div>
+        <div><b>De Mítico a Legendario</b><span>Draft Coach que aprende de tus partidas</span></div>
         <Link className="status-pill" href="/meta">● Parche 04/08</Link>
       </header>
       {children}

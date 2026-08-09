@@ -1,1 +1,12 @@
-import type {Metadata} from "next";import MatchTracker from "@/components/MatchTracker";import {maps,brawlers} from "@/lib/data";export const metadata:Metadata={title:"Entrenador personal"};export default function TrackerPage(){return <div className="page"><div className="page-heading"><span className="eyebrow">Rendimiento personal</span><h1>Entrenador</h1><p>Registra partidas para detectar tus mejores brawlers y mapas. Los datos no salen de tu dispositivo.</p></div><MatchTracker maps={maps} brawlers={brawlers}/></div>}
+import type { Metadata } from "next";
+import MatchTracker from "@/components/MatchTracker";
+import { maps, brawlers } from "@/lib/data";
+
+export const metadata: Metadata = { title: "Aprendizaje personal" };
+
+export default function TrackerPage() {
+  return <div className="page">
+    <div className="page-heading"><span className="eyebrow">Draft Coach v0.7</span><h1>Aprendizaje personal</h1><p>Registra resultados para que las recomendaciones se adapten gradualmente a tus mejores brawlers, roles y mapas. Los datos permanecen en tu dispositivo.</p></div>
+    <MatchTracker maps={maps} brawlers={brawlers} />
+  </div>;
+}

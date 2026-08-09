@@ -11,9 +11,13 @@ import type {
   PlayerPool,
   PlayerPoolEntry,
   PoolPolicy,
+  MatchResult,
+  PersonalMatch,
+  PersonalPerformance,
 } from "@/lib/types";
 import { analyzeDraft } from "@/lib/draft-engine";
 import { loadPool } from "@/lib/pool";
+import { buildPersonalPerformance, readMatchHistory, saveMatchHistory } from "@/lib/performance";
 import { BrawlerPortrait } from "./GameArtwork";
 import BrawlerDraftPicker from "./BrawlerDraftPicker";
 
@@ -83,6 +87,11 @@ function RecommendationCard({
       <span>Dominio {poolEntry.mastery}/5</span>
       {!poolEntry.available && <span className="bad">No disponible</span>}
     </div>}
+    {result.personalHistory && result.personalHistory.games >= 2 && <div className="personal-history-badge-v7">
+      <span>{result.personalHistory.winRate}% personal</span>
+      <small>{result.personalHistory.games} partidas{result.personalMapHistory && result.personalMapHistory.games >= 2 ? ` · ${result.personalMapHistory.winRate}% en este mapa` : ""}</small>
+      {typeof result.personalAdjustment === "number" && Math.abs(result.personalAdjustment) >= 1 && <b className={result.personalAdjustment >= 0 ? "positive" : "negative"}>{result.personalAdjustment > 0 ? "+" : ""}{result.personalAdjustment}</b>}
+    </div>}
     <div className="simple-rec-tags">
       {result.countersHit.slice(0, 3).map((name) => <span className="good" key={name}>Frena {name}</span>)}
       {result.softCounters.slice(0, 2).map((name) => <span className="soft" key={name}>Favorable vs {name}</span>)}
@@ -118,11 +127,20 @@ export default function DraftAssistant({
   const [personalPool, setPersonalPool] = useState<PlayerPool>({});
   const [poolPolicy, setPoolPolicy] = useState<PoolPolicy>("Off");
   const [quickMode, setQuickMode] = useState(false);
+  const [learnFromHistory, setLearnFromHistory] = useState(true);
+  const [personalPerformance, setPersonalPerformance] = useState<PersonalPerformance | undefined>();
+  const [matchHistory, setMatchHistory] = useState<PersonalMatch[]>([]);
+  const [playedBrawler, setPlayedBrawler] = useState("");
+  const [matchResult, setMatchResult] = useState<MatchResult>("Victoria");
+  const [matchNote, setMatchNote] = useState("");
   const [scenarioEnemy, setScenarioEnemy] = useState("");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     setPersonalPool(loadPool(brawlers));
+    const storedMatches = readMatchHistory(maps, brawlers);
+    setMatchHistory(storedMatches);
+    setPersonalPerformance(buildPersonalPerformance(storedMatches));
     const params = new URLSearchParams(window.location.search);
     const sharedMap = params.get("map");
     const sharedFirst = params.get("first") as DraftFirstPickOwner | null;
@@ -131,6 +149,7 @@ export default function DraftAssistant({
     const sharedPoolPolicy = params.get("pool") as PoolPolicy | null;
     const sharedQuick = params.get("quick");
     const sharedScenario = params.get("scenario");
+    const sharedLearning = params.get("learn");
 
     if (sharedMap) {
       const found = maps.find((item) => item.slug === sharedMap);
@@ -148,6 +167,7 @@ export default function DraftAssistant({
     if (sharedPoolPolicy && ["Off", "Preferir", "Solo pool"].includes(sharedPoolPolicy)) setPoolPolicy(sharedPoolPolicy);
     if (sharedQuick === "1") setQuickMode(true);
     if (sharedScenario) setScenarioEnemy(sharedScenario);
+    if (sharedLearning === "0") setLearnFromHistory(false);
   }, [brawlers, maps]);
 
   const map = maps.find((item) => item.slug === mapSlug) || availableMaps[0];
@@ -177,8 +197,10 @@ export default function DraftAssistant({
       priority,
       personalPool,
       poolPolicy,
+      personalPerformance,
+      learnFromHistory,
     }, brawlers);
-  }, [map, position, allies, enemies, bans, priority, personalPool, poolPolicy, brawlers]);
+  }, [map, position, allies, enemies, bans, priority, personalPool, poolPolicy, personalPerformance, learnFromHistory, brawlers]);
 
   const nextEnemyIndex = useMemo(() => {
     const start = nextIndex < 0 ? 0 : nextIndex;
@@ -211,8 +233,10 @@ export default function DraftAssistant({
       priority: scenarioPosition === "First pick" ? "Seguro" : "Counter",
       personalPool,
       poolPolicy,
+      personalPerformance,
+      learnFromHistory,
     }, brawlers);
-  }, [map, scenarioEnemy, nextEnemyIndex, scenarioPosition, scenarioAllies, scenarioEnemies, bans, personalPool, poolPolicy, brawlers]);
+  }, [map, scenarioEnemy, nextEnemyIndex, scenarioPosition, scenarioAllies, scenarioEnemies, bans, personalPool, poolPolicy, personalPerformance, learnFromHistory, brawlers]);
 
   const displayAnalysis = scenarioAnalysis || analysis;
   const displayPosition = scenarioAnalysis ? scenarioPosition : position;
@@ -249,6 +273,8 @@ export default function DraftAssistant({
     if (nextIndex < 0) return;
     setOrderedPicks((current) => current.map((pick, index) => index === nextIndex ? name : pick));
     setScenarioEnemy("");
+    setPlayedBrawler("");
+    setMatchNote("");
     setQuery("");
     setFocused(false);
   };
@@ -278,6 +304,8 @@ export default function DraftAssistant({
     setOrderedPicks(Array(6).fill(null));
     setBans([]);
     setScenarioEnemy("");
+    setPlayedBrawler("");
+    setMatchNote("");
   };
 
   const resetDraft = () => {
@@ -298,6 +326,7 @@ export default function DraftAssistant({
       pool: poolPolicy,
       quick: quickMode ? "1" : "0",
       scenario: scenarioEnemy,
+      learn: learnFromHistory ? "1" : "0",
     });
     const url = `${window.location.origin}/draft?${params.toString()}`;
     try {
@@ -361,6 +390,34 @@ export default function DraftAssistant({
     setScenarioEnemy("");
   };
 
+  const saveDraftResult = () => {
+    if (!map || !playedBrawler || allies.length !== 3 || enemies.length !== 3) return;
+    const profile = brawlers.find((brawler) => brawler.name === playedBrawler);
+    const slotIndex = orderedPicks.findIndex((pick) => pick === playedBrawler);
+    const match: PersonalMatch = {
+      id: crypto.randomUUID(),
+      date: new Date().toISOString(),
+      mapSlug: map.slug,
+      mapName: map.name,
+      mode: map.mode,
+      brawler: playedBrawler,
+      brawlerSlug: profile?.slug,
+      role: profile?.role,
+      result: matchResult,
+      draftPosition: slotIndex === 0 ? "First pick" : slotIndex === 5 ? "Last pick" : "Pick intermedio",
+      allies,
+      enemies,
+      note: matchNote,
+      source: "Draft Coach",
+    };
+    const nextHistory = [match, ...matchHistory].slice(0, 300);
+    setMatchHistory(nextHistory);
+    saveMatchHistory(nextHistory);
+    setPersonalPerformance(buildPersonalPerformance(nextHistory));
+    setMessage("Resultado guardado; las recomendaciones se han actualizado");
+    setMatchNote("");
+  };
+
   const poolEntryFor = (result?: DraftRecommendation) =>
     result ? personalPool[result.brawler.slug] : undefined;
 
@@ -377,7 +434,7 @@ export default function DraftAssistant({
   return <div className="ordered-draft-assistant">
     <section className="panel ordered-draft-panel">
       <div className="section-title">
-        <div><span className="eyebrow">Draft Coach v0.6</span><h2>Introduce los picks en orden</h2></div>
+        <div><span className="eyebrow">Draft Coach v0.7</span><h2>Introduce los picks en orden</h2></div>
         <div className="draft-action-row">
           <button type="button" className="secondary-button compact-button" onClick={shareDraft}>Compartir</button>
           <button type="button" className="secondary-button compact-button" onClick={resetDraft}>Reiniciar</button>
@@ -391,6 +448,7 @@ export default function DraftAssistant({
         <label>First pick<select value={firstPickOwner} onChange={(event) => { setFirstPickOwner(event.target.value as DraftFirstPickOwner); setOrderedPicks(Array(6).fill(null)); setScenarioEnemy(""); }}><option value="Aliado">Mi equipo</option><option value="Rival">Equipo rival</option></select></label>
         <label>Política de pool<select value={poolPolicy} onChange={(event) => setPoolPolicy(event.target.value as PoolPolicy)}><option value="Off">No usar pool</option><option value="Preferir">Priorizar mi pool</option><option value="Solo pool">Solo brawlers disponibles</option></select></label>
         <label className="auto-position-toggle"><input type="checkbox" checked={quickMode} onChange={(event) => setQuickMode(event.target.checked)} /><span><b>Modo ultrarrápido</b><small>Pick, línea y build</small></span></label>
+        <label className="auto-position-toggle learning-toggle-v7"><input type="checkbox" checked={learnFromHistory} onChange={(event) => setLearnFromHistory(event.target.checked)} /><span><b>Aprender de mi historial</b><small>{personalPerformance?.overall.games || 0} partidas registradas</small></span></label>
       </div>
 
       <div className="draft-ban-panel-v51">
@@ -477,6 +535,17 @@ export default function DraftAssistant({
       </div>
       <small className="ordered-edit-hint">Pulsa un pick ya introducido para corregirlo; se borrarán también los picks posteriores.</small>
     </section>
+
+    {nextIndex < 0 && allies.length === 3 && enemies.length === 3 && <section className="panel draft-result-panel-v7">
+      <div className="section-title"><div><span className="eyebrow">Aprendizaje personal</span><h2>Guardar resultado del draft</h2></div><span className="status-pill">3 vs 3 completo</span></div>
+      <div className="draft-result-form-v7">
+        <label>¿Qué brawler jugaste?<select value={playedBrawler} onChange={(event) => setPlayedBrawler(event.target.value)}><option value="">Seleccionar aliado…</option>{allies.map((ally) => <option key={ally}>{ally}</option>)}</select></label>
+        <label>Resultado<select value={matchResult} onChange={(event) => setMatchResult(event.target.value as MatchResult)}><option>Victoria</option><option>Derrota</option></select></label>
+        <label>Nota rápida<input value={matchNote} onChange={(event) => setMatchNote(event.target.value)} placeholder="Matchup, error o acierto clave" /></label>
+        <button type="button" className="primary-button" disabled={!playedBrawler} onClick={saveDraftResult}>Guardar y aprender</button>
+      </div>
+      <small>La recomendación personal se ajusta de forma gradual; una sola partida no cambia significativamente el ranking.</small>
+    </section>}
 
     {nextEnemyIndex >= 0 && <section className={`panel draft-simulator-v6 ${scenarioEnemy ? "scenario-active" : ""}`}>
       <div className="section-title">

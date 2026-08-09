@@ -1,6 +1,21 @@
-# Brawl Draft Lab v0.6
+# Brawl Draft Lab v0.7
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.7
+
+- Aprendizaje personal basado en resultados reales.
+- Guardado del resultado directamente desde un draft 3v3 completo.
+- Ajuste moderado de recomendaciones según:
+  - rendimiento con cada brawler;
+  - rendimiento específico del brawler en el mapa;
+  - tamaño de la muestra.
+- Interruptor para activar o desactivar el aprendizaje.
+- Historial personal visible en las tarjetas de recomendación.
+- Entrenador renovado con mejores brawlers, rendimiento por rol y mapas débiles.
+- Importación, exportación y eliminación de partidas.
+- Migración automática del historial antiguo.
+- Los datos permanecen en el navegador y no salen del dispositivo.
 
 ## Novedades v0.6
 

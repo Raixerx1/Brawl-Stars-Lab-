@@ -1,3 +1,4 @@
+import { personalAdjustment } from "./performance";
 import type {
   BanRecommendation,
   Brawler,
@@ -486,6 +487,21 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
     if (poolEntry.avoid) { score -= poolPolicy === "Solo pool" ? 55 : 28; personal = 0; warnings.push("Marcado para evitar en tu pool"); }
   }
 
+  const learned = input.learnFromHistory
+    ? personalAdjustment(brawler.slug, input.map.slug, input.personalPerformance)
+    : { adjustment: 0, brawler: undefined, map: undefined };
+  if (learned.adjustment) {
+    score += learned.adjustment;
+    personal += learned.adjustment * 2.8;
+    if (learned.adjustment >= 2) reasons.push(`Buen rendimiento personal: +${Math.round(learned.adjustment)} puntos`);
+    if (learned.adjustment <= -2) warnings.push(`Tu historial personal penaliza este pick: ${Math.round(learned.adjustment)} puntos`);
+  }
+  if (learned.map && learned.map.games >= 3) {
+    reasons.push(`${learned.map.winRate}% en ${input.map.name} con ${brawler.name} (${learned.map.games} partidas)`);
+  } else if (learned.brawler && learned.brawler.games >= 3) {
+    reasons.push(`${learned.brawler.winRate}% personal con ${brawler.name} (${learned.brawler.games} partidas)`);
+  }
+
   if (hasTag(brawler, "safe")) safety += 13;
   if (hasTag(brawler, "carry")) synergy += 5;
   if (brawler.profileComplete) safety += 4;
@@ -544,6 +560,9 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
     counterLabel,
     suggestedLine: lineFor(brawler, input),
     plan: planFor(brawler, direct.length ? direct : soft, exposed, input),
+    personalHistory: learned.brawler,
+    personalMapHistory: learned.map,
+    personalAdjustment: Math.round(learned.adjustment * 10) / 10,
     build: tacticalBuild(brawler, input, enemies),
     lanePlan: lanePlanFor(brawler, direct.length ? direct : soft, exposed, input),
   };
