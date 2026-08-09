@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.4.5 — Barra única de picks
+
+- Flujo cronológico único para los seis picks.
+- Entrada común para añadir cada brawler en orden.
+- Colores aliados y rivales adaptados al first pick.
+- Recomendaciones justo debajo del draft.
+- Estimación de victoria por equipos.
+- Consejos, líneas y matchups simplificados.
+- Eliminados los cuatro paneles de entrada independientes.
+
 ## v0.4.4 — Orden competitivo real
 
 - Secuencia 1–2–2–1 del draft competitivo.

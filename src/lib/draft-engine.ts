@@ -713,7 +713,7 @@ function matchupQuality(team: Brawler[], opponents: Brawler[]) {
 }
 
 function estimateWinProbability(input: DraftInput, allies: Brawler[], enemies: Brawler[]): WinEstimate | undefined {
-  if (!input.myPick || allies.length === 0 || enemies.length === 0) return undefined;
+  if (allies.length === 0 || enemies.length === 0) return undefined;
 
   const allyBase = paddedAverage(allies.map((brawler) => brawlerMapStrength(brawler, input)));
   const enemyBase = paddedAverage(enemies.map((brawler) => brawlerMapStrength(brawler, input)));
@@ -837,7 +837,7 @@ export function analyzeDraft(input: DraftInput, roster: Brawler[]): DraftAnalysi
   const selectedPick = selectedProfile
     ? scoreCandidate(selectedProfile, input, otherAllies, enemies, recommendationNeeds)
     : undefined;
-  const coachCandidate = selectedProfile || recommendations[0]?.brawler;
+  const coachCandidate = selectedProfile || (fullAllies.length < 3 ? recommendations[0]?.brawler : undefined);
   const visiblePicks = fullAllies.length + enemies.length;
   const draftStage = selectedProfile
     ? visiblePicks >= 6
@@ -854,7 +854,7 @@ export function analyzeDraft(input: DraftInput, roster: Brawler[]): DraftAnalysi
   return {
     recommendations,
     selectedPick,
-    winEstimate: selectedProfile ? estimateWinProbability(input, fullAllies, enemies) : undefined,
+    winEstimate: fullAllies.length && enemies.length ? estimateWinProbability(input, fullAllies, enemies) : undefined,
     needs: finalNeeds,
     threats,
     strengths,

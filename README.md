@@ -1,6 +1,20 @@
-# Brawl Draft Lab v0.4.4
+# Brawl Draft Lab v0.4.5
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.4.5
+
+- Eliminados los bloques separados de aliados, rivales y mi pick.
+- Una sola barra cronológica de seis picks.
+- Un único buscador que coloca automáticamente cada brawler en el siguiente slot.
+- Azul para aliados y rojo para rivales; la secuencia se invierte cuando el first pick es rival.
+- Recomendaciones inmediatamente debajo:
+  - first pick: mejor brawler sólido del mapa;
+  - picks intermedios: counters directos y equilibrio;
+  - last pick: máximo castigo contra la composición rival.
+- Porcentaje estimado para el equipo aliado sin necesitar identificar un pick propio.
+- Consejos rápidos, matchups que buscar y distribución de líneas.
+- Corrección sencilla: al pulsar un pick se eliminan ese slot y los posteriores.
 
 ## Novedades v0.4.4
 
