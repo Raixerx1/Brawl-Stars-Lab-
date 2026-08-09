@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { meta, maps, brawlers } from "@/lib/data";
 import { BrawlerPortrait } from "@/components/GameArtwork";
+import MetaTierList from "@/components/MetaTierList";
+import tierListRaw from "@/data/meta-tierlist.json";
 
 export const metadata: Metadata = { title: "Meta" };
 
@@ -11,19 +13,21 @@ export default function MetaPage() {
   const generalNerfs = meta.generalNerfs as NerfEntry[];
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Actualización oficial</span>
-      <h1>Parche del 4 de agosto</h1>
-      <p>Última revisión interna: {meta.updated}. Los cambios generales sí afectan al meta estándar; los NanoPowers se presentan aparte porque son específicos del evento.</p>
+      <span className="eyebrow">Meta y actualización oficial</span>
+      <h1>Tier list y parche actual</h1>
+      <p>Tier list revisada con datos de alto nivel del 08/08/2026. Debajo se mantienen los nerfs generales del mantenimiento del 04/08 y, por separado, los cambios exclusivos del evento.</p>
     </div>
 
-    <div className="stats-grid">
+    <MetaTierList data={tierListRaw} brawlers={brawlers} />
+
+    <div className="stats-grid meta-stats-v11">
       <div className="stat-card"><b>{meta.rosterCount}</b><span>brawlers</span></div>
       <div className="stat-card"><b>{profiled.length}</b><span>perfiles tácticos</span></div>
       <div className="stat-card"><b>{maps.length}</b><span>mapas revisados</span></div>
       <div className="stat-card"><b>{generalNerfs.length}</b><span>nerfs generales registrados</span></div>
     </div>
 
-    <div className="section-title spaced"><div><span className="eyebrow danger-text">Balance general</span><h2>Brawlers debilitados</h2></div></div>
+    <div className="section-title spaced"><div><span className="eyebrow danger-text">Debajo de la tier list · balance general</span><h2>Nerfs del parche del 4 de agosto</h2></div></div>
     <div className="patch-grid">
       {generalNerfs.map((entry) => <article className="patch-card" key={entry.brawler}>
         <BrawlerPortrait name={entry.brawler} className="patch-portrait" />
@@ -52,7 +56,7 @@ export default function MetaPage() {
 
     <section className="panel spaced">
       <span className="eyebrow">Criterio editorial</span>
-      <h2>Cómo interpretar la v0.3</h2>
+      <h2>Cómo interpretar la v0.11</h2>
       <div className="note-list">{meta.notes.map((note: string) => <p key={note}>✓ {note}</p>)}</div>
     </section>
   </div>;

@@ -434,7 +434,7 @@ export default function DraftAssistant({
   return <div className="ordered-draft-assistant">
     <section className="panel ordered-draft-panel">
       <div className="section-title">
-        <div><span className="eyebrow">Draft Coach v0.7</span><h2>Introduce los picks en orden</h2></div>
+        <div><span className="eyebrow">Draft Coach v0.11</span><h2>Introduce los picks en orden</h2></div>
         <div className="draft-action-row">
           <button type="button" className="secondary-button compact-button" onClick={shareDraft}>Compartir</button>
           <button type="button" className="secondary-button compact-button" onClick={resetDraft}>Reiniciar</button>
@@ -449,6 +449,20 @@ export default function DraftAssistant({
         <label>Política de pool<select value={poolPolicy} onChange={(event) => setPoolPolicy(event.target.value as PoolPolicy)}><option value="Off">No usar pool</option><option value="Preferir">Priorizar mi pool</option><option value="Solo pool">Solo brawlers disponibles</option></select></label>
         <label className="auto-position-toggle"><input type="checkbox" checked={quickMode} onChange={(event) => setQuickMode(event.target.checked)} /><span><b>Modo ultrarrápido</b><small>Pick, línea y build</small></span></label>
         <label className="auto-position-toggle learning-toggle-v7"><input type="checkbox" checked={learnFromHistory} onChange={(event) => setLearnFromHistory(event.target.checked)} /><span><b>Aprender de mi historial</b><small>{personalPerformance?.overall.games || 0} partidas registradas</small></span></label>
+      </div>
+
+      <div className="first-pick-audit-v11">
+        <div>
+          <span className="eyebrow">First picks revisados</span>
+          <small>{map.firstPickReviewedAt || "Revisión editorial"} · confianza {map.firstPickConfidence || "Media"}</small>
+        </div>
+        <div className="first-pick-audit-brawlers">
+          {map.firstPicks.map((name, index) => <span key={name}>
+            <BrawlerPortrait name={name} className="first-pick-audit-avatar" />
+            <b>{index + 1}. {name}</b>
+          </span>)}
+        </div>
+        {map.firstPickNotes && <p>{map.firstPickNotes}</p>}
       </div>
 
       <div className="draft-ban-panel-v51">

@@ -14,12 +14,16 @@ import type {
 } from "./types";
 
 const tierScore: Record<string, number> = {
+  "S+": 68,
   S: 64,
   "A+": 59,
-  A: 54,
-  "B+": 49,
-  B: 44,
-  "Sin evaluar": 41,
+  A: 56,
+  "B+": 51,
+  B: 48,
+  C: 43,
+  D: 38,
+  F: 32,
+  "Sin evaluar": 40,
 };
 
 const norm = (value: string) => value.trim().toLowerCase();
@@ -325,6 +329,7 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
 
   const sIndex = input.map.tierS.indexOf(brawler.name);
   const aIndex = input.map.tierA.indexOf(brawler.name);
+  const firstPickIndex = input.map.firstPicks.indexOf(brawler.name);
   if (sIndex >= 0) {
     score += 17 - sIndex * 1.4;
     mapFit += 24 - sIndex * 2;
@@ -336,21 +341,58 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
   }
 
   if (input.position === "First pick") {
-    if (hasTag(brawler, "safe") || isControl(brawler) || isLongRange(brawler)) {
+    const openMap = input.map.layout === "Abierto";
+    const explicitFirstPick = firstPickIndex >= 0;
+    const naturallySafe =
+      hasTag(brawler, "safe") ||
+      isLongRange(brawler) ||
+      (isControl(brawler) && !openMap);
+
+    if (naturallySafe) {
       score += 10;
       safety += 22;
       reasons.push("Pick sólido y difícil de castigar");
     }
-    if (sIndex >= 0) {
-      score += 6;
-      mapFit += 8;
-      reasons.push("Prioridad alta como first pick del mapa");
+
+    if (explicitFirstPick) {
+      score += 20 - firstPickIndex * 3;
+      mapFit += 22 - firstPickIndex * 3;
+      safety += 12;
+      risk -= 8;
+      reasons.push(`First pick revisado del mapa${input.map.firstPickReviewedAt ? ` · ${input.map.firstPickReviewedAt}` : ""}`);
+    } else if (sIndex >= 0) {
+      score += 3;
+      mapFit += 5;
+      reasons.push("Buen rendimiento editorial en el mapa, pero no es la prioridad ciega principal");
     }
-    if (hasTag(brawler, "lastpick", "assassin") || brawler.role === "Asesino") {
-      score -= 8;
-      safety -= 16;
-      risk += 18;
+
+    if (openMap && !isLongRange(brawler) && !hasTag(brawler, "open")) {
+      score -= explicitFirstPick ? 6 : 17;
+      mapFit -= explicitFirstPick ? 8 : 22;
+      safety -= explicitFirstPick ? 6 : 18;
+      risk += explicitFirstPick ? 5 : 17;
+      warnings.push("Alcance limitado para un first pick en mapa abierto");
+    }
+
+    if ((hasTag(brawler, "lastpick", "assassin") || brawler.role === "Asesino") && !explicitFirstPick) {
+      score -= 11;
+      safety -= 20;
+      risk += 22;
       warnings.push("Expone demasiado el draft como primera selección");
+    }
+
+    if ((brawler.role === "Tanque" || hasTag(brawler, "tank")) && openMap && !explicitFirstPick) {
+      score -= 10;
+      safety -= 13;
+      risk += 16;
+      warnings.push("Tanque vulnerable a counters a ciegas en mapa abierto");
+    }
+
+    if (brawler.role === "Apoyo" && !hasTag(brawler, "carry") && !explicitFirstPick) {
+      score -= 4;
+      safety -= 4;
+      risk += 6;
+      warnings.push("First pick con dependencia elevada del equipo");
     }
   }
   if (input.position === "Pick intermedio" && (hasTag(brawler, "safe", "control") || isControl(brawler))) {
@@ -887,8 +929,17 @@ export function analyzeDraft(input: DraftInput, roster: Brawler[]): DraftAnalysi
     .sort((a, b) => {
       const priority = input.priority || "Counter";
       if (input.position === "First pick") {
-        const aFirst = a.metrics.mapFit * .52 + a.metrics.safety * .38 - a.metrics.risk * .18 + a.score * .16;
-        const bFirst = b.metrics.mapFit * .52 + b.metrics.safety * .38 - b.metrics.risk * .18 + b.score * .16;
+        const aReviewed = input.map.firstPicks.indexOf(a.brawler.name);
+        const bReviewed = input.map.firstPicks.indexOf(b.brawler.name);
+
+        // The audited map list is authoritative for blind first picks.
+        // Bans and strict personal-pool filters are applied before this sort.
+        if (aReviewed >= 0 && bReviewed < 0) return -1;
+        if (bReviewed >= 0 && aReviewed < 0) return 1;
+        if (aReviewed >= 0 && bReviewed >= 0) return aReviewed - bReviewed;
+
+        const aFirst = a.metrics.mapFit * .50 + a.metrics.safety * .36 - a.metrics.risk * .20 + a.score * .14;
+        const bFirst = b.metrics.mapFit * .50 + b.metrics.safety * .36 - b.metrics.risk * .20 + b.score * .14;
         return bFirst - aFirst || b.score - a.score;
       }
       if (input.position === "Last pick" && enemies.length) {

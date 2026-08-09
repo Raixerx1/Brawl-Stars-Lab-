@@ -1,6 +1,34 @@
-# Brawl Draft Lab v0.10
+# Brawl Draft Lab v0.11
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.11
+
+- Nueva **tier list visual** en la parte superior de Meta.
+- Dos vistas:
+  - Meta de las últimas 24 horas.
+  - General de los últimos 30 días.
+- Todos los brawlers aparecen agrupados en S, A, B, C, D, F o Sin datos.
+- Los nerfs oficiales del 04/08/2026 permanecen debajo de la tier list.
+- La tier list global no sustituye la evaluación específica de cada mapa.
+- Revisión manual de matchups recientes.
+- Bolt corregido:
+  - castiga a Piper, Belle, Mandy, Brock y Angelo;
+  - es frenado por Gale, Damian, Charlie, Otis y Lou.
+- Razones específicas para los matchups revisados, por encima de explicaciones genéricas por rol.
+- Auditoría de los **39 mapas** para revisar first picks.
+- Rustic Arcade reclasificado como mapa abierto.
+- First picks de Rustic Arcade: **Piper, 8-Bit y Brock**.
+- Sandy deja de aparecer como prioridad ciega en Rustic Arcade.
+- El motor de draft da prioridad explícita a los first picks auditados.
+- Penalización de corto alcance, asesinos y tanques expuestos como first pick en mapas abiertos.
+- Nuevos comandos:
+  - `npm run audit:matchups`
+  - `npm run audit:first-picks`
+  - `npm run audit:all`
+- Informes técnicos:
+  - `MATCHUP_AUDIT.md`
+  - `FIRST_PICK_AUDIT.md`
 
 ## Novedades v0.10
 

@@ -4,6 +4,8 @@ const hasAny = (brawler: Brawler, values: string[]) =>
   values.some((value) => brawler.tags.includes(value) || brawler.role.toLowerCase().includes(value));
 
 export function favorableReason(source: Brawler, target: Brawler) {
+  const reviewed = source.matchupNotes?.favorable?.[target.name];
+  if (reviewed) return reviewed;
   if (hasAny(source, ["antitank", "antitanque"]) && target.role === "Tanque") {
     return "Daño o control especialmente eficiente contra objetivos de mucha vida.";
   }
@@ -29,6 +31,8 @@ export function favorableReason(source: Brawler, target: Brawler) {
 }
 
 export function threatReason(source: Brawler, threat: Brawler) {
+  const reviewed = source.matchupNotes?.threats?.[threat.name];
+  if (reviewed) return reviewed;
   if (source.role === "Artillero" && threat.role === "Asesino") {
     return "Amenaza de entrada directa: evita quedarte sin gadget, súper o cobertura aliada.";
   }

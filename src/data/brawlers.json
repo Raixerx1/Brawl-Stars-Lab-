@@ -4,7 +4,7 @@
     "name": "Shelly",
     "rarity": "Starter",
     "role": "Antitanque",
-    "tier": "Sin evaluar",
+    "tier": "B",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -16,7 +16,9 @@
       "El Primo",
       "Rosa",
       "Darryl",
-      "Edgar"
+      "Edgar",
+      "Damian",
+      "Gigi"
     ],
     "counteredBy": [
       "Piper",
@@ -33,7 +35,7 @@
     "name": "Colt",
     "rarity": "Rare",
     "role": "Tirador",
-    "tier": "Sin evaluar",
+    "tier": "B",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -62,7 +64,7 @@
     "name": "Bull",
     "rarity": "Rare",
     "role": "Tanque",
-    "tier": "Sin evaluar",
+    "tier": "B",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -81,7 +83,8 @@
       "Shelly",
       "Gale",
       "Surge",
-      "Lou"
+      "Lou",
+      "Glowy"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -91,7 +94,7 @@
     "name": "Brock",
     "rarity": "Rare",
     "role": "Tirador",
-    "tier": "Sin evaluar",
+    "tier": "S",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -103,14 +106,16 @@
       "Barley",
       "Sprout",
       "8-Bit",
-      "Pam"
+      "Pam",
+      "Glowy"
     ],
     "counteredBy": [
       "Piper",
       "Nani",
       "Angelo",
       "Max",
-      "Leon"
+      "Leon",
+      "Bolt"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -120,7 +125,7 @@
     "name": "Barley",
     "rarity": "Rare",
     "role": "Artillero",
-    "tier": "Sin evaluar",
+    "tier": "F",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -132,14 +137,18 @@
       "Jacky",
       "Pam",
       "Jessie",
-      "8-Bit"
+      "8-Bit",
+      "Charlie"
     ],
     "counteredBy": [
       "Mortis",
       "Mico",
       "Kenji",
       "Edgar",
-      "Brock"
+      "Brock",
+      "Nori",
+      "Kaze",
+      "Gigi"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -149,7 +158,7 @@
     "name": "Nita",
     "rarity": "Rare",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -168,7 +177,8 @@
       "Belle",
       "Angelo",
       "Colette",
-      "Griff"
+      "Griff",
+      "Pierce"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -178,7 +188,7 @@
     "name": "El Primo",
     "rarity": "Rare",
     "role": "Tanque",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -197,7 +207,8 @@
       "Shelly",
       "Gale",
       "Surge",
-      "Lou"
+      "Lou",
+      "Glowy"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -207,7 +218,7 @@
     "name": "Poco",
     "rarity": "Rare",
     "role": "Apoyo",
-    "tier": "Sin evaluar",
+    "tier": "F",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -236,7 +247,7 @@
     "name": "Rosa",
     "rarity": "Rare",
     "role": "Tanque",
-    "tier": "Sin evaluar",
+    "tier": "A",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -255,7 +266,8 @@
       "Shelly",
       "Gale",
       "Surge",
-      "Emz"
+      "Emz",
+      "Glowy"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -300,7 +312,7 @@
     "name": "Jessie",
     "rarity": "Super Rare",
     "role": "Control",
-    "tier": "A",
+    "tier": "F",
     "range": "Largo",
     "difficulty": 2,
     "tags": [
@@ -325,7 +337,9 @@
       "Belle",
       "Angelo",
       "Brock",
-      "Mortis"
+      "Mortis",
+      "Pierce",
+      "Najia"
     ],
     "build": "Daño + recarga; coloca la torreta fuera del fuego cruzado.",
     "profileComplete": true
@@ -335,7 +349,7 @@
     "name": "Dynamike",
     "rarity": "Super Rare",
     "role": "Artillero",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -347,14 +361,16 @@
       "Jacky",
       "Pam",
       "Jessie",
-      "8-Bit"
+      "8-Bit",
+      "Charlie"
     ],
     "counteredBy": [
       "Mortis",
       "Mico",
       "Kenji",
       "Edgar",
-      "Stu"
+      "Stu",
+      "Kaze"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -364,7 +380,7 @@
     "name": "Darryl",
     "rarity": "Super Rare",
     "role": "Asesino",
-    "tier": "Sin evaluar",
+    "tier": "F",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -393,7 +409,7 @@
     "name": "Penny",
     "rarity": "Super Rare",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -412,7 +428,8 @@
       "Belle",
       "Angelo",
       "Mortis",
-      "Brock"
+      "Brock",
+      "Pierce"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -422,7 +439,7 @@
     "name": "Tick",
     "rarity": "Super Rare",
     "role": "Artillero",
-    "tier": "B+",
+    "tier": "F",
     "range": "Muy largo",
     "difficulty": 3,
     "tags": [
@@ -446,7 +463,9 @@
       "Mico",
       "Kenji",
       "Edgar",
-      "Brock"
+      "Brock",
+      "Starr Nova",
+      "Nori"
     ],
     "build": "Escudo + recarga; solo como último pick seguro.",
     "profileComplete": true
@@ -456,7 +475,7 @@
     "name": "Carl",
     "rarity": "Super Rare",
     "role": "Daño",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -485,7 +504,7 @@
     "name": "8-Bit",
     "rarity": "Super Rare",
     "role": "Tirador",
-    "tier": "B+",
+    "tier": "A",
     "range": "Medio-largo",
     "difficulty": 3,
     "tags": [
@@ -504,7 +523,10 @@
       "Piper",
       "Angelo",
       "Brock",
-      "Mortis"
+      "Mortis",
+      "Damian",
+      "Najia",
+      "Sirius"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": true
@@ -514,7 +536,7 @@
     "name": "Jacky",
     "rarity": "Super Rare",
     "role": "Tanque",
-    "tier": "Sin evaluar",
+    "tier": "F",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -533,7 +555,8 @@
       "Shelly",
       "Gale",
       "Surge",
-      "Emz"
+      "Emz",
+      "Damian"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -543,7 +566,7 @@
     "name": "Gus",
     "rarity": "Super Rare",
     "role": "Apoyo",
-    "tier": "Sin evaluar",
+    "tier": "F",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -572,7 +595,7 @@
     "name": "Bo",
     "rarity": "Epic",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "B",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -601,7 +624,7 @@
     "name": "Piper",
     "rarity": "Epic",
     "role": "Tirador",
-    "tier": "S",
+    "tier": "A",
     "range": "Muy largo",
     "difficulty": 4,
     "tags": [
@@ -619,14 +642,21 @@
       "Jessie",
       "Pam",
       "Penny",
-      "8-Bit"
+      "8-Bit",
+      "Charlie",
+      "Gale",
+      "Sirius"
     ],
     "counteredBy": [
       "Mortis",
       "Kenji",
       "Melodie",
       "Mico",
-      "Leon"
+      "Leon",
+      "Bolt",
+      "Starr Nova",
+      "Nori",
+      "Kaze"
     ],
     "build": "Daño + escudo; elige herramienta defensiva frente a dive.",
     "profileComplete": true
@@ -636,7 +666,7 @@
     "name": "Pam",
     "rarity": "Epic",
     "role": "Apoyo",
-    "tier": "Sin evaluar",
+    "tier": "F",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -655,7 +685,9 @@
       "Piper",
       "Belle",
       "Crow",
-      "Griff"
+      "Griff",
+      "Najia",
+      "Sirius"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -665,7 +697,7 @@
     "name": "Frank",
     "rarity": "Epic",
     "role": "Tanque",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -684,7 +716,11 @@
       "Shelly",
       "Gale",
       "Surge",
-      "Lou"
+      "Lou",
+      "Damian",
+      "Pierce",
+      "Najia",
+      "Sirius"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -694,7 +730,7 @@
     "name": "Bibi",
     "rarity": "Epic",
     "role": "Tanque",
-    "tier": "Sin evaluar",
+    "tier": "A",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -713,7 +749,8 @@
       "Gale",
       "Surge",
       "Shelly",
-      "R-T"
+      "R-T",
+      "Damian"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -723,7 +760,7 @@
     "name": "Bea",
     "rarity": "Epic",
     "role": "Tirador",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -735,14 +772,16 @@
       "El Primo",
       "Rosa",
       "Frank",
-      "Bibi"
+      "Bibi",
+      "Glowy"
     ],
     "counteredBy": [
       "Mortis",
       "Kenji",
       "Mico",
       "Leon",
-      "Piper"
+      "Piper",
+      "Gigi"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -752,7 +791,7 @@
     "name": "Emz",
     "rarity": "Epic",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "A",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -781,7 +820,7 @@
     "name": "Gale",
     "rarity": "Epic",
     "role": "Control",
-    "tier": "A",
+    "tier": "B",
     "range": "Largo",
     "difficulty": 2,
     "tags": [
@@ -794,28 +833,42 @@
       "Zona Restringida": 8
     },
     "counters": [
-      "Bull",
-      "El Primo",
-      "Rosa",
+      "Bolt",
+      "Damian",
+      "Nori",
       "Edgar",
-      "Buzz"
+      "Buzz",
+      "Starr Nova",
+      "Kaze"
     ],
     "counteredBy": [
       "Piper",
       "Belle",
       "Angelo",
-      "Byron",
-      "Rico"
+      "Sprout",
+      "Grom",
+      "Pierce"
     ],
-    "build": "Recarga + daño; conserva el empuje para cortar engages.",
-    "profileComplete": true
+    "build": "Recarga + daño; guarda el empuje para la entrada del carry rival.",
+    "profileComplete": true,
+    "matchupReviewedAt": "09/08/2026",
+    "matchupNotes": {
+      "favorable": {
+        "Bolt": "Empuje, ralentización y control de trayectoria: es uno de sus counters más directos.",
+        "Damian": "Evita que llegue a rango de combo.",
+        "Nori": "Corta el dash y protege el backline.",
+        "Edgar": "Niega el salto y lo expulsa del objetivo.",
+        "Buzz": "Interrumpe el engage y le obliga a gastar el Super sin conversión."
+      },
+      "threats": {}
+    }
   },
   {
     "slug": "nani",
     "name": "Nani",
     "rarity": "Epic",
     "role": "Tirador",
-    "tier": "A",
+    "tier": "C",
     "range": "Muy largo",
     "difficulty": 5,
     "tags": [
@@ -833,7 +886,8 @@
       "Belle",
       "Mandy",
       "8-Bit",
-      "Pam"
+      "Pam",
+      "Charlie"
     ],
     "counteredBy": [
       "Mortis",
@@ -850,7 +904,7 @@
     "name": "Colette",
     "rarity": "Epic",
     "role": "Antitanque",
-    "tier": "A+",
+    "tier": "C",
     "range": "Largo",
     "difficulty": 3,
     "tags": [
@@ -868,7 +922,8 @@
       "Bull",
       "El Primo",
       "Rosa",
-      "Meg"
+      "Meg",
+      "Damian"
     ],
     "counteredBy": [
       "Piper",
@@ -885,7 +940,7 @@
     "name": "Edgar",
     "rarity": "Epic",
     "role": "Asesino",
-    "tier": "Sin evaluar",
+    "tier": "S",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -897,14 +952,16 @@
       "Barley",
       "Grom",
       "Sprout",
-      "Piper"
+      "Piper",
+      "Najia"
     ],
     "counteredBy": [
       "Shelly",
       "Gale",
       "Surge",
       "Otis",
-      "R-T"
+      "R-T",
+      "Glowy"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -914,7 +971,7 @@
     "name": "Stu",
     "rarity": "Epic",
     "role": "Asesino",
-    "tier": "Sin evaluar",
+    "tier": "A",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -926,7 +983,8 @@
       "Barley",
       "Piper",
       "Belle",
-      "Jessie"
+      "Jessie",
+      "Najia"
     ],
     "counteredBy": [
       "Gale",
@@ -943,7 +1001,7 @@
     "name": "Belle",
     "rarity": "Epic",
     "role": "Tirador",
-    "tier": "A+",
+    "tier": "C",
     "range": "Muy largo",
     "difficulty": 3,
     "tags": [
@@ -961,14 +1019,20 @@
       "8-Bit",
       "Frank",
       "Meg",
-      "Poco"
+      "Poco",
+      "Charlie",
+      "Gale",
+      "Sirius"
     ],
     "counteredBy": [
       "Mortis",
       "Kenji",
       "Melodie",
       "Mico",
-      "Leon"
+      "Leon",
+      "Bolt",
+      "Starr Nova",
+      "Nori"
     ],
     "build": "Recarga/daño y supervivencia; pick seguro de primera rotación.",
     "profileComplete": true
@@ -978,7 +1042,7 @@
     "name": "Grom",
     "rarity": "Epic",
     "role": "Artillero",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -990,14 +1054,17 @@
       "Jacky",
       "Pam",
       "Jessie",
-      "8-Bit"
+      "8-Bit",
+      "Gale"
     ],
     "counteredBy": [
       "Mortis",
       "Mico",
       "Kenji",
       "Edgar",
-      "Brock"
+      "Brock",
+      "Starr Nova",
+      "Nori"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -1007,7 +1074,7 @@
     "name": "Griff",
     "rarity": "Epic",
     "role": "Daño",
-    "tier": "B",
+    "tier": "A",
     "range": "Medio-largo",
     "difficulty": 3,
     "tags": [
@@ -1036,7 +1103,7 @@
     "name": "Ash",
     "rarity": "Epic",
     "role": "Tanque",
-    "tier": "A+",
+    "tier": "B",
     "range": "Corto",
     "difficulty": 4,
     "tags": [
@@ -1060,7 +1127,8 @@
       "Gale",
       "Surge",
       "Lou",
-      "Shelly"
+      "Shelly",
+      "Sirius"
     ],
     "build": "Velocidad + daño; necesita rutas y apoyo.",
     "profileComplete": true
@@ -1070,7 +1138,7 @@
     "name": "Lola",
     "rarity": "Epic",
     "role": "Daño",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1099,7 +1167,7 @@
     "name": "Bonnie",
     "rarity": "Epic",
     "role": "Asesino",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1128,7 +1196,7 @@
     "name": "Sam",
     "rarity": "Epic",
     "role": "Tanque",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1157,7 +1225,7 @@
     "name": "Mandy",
     "rarity": "Epic",
     "role": "Tirador",
-    "tier": "Sin evaluar",
+    "tier": "B",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1169,14 +1237,17 @@
       "Jessie",
       "8-Bit",
       "Frank",
-      "Penny"
+      "Penny",
+      "Glowy"
     ],
     "counteredBy": [
       "Mortis",
       "Kenji",
       "Melodie",
       "Mico",
-      "Leon"
+      "Leon",
+      "Bolt",
+      "Starr Nova"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -1186,7 +1257,7 @@
     "name": "Maisie",
     "rarity": "Epic",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1198,7 +1269,8 @@
       "El Primo",
       "Rosa",
       "Edgar",
-      "Buzz"
+      "Buzz",
+      "Kaze"
     ],
     "counteredBy": [
       "Piper",
@@ -1215,7 +1287,7 @@
     "name": "Hank",
     "rarity": "Epic",
     "role": "Tanque",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1244,7 +1316,7 @@
     "name": "Pearl",
     "rarity": "Epic",
     "role": "Daño",
-    "tier": "Sin evaluar",
+    "tier": "F",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1273,7 +1345,7 @@
     "name": "Larry & Lawrie",
     "rarity": "Epic",
     "role": "Artillero",
-    "tier": "Sin evaluar",
+    "tier": "B",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1285,7 +1357,8 @@
       "Jacky",
       "Pam",
       "Jessie",
-      "8-Bit"
+      "8-Bit",
+      "Glowy"
     ],
     "counteredBy": [
       "Mortis",
@@ -1302,7 +1375,7 @@
     "name": "Angelo",
     "rarity": "Epic",
     "role": "Tirador",
-    "tier": "S",
+    "tier": "C",
     "range": "Muy largo",
     "difficulty": 4,
     "tags": [
@@ -1320,14 +1393,17 @@
       "Belle",
       "Mandy",
       "Pam",
-      "8-Bit"
+      "8-Bit",
+      "Gale",
+      "Sirius"
     ],
     "counteredBy": [
       "Mortis",
       "Kenji",
       "Melodie",
       "Mico",
-      "Leon"
+      "Leon",
+      "Bolt"
     ],
     "build": "Daño + escudo; movilidad si el mapa lo exige.",
     "profileComplete": true
@@ -1337,7 +1413,7 @@
     "name": "Berry",
     "rarity": "Epic",
     "role": "Apoyo",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1366,7 +1442,7 @@
     "name": "Shade",
     "rarity": "Epic",
     "role": "Asesino",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1395,7 +1471,7 @@
     "name": "Meeple",
     "rarity": "Epic",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1424,7 +1500,7 @@
     "name": "Trunk",
     "rarity": "Epic",
     "role": "Tanque",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1452,14 +1528,15 @@
     "slug": "bolt",
     "name": "Bolt",
     "rarity": "Epic",
-    "role": "Daño",
-    "tier": "A",
-    "range": "Medio",
+    "role": "Tanque",
+    "tier": "C",
+    "range": "Corto",
     "difficulty": 3,
     "tags": [
+      "tank",
       "carry",
-      "damage",
-      "safe"
+      "mobile",
+      "objective"
     ],
     "modes": {
       "Balón Brawl": 8,
@@ -1468,28 +1545,45 @@
       "Atraco": 7
     },
     "counters": [
-      "Rosa",
-      "Frank",
-      "Bibi",
-      "Otis",
-      "Sandy"
+      "Piper",
+      "Belle",
+      "Mandy",
+      "Brock",
+      "Angelo"
     ],
     "counteredBy": [
-      "Belle",
-      "Angelo",
-      "Mandy",
-      "Stu",
-      "Buzz"
+      "Gale",
+      "Damian",
+      "Charlie",
+      "Otis",
+      "Lou"
     ],
-    "build": "Daño + escudo; presión constante y buena economía de munición.",
-    "profileComplete": true
+    "build": "Daño + escudo; gana velocidad con espacio y entra después de forzar el control rival.",
+    "profileComplete": true,
+    "matchupReviewedAt": "09/08/2026",
+    "matchupNotes": {
+      "favorable": {
+        "Piper": "Su aceleración y el Super cierran la distancia y eliminan la ventaja de alcance de Piper.",
+        "Belle": "Puede atravesar el espacio abierto y obligar a Belle a abandonar su línea.",
+        "Mandy": "Castiga su posición estática y reduce el tiempo disponible para cargar el disparo.",
+        "Brock": "La entrada rápida acorta la ventana de kiteo y esquiva.",
+        "Angelo": "Puede perseguirlo y negar el espacio que necesita para cargar disparos."
+      },
+      "threats": {
+        "Gale": "El empuje y la ralentización cortan su trayectoria; la inmunidad al control de Bolt solo cubre el primer segundo del Super.",
+        "Damian": "Su control de zona y los altavoces castigan la ruta en la que Bolt necesita acelerar.",
+        "Charlie": "El capullo consume toda la ventana de engage y detiene su presión.",
+        "Otis": "El silencio desactiva sus recursos durante la entrada.",
+        "Lou": "La congelación y la negación de zona impiden mantener una trayectoria limpia."
+      }
+    }
   },
   {
     "slug": "mortis",
     "name": "Mortis",
     "rarity": "Mythic",
     "role": "Asesino",
-    "tier": "Sin evaluar",
+    "tier": "A",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1501,14 +1595,16 @@
       "Barley",
       "Grom",
       "Sprout",
-      "Piper"
+      "Piper",
+      "Najia"
     ],
     "counteredBy": [
       "Shelly",
       "Gale",
       "Surge",
       "Otis",
-      "R-T"
+      "R-T",
+      "Glowy"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -1518,7 +1614,7 @@
     "name": "Tara",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1547,7 +1643,7 @@
     "name": "Gene",
     "rarity": "Mythic",
     "role": "Apoyo",
-    "tier": "S",
+    "tier": "D",
     "range": "Largo",
     "difficulty": 3,
     "tags": [
@@ -1584,7 +1680,7 @@
     "name": "Mr. P",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1632,7 +1728,8 @@
       "Belle",
       "Angelo",
       "Mandy",
-      "Nani"
+      "Nani",
+      "Sirius"
     ],
     "counteredBy": [
       "Gale",
@@ -1649,7 +1746,7 @@
     "name": "Sprout",
     "rarity": "Mythic",
     "role": "Artillero",
-    "tier": "Sin evaluar",
+    "tier": "F",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1661,7 +1758,9 @@
       "Meg",
       "Nita",
       "El Primo",
-      "Rosa"
+      "Rosa",
+      "Gale",
+      "Glowy"
     ],
     "counteredBy": [
       "Edgar",
@@ -1678,7 +1777,7 @@
     "name": "Lou",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "A+",
+    "tier": "C",
     "range": "Largo",
     "difficulty": 3,
     "tags": [
@@ -1695,7 +1794,10 @@
       "El Primo",
       "Rosa",
       "Frank",
-      "Bibi"
+      "Bibi",
+      "Bolt",
+      "Damian",
+      "Kaze"
     ],
     "counteredBy": [
       "Piper",
@@ -1712,7 +1814,7 @@
     "name": "Byron",
     "rarity": "Mythic",
     "role": "Apoyo",
-    "tier": "A",
+    "tier": "B",
     "range": "Muy largo",
     "difficulty": 4,
     "tags": [
@@ -1747,7 +1849,7 @@
     "name": "Ruffs",
     "rarity": "Mythic",
     "role": "Apoyo",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1776,7 +1878,7 @@
     "name": "Squeak",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1805,7 +1907,7 @@
     "name": "Buzz",
     "rarity": "Mythic",
     "role": "Asesino",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1817,7 +1919,8 @@
       "Grom",
       "Sprout",
       "Belle",
-      "Angelo"
+      "Angelo",
+      "Najia"
     ],
     "counteredBy": [
       "Maisie",
@@ -1834,7 +1937,7 @@
     "name": "Fang",
     "rarity": "Mythic",
     "role": "Asesino",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1846,7 +1949,8 @@
       "Sprout",
       "Larry & Lawrie",
       "Angelo",
-      "Mandy"
+      "Mandy",
+      "Najia"
     ],
     "counteredBy": [
       "R-T",
@@ -1863,7 +1967,7 @@
     "name": "Eve",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1892,7 +1996,7 @@
     "name": "Janet",
     "rarity": "Mythic",
     "role": "Tirador",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1921,7 +2025,7 @@
     "name": "Otis",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "B",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1933,7 +2037,12 @@
       "Jacky",
       "Ash",
       "Fang",
-      "Mico"
+      "Mico",
+      "Bolt",
+      "Damian",
+      "Starr Nova",
+      "Nori",
+      "Gigi"
     ],
     "counteredBy": [
       "Mandy",
@@ -1950,7 +2059,7 @@
     "name": "Buster",
     "rarity": "Mythic",
     "role": "Tanque",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -1979,7 +2088,7 @@
     "name": "Gray",
     "rarity": "Mythic",
     "role": "Apoyo",
-    "tier": "Sin evaluar",
+    "tier": "B",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2008,7 +2117,7 @@
     "name": "R-T",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "A",
+    "tier": "D",
     "range": "Largo",
     "difficulty": 4,
     "tags": [
@@ -2026,7 +2135,10 @@
       "Mortis",
       "Buzz",
       "Bull",
-      "El Primo"
+      "El Primo",
+      "Starr Nova",
+      "Nori",
+      "Gigi"
     ],
     "counteredBy": [
       "Piper",
@@ -2043,7 +2155,7 @@
     "name": "Willow",
     "rarity": "Mythic",
     "role": "Artillero",
-    "tier": "Sin evaluar",
+    "tier": "B",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2062,7 +2174,8 @@
       "Buzz",
       "Fang",
       "Griff",
-      "Starr Nova"
+      "Starr Nova",
+      "Gigi"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -2072,7 +2185,7 @@
     "name": "Doug",
     "rarity": "Mythic",
     "role": "Apoyo",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2101,7 +2214,7 @@
     "name": "Chuck",
     "rarity": "Mythic",
     "role": "Especialista",
-    "tier": "A+",
+    "tier": "D",
     "range": "Medio",
     "difficulty": 4,
     "tags": [
@@ -2134,19 +2247,22 @@
     "name": "Charlie",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
-      "control"
+      "control",
+      "antidive",
+      "utility"
     ],
     "modes": {},
     "counters": [
-      "Bull",
-      "El Primo",
-      "Rosa",
-      "Mortis",
-      "Edgar"
+      "Bolt",
+      "Damian",
+      "Starr Nova",
+      "Kaze",
+      "Nori",
+      "Gigi"
     ],
     "counteredBy": [
       "Piper",
@@ -2155,15 +2271,26 @@
       "Barley",
       "Dynamike"
     ],
-    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
-    "profileComplete": false
+    "build": "Recarga + escudo; reserva el capullo para cancelar el engage rival.",
+    "profileComplete": true,
+    "matchupReviewedAt": "09/08/2026",
+    "matchupNotes": {
+      "favorable": {
+        "Bolt": "El capullo detiene el Super y consume su ventana de velocidad.",
+        "Damian": "Puede aislarlo antes de que complete el combo.",
+        "Starr Nova": "Interrumpe la transformación y permite reposicionar al equipo.",
+        "Kaze": "Su control reduce el valor de una entrada explosiva.",
+        "Nori": "El capullo neutraliza el dash y corta la persecución."
+      },
+      "threats": {}
+    }
   },
   {
     "slug": "mico",
     "name": "Mico",
     "rarity": "Mythic",
     "role": "Asesino",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2192,7 +2319,7 @@
     "name": "Melodie",
     "rarity": "Mythic",
     "role": "Asesino",
-    "tier": "A",
+    "tier": "B",
     "range": "Medio",
     "difficulty": 4,
     "tags": [
@@ -2210,7 +2337,8 @@
       "Barley",
       "Piper",
       "Belle",
-      "Grom"
+      "Grom",
+      "Pierce"
     ],
     "counteredBy": [
       "Gale",
@@ -2227,7 +2355,7 @@
     "name": "Lily",
     "rarity": "Mythic",
     "role": "Asesino",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2239,7 +2367,8 @@
       "Grom",
       "Sprout",
       "Belle",
-      "Angelo"
+      "Angelo",
+      "Pierce"
     ],
     "counteredBy": [
       "Lou",
@@ -2256,7 +2385,7 @@
     "name": "Clancy",
     "rarity": "Mythic",
     "role": "Daño",
-    "tier": "Sin evaluar",
+    "tier": "F",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2285,7 +2414,7 @@
     "name": "Moe",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2314,7 +2443,7 @@
     "name": "Juju",
     "rarity": "Mythic",
     "role": "Artillero",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2333,7 +2462,9 @@
       "Melodie",
       "Lily",
       "Brock",
-      "Colt"
+      "Colt",
+      "Kaze",
+      "Gigi"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -2343,7 +2474,7 @@
     "name": "Ollie",
     "rarity": "Mythic",
     "role": "Tanque",
-    "tier": "A+",
+    "tier": "D",
     "range": "Corto",
     "difficulty": 3,
     "tags": [
@@ -2377,7 +2508,7 @@
     "name": "Lumi",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "A",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2406,7 +2537,7 @@
     "name": "Finx",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "F",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2435,7 +2566,7 @@
     "name": "Jae-Yong",
     "rarity": "Mythic",
     "role": "Apoyo",
-    "tier": "Sin evaluar",
+    "tier": "F",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2464,7 +2595,7 @@
     "name": "Alli",
     "rarity": "Mythic",
     "role": "Asesino",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2493,7 +2624,7 @@
     "name": "Mina",
     "rarity": "Mythic",
     "role": "Daño",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2522,7 +2653,7 @@
     "name": "Ziggy",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "F",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2551,7 +2682,7 @@
     "name": "Gigi",
     "rarity": "Mythic",
     "role": "Asesino",
-    "tier": "Sin evaluar",
+    "tier": "F",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2572,15 +2703,20 @@
       "Cordelius",
       "Charlie"
     ],
-    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
-    "profileComplete": false
+    "build": "Daño + escudo; entra cuando el antidive rival esté en enfriamiento.",
+    "profileComplete": true,
+    "matchupReviewedAt": "09/08/2026",
+    "matchupNotes": {
+      "favorable": {},
+      "threats": {}
+    }
   },
   {
     "slug": "glowy",
     "name": "Glowy",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2601,27 +2737,35 @@
       "Sprout",
       "Larry & Lawrie"
     ],
-    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
-    "profileComplete": false
+    "build": "Recarga + daño; controla el choke y conserva el miedo para el dive.",
+    "profileComplete": true,
+    "matchupReviewedAt": "09/08/2026",
+    "matchupNotes": {
+      "favorable": {},
+      "threats": {}
+    }
   },
   {
     "slug": "najia",
     "name": "Najia",
     "rarity": "Mythic",
     "role": "Tirador",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
-      "tirador"
+      "damage",
+      "poison",
+      "control",
+      "range"
     ],
     "modes": {},
     "counters": [
-      "Bo",
-      "Emz",
+      "Frank",
+      "8-Bit",
       "Pam",
       "Jessie",
-      "Frank"
+      "Meg"
     ],
     "counteredBy": [
       "Mortis",
@@ -2630,42 +2774,66 @@
       "Buzz",
       "Fang"
     ],
-    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
-    "profileComplete": false
+    "build": "Daño + recarga; acumula veneno sobre objetivos lentos y evita duelos cuerpo a cuerpo.",
+    "profileComplete": true,
+    "matchupReviewedAt": "09/08/2026",
+    "matchupNotes": {
+      "favorable": {},
+      "threats": {}
+    }
   },
   {
     "slug": "damian",
     "name": "Damian",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "B+",
+    "tier": "B",
     "range": "Medio",
     "difficulty": 4,
     "tags": [
       "control",
       "burst",
-      "lastpick"
+      "antidive",
+      "objective"
     ],
     "modes": {
       "Zona Restringida": 8,
       "Balón Brawl": 7
     },
     "counters": [
+      "Bolt",
       "Frank",
       "Jacky",
-      "Pam",
-      "Jessie",
+      "Bibi",
       "8-Bit"
     ],
     "counteredBy": [
-      "Piper",
-      "Belle",
-      "Angelo",
-      "Max",
-      "Kenji"
+      "Gale",
+      "Colette",
+      "Shelly",
+      "Lou",
+      "Otis",
+      "Charlie"
     ],
-    "build": "Daño + escudo; busca encadenar explosiones sobre choke points.",
-    "profileComplete": true
+    "build": "Daño + escudo; encadena el combo y los altavoces sobre rutas cerradas.",
+    "profileComplete": true,
+    "matchupReviewedAt": "09/08/2026",
+    "matchupNotes": {
+      "favorable": {
+        "Bolt": "Puede interrumpir su ruta y llenar de control la zona donde Bolt necesita acelerar.",
+        "Frank": "Su movilidad y presión persistente castigan la animación lenta de Frank.",
+        "Jacky": "Controla mejor la distancia y responde a su entrada con daño y desplazamiento.",
+        "Bibi": "Sus rebotes y control dificultan que Bibi mantenga una línea limpia.",
+        "8-Bit": "Castiga su baja movilidad y la posición alrededor de la torreta."
+      },
+      "threats": {
+        "Gale": "Lo mantiene fuera del rango de combo y corta sus entradas.",
+        "Colette": "El daño porcentual elimina su ventaja de vida.",
+        "Shelly": "El burst a corta distancia castiga cualquier entrada frontal.",
+        "Lou": "La congelación corta el combo y niega la zona de los altavoces.",
+        "Otis": "El silencio interrumpe el momento en el que Damian necesita encadenar habilidades."
+      }
+    }
   },
   {
     "slug": "starr-nova",
@@ -2676,9 +2844,10 @@
     "range": "Medio",
     "difficulty": 4,
     "tags": [
-      "control",
+      "assassin",
       "carry",
-      "tempo"
+      "tempo",
+      "mobile"
     ],
     "modes": {
       "Balón Brawl": 9,
@@ -2686,28 +2855,45 @@
       "Zona Restringida": 8
     },
     "counters": [
-      "Frank",
-      "Rosa",
-      "Ash",
-      "Pam",
-      "Jessie"
-    ],
-    "counteredBy": [
       "Piper",
       "Belle",
-      "Angelo",
-      "Nani",
-      "Kenji"
+      "Mandy",
+      "Tick",
+      "Grom"
     ],
-    "build": "Daño + escudo; administra transformaciones y no sobreextiendas.",
-    "profileComplete": true
+    "counteredBy": [
+      "Gale",
+      "Otis",
+      "Charlie",
+      "Cordelius",
+      "R-T"
+    ],
+    "build": "Daño + escudo; transforma con una ruta de salida y evita entrar sin recursos.",
+    "profileComplete": true,
+    "matchupReviewedAt": "09/08/2026",
+    "matchupNotes": {
+      "favorable": {
+        "Piper": "Su movilidad permite saltar la zona de confort de Piper.",
+        "Belle": "Puede cerrar distancia y forzar a Belle a perder el ángulo.",
+        "Mandy": "Castiga su inmovilidad durante el enfoque.",
+        "Tick": "Puede alcanzar al artillero antes de que sus minas controlen la salida.",
+        "Grom": "Su entrada rápida explota los huecos entre proyectiles."
+      },
+      "threats": {
+        "Gale": "El peel y el empuje rompen la transformación ofensiva.",
+        "Otis": "El silencio neutraliza la ventana de burst.",
+        "Charlie": "El capullo corta la transformación y compra tiempo.",
+        "Cordelius": "El Reino de las Sombras aísla el engage y elimina apoyos.",
+        "R-T": "Su burst cercano y la marca castigan la entrada frontal."
+      }
+    }
   },
   {
     "slug": "wendy",
     "name": "Wendy",
     "rarity": "Mythic",
     "role": "Control",
-    "tier": "A",
+    "tier": "Sin evaluar",
     "range": "Largo",
     "difficulty": 3,
     "tags": [
@@ -2741,7 +2927,7 @@
     "name": "Spike",
     "rarity": "Legendary",
     "role": "Control",
-    "tier": "Sin evaluar",
+    "tier": "B",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2770,7 +2956,7 @@
     "name": "Crow",
     "rarity": "Legendary",
     "role": "Asesino",
-    "tier": "B",
+    "tier": "A",
     "range": "Medio-largo",
     "difficulty": 3,
     "tags": [
@@ -2799,7 +2985,7 @@
     "name": "Leon",
     "rarity": "Legendary",
     "role": "Asesino",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2811,7 +2997,8 @@
       "Belle",
       "Tick",
       "Barley",
-      "Grom"
+      "Grom",
+      "Pierce"
     ],
     "counteredBy": [
       "Gale",
@@ -2828,7 +3015,7 @@
     "name": "Sandy",
     "rarity": "Legendary",
     "role": "Control",
-    "tier": "A",
+    "tier": "C",
     "range": "Medio",
     "difficulty": 3,
     "tags": [
@@ -2864,7 +3051,7 @@
     "name": "Surge",
     "rarity": "Legendary",
     "role": "Antidive",
-    "tier": "A",
+    "tier": "S",
     "range": "Medio",
     "difficulty": 3,
     "tags": [
@@ -2882,7 +3069,8 @@
       "Mortis",
       "Buzz",
       "Bull",
-      "El Primo"
+      "El Primo",
+      "Nori"
     ],
     "counteredBy": [
       "Piper",
@@ -2899,7 +3087,7 @@
     "name": "Amber",
     "rarity": "Legendary",
     "role": "Control",
-    "tier": "A+",
+    "tier": "D",
     "range": "Largo",
     "difficulty": 3,
     "tags": [
@@ -2934,7 +3122,7 @@
     "name": "Meg",
     "rarity": "Legendary",
     "role": "Tanque",
-    "tier": "Sin evaluar",
+    "tier": "S",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2953,7 +3141,9 @@
       "Emz",
       "Griff",
       "Clancy",
-      "Bea"
+      "Bea",
+      "Najia",
+      "Sirius"
     ],
     "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
     "profileComplete": false
@@ -2963,7 +3153,7 @@
     "name": "Chester",
     "rarity": "Legendary",
     "role": "Daño",
-    "tier": "Sin evaluar",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -2992,7 +3182,7 @@
     "name": "Cordelius",
     "rarity": "Legendary",
     "role": "Asesino",
-    "tier": "A",
+    "tier": "C",
     "range": "Medio",
     "difficulty": 4,
     "tags": [
@@ -3010,7 +3200,11 @@
       "Melodie",
       "Max",
       "Gene",
-      "Byron"
+      "Byron",
+      "Starr Nova",
+      "Nori",
+      "Kaze",
+      "Gigi"
     ],
     "counteredBy": [
       "Piper",
@@ -3027,7 +3221,7 @@
     "name": "Kit",
     "rarity": "Legendary",
     "role": "Apoyo",
-    "tier": "Sin evaluar",
+    "tier": "B",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -3056,7 +3250,7 @@
     "name": "Draco",
     "rarity": "Legendary",
     "role": "Tanque",
-    "tier": "Sin evaluar",
+    "tier": "F",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -3085,7 +3279,7 @@
     "name": "Kenji",
     "rarity": "Legendary",
     "role": "Asesino",
-    "tier": "A+",
+    "tier": "B",
     "range": "Corto",
     "difficulty": 4,
     "tags": [
@@ -3103,7 +3297,9 @@
       "Barley",
       "Grom",
       "Sprout",
-      "Piper"
+      "Piper",
+      "Pierce",
+      "Sirius"
     ],
     "counteredBy": [
       "Gale",
@@ -3120,7 +3316,7 @@
     "name": "Pierce",
     "rarity": "Legendary",
     "role": "Tirador",
-    "tier": "Sin evaluar",
+    "tier": "B",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -3139,10 +3335,16 @@
       "Lily",
       "Kenji",
       "Leon",
-      "Kaze"
+      "Kaze",
+      "Gigi"
     ],
-    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
-    "profileComplete": false
+    "build": "Daño + recarga; administra el último disparo y no cedas cobertura.",
+    "profileComplete": true,
+    "matchupReviewedAt": "09/08/2026",
+    "matchupNotes": {
+      "favorable": {},
+      "threats": {}
+    }
   },
   {
     "slug": "nori",
@@ -3153,8 +3355,8 @@
     "range": "Medio",
     "difficulty": 4,
     "tags": [
+      "assassin",
       "carry",
-      "damage",
       "mobile"
     ],
     "modes": {
@@ -3174,17 +3376,23 @@
       "Surge",
       "R-T",
       "Cordelius",
-      "Otis"
+      "Otis",
+      "Charlie"
     ],
-    "build": "Daño + escudo; entra después de forzar recursos.",
-    "profileComplete": true
+    "build": "Daño + escudo; entra después de forzar gadgets de peel.",
+    "profileComplete": true,
+    "matchupReviewedAt": "09/08/2026",
+    "matchupNotes": {
+      "favorable": {},
+      "threats": {}
+    }
   },
   {
     "slug": "kaze",
     "name": "Kaze",
     "rarity": "Ultra Legendary",
     "role": "Asesino",
-    "tier": "Sin evaluar",
+    "tier": "D",
     "range": "Variable",
     "difficulty": 3,
     "tags": [
@@ -3205,15 +3413,20 @@
       "Lou",
       "Gale"
     ],
-    "build": "Ficha preparada; build pendiente de validación en el parche vigente.",
-    "profileComplete": false
+    "build": "Daño + escudo; busca artilleros y tiradores sin herramienta de escape.",
+    "profileComplete": true,
+    "matchupReviewedAt": "09/08/2026",
+    "matchupNotes": {
+      "favorable": {},
+      "threats": {}
+    }
   },
   {
     "slug": "sirius",
     "name": "Sirius",
     "rarity": "Ultra Legendary",
     "role": "Especialista",
-    "tier": "A",
+    "tier": "C",
     "range": "Variable",
     "difficulty": 5,
     "tags": [
@@ -3240,7 +3453,12 @@
       "Max",
       "Kenji"
     ],
-    "build": "Build dependiente del rival; prioriza flexibilidad.",
-    "profileComplete": true
+    "build": "Explota sombras valiosas y evita líneas abiertas sin cobertura.",
+    "profileComplete": true,
+    "matchupReviewedAt": "09/08/2026",
+    "matchupNotes": {
+      "favorable": {},
+      "threats": {}
+    }
   }
 ]

@@ -1,15 +1,16 @@
 {
-  "updated": "2026-08-08",
+  "updated": "2026-08-09",
   "officialPatch": "Mantenimiento y balance del 4 de agosto de 2026",
   "officialPatchDate": "04/08/2026",
   "rosterCount": 106,
   "newestBrawler": "Wendy",
   "notes": [
-    "Pool Ranked comprobado el 08/08/2026: 33 mapas vigentes y 6 históricos conservados para consulta.",
-    "La base incluye New Horizons, Flowing Springs, Sneaky Fields y el resto de mapas que faltaban en la versión anterior.",
-    "La base se ha revisado con los cambios generales publicados para el mantenimiento del 04/08/2026.",
+    "Tier list actual añadida encima de los cambios de balance, con vistas Meta 24 h y General 30 d.",
+    "Los tiers globales proceden de datos de alto nivel y no sustituyen la evaluación específica por mapa.",
+    "Los 39 mapas han recibido una auditoría de first picks orientada a SoloQ, seguridad y exposición a counters.",
+    "Rustic Arcade se trata como mapa abierto: Piper, 8-Bit y Brock son sus first picks revisados; Sandy queda como opción situacional.",
+    "Bolt y otros brawlers recientes tienen relaciones de matchup revisadas manualmente y razones específicas.",
     "Los cambios de NanoPowers se muestran por separado porque pertenecen al evento y no deben trasladarse automáticamente al meta Ranked estándar.",
-    "Los tiers y counters son editoriales; no se presentan como porcentajes de victoria.",
     "Las imágenes se cargan desde BrawlAPI/Brawlify con fallback local si la red no está disponible."
   ],
   "generalNerfs": [
@@ -140,6 +141,16 @@
       "name": "Brawl Time Ninja — estadísticas globales",
       "url": "https://brawltime.ninja/es/tier-list/brawler",
       "kind": "Estadísticas de terceros"
+    },
+    {
+      "name": "Noff — Tier List de alto nivel, actualización 08/08/2026",
+      "url": "https://www.noff.gg/brawl-stars/tier-list",
+      "kind": "Tier list y datos de top 200"
+    },
+    {
+      "name": "Brawl Time Ninja — Rustic Arcade, actualización agosto de 2026",
+      "url": "https://brawltime.ninja/tier-list/mode/gem-grab/map/Rustic-Arcade",
+      "kind": "Contraste estadístico por mapa"
     }
   ]
 }

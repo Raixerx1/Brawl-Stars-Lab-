@@ -687,7 +687,7 @@ export default function LiveMatchAnalyzer({
 
     <section className="panel live-setup-v8">
       <div className="section-title">
-        <div><span className="eyebrow">Auto Review Beta v0.10</span><h2>Preparar sesión</h2></div>
+        <div><span className="eyebrow">Auto Review Beta v0.11</span><h2>Preparar sesión</h2></div>
         <span className={`live-privacy-chip ${status}`}>{status === "sharing" ? `● ${autoStatusText}` : "Procesamiento local"}</span>
       </div>
 

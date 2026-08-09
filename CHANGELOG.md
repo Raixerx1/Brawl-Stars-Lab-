@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.11 — Tier list, counters y first picks
+
+- Tier list visual actual con vistas 24 h y 30 d.
+- Nerfs oficiales conservados debajo de la tier list.
+- Matchups de Bolt corregidos y explicaciones específicas.
+- Doce perfiles recientes revisados manualmente.
+- Auditoría de los 39 mapas y de sus first picks.
+- Rustic Arcade reclasificado como abierto: Piper, 8-Bit y Brock.
+- El motor prioriza los first picks auditados y penaliza picks ciegos vulnerables.
+- Auditorías automatizadas y dos informes técnicos nuevos.
+
 ## v0.10 — Auto Review adaptativo
 
 - Feedback correcto/falso por detección.

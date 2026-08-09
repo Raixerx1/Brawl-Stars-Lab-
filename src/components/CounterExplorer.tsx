@@ -131,6 +131,7 @@ export default function CounterExplorer({ brawlers }: { brawlers: Brawler[] }) {
             <span>{source.counters.length} buenos matchups</span>
             <span>{source.counteredBy.length} amenazas</span>
             <span>{source.profileComplete ? "Perfil táctico completo" : "Perfil base pendiente de validación"}</span>
+            {source.matchupReviewedAt && <span className="counter-reviewed-chip">Revisión específica: {source.matchupReviewedAt}</span>}
           </div>
         </div>
       </section>
@@ -150,7 +151,7 @@ export default function CounterExplorer({ brawlers }: { brawlers: Brawler[] }) {
               if (!target) return null;
               return <article className="matchup-card favorable" key={name}>
                 <BrawlerPortrait name={target.name} className="matchup-avatar" />
-                <div><h3>{target.name}</h3><p>{favorableReason(source, target)}</p></div>
+                <div><h3>{target.name}</h3><p>{favorableReason(source, target)}</p>{source.matchupNotes?.favorable?.[target.name] && <small>Matchup revisado manualmente</small>}</div>
               </article>;
             })}
             {!source.counters.length && <div className="empty-state">Todavía no se han definido counters para {source.name}.</div>}
@@ -166,7 +167,7 @@ export default function CounterExplorer({ brawlers }: { brawlers: Brawler[] }) {
               if (!threat) return null;
               return <article className="matchup-card threat" key={name}>
                 <BrawlerPortrait name={threat.name} className="matchup-avatar" />
-                <div><h3>{threat.name}</h3><p>{threatReason(source, threat)}</p></div>
+                <div><h3>{threat.name}</h3><p>{threatReason(source, threat)}</p>{source.matchupNotes?.threats?.[threat.name] && <small>Matchup revisado manualmente</small>}</div>
               </article>;
             })}
             {!source.counteredBy.length && <div className="empty-state">Todavía no se han definido amenazas para {source.name}.</div>}

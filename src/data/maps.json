@@ -24,9 +24,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Nori",
-      "Sandy",
-      "Gale"
+      "Surge",
+      "Bibi",
+      "Max"
     ],
     "lastPicks": [
       "Kenji",
@@ -40,12 +40,15 @@
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Palco central"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: Surge, Bibi, Max. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "slug": "pinball-dreams",
@@ -72,9 +75,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Nori",
-      "Sandy",
-      "Gale"
+      "Rico",
+      "Surge",
+      "Bibi"
     ],
     "lastPicks": [
       "Kenji",
@@ -88,12 +91,15 @@
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Pinball"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "First picks revisados para mapa cerrado: Rico, Surge, Bibi. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
   },
   {
     "name": "Sneaky Fields",
@@ -119,9 +125,9 @@
       "Bibi"
     ],
     "firstPicks": [
-      "Bolt",
-      "Damian",
-      "Nita"
+      "Bibi",
+      "Rosa",
+      "Gale"
     ],
     "lastPicks": [
       "Jacky",
@@ -136,12 +142,15 @@
     "plan": "Controla los arbustos antes de conducir el balón. Conserva una respuesta antidive y rompe únicamente los muros que abran la portería rival.",
     "slug": "sneaky-fields",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Campos furtivos"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "First picks revisados para mapa cerrado: Bibi, Rosa, Gale. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
   },
   {
     "slug": "triple-dribble",
@@ -168,9 +177,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Nori",
-      "Sandy",
-      "Gale"
+      "Surge",
+      "Bibi",
+      "Max"
     ],
     "lastPicks": [
       "Kenji",
@@ -184,12 +193,15 @@
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Triple drible"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: Surge, Bibi, Max. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "slug": "beach-ball",
@@ -216,9 +228,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Nori",
-      "Sandy",
-      "Gale"
+      "Brock",
+      "Piper",
+      "Max"
     ],
     "lastPicks": [
       "Kenji",
@@ -232,12 +244,15 @@
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": true,
-    "status": "Mapa histórico o fuera del pool Ranked vigente · conservado para consulta.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Histórico",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Pelota de playa"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa abierto: Brock, Piper y Max. Se prioriza alcance para ganar la primera línea y movilidad para convertir el control en avance con balón."
   },
   {
     "slug": "penalty-kick",
@@ -264,9 +279,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Nori",
-      "Sandy",
-      "Gale"
+      "Rico",
+      "Surge",
+      "Bibi"
     ],
     "lastPicks": [
       "Kenji",
@@ -280,13 +295,16 @@
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa histórico o fuera del pool Ranked vigente · conservado para consulta.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Histórico",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Penalti",
       "Tiro penal"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: Rico, Surge, Bibi. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "slug": "spiraling-out",
@@ -313,9 +331,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Nori",
-      "Sandy",
-      "Gale"
+      "Surge",
+      "Max",
+      "Bibi"
     ],
     "lastPicks": [
       "Kenji",
@@ -329,12 +347,15 @@
     ],
     "plan": "Gana primero los carriles y la munición. El balón es una herramienta de presión, no una obligación de avanzar.",
     "featuredOfficialJune2026": true,
-    "status": "Mapa histórico o fuera del pool Ranked vigente · conservado para consulta.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Histórico",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Efecto envolvente"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: Surge, Max, Bibi. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "slug": "crystal-arcade",
@@ -361,9 +382,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Gene",
-      "Sandy",
-      "Belle"
+      "8-Bit",
+      "Max",
+      "Rico"
     ],
     "lastPicks": [
       "Tara",
@@ -377,12 +398,15 @@
     ],
     "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
     "featuredOfficialJune2026": true,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Arcade de cristal"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: 8-Bit, Max, Rico. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "name": "Deathcap Trap",
@@ -408,9 +432,9 @@
       "Gigi"
     ],
     "firstPicks": [
-      "Bolt",
-      "Najia",
-      "Angelo"
+      "8-Bit",
+      "Brock",
+      "Max"
     ],
     "lastPicks": [
       "Buster",
@@ -425,10 +449,13 @@
     "plan": "El portador debe mantener una salida lateral. Presiona el centro desde dos ángulos y evita agruparte frente a daño de área.",
     "slug": "deathcap-trap",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
-    "aliases": []
+    "poolCheckedAt": "09/08/2026",
+    "aliases": [],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: 8-Bit, Brock, Max. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "slug": "double-swoosh",
@@ -455,9 +482,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Gene",
-      "Sandy",
-      "Belle"
+      "Rosa",
+      "Tara",
+      "Gene"
     ],
     "lastPicks": [
       "Tara",
@@ -471,12 +498,15 @@
     ],
     "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Doble swoosh"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "First picks revisados para mapa cerrado: Rosa, Tara, Gene. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
   },
   {
     "name": "Flooded Mine",
@@ -502,9 +532,9 @@
       "Doug"
     ],
     "firstPicks": [
-      "Damian",
-      "Bolt",
-      "Jessie"
+      "Rico",
+      "Rosa",
+      "Tara"
     ],
     "lastPicks": [
       "Tara",
@@ -519,12 +549,15 @@
     "plan": "Gana visión antes de entrar en los pasillos. Usa torretas, invocaciones y control de área para proteger la retirada del portador.",
     "slug": "flooded-mine",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Mina inundada"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa cerrado: Rico, Rosa, Tara. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
   },
   {
     "name": "Gem Fort",
@@ -550,9 +583,9 @@
       "Tara"
     ],
     "firstPicks": [
-      "Bolt",
-      "Jessie",
-      "Nori"
+      "8-Bit",
+      "Max",
+      "Rico"
     ],
     "lastPicks": [
       "Sprout",
@@ -567,12 +600,15 @@
     "plan": "No entregues el fuerte central de forma simultánea por ambos lados. El portador debe jugar detrás de la cobertura y conservar una ruta de retirada.",
     "slug": "gem-fort",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Fuerte de gemas"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: 8-Bit, Max, Rico. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "slug": "hard-rock-mine",
@@ -599,9 +635,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Gene",
-      "Sandy",
-      "Belle"
+      "8-Bit",
+      "Max",
+      "Rico"
     ],
     "lastPicks": [
       "Tara",
@@ -615,12 +651,15 @@
     ],
     "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Mina rocosa"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: 8-Bit, Max, Rico. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "name": "Lilygear Lake",
@@ -646,9 +685,9 @@
       "Moe"
     ],
     "firstPicks": [
-      "Bolt",
-      "Nori",
-      "8-Bit"
+      "8-Bit",
+      "Piper",
+      "Brock"
     ],
     "lastPicks": [
       "Kaze",
@@ -663,39 +702,42 @@
     "plan": "Asegura rango y movilidad para cruzar los ángulos de agua. Evita una composición lenta sin herramientas para cambiar de línea.",
     "slug": "lilygear-lake",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
-    "aliases": []
+    "poolCheckedAt": "09/08/2026",
+    "aliases": [],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa abierto: 8-Bit, Piper, Brock. Se prioriza alcance, presión estable y herramientas de escape."
   },
   {
     "slug": "rustic-arcade",
     "name": "Rustic Arcade",
     "mode": "Atrapagemas",
-    "layout": "Mixto",
+    "layout": "Abierto",
     "traits": [
-      "mapa destacado",
-      "control de gemas",
-      "rutas laterales"
+      "líneas largas",
+      "centro expuesto",
+      "laterales con cobertura puntual"
     ],
     "tierS": [
-      "Gene",
-      "Sandy",
-      "Belle",
-      "R-T",
-      "Tara"
+      "Piper",
+      "8-Bit",
+      "Brock",
+      "Surge",
+      "Meg"
     ],
     "tierA": [
-      "Max",
+      "Crow",
       "Rico",
-      "Byron",
-      "Cordelius",
-      "Starr Nova"
+      "Max",
+      "Belle",
+      "Gene"
     ],
     "firstPicks": [
-      "Gene",
-      "Sandy",
-      "Belle"
+      "Piper",
+      "8-Bit",
+      "Brock"
     ],
     "lastPicks": [
       "Tara",
@@ -703,18 +745,21 @@
       "Rico"
     ],
     "bans": [
-      "Gene",
-      "Sandy",
-      "Belle"
+      "Piper",
+      "Brock",
+      "Surge"
     ],
-    "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
+    "plan": "Mantén un mid de largo alcance y dos líneas capaces de cruzar fuego. No entregues el centro a un tirador rival y evita picks de alcance medio a ciegas.",
     "featuredOfficialJune2026": true,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Salón recreativo rústico"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "Mapa reclasificado como abierto: prioriza alcance, control estable del centro y baja exposición. Piper, 8-Bit y Brock ofrecen líneas largas; Sandy queda como pick situacional, no como first pick."
   },
   {
     "slug": "undermine",
@@ -741,9 +786,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Gene",
-      "Sandy",
-      "Belle"
+      "Rico",
+      "Max",
+      "8-Bit"
     ],
     "lastPicks": [
       "Tara",
@@ -757,12 +802,15 @@
     ],
     "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Cueva subterránea"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: Rico, Max, 8-Bit. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "slug": "last-stop",
@@ -789,9 +837,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Gene",
-      "Sandy",
-      "Belle"
+      "8-Bit",
+      "Max",
+      "Rico"
     ],
     "lastPicks": [
       "Tara",
@@ -805,12 +853,15 @@
     ],
     "plan": "Define un portador estable y dos líneas. Con 8–10 gemas, retrocede por capas y conserva un recurso defensivo.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa histórico o fuera del pool Ranked vigente · conservado para consulta.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Histórico",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Última parada"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: 8-Bit, Max, Rico. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "slug": "belle-s-rock",
@@ -837,9 +888,9 @@
       "Sirius"
     ],
     "firstPicks": [
-      "Belle",
-      "Gene",
-      "Angelo"
+      "Brock",
+      "Piper",
+      "Mandy"
     ],
     "lastPicks": [
       "Kenji",
@@ -853,12 +904,15 @@
     ],
     "plan": "Prioriza vida y daño seguro. El gas es un recurso; no regales la primera baja por una eliminación improbable.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Roca de Belle"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: Brock, Piper, Mandy. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "slug": "flaring-phoenix",
@@ -885,9 +939,9 @@
       "Sirius"
     ],
     "firstPicks": [
-      "Belle",
-      "Gene",
-      "Angelo"
+      "Brock",
+      "Piper",
+      "Mandy"
     ],
     "lastPicks": [
       "Kenji",
@@ -901,12 +955,15 @@
     ],
     "plan": "Prioriza vida y daño seguro. El gas es un recurso; no regales la primera baja por una eliminación improbable.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Fénix en llamas"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: Brock, Piper, Mandy. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "name": "Flowing Springs",
@@ -932,9 +989,9 @@
       "Nani"
     ],
     "firstPicks": [
-      "Bolt",
-      "Najia",
-      "Brock"
+      "Brock",
+      "Piper",
+      "Angelo"
     ],
     "lastPicks": [
       "Piper",
@@ -949,13 +1006,16 @@
     "plan": "Juega por daño seguro y control del agua. No cruces el centro sin ventaja de vida o munición y conserva movilidad para el cierre del gas.",
     "slug": "flowing-springs",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Manantiales caudalosos",
       "Manantial caudaloso"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa abierto: Brock, Piper, Angelo. Se prioriza alcance, presión estable y herramientas de escape."
   },
   {
     "slug": "goldarm-gulch",
@@ -982,9 +1042,9 @@
       "Sirius"
     ],
     "firstPicks": [
-      "Belle",
-      "Gene",
-      "Angelo"
+      "Brock",
+      "Mandy",
+      "Gray"
     ],
     "lastPicks": [
       "Kenji",
@@ -998,12 +1058,15 @@
     ],
     "plan": "Prioriza vida y daño seguro. El gas es un recurso; no regales la primera baja por una eliminación improbable.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Barranco del brazo de oro"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa cerrado: Brock, Mandy, Gray. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
   },
   {
     "name": "New Horizons",
@@ -1030,8 +1093,8 @@
     ],
     "firstPicks": [
       "Brock",
-      "Bolt",
-      "Nori"
+      "Surge",
+      "Piper"
     ],
     "lastPicks": [
       "Sirius",
@@ -1046,12 +1109,15 @@
     "plan": "El muro central define el draft. Abre el mapa si el rival depende de corto alcance; consérvalo si tu composición gana mediante artilleros o flanqueos.",
     "slug": "new-horizons",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Nuevos horizontes"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: Brock, Surge, Piper. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "slug": "out-in-the-open",
@@ -1078,8 +1144,8 @@
       "Sirius"
     ],
     "firstPicks": [
-      "Belle",
-      "Gene",
+      "Brock",
+      "Piper",
       "Angelo"
     ],
     "lastPicks": [
@@ -1094,13 +1160,16 @@
     ],
     "plan": "Prioriza vida y daño seguro. El gas es un recurso; no regales la primera baja por una eliminación improbable.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "A la intemperie",
       "Out in the Open"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "First picks revisados para mapa abierto: Brock, Piper, Angelo. Se prioriza alcance, presión estable y herramientas de escape."
   },
   {
     "slug": "dueling-beetles",
@@ -1127,9 +1196,9 @@
       "Damian"
     ],
     "firstPicks": [
-      "Lou",
-      "Amber",
-      "Sandy"
+      "Surge",
+      "Max",
+      "Lou"
     ],
     "lastPicks": [
       "Gale",
@@ -1143,12 +1212,15 @@
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Duelo de escarabajos"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: Surge, Max, Lou. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "slug": "open-business",
@@ -1175,9 +1247,9 @@
       "Damian"
     ],
     "firstPicks": [
-      "Lou",
-      "Amber",
-      "Sandy"
+      "Brock",
+      "8-Bit",
+      "Max"
     ],
     "lastPicks": [
       "Gale",
@@ -1191,10 +1263,13 @@
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
-    "aliases": []
+    "poolCheckedAt": "09/08/2026",
+    "aliases": [],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa abierto: Brock, 8-Bit, Max. Se prioriza alcance, presión estable y herramientas de escape."
   },
   {
     "slug": "parallel-plays",
@@ -1221,9 +1296,9 @@
       "Damian"
     ],
     "firstPicks": [
-      "Lou",
-      "Amber",
-      "Sandy"
+      "Surge",
+      "Bibi",
+      "Lou"
     ],
     "lastPicks": [
       "Gale",
@@ -1237,12 +1312,15 @@
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Estrategias paralelas"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa cerrado: Surge, Bibi, Lou. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
   },
   {
     "slug": "ring-of-fire",
@@ -1269,9 +1347,9 @@
       "Damian"
     ],
     "firstPicks": [
-      "Lou",
-      "Amber",
-      "Sandy"
+      "8-Bit",
+      "Brock",
+      "Max"
     ],
     "lastPicks": [
       "Gale",
@@ -1285,14 +1363,17 @@
     ],
     "plan": "El objetivo es tiempo de zona. Alterna entradas para evitar morir los tres a la vez y encadena supers de control.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Pista ardiente",
       "Anillo de fuego",
       "Ring of Fire"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa abierto: 8-Bit, Brock, Max. Se prioriza alcance, presión estable y herramientas de escape."
   },
   {
     "slug": "bridge-too-far",
@@ -1319,9 +1400,9 @@
       "8-Bit"
     ],
     "firstPicks": [
-      "Colette",
-      "Colt",
-      "Jessie"
+      "Brock",
+      "8-Bit",
+      "Colt"
     ],
     "lastPicks": [
       "Chuck",
@@ -1335,10 +1416,13 @@
     ],
     "plan": "Compara daño potencial a caja y defensa. No persigas bajas lejos del objetivo cuando exista una ventana de daño.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
-    "aliases": []
+    "poolCheckedAt": "09/08/2026",
+    "aliases": [],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "First picks revisados para mapa abierto: Brock, 8-Bit, Colt. Se prioriza alcance, presión estable y herramientas de escape."
   },
   {
     "slug": "hot-potato",
@@ -1365,9 +1449,9 @@
       "8-Bit"
     ],
     "firstPicks": [
-      "Colette",
-      "Colt",
-      "Jessie"
+      "Rico",
+      "Bibi",
+      "Colt"
     ],
     "lastPicks": [
       "Chuck",
@@ -1381,12 +1465,15 @@
     ],
     "plan": "Compara daño potencial a caja y defensa. No persigas bajas lejos del objetivo cuando exista una ventana de daño.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Patata caliente"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa cerrado: Rico, Bibi, Colt. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
   },
   {
     "slug": "kaboom-canyon",
@@ -1413,9 +1500,9 @@
       "8-Bit"
     ],
     "firstPicks": [
-      "Colette",
+      "Brock",
       "Colt",
-      "Jessie"
+      "8-Bit"
     ],
     "lastPicks": [
       "Chuck",
@@ -1429,10 +1516,13 @@
     ],
     "plan": "Compara daño potencial a caja y defensa. No persigas bajas lejos del objetivo cuando exista una ventana de daño.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
-    "aliases": []
+    "poolCheckedAt": "09/08/2026",
+    "aliases": [],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: Brock, Colt, 8-Bit. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "name": "Pit Stop",
@@ -1458,9 +1548,9 @@
       "Jacky"
     ],
     "firstPicks": [
-      "Nita",
-      "Griff",
-      "Jessie"
+      "Bibi",
+      "Bull",
+      "Rico"
     ],
     "lastPicks": [
       "Edgar",
@@ -1475,12 +1565,15 @@
     "plan": "Decide pronto si tu composición gana por carrera de daño o por defensa. No persigas rivales cuando tengas acceso directo a la caja.",
     "slug": "pit-stop",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Parada en boxes"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa cerrado: Bibi, Bull, Rico. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
   },
   {
     "slug": "safe-zone",
@@ -1507,9 +1600,9 @@
       "8-Bit"
     ],
     "firstPicks": [
-      "Colette",
+      "Brock",
       "Colt",
-      "Jessie"
+      "8-Bit"
     ],
     "lastPicks": [
       "Chuck",
@@ -1523,12 +1616,15 @@
     ],
     "plan": "Compara daño potencial a caja y defensa. No persigas bajas lejos del objetivo cuando exista una ventana de daño.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Zona segura"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "First picks revisados para mapa abierto: Brock, Colt, 8-Bit. Se prioriza alcance, presión estable y herramientas de escape."
   },
   {
     "name": "Safe(r) Zone",
@@ -1554,9 +1650,9 @@
       "Mico"
     ],
     "firstPicks": [
-      "Nori",
-      "Bolt",
-      "8-Bit"
+      "8-Bit",
+      "Brock",
+      "Colt"
     ],
     "lastPicks": [
       "Chuck",
@@ -1571,12 +1667,15 @@
     "plan": "Mantén una línea de defensa y otra de presión. Si ganas la rotación central, convierte inmediatamente la ventaja en daño a caja.",
     "slug": "safer-zone",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Zona más segura"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: 8-Bit, Brock, Colt. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "name": "Dry Season",
@@ -1602,9 +1701,9 @@
       "Mandy"
     ],
     "firstPicks": [
-      "Najia",
       "Brock",
-      "Piper"
+      "Piper",
+      "Mandy"
     ],
     "lastPicks": [
       "Tick",
@@ -1619,12 +1718,15 @@
     "plan": "Usa los muros para obtener daño seguro, pero reserva una respuesta frente a asesinos. Con ventaja de estrellas, obliga al rival a exponerse.",
     "slug": "dry-season",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Sequía sanguinaria"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: Brock, Piper, Mandy. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "slug": "hideout",
@@ -1651,9 +1753,9 @@
       "Brock"
     ],
     "firstPicks": [
-      "Belle",
-      "Gene",
-      "Piper"
+      "Piper",
+      "Brock",
+      "Belle"
     ],
     "lastPicks": [
       "Nani",
@@ -1667,12 +1769,15 @@
     ],
     "plan": "Con ventaja de estrellas, obliga al rival a cruzar espacio abierto y evita intercambios uno por uno innecesarios.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Escondite"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: Piper, Brock, Belle. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "name": "Layer Cake",
@@ -1698,9 +1803,9 @@
       "Starr Nova"
     ],
     "firstPicks": [
-      "Najia",
       "Brock",
-      "Nori"
+      "Mandy",
+      "R-T"
     ],
     "lastPicks": [
       "Tick",
@@ -1715,10 +1820,13 @@
     "plan": "Controla una capa de muros cada vez. No apiles tres brawlers vulnerables al dive y abre el mapa si el rival depende de artilleros.",
     "slug": "layer-cake",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
-    "aliases": []
+    "poolCheckedAt": "09/08/2026",
+    "aliases": [],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa cerrado: Brock, Mandy, R-T. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
   },
   {
     "slug": "shooting-star",
@@ -1745,9 +1853,9 @@
       "Brock"
     ],
     "firstPicks": [
-      "Belle",
-      "Gene",
-      "Piper"
+      "Piper",
+      "Brock",
+      "Angelo"
     ],
     "lastPicks": [
       "Nani",
@@ -1761,12 +1869,15 @@
     ],
     "plan": "Con ventaja de estrellas, obliga al rival a cruzar espacio abierto y evita intercambios uno por uno innecesarios.",
     "featuredOfficialJune2026": false,
-    "status": "Pool Ranked vigente · revisado el 08/08/2026.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Actual",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Tiroteo estelar"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Alta",
+    "firstPickNotes": "First picks revisados para mapa abierto: Piper, Brock, Angelo. Se prioriza alcance, presión estable y herramientas de escape."
   },
   {
     "slug": "canal-grande",
@@ -1793,9 +1904,9 @@
       "Brock"
     ],
     "firstPicks": [
-      "Belle",
-      "Gene",
-      "Piper"
+      "Piper",
+      "Brock",
+      "Belle"
     ],
     "lastPicks": [
       "Nani",
@@ -1809,12 +1920,15 @@
     ],
     "plan": "Con ventaja de estrellas, obliga al rival a cruzar espacio abierto y evita intercambios uno por uno innecesarios.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa histórico o fuera del pool Ranked vigente · conservado para consulta.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Histórico",
-    "poolCheckedAt": "08/08/2026",
+    "poolCheckedAt": "09/08/2026",
     "aliases": [
       "Gran Canal"
-    ]
+    ],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa mixto: Piper, Brock, Belle. Se prioriza flexibilidad entre centro y laterales y baja dependencia del draft aliado."
   },
   {
     "slug": "snake-prairie",
@@ -1841,9 +1955,9 @@
       "Brock"
     ],
     "firstPicks": [
-      "Belle",
-      "Gene",
-      "Piper"
+      "Bo",
+      "Tara",
+      "Gene"
     ],
     "lastPicks": [
       "Nani",
@@ -1857,9 +1971,12 @@
     ],
     "plan": "Con ventaja de estrellas, obliga al rival a cruzar espacio abierto y evita intercambios uno por uno innecesarios.",
     "featuredOfficialJune2026": false,
-    "status": "Mapa histórico o fuera del pool Ranked vigente · conservado para consulta.",
+    "status": "Pool Ranked vigente · first picks revisados el 09/08/2026.",
     "rotationStatus": "Histórico",
-    "poolCheckedAt": "08/08/2026",
-    "aliases": []
+    "poolCheckedAt": "09/08/2026",
+    "aliases": [],
+    "firstPickReviewedAt": "09/08/2026",
+    "firstPickConfidence": "Media",
+    "firstPickNotes": "First picks revisados para mapa cerrado: Bo, Tara, Gene. Se prioriza control de pasillos, presión y capacidad de sobrevivir al dive."
   }
 ]

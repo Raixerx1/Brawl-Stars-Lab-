@@ -12,6 +12,11 @@ export type Brawler = {
   counteredBy: string[];
   build: string;
   profileComplete: boolean;
+  matchupReviewedAt?: string;
+  matchupNotes?: {
+    favorable?: Record<string, string>;
+    threats?: Record<string, string>;
+  };
 };
 
 export type MapProfile = {
@@ -31,6 +36,9 @@ export type MapProfile = {
   aliases?: string[];
   rotationStatus: "Actual" | "Histórico";
   poolCheckedAt: string;
+  firstPickReviewedAt?: string;
+  firstPickConfidence?: "Baja" | "Media" | "Alta";
+  firstPickNotes?: string;
 };
 
 export type DraftPosition = "First pick" | "Pick intermedio" | "Last pick";
