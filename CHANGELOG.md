@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.1 — Panel de bans
+
+- Panel compacto de hasta seis bans.
+- Exclusión automática en buscador y recomendaciones.
+- Bans incluidos en el enlace compartido.
+- Limpieza conjunta al reiniciar o cambiar de mapa.
+
 ## v0.5 — Draft personalizado
 
 - Pool desactivado, preferente o estricto.

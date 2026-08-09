@@ -1,6 +1,15 @@
-# Brawl Draft Lab v0.5
+# Brawl Draft Lab v0.5.1
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.5.1
+
+- Recuperado el panel de bans dentro del Draft Assistant.
+- Hasta seis brawlers bloqueados.
+- Los bans desaparecen del buscador de picks y de todas las recomendaciones.
+- El motor de draft recibe los bans y no propone brawlers bloqueados.
+- Los bans se conservan al compartir un draft mediante enlace.
+- Al reiniciar o cambiar de mapa se limpian junto con los picks.
 
 ## Novedades v0.5
 

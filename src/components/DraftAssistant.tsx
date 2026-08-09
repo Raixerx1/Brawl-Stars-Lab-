@@ -15,6 +15,7 @@ import type {
 import { analyzeDraft } from "@/lib/draft-engine";
 import { loadPool } from "@/lib/pool";
 import { BrawlerPortrait } from "./GameArtwork";
+import BrawlerDraftPicker from "./BrawlerDraftPicker";
 
 type DraftTeam = "ally" | "enemy";
 type OrderedPick = string | null;
@@ -111,6 +112,7 @@ export default function DraftAssistant({
   const [mapSlug, setMapSlug] = useState(availableMaps[0]?.slug || "");
   const [firstPickOwner, setFirstPickOwner] = useState<DraftFirstPickOwner>("Aliado");
   const [orderedPicks, setOrderedPicks] = useState<OrderedPick[]>(Array(6).fill(null));
+  const [bans, setBans] = useState<string[]>([]);
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
   const [personalPool, setPersonalPool] = useState<PlayerPool>({});
@@ -124,6 +126,7 @@ export default function DraftAssistant({
     const sharedMap = params.get("map");
     const sharedFirst = params.get("first") as DraftFirstPickOwner | null;
     const sharedPicks = params.get("picks")?.split("|").map((pick) => pick || null) || [];
+    const sharedBans = params.get("bans")?.split("|").filter(Boolean) || [];
     const sharedPoolPolicy = params.get("pool") as PoolPolicy | null;
     const sharedQuick = params.get("quick");
 
@@ -139,6 +142,7 @@ export default function DraftAssistant({
       const normalized = Array.from({ length: 6 }, (_, index) => sharedPicks[index] || null);
       setOrderedPicks(normalized);
     }
+    if (sharedBans.length) setBans(sharedBans.slice(0, 6));
     if (sharedPoolPolicy && ["Off", "Preferir", "Solo pool"].includes(sharedPoolPolicy)) setPoolPolicy(sharedPoolPolicy);
     if (sharedQuick === "1") setQuickMode(true);
   }, [brawlers, maps]);
@@ -166,16 +170,19 @@ export default function DraftAssistant({
       position,
       allies,
       enemies,
-      bans: [],
+      bans,
       priority,
       personalPool,
       poolPolicy,
     }, brawlers);
-  }, [map, position, allies, enemies, priority, personalPool, poolPolicy, brawlers]);
+  }, [map, position, allies, enemies, bans, priority, personalPool, poolPolicy, brawlers]);
 
   const selectedNames = useMemo(
-    () => new Set(orderedPicks.filter(Boolean).map((name) => normalize(name as string))),
-    [orderedPicks],
+    () => new Set([
+      ...orderedPicks.filter(Boolean).map((name) => normalize(name as string)),
+      ...bans.map(normalize),
+    ]),
+    [orderedPicks, bans],
   );
 
   const suggestions = useMemo(() => {
@@ -219,10 +226,12 @@ export default function DraftAssistant({
       || maps.find((item) => item.mode === nextMode);
     if (first) setMapSlug(first.slug);
     setOrderedPicks(Array(6).fill(null));
+    setBans([]);
   };
 
   const resetDraft = () => {
     setOrderedPicks(Array(6).fill(null));
+    setBans([]);
     setQuery("");
     setMessage("");
   };
@@ -233,6 +242,7 @@ export default function DraftAssistant({
       map: map.slug,
       first: firstPickOwner,
       picks: orderedPicks.map((pick) => pick || "").join("|"),
+      bans: bans.join("|"),
       pool: poolPolicy,
       quick: quickMode ? "1" : "0",
     });
@@ -280,7 +290,7 @@ export default function DraftAssistant({
   return <div className="ordered-draft-assistant">
     <section className="panel ordered-draft-panel">
       <div className="section-title">
-        <div><span className="eyebrow">Draft Coach v0.5</span><h2>Introduce los picks en orden</h2></div>
+        <div><span className="eyebrow">Draft Coach v0.5.1</span><h2>Introduce los picks en orden</h2></div>
         <div className="draft-action-row">
           <button type="button" className="secondary-button compact-button" onClick={shareDraft}>Compartir</button>
           <button type="button" className="secondary-button compact-button" onClick={resetDraft}>Reiniciar</button>
@@ -290,10 +300,23 @@ export default function DraftAssistant({
 
       <div className="ordered-draft-context ordered-draft-context-v5">
         <label>Modo<select value={mode} onChange={(event) => changeMode(event.target.value)}>{modes.map((item) => <option key={item}>{item}</option>)}</select></label>
-        <label>Mapa<select value={mapSlug} onChange={(event) => { setMapSlug(event.target.value); setOrderedPicks(Array(6).fill(null)); }}>{availableMaps.map((item) => <option value={item.slug} key={item.slug}>{item.name}{item.rotationStatus === "Histórico" ? " · histórico" : ""}</option>)}</select></label>
+        <label>Mapa<select value={mapSlug} onChange={(event) => { setMapSlug(event.target.value); setOrderedPicks(Array(6).fill(null)); setBans([]); }}>{availableMaps.map((item) => <option value={item.slug} key={item.slug}>{item.name}{item.rotationStatus === "Histórico" ? " · histórico" : ""}</option>)}</select></label>
         <label>First pick<select value={firstPickOwner} onChange={(event) => { setFirstPickOwner(event.target.value as DraftFirstPickOwner); setOrderedPicks(Array(6).fill(null)); }}><option value="Aliado">Mi equipo</option><option value="Rival">Equipo rival</option></select></label>
         <label>Política de pool<select value={poolPolicy} onChange={(event) => setPoolPolicy(event.target.value as PoolPolicy)}><option value="Off">No usar pool</option><option value="Preferir">Priorizar mi pool</option><option value="Solo pool">Solo brawlers disponibles</option></select></label>
         <label className="auto-position-toggle"><input type="checkbox" checked={quickMode} onChange={(event) => setQuickMode(event.target.checked)} /><span><b>Modo ultrarrápido</b><small>Pick, línea y build</small></span></label>
+      </div>
+
+      <div className="draft-ban-panel-v51">
+        <BrawlerDraftPicker
+          title="Bans"
+          subtitle="Añade los brawlers bloqueados antes o durante el draft"
+          values={bans}
+          max={6}
+          roster={brawlers}
+          unavailable={selectedNames}
+          tone="ban"
+          onChange={setBans}
+        />
       </div>
 
       <div className="ordered-phase-labels">

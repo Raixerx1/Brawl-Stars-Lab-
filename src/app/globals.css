@@ -226,3 +226,15 @@
 .pool-favorite-button.active{color:var(--yellow);border-color:rgba(255,214,74,.28);background:rgba(255,214,74,.09)}
 @media(max-width:1180px){.ordered-draft-context-v5{grid-template-columns:repeat(3,1fr)}.contextual-build-grid{grid-template-columns:1fr 1fr}.pool-stats-v5{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:760px){.ordered-draft-context-v5,.quick-rec-grid,.contextual-build-grid,.pool-search-row,.pool-stats-v5{grid-template-columns:1fr}.contextual-build-title{grid-template-columns:auto 1fr}.contextual-build-title>strong{grid-column:1/-1}.quick-rec-grid .simple-rec-card:not(:first-child) .simple-rec-brief{display:block}}
+
+
+/* v0.5.1 — Panel de bans */
+.draft-ban-panel-v51{margin:12px 0 14px}
+.draft-ban-panel-v51 .draft-picker{padding:13px;border-radius:15px}
+.draft-ban-panel-v51 .draft-picker-head{margin-bottom:9px}
+.draft-ban-panel-v51 .draft-slots{grid-template-columns:repeat(6,minmax(0,1fr))}
+.draft-ban-panel-v51 .draft-slot{min-height:72px}
+.draft-ban-panel-v51 .draft-slot-avatar{width:36px;height:36px}
+.draft-ban-panel-v51 .draft-search-wrap{margin-top:9px}
+@media(max-width:900px){.draft-ban-panel-v51 .draft-slots{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.draft-ban-panel-v51 .draft-slots{grid-template-columns:repeat(2,1fr)}}
