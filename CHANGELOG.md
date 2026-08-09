@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.8 — Live Review
+
+- Captura local de pantalla o ventana.
+- Vista de vídeo en directo sin subida automática.
+- Cronómetro y marcadores temporales.
+- Atajos de teclado para eventos frecuentes.
+- Captura manual de fotogramas.
+- Resumen postpartida automático basado en eventos.
+- Historial local de revisiones.
+- Exportación JSON.
+- Integración con Aprendizaje personal.
+- Navegación y portada actualizadas.
+
 ## v0.7 — Aprendizaje personal
 
 - Historial de partidas tipado y compatible con registros anteriores.

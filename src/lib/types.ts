@@ -68,7 +68,7 @@ export type PersonalMatch = {
   allies?: string[];
   enemies?: string[];
   note: string;
-  source: "Manual" | "Draft Coach";
+  source: "Manual" | "Draft Coach" | "Live Review";
 };
 
 export type PersonalStat = {
@@ -84,6 +84,41 @@ export type PersonalPerformance = {
   maps: Record<string, PersonalStat>;
   roles: Record<string, PersonalStat>;
   brawlerMaps: Record<string, PersonalStat>;
+};
+
+
+
+export type LiveEventTone = "good" | "bad" | "neutral" | "objective";
+
+export type LiveMatchEvent = {
+  id: string;
+  second: number;
+  label: string;
+  category: string;
+  tone: LiveEventTone;
+  note?: string;
+};
+
+export type LiveReviewSummary = {
+  strengths: string[];
+  mistakes: string[];
+  recommendations: string[];
+  headline: string;
+};
+
+export type LiveReviewSession = {
+  id: string;
+  date: string;
+  mapSlug: string;
+  mapName: string;
+  mode: string;
+  brawler: string;
+  brawlerSlug?: string;
+  result?: MatchResult;
+  duration: number;
+  events: LiveMatchEvent[];
+  note: string;
+  summary: LiveReviewSummary;
 };
 
 export type TacticalBuild = {

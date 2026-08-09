@@ -11,10 +11,10 @@ export default function Home() {
       <div>
         <span className="hero-badge">PARCHE 04/08/2026 · RANKED LAB</span>
         <h1>Gana el draft<br /><em>antes de empezar.</em></h1>
-        <p>Draft vivo, counters, builds contextuales, simulación del rival y recomendaciones personalizadas según tu pool competitivo.</p>
+        <p>Draft vivo, counters, builds contextuales, simulación del rival, Live Review y recomendaciones personalizadas según tu historial.</p>
         <div className="hero-actions">
           <Link href="/draft" className="primary-button">Abrir Draft Assistant</Link>
-          <Link href="/pool" className="secondary-button">Configurar mi pool</Link>
+          <Link href="/live" className="secondary-button">Abrir Live Review</Link>
         </div>
       </div>
       <div className="hero-roster" aria-hidden="true">
@@ -49,10 +49,11 @@ export default function Home() {
     </section>
 
     <div className="section-title spaced"><div><span className="eyebrow">Nuevas herramientas</span><h2>Decide mejor antes y durante el draft</h2></div></div>
-    <div className="feature-grid">
+    <div className="feature-grid feature-grid-v8">
       <Link href="/draft" className="panel feature-card"><b>◎</b><h3>Draft Coach</h3><p>Build, líneas, bans, simulación del siguiente pick y modo ultrarrápido.</p></Link>
+      <Link href="/live" className="panel feature-card"><b>▶</b><h3>Live Review</h3><p>Comparte la ventana de la partida, marca eventos y genera una revisión postpartida local.</p></Link>
       <Link href="/pool" className="panel feature-card"><b>◉</b><h3>Mi pool</h3><p>Prioriza fuerza 11, hipercargas y los brawlers que realmente dominas.</p></Link>
-      <Link href="/compare" className="panel feature-card"><b>≍</b><h3>Comparador</h3><p>Compara first pick, carry, counters compartidos y amenazas comunes.</p></Link>
+      <Link href="/tracker" className="panel feature-card"><b>▥</b><h3>Aprendizaje</h3><p>Convierte resultados y Live Reviews en ajustes personales moderados del Draft Coach.</p></Link>
     </div>
   </div>;
 }

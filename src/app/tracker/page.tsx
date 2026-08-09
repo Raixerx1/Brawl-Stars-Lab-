@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Aprendizaje personal" };
 
 export default function TrackerPage() {
   return <div className="page">
-    <div className="page-heading"><span className="eyebrow">Draft Coach v0.7</span><h1>Aprendizaje personal</h1><p>Registra resultados para que las recomendaciones se adapten gradualmente a tus mejores brawlers, roles y mapas. Los datos permanecen en tu dispositivo.</p></div>
+    <div className="page-heading"><span className="eyebrow">Draft Coach v0.8</span><h1>Aprendizaje personal</h1><p>Registra resultados manualmente o desde Live Review para que las recomendaciones se adapten gradualmente a tus mejores brawlers, roles y mapas. Los datos permanecen en tu dispositivo.</p></div>
     <MatchTracker maps={maps} brawlers={brawlers} />
   </div>;
 }

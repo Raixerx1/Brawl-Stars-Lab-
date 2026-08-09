@@ -53,7 +53,10 @@ export function normalizeMatchHistory(
       allies: Array.isArray(value.allies) ? value.allies : [],
       enemies: Array.isArray(value.enemies) ? value.enemies : [],
       note: value.note || "",
-      source: value.source === "Draft Coach" ? "Draft Coach" : "Manual",
+      source:
+        value.source === "Draft Coach" ? "Draft Coach" :
+        value.source === "Live Review" ? "Live Review" :
+        "Manual",
     }];
   });
 }

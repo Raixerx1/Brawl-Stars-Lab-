@@ -1,6 +1,30 @@
-# Brawl Draft Lab v0.7
+# Brawl Draft Lab v0.8
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.8
+
+- Nueva sección **Live Review**.
+- Captura local de una pantalla, ventana o pestaña mediante el selector del navegador.
+- La aplicación no graba ni sube automáticamente el vídeo.
+- Cronómetro sincronizado con la sesión.
+- Marcadores rápidos con atajos de teclado:
+  - eliminaciones y muertes;
+  - rotaciones y sobreextensiones;
+  - cambios de línea y matchups;
+  - supers e hipercargas;
+  - objetivo ganado o perdido.
+- Cronología editable con el segundo exacto de cada evento.
+- Captura manual de fotogramas como imagen.
+- Resumen postpartida determinista con fortalezas, errores y próximo foco.
+- Guardado local de hasta 50 Live Reviews.
+- Exportación de la revisión en JSON.
+- Envío directo del resultado al sistema de Aprendizaje personal.
+- Nueva fuente de historial: **Live Review**.
+
+### Límites de Live Review
+
+La v0.8 no interpreta automáticamente todos los píxeles ni reconoce por sí sola cada acción del juego. La pantalla compartida se utiliza como referencia visual local y el análisis se construye con los marcadores que registras durante la partida. Esto evita grabar o enviar el vídeo y mantiene la sesión ligera.
 
 ## Novedades v0.7
 
