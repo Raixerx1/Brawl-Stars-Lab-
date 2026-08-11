@@ -99,7 +99,7 @@ export default function LiveMatchAnalyzer({
   const voiceCommentsRef = useRef(false);
   const feedbackProfileRef = useRef<AutoFeedbackProfile>({});
   const emittedSequenceKeysRef = useRef(new Set<string>());
-  const lastMotionAtRef = useRef(Date.now());
+  const lastMotionAtRef = useRef(0);
 
   const [status, setStatus] = useState<CaptureStatus>("idle");
   const [elapsed, setElapsed] = useState(0);
@@ -417,453 +417,21 @@ export default function LiveMatchAnalyzer({
     if (!context) return null;
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     const dataUrl = canvas.toDataURL("image/jpeg", .86);
-    setLastFrame(dataUrl);
-
-    if (download) {
-      const anchor = document.createElement("a");
-      anchor.href = dataUrl;
-      anchor.download = `brawl-live-${formatLiveTime(elapsed).replace(":", "-")}.jpg`;
-      anchor.click();
-      setMessage("Fotograma guardado en el dispositivo");
-    }
-    return dataUrl;
-  };
-
-  const finishCapture = () => {
-    captureFrame(false);
-    streamRef.current?.getTracks().forEach((track) => track.stop());
-    streamRef.current = null;
-    setStreamHealth("EstÃ¡tica");
-    setAutoStatus("paused");
-    setStatus("review");
-    setMessage("Captura finalizada; revisa los eventos automÃ¡ticos antes de guardar");
-  };
-
-  const startCapture = async () => {
-    setMessage("");
-    setSavedToLearning(false);
-    setLastFrame(null);
-
-    if (!navigator.mediaDevices?.getDisplayMedia) {
-      setMessage("Este navegador no permite compartir pantalla desde la web. Prueba Chrome o Edge en ordenador.");
-      return;
-    }
-
-    try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: {
-          frameRate: { ideal: 30, max: 60 },
-        },
-        audio: false,
-      });
-
-      streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        await videoRef.current.play();
-      }
-
-      const track = stream.getVideoTracks()[0];
-      track.addEventListener("ended", () => {
-        captureFrame(false);
-        streamRef.current = null;
-        setStreamHealth("EstÃ¡tica");
-        setAutoStatus("paused");
-        setStatus("review");
-        setMessage("El navegador ha detenido la pantalla compartida");
-      });
-
-      startedAtRef.current = Date.now();
-      elapsedRef.current = 0;
-      detectorStateRef.current = createAutoDetectorState();
-      emittedSequenceKeysRef.current = new Set<string>();
-      lastMotionAtRef.current = Date.now();
-      setStreamHealth("Calibrando");
-      setElapsed(0);
-      setEvents([]);
-      setAutoComments([]);
-      setCalibration(0);
-      setLastMetrics(null);
-      setNote("");
-      setAutoStatus(autoAnalysis ? "calibrating" : "paused");
-      setStatus("sharing");
-    } catch (error) {
-      const name = error instanceof DOMException ? error.name : "";
-      setMessage(name === "NotAllowedError"
-        ? "No se concediÃ³ permiso para compartir la pantalla"
-        : "No se pudo iniciar la captura de pantalla");
-    }
-  };
-
-  const resetSession = () => {
-    streamRef.current?.getTracks().forEach((track) => track.stop());
-    streamRef.current = null;
-    startedAtRef.current = null;
-    if (videoRef.current) videoRef.current.srcObject = null;
-    setStatus("idle");
-    setAutoStatus("idle");
-    setElapsed(0);
-    elapsedRef.current = 0;
-    detectorStateRef.current = createAutoDetectorState();
-    emittedSequenceKeysRef.current = new Set<string>();
-    setStreamHealth("Calibrando");
-    setEvents([]);
-    setAutoComments([]);
-    setCalibration(0);
-    setLastMetrics(null);
-    setNote("");
-    setCustomEvent("");
-    setLastFrame(null);
-    setSavedToLearning(false);
-    if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
-    setMessage("");
-  };
-
-  const addEvent = (template: EventTemplate) => {
-    setEvents((current) => [...current, {
-      id: crypto.randomUUID(),
-      second: elapsed,
-      label: template.label,
-      category: template.category,
-      tone: template.tone,
-      source: "Manual",
-    }]);
-  };
-
-  const addCustomEvent = () => {
-    const value = customEvent.trim();
-    if (!value) return;
-    setEvents((current) => [...current, {
-      id: crypto.randomUUID(),
-      second: elapsed,
-      label: value,
-      category: "Nota",
-      tone: "neutral",
-      source: "Manual",
-    }]);
-    setCustomEvent("");
-  };
-
-  const removeEvent = (id: string) => {
-    const target = events.find((event) => event.id === id);
-    setEvents((current) => current.filter((event) => event.id !== id));
-    if (target?.source === "Auto") {
-      setAutoComments((current) => current.filter(
-        (comment) => !(comment.second === target.second && comment.eventLabel === target.label),
-      ));
-    }
-  };
-
-  const reviewAutoComment = (
-    comment: AutoLiveComment,
-    verdict: AutoFeedbackVerdict,
-  ) => {
-    if (comment.feedback) return;
-    const key = comment.autoKey || comment.eventLabel || "unknown";
-    const nextProfile = registerAutoFeedback(feedbackProfileRef.current, key, verdict);
-    feedbackProfileRef.current = nextProfile;
-    setFeedbackProfile(nextProfile);
-    saveAutoFeedback(nextProfile);
-
-    setAutoComments((current) => current.map((item) =>
-      item.id === comment.id ? { ...item, feedback: verdict } : item
-    ));
-
-    setEvents((current) => current.flatMap((event) => {
-      const associated =
-        event.source === "Auto" &&
-        event.second === comment.second &&
-        event.label === comment.eventLabel;
-      if (!associated) return [event];
-      if (verdict === "rejected") return [];
-      return [{ ...event, feedback: verdict }];
-    }));
-
-    setMessage(verdict === "accepted"
-      ? "DetecciÃ³n confirmada; se tendrÃ¡ en cuenta en futuras sesiones"
-      : "Falso positivo registrado y eliminado del resumen");
-  };
-
-  const currentSession = (): LiveReviewSession | null => {
-    if (!selectedMap || !selectedBrawler) return null;
-    const sessionAccepted = autoComments.filter((comment) => comment.feedback === "accepted").length;
-    const sessionRejected = autoComments.filter((comment) => comment.feedback === "rejected").length;
-    return {
-      id: crypto.randomUUID(),
-      date: new Date().toISOString(),
-      mapSlug: selectedMap.slug,
-      mapName: selectedMap.name,
-      mode: selectedMap.mode,
-      brawler: selectedBrawler.name,
-      brawlerSlug: selectedBrawler.slug,
-      result,
-      duration: elapsed,
-      events,
-      comments: autoComments,
-      autoAnalysis: {
-        enabled: autoAnalysis,
-        sensitivity: autoSensitivity,
-        detections: events.filter((event) => event.source === "Auto").length,
-        accepted: sessionAccepted,
-        rejected: sessionRejected,
-        sequenceInsights: events.filter((event) => Boolean(event.sequenceKey)).length,
-      },
-      note,
-      summary,
-    };
-  };
-
-  const saveSession = () => {
-    const session = currentSession();
-    if (!session) return;
-    const next = [session, ...sessions].slice(0, 50);
-    setSessions(next);
-    saveLiveReviews(next);
-    setMessage("Live Review guardado localmente");
-  };
-
-  const saveToLearning = () => {
-    const session = currentSession();
-    if (!session || !selectedMap || !selectedBrawler) return;
-    const matches = readMatchHistory(maps, brawlers);
-    const reviewNote = [
-      summary.headline,
-      summary.recommendations[0],
-      note.trim(),
-    ].filter(Boolean).join(" Â· ");
-
-    const match: PersonalMatch = {
-      id: crypto.randomUUID(),
-      date: new Date().toISOString(),
-      mapSlug: selectedMap.slug,
-      mapName: selectedMap.name,
-      mode: selectedMap.mode,
-      brawler: selectedBrawler.name,
-      brawlerSlug: selectedBrawler.slug,
-      role: selectedBrawler.role,
-      result,
-      draftPosition: "Pick intermedio",
-      allies: [],
-      enemies: [],
-      note: reviewNote,
-      source: "Live Review",
-    };
-    saveMatchHistory([match, ...matches].slice(0, 300));
-    setSavedToLearning(true);
-    setMessage("Resultado aÃ±adido al aprendizaje personal");
-  };
-
-  const exportCurrent = () => {
-    const session = currentSession();
-    if (!session) return;
-    downloadJson("brawl-live-review.json", session);
-    setMessage("Live Review exportado");
-  };
-
-  const removeSession = (id: string) => {
-    const next = sessions.filter((session) => session.id !== id);
-    setSessions(next);
-    saveLiveReviews(next);
-  };
-
-  const autoEventCount = events.filter((event) => event.source === "Auto").length;
-  const sequenceInsightCount = events.filter((event) => Boolean(event.sequenceKey)).length;
-  const learnedFeedback = feedbackSummary(feedbackProfile);
-  const unreviewedComments = autoComments.filter((comment) => !comment.feedback);
-  const latestAutoComment = unreviewedComments[0] || autoComments[0];
-  const historyComments = autoComments
-    .filter((comment) => comment.id !== latestAutoComment?.id)
-    .slice(0, 8);
-  const autoStatusText =
-    autoStatus === "calibrating" ? `Calibrando ${calibration}%` :
-    autoStatus === "active" ? "Analizando fotogramas" :
-    autoStatus === "paused" ? "AnÃ¡lisis pausado" :
-    "Preparado";
-  const motionLevel = lastMetrics ? Math.round(lastMetrics.motion * 100) : 0;
-
-  return <div className="live-review-v8 live-review-v9 live-review-v10">
-    <canvas ref={analysisCanvasRef} className="auto-analysis-canvas" aria-hidden="true" />
-    {message && <div className="draft-toast">{message}</div>}
-
-    <section className="panel live-setup-v8">
-      <div className="section-title">
-        <div><span className="eyebrow">Auto Review Beta v0.13</span><h2>Preparar sesiÃ³n</h2></div>
-        <span className={`live-privacy-chip ${status}`}>{status === "sharing" ? `â— ${autoStatusText}` : "Procesamiento local"}</span>
-      </div>
-
-      <div className="live-setup-grid">
-        <label>Mapa<select value={mapSlug} disabled={status === "sharing"} onChange={(event) => setMapSlug(event.target.value)}>
-          {maps.map((map) => <option value={map.slug} key={map.slug}>{map.mode} Â· {map.name}</option>)}
-        </select></label>
-        <label>Tu brawler<select value={brawlerName} disabled={status === "sharing"} onChange={(event) => setBrawlerName(event.target.value)}>
-          {brawlers.map((brawler) => <option value={brawler.name} key={brawler.slug}>{brawler.name} Â· {brawler.role}</option>)}
-        </select></label>
-        <label>Resultado<select value={result} onChange={(event) => setResult(event.target.value as MatchResult)}>
-          <option>Victoria</option><option>Derrota</option>
-        </select></label>
-      </div>
-
-      <div className="auto-review-controls-v9">
-        <label className="auto-review-toggle">
-          <input type="checkbox" checked={autoAnalysis} onChange={(event) => setAutoAnalysis(event.target.checked)} />
-          <span><b>DetecciÃ³n automÃ¡tica</b><small>Analiza fotogramas localmente cada 650 ms</small></span>
-        </label>
-        <label>Sensibilidad<select value={autoSensitivity} onChange={(event) => setAutoSensitivity(event.target.value as AutoReviewSensitivity)}>
-          <option>Baja</option><option>Media</option><option>Alta</option>
-        </select></label>
-        <label className="auto-review-toggle">
-          <input type="checkbox" checked={voiceComments} onChange={(event) => setVoiceComments(event.target.checked)} />
-          <span><b>Comentarios por voz</b><small>Solo detecciones con confianza suficiente</small></span>
-        </label>
-        <div className={`auto-review-status status-${autoStatus}`}>
-          <span>{autoStatusText}</span>
-          <b>{status === "sharing" ? `Captura ${streamHealth.toLowerCase()}` : "Captura no iniciada"}</b>
-          <small>{autoEventCount} eventos Â· movimiento {motionLevel}%</small>
-        </div>
-      </div>
-
-      <div className="auto-learning-strip-v10">
-        <span><b>{unreviewedComments.length}</b> pendientes</span>
-        <span><b>{learnedFeedback.accepted}</b> correctas</span>
-        <span><b>{learnedFeedback.rejected}</b> falsas</span>
-        <span><b>{learnedFeedback.precision ?? "â€”"}{learnedFeedback.precision !== undefined ? "%" : ""}</b> precisiÃ³n revisada</span>
-        <span><b>{sequenceInsightCount}</b> secuencias</span>
-      </div>
-
-      <div className="live-main-actions">
-        {status === "idle" && <button type="button" className="primary-button" onClick={startCapture} disabled={!captureSupported}>Compartir pantalla o ventana</button>}
-        {status === "sharing" && <button type="button" className="live-stop-button" onClick={finishCapture}>Detener captura</button>}
-        {status === "sharing" && autoAnalysis && <button type="button" className="secondary-button" onClick={recalibrateAutoReview}>Recalibrar</button>}
-        {learnedFeedback.reviewed > 0 && <button type="button" className="secondary-button" onClick={resetAutoLearning}>Restaurar aprendizaje visual</button>}
-        {status !== "idle" && <button type="button" className="secondary-button" onClick={() => captureFrame(true)}>Guardar fotograma</button>}
-        {status !== "idle" && <button type="button" className="secondary-button" onClick={resetSession}>Nueva sesiÃ³n</button>}
-      </div>
-      <p className="live-privacy-note">La imagen y el anÃ¡lisis de fotogramas permanecen en tu navegador. La aplicaciÃ³n no graba ni envÃ­a automÃ¡ticamente el vÃ­deo. Las detecciones son heurÃ­sticas: revisa y elimina los falsos positivos antes de guardar.</p>
-    </section>
-
-    <section className="live-workspace-v8">
-      <article className="panel live-video-panel">
-        <div className="live-video-head">
-          <div><span className="eyebrow">Vista en directo</span><h2>{selectedMap?.name || "Partida"}</h2></div>
-          <strong>{formatLiveTime(elapsed)}</strong>
-        </div>
-        <div className={`live-video-frame ${status}`}>
-          <video ref={videoRef} muted playsInline />
-          {status !== "sharing" && lastFrame && <img src={lastFrame} alt="Ãšltimo fotograma de la sesiÃ³n" />}
-          {status === "idle" && <div className="live-video-placeholder">
-            <b>Comparte Brawl Stars, un emulador o la ventana donde duplicas el mÃ³vil</b>
-            <span>El navegador te permitirÃ¡ elegir una pantalla, ventana o pestaÃ±a.</span>
-          </div>}
-          {status === "review" && !lastFrame && <div className="live-video-placeholder"><b>Captura finalizada</b><span>Revisa la cronologÃ­a y guarda el resultado.</span></div>}
-          {status === "sharing" && <span className="live-recording-dot">LIVE</span>}
-          {status === "sharing" && autoAnalysis && <span className={`auto-vision-badge ${autoStatus}`}>{autoStatusText}</span>}
-        </div>
-      </article>
-
-      <article className="panel live-events-panel">
-        <div className="live-events-head">
-          <div><span className="eyebrow">Marcadores rÃ¡pidos</span><h2>{events.length} eventos</h2></div>
-          {events.length > 0 && <button type="button" onClick={() => setEvents((current) => current.slice(0, -1))}>Deshacer Ãºltimo</button>}
-        </div>
-        <div className="live-event-buttons">
-          {EVENT_TEMPLATES.map((template) => <button
-            type="button"
-            className={`tone-${template.tone}`}
-            key={template.label}
-            onClick={() => addEvent(template)}
-            disabled={status === "idle"}
-            title={`Atajo: ${template.shortcut}`}
-          >
-            <b>{template.label}</b><small>{template.shortcut}</small>
-          </button>)}
-        </div>
-        <div className="live-custom-event">
-          <input value={customEvent} disabled={status === "idle"} onChange={(event) => setCustomEvent(event.target.value)} onKeyDown={(event) => {
-            if (event.key === "Enter") addCustomEvent();
-          }} placeholder="AÃ±adir una nota rÃ¡pidaâ€¦" />
-          <button type="button" onClick={addCustomEvent} disabled={!customEvent.trim()}>AÃ±adir</button>
-        </div>
-      </article>
-    </section>
-
-    <section className="panel auto-comments-panel-v9">
-      <div className="section-title">
-        <div><span className="eyebrow">Coach automÃ¡tico</span><h2>Comentarios generados en directo</h2></div>
-        <span>{unreviewedComments.length} pendientes Â· {autoComments.length} totales</span>
-      </div>
-
-      {latestAutoComment ? <div className={`auto-latest-comment tone-${latestAutoComment.tone} feedback-${latestAutoComment.feedback || "pending"}`}>
-        <div>
-          <span>{formatLiveTime(latestAutoComment.second)} Â· confianza {latestAutoComment.confidence}% Â· {latestAutoComment.kind === "sequence" ? "secuencia tÃ¡ctica" : "fotograma"}</span>
-          <b>{latestAutoComment.text}</b>
-        </div>
-        {latestAutoComment.feedback ? <strong className={`feedback-result ${latestAutoComment.feedback}`}>
-          {latestAutoComment.feedback === "accepted" ? "âœ“ Correcto" : "Ã— Falso positivo"}
-        </strong> : <div className="auto-feedback-actions">
-          <button type="button" className="accept" onClick={() => reviewAutoComment(latestAutoComment, "accepted")}>Correcto</button>
-          <button type="button" className="reject" onClick={() => reviewAutoComment(latestAutoComment, "rejected")}>Falso</button>
-        </div>}
-      </div> : <div className="auto-comment-empty">
-        <b>{autoStatus === "calibrating" ? `Calibrando la imagen: ${calibration}%` : autoAnalysis ? "Esperando un cambio relevante" : "DetecciÃ³n automÃ¡tica desactivada"}</b>
-        <span>El sistema analiza fotogramas y combina eventos cercanos para detectar muertes con coste, supers sin conversiÃ³n y reentradas demasiado rÃ¡pidas.</span>
-      </div>}
-
-      {historyComments.length > 0 && <div className="auto-comment-history">
-        {historyComments.map((comment) => <article className={`tone-${comment.tone} feedback-${comment.feedback || "pending"}`} key={comment.id}>
-          <time>{formatLiveTime(comment.second)}</time>
-          <div><b>{comment.text}</b><small>{comment.eventLabel || "Comentario"} Â· {comment.confidence}% Â· {comment.kind === "sequence" ? "Secuencia" : "Frame"}</small></div>
-          {comment.feedback ? <span className={`feedback-mini ${comment.feedback}`}>{comment.feedback === "accepted" ? "âœ“" : "Ã—"}</span> : <div className="auto-feedback-mini-actions">
-            <button type="button" onClick={() => reviewAutoComment(comment, "accepted")} aria-label="Marcar detecciÃ³n correcta">âœ“</button>
-            <button type="button" onClick={() => reviewAutoComment(comment, "rejected")} aria-label="Marcar falso positivo">Ã—</button>
-          </div>}
-        </article>)}
-      </div>}
-    </section>
-
-    <section className="panel live-timeline-panel">
-      <div className="section-title"><div><span className="eyebrow">CronologÃ­a</span><h2>Momentos de la partida</h2></div><span>{formatLiveTime(elapsed)}</span></div>
-      <div className="live-timeline-list">
-        {events.length ? [...events].reverse().map((event) => <article className={`tone-${event.tone}`} key={event.id}>
-          <time>{formatLiveTime(event.second)}</time>
-          <div><b>{event.label}</b><small>{event.category}{event.source === "Auto" ? ` Â· Auto ${event.confidence || 0}%${event.sequenceKey ? " Â· Secuencia" : ""}${event.feedback === "accepted" ? " Â· Confirmado" : ""}` : " Â· Manual"}</small></div>
-          <button type="button" onClick={() => removeEvent(event.id)} aria-label={`Eliminar ${event.label}`}>Ã—</button>
-        </article>) : <div className="empty-state">Los marcadores aparecerÃ¡n aquÃ­ con el segundo exacto de la sesiÃ³n.</div>}
-      </div>
-    </section>
-
-    <section className="live-review-grid-v8">
-      <article className="panel live-summary-panel">
-        <span className="eyebrow">Resumen automÃ¡tico</span>
-        <h2>{summary.headline}</h2>
-        <div className="live-summary-columns">
-          <div><b>Fortalezas</b>{summary.strengths.length ? summary.strengths.map((item) => <span className="good" key={item}>+ {item}</span>) : <small>Sin fortalezas suficientes registradas.</small>}</div>
-          <div><b>Errores</b>{summary.mistakes.length ? summary.mistakes.map((item) => <span className="bad" key={item}>âˆ’ {item}</span>) : <small>Sin errores especÃ­ficos registrados.</small>}</div>
-          <div><b>PrÃ³ximo foco</b>{summary.recommendations.map((item) => <span key={item}>â†’ {item}</span>)}</div>
-        </div>
-      </article>
-
-      <article className="panel live-save-panel">
-        <span className="eyebrow">Cerrar revisiÃ³n</span>
-        <h2>Guardar y aprender</h2>
-        <label>Nota final<textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="QuÃ© ocurriÃ³ en la primera muerte, por quÃ© cambiaste de lÃ­nea, quÃ© debes repetirâ€¦" /></label>
-        <div className="live-save-actions">
-          <button type="button" className="primary-button" onClick={saveSession}>Guardar Live Review</button>
-          <button type="button" className="secondary-button" onClick={saveToLearning} disabled={savedToLearning}>{savedToLearning ? "AÃ±adido al aprendizaje" : "Enviar a Aprendizaje"}</button>
-          <button type="button" className="secondary-button" onClick={exportCurrent}>Exportar JSON</button>
-        </div>
-      </article>
-    </section>
-
-    <section className="panel live-history-panel">
-      <div className="section-title"><div><span className="eyebrow">Historial local</span><h2>Ãšltimas revisiones</h2></div><span>{sessions.length}/50</span></div>
-      <div className="live-session-list">
-        {sessions.slice(0, 10).map((session) => <article key={session.id}>
-          <BrawlerPortrait name={session.brawler} className="live-history-avatar" />
-          <div><b>{session.brawler} Â· {session.mapName}</b><small>{session.result || "Sin resultado"} Â· {formatLiveTime(session.duration)} Â· {session.events.length} eventos{session.autoAnalysis?.detections ? ` Â· ${session.autoAnalysis.detections} auto` : ""}{session.autoAnalysis?.sequenceInsights ? ` Â· ${session.autoAnalysis.sequenceInsights} secuencias` : ""}</small><p>{session.summary.headline}</p></div>
-          <button type="button" onClick={() => removeSession(session.id)} aria-label={`Eliminar revisiÃ³n de ${session.brawler}`}>Ã—</button>
-        </article>)}
-        {!sessions.length && <div className="empty-state">Las revisiones guardadas aparecerÃ¡n aquÃ­ y permanecerÃ¡n en este dispositivo.</div>}
-      </div>
-    </section>
-  </div>;
-}
+    setLastFrame(dataUrl);Ûo6¶‰ËkºwµçQ èA•ÉÍ½¹…±5…Ñ €ôì(€€€€€¥èÉåÁÑ¼¹É…¹‘½µUU% ¤°(€€€€€‘…Ñ”è¹•Ü…Ñ” ¤¹Ñ½%M=MÑÉ¥¹œ ¤°(€€€€€µ…ÁM±ÕœèÍ•±•Ñ•‘5…À¹Í±Õœ°(€€€€€µ…Á9…µ”èÍ•±•Ñ•‘5…À¹¹…µ”°(€€€€€µ½‘”èÍ•±•Ñ•‘5…À¹µ½‘”°(€€€€€‰É…İ±•ÈèÍ•±•Ñ•‘	É…İ±•È¹¹…µ”°(€€€€€‰É…İ±•ÉM±ÕœèÍ•±•Ñ•‘	É…İ±•È¹Í±Õœ°(€€€€€É½±”èÍ•±•Ñ•‘	É…İ±•È¹É½±”°(€€€€€É•ÍÕ±Ğ°(€€€€€‘É…™ÑA½Í¥Ñ¥½¸è€‰A¥¬¥¹Ñ•Éµ•‘¥¼ˆ°(€€€€€…±±¥•Ìèmt°(€€€€€•¹•µ¥•Ìèmt°(€€€€€¹½Ñ”èÉ•Ù¥•İ9½Ñ”°(€€€€€Í½ÕÉ”è€‰1¥Ù”I•Ù¥•Üˆ°(€€€ôì(€€€Í…Ù•5…Ñ¡!¥ÍÑ½Éä¡mµ…Ñ °€¸¸¹µ…Ñ¡•Ít¹Í±¥” À°€ÌÀÀ¤¤ì(€€€Í•ÑM…Ù•‘Q½1•…É¹¥¹œ¡ÑÉÕ”¤ì(€€€Í•Ñ5•ÍÍ…” ‰I•ÍÕ±Ñ…‘¼‡Å…‘¥‘¼…°…ÁÉ•¹‘¥é…©”Á•ÉÍ½¹…°ˆ¤ì(€ôì((€½¹ÍĞ•áÁ½ÉÑÕÉÉ•¹Ğ€ô€ ¤€ôøì(€€€½¹ÍĞÍ•ÍÍ¥½¸€ôÕÉÉ•¹ÑM•ÍÍ¥½¸ ¤ì(€€€¥˜€ …Í•ÍÍ¥½¸¤É•ÑÕÉ¸ì(€€€‘½İ¹±½…‘)Í½¸ ‰‰É…İ°µ±¥Ù”µÉ•Ù¥•Ü¹©Í½¸ˆ°Í•ÍÍ¥½¸¤ì(€€€Í•Ñ5•ÍÍ…” ‰1¥Ù”I•Ù¥•Ü•áÁ½ÉÑ…‘¼ˆ¤ì(€ôì((€½¹ÍĞÉ•µ½Ù•M•ÍÍ¥½¸€ô€¡¥èÍÑÉ¥¹œ¤€ôøì(€€€½¹ÍĞ¹•áĞ€ôÍ•ÍÍ¥½¹Ì¹™¥±Ñ•È ¡Í•ÍÍ¥½¸¤€ôøÍ•ÍÍ¥½¸¹¥€„ôô¥¤ì(€€€Í•ÑM•ÍÍ¥½¹Ì¡¹•áĞ¤ì(€€€Í…Ù•1¥Ù•I•Ù¥•İÌ¡¹•áĞ¤ì(€ôì((€½¹ÍĞ…ÕÑ½Ù•¹Ñ½Õ¹Ğ€ô•Ù•¹ÑÌ¹™¥±Ñ•È ¡•Ù•¹Ğ¤€ôø•Ù•¹Ğ¹Í½ÕÉ”€ôôô€‰ÕÑ¼ˆ¤¹±•¹Ñ ì(€½¹ÍĞÍ•ÅÕ•¹•%¹Í¥¡Ñ½Õ¹Ğ€ô•Ù•¹ÑÌ¹™¥±Ñ•È ¡•Ù•¹Ğ¤€ôø	½½±•…¸¡•Ù•¹Ğ¹Í•ÅÕ•¹•-•ä¤¤¹±•¹Ñ ì(€½¹ÍĞ±•…É¹•‘••‘‰…¬€ô™••‘‰…­MÕµµ…Éä¡™••‘‰…­AÉ½™¥±”¤ì(€½¹ÍĞÕ¹É•Ù¥•İ•‘½µµ•¹ÑÌ€ô…ÕÑ½½µµ•¹ÑÌ¹™¥±Ñ•È ¡½µµ•¹Ğ¤€ôø€…½µµ•¹Ğ¹™••‘‰…¬¤ì(€½¹ÍĞ±…Ñ•ÍÑÕÑ½½µµ•¹Ğ€ôÕ¹É•Ù¥•İ•‘½µµ•¹ÑÍlÁtñğ…ÕÑ½½µµ•¹ÑÍlÁtì(€½¹ÍĞ¡¥ÍÑ½Éå½µµ•¹ÑÌ€ô…ÕÑ½½µµ•¹ÑÌ(€€€€¹™¥±Ñ•È ¡½µµ•¹Ğ¤€ôø½µµ•¹Ğ¹¥€„ôô±…Ñ•ÍÑÕÑ½½µµ•¹Ğü¹¥¤(€€€€¹Í±¥” À°€à¤ì(€½¹ÍĞ…ÕÑ½MÑ…ÑÕÍQ•áĞ€ô(€€€…ÕÑ½MÑ…ÑÕÌ€ôôô€‰…±¥‰É…Ñ¥¹œˆ€ü…±¥‰É…¹‘¼€‘í…±¥‰É…Ñ¥½¹ô•€€è(€€€…ÕÑ½MÑ…ÑÕÌ€ôôô€‰…Ñ¥Ù”ˆ€ü€‰¹…±¥é…¹‘¼™½Ñ½É…µ…Ìˆ€è(€€€…ÕÑ½MÑ…ÑÕÌ€ôôô€‰Á…ÕÍ•ˆ€ü€‰»…±¥Í¥ÌÁ…ÕÍ…‘¼ˆ€è(€€€€‰AÉ•Á…É…‘¼ˆì(€½¹ÍĞµ½Ñ¥½¹1•Ù•°€ô±…ÍÑ5•ÑÉ¥Ì€ü5…Ñ ¹É½Õ¹¡±…ÍÑ5•ÑÉ¥Ì¹µ½Ñ¥½¸€¨€ÄÀÀ¤€è€Àì((€É•ÑÕÉ¸€ñ‘¥Ø±…ÍÍ9…µ”ô‰±¥Ù”µÉ•Ù¥•ÜµØà±¥Ù”µÉ•Ù¥•ÜµØä±¥Ù”µÉ•Ù¥•ÜµØÄÀˆø(€€€€ñ…¹Ù…ÌÉ•˜õí…¹…±åÍ¥Í…¹Ù…ÍI•™ô±…ÍÍ9…µ”ô‰…ÕÑ¼µ…¹…±åÍ¥Ìµ…¹Ù…Ìˆ…É¥„µ¡¥‘‘•¸ô‰ÑÉÕ”ˆ€¼ø(€€€íµ•ÍÍ…”€˜˜€ñ‘¥Ø±…ÍÍ9…µ”ô‰‘É…™ĞµÑ½…ÍĞˆùíµ•ÍÍ…•ôğ½‘¥Øùô((€€€€ñÍ•Ñ¥½¸±…ÍÍ9…µ”ô‰Á…¹•°±¥Ù”µÍ•ÑÕÀµØàˆø(€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰Í•Ñ¥½¸µÑ¥Ñ±”ˆø(€€€€€€€€ñ‘¥ØøñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½ÜˆùÕÑ¼I•Ù¥•Ü	•Ñ„ØÀ¸ÄĞğ½ÍÁ…¸øñ ÈùAÉ•Á…É…ÈÍ•Í§Í¸ğ½ Èøğ½‘¥Øø(€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”õí±¥Ù”µÁÉ¥Ù…äµ¡¥À€‘íÍÑ…ÑÕÍõôùíÍÑ…ÑÕÌ€ôôô€‰Í¡…É¥¹œˆ€üƒŠ^<€‘í…ÕÑ½MÑ…ÑÕÍQ•áÑõ€€è€‰AÉ½•Í…µ¥•¹Ñ¼±½…°‰ôğ½ÍÁ…¸ø(€€€€€€ğ½‘¥Øø((€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰±¥Ù”µÍ•ÑÕÀµÉ¥ˆø(€€€€€€€€ñ±…‰•°ù5…Á„ñÍ•±•ĞÙ…±Õ”õíµ…ÁM±Õô‘¥Í…‰±•õíÍÑ…ÑÕÌ€ôôô€‰Í¡…É¥¹œ‰ô½¹¡…¹”õì¡•Ù•¹Ğ¤€ôøÍ•Ñ5…ÁM±Õœ¡•Ù•¹Ğ¹Ñ…É•Ğ¹Ù…±Õ”¥ôø(€€€€€€€€€íµ…ÁÌ¹µ…À ¡µ…À¤€ôø€ñ½ÁÑ¥½¸Ù…±Õ”õíµ…À¹Í±Õô­•äõíµ…À¹Í±Õôùíµ…À¹µ½‘•ôƒ
+Üíµ…À¹¹…µ•ôğ½½ÁÑ¥½¸ø¥ô(€€€€€€€€ğ½Í•±•Ğøğ½±…‰•°ø(€€€€€€€€ñ±…‰•°ùQÔ‰É…İ±•ÈñÍ•±•ĞÙ…±Õ”õí‰É…İ±•É9…µ•ô‘¥Í…‰±•õíÍÑ…ÑÕÌ€ôôô€‰Í¡…É¥¹œ‰ô½¹¡…¹”õì¡•Ù•¹Ğ¤€ôøÍ•Ñ	É…İ±•É9…µ”¡•Ù•¹Ğ¹Ñ…É•Ğ¹Ù…±Õ”¥ôø(€€€€€€€€€í‰É…İ±•ÉÌ¹µ…À ¡‰É…İ±•È¤€ôø€ñ½ÁÑ¥½¸Ù…±Õ”õí‰É…İ±•È¹¹…µ•ô­•äõí‰É…İ±•È¹Í±Õôùí‰É…İ±•È¹¹…µ•ôƒ
+Üí‰É…İ±•È¹É½±•ôğ½½ÁÑ¥½¸ø¥ô(€€€€€€€€ğ½Í•±•Ğøğ½±…‰•°ø(€€€€€€€€ñ±…‰•°ùI•ÍÕ±Ñ…‘¼ñÍ•±•ĞÙ…±Õ”õíÉ•ÍÕ±Ñô½¹¡…¹”õì¡•Ù•¹Ğ¤€ôøÍ•ÑI•ÍÕ±Ğ¡•Ù•¹Ğ¹Ñ…É•Ğ¹Ù…±Õ”…Ì5…Ñ¡I•ÍÕ±Ğ¥ôø(€€€€€€€€€€ñ½ÁÑ¥½¸ùY¥Ñ½É¥„ğ½½ÁÑ¥½¸øñ½ÁÑ¥½¸ù•ÉÉ½Ñ„ğ½½ÁÑ¥½¸ø(€€€€€€€€ğ½Í•±•Ğøğ½±…‰•°ø(€€€€€€ğ½‘¥Øø((€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰…ÕÑ¼µÉ•Ù¥•Üµ½¹ÑÉ½±ÌµØäˆø(€€€€€€€€ñ±…‰•°±…ÍÍ9…µ”ô‰…ÕÑ¼µÉ•Ù¥•ÜµÑ½±”ˆø(€€€€€€€€€€ñ¥¹ÁÕĞÑåÁ”ô‰¡•­‰½àˆ¡•­•õí…ÕÑ½¹…±åÍ¥Íô½¹¡…¹”õì¡•Ù•¹Ğ¤€ôøÍ•ÑÕÑ½¹…±åÍ¥Ì¡•Ù•¹Ğ¹Ñ…É•Ğ¹¡•­•¥ô€¼ø(€€€€€€€€€€ñÍÁ…¸øñˆù•Ñ•§Í¸…ÕÑ½·…Ñ¥„ğ½ˆøñÍµ…±°ù¹…±¥é„™½Ñ½É…µ…Ì±½…±µ•¹Ñ”…‘„€ØÔÀµÌğ½Íµ…±°øğ½ÍÁ…¸ø(€€€€€€€€ğ½±…‰•°ø(€€€€€€€€ñ±…‰•°ùM•¹Í¥‰¥±¥‘…ñÍ•±•ĞÙ…±Õ”õí…ÕÑ½M•¹Í¥Ñ¥Ù¥Ñåô½¹¡…¹”õì¡•Ù•¹Ğ¤€ôøÍ•ÑÕÑ½M•¹Í¥Ñ¥Ù¥Ñä¡•Ù•¹Ğ¹Ñ…É•Ğ¹Ù…±Õ”…ÌÕÑ½I•Ù¥•İM•¹Í¥Ñ¥Ù¥Ñä¥ôø(€€€€€€€€€€ñ½ÁÑ¥½¸ù	…©„ğ½½ÁÑ¥½¸øñ½ÁÑ¥½¸ù5•‘¥„ğ½½ÁÑ¥½¸øñ½ÁÑ¥½¸ù±Ñ„ğ½½ÁÑ¥½¸ø(€€€€€€€€ğ½Í•±•Ğøğ½±…‰•°ø(€€€€€€€€ñ±…‰•°±…ÍÍ9…µ”ô‰…ÕÑ¼µÉ•Ù¥•ÜµÑ½±”ˆø(€€€€€€€€€€ñ¥¹ÁÕĞÑåÁ”ô‰¡•­‰½àˆ¡•­•õíÙ½¥•½µµ•¹ÑÍô½¹¡…¹”õì¡•Ù•¹Ğ¤€ôøÍ•ÑY½¥•½µµ•¹ÑÌ¡•Ù•¹Ğ¹Ñ…É•Ğ¹¡•­•¥ô€¼ø(€€€€€€€€€€ñÍÁ…¸øñˆù½µ•¹Ñ…É¥½ÌÁ½ÈÙ½èğ½ˆøñÍµ…±°ùM½±¼‘•Ñ•¥½¹•Ì½¸½¹™¥…¹é„ÍÕ™¥¥•¹Ñ”ğ½Íµ…±°øğ½ÍÁ…¸ø(€€€€€€€€ğ½±…‰•°ø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”õí…ÕÑ¼µÉ•Ù¥•ÜµÍÑ…ÑÕÌÍÑ…ÑÕÌ´‘í…ÕÑ½MÑ…ÑÕÍõôø(€€€€€€€€€€ñÍÁ…¸ùí…ÕÑ½MÑ…ÑÕÍQ•áÑôğ½ÍÁ…¸ø(€€€€€€€€€€ñˆùíÍÑ…ÑÕÌ€ôôô€‰Í¡…É¥¹œˆ€ü…ÁÑÕÉ„€‘íÍÑÉ•…µ!•…±Ñ ¹Ñ½1½İ•É…Í” ¥õ€€è€‰…ÁÑÕÉ„¹¼¥¹¥¥…‘„‰ôğ½ˆø(€€€€€€€€€€ñÍµ…±°ùí…ÕÑ½Ù•¹Ñ½Õ¹Ñô•Ù•¹Ñ½Ìƒ
+Üµ½Ù¥µ¥•¹Ñ¼íµ½Ñ¥½¹1•Ù•±ô”ğ½Íµ…±°ø(€€€€€€€€ğ½‘¥Øø(€€€€€€ğ½‘¥Øø((€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰…ÕÑ¼µ±•…É¹¥¹œµÍÑÉ¥ÀµØÄÀˆø(€€€€€€€€ñÍÁ…¸øñˆùíÕ¹É•Ù¥•İ•‘½µµ•¹ÑÌ¹±•¹Ñ¡ôğ½ˆøÁ•¹‘¥•¹Ñ•Ìğ½ÍÁ…¸ø(€€€€€€€€ñÍÁ…¸øñˆùí±•…É¹•‘••‘‰…¬¹…•ÁÑ•‘ôğ½ˆø½ÉÉ•Ñ…Ìğ½ÍÁ…¸ø(€€€€€€€€ñÍÁ…¸øñˆùí±•…É¹•‘••‘‰…¬¹É•©•Ñ•‘ôğ½ˆø™…±Í…Ìğ½ÍÁ…¸ø(€€€€€€€€ñÍÁ…¸øñˆùí±•…É¹•‘••‘‰…¬¹ÁÉ•¥Í¥½¸€üü€‹ŠP‰õí±•…É¹•‘••‘‰…¬¹ÁÉ•¥Í¥½¸€„ôôÕ¹‘•™¥¹•€ü€ˆ”ˆ€è€ˆ‰ôğ½ˆøÁÉ•¥Í§Í¸É•Ù¥Í…‘„ğ½ÍÁ…¸ø(€€€€€€€€ñÍÁ…¸øñˆùíÍ•ÅÕ•¹•%¹Í¥¡Ñ½Õ¹Ñôğ½ˆøÍ•Õ•¹¥…Ìğ½ÍÁ…¸ø(€€€€€€ğ½‘¥Øø((€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰±¥Ù”µµ…¥¸µ…Ñ¥½¹Ìˆø(€€€€€€€íÍÑ…ÑÕÌ€ôôô€‰¥‘±”ˆ€˜˜€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ±…ÍÍ9…µ”ô‰ÁÉ¥µ…Éäµ‰ÕÑÑ½¸ˆ½¹±¥¬õíÍÑ…ÉÑ…ÁÑÕÉ•ô‘¥Í…‰±•õì……ÁÑÕÉ•MÕÁÁ½ÉÑ•‘ôù½µÁ…ÉÑ¥ÈÁ…¹Ñ…±±„¼Ù•¹Ñ…¹„ğ½‰ÕÑÑ½¸ùô(€€€€€€€íÍÑ…ÑÕÌ€ôôô€‰Í¡…É¥¹œˆ€˜˜€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ±…ÍÍ9…µ”ô‰±¥Ù”µÍÑ½Àµ‰ÕÑÑ½¸ˆ½¹±¥¬õí™¥¹¥Í¡…ÁÑÕÉ•ôù•Ñ•¹•È…ÁÑÕÉ„ğ½‰ÕÑÑ½¸ùô(€€€€€€€íÍÑ…ÑÕÌ€ôôô€‰Í¡…É¥¹œˆ€˜˜…ÕÑ½¹…±åÍ¥Ì€˜˜€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ±…ÍÍ9…µ”ô‰Í•½¹‘…Éäµ‰ÕÑÑ½¸ˆ½¹±¥¬õíÉ•…±¥‰É…Ñ•ÕÑ½I•Ù¥•İôùI•…±¥‰É…Èğ½‰ÕÑÑ½¸ùô(€€€€€€€í±•…É¹•‘••‘‰…¬¹É•Ù¥•İ•€ø€À€˜˜€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ±…ÍÍ9…µ”ô‰Í•½¹‘…Éäµ‰ÕÑÑ½¸ˆ½¹±¥¬õíÉ•Í•ÑÕÑ½1•…É¹¥¹ôùI•ÍÑ…ÕÉ…È…ÁÉ•¹‘¥é…©”Ù¥ÍÕ…°ğ½‰ÕÑÑ½¸ùô(€€€€€€€íÍÑ…ÑÕÌ€„ôô€‰¥‘±”ˆ€˜˜€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ±…ÍÍ9…µ”ô‰Í•½¹‘…Éäµ‰ÕÑÑ½¸ˆ½¹±¥¬õì ¤€ôø…ÁÑÕÉ•É…µ”¡ÑÉÕ”¥ôùÕ…É‘…È™½Ñ½É…µ„ğ½‰ÕÑÑ½¸ùô(€€€€€€€íÍÑ…ÑÕÌ€„ôô€‰¥‘±”ˆ€˜˜€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ±…ÍÍ9…µ”ô‰Í•½¹‘…Éäµ‰ÕÑÑ½¸ˆ½¹±¥¬õíÉ•Í•ÑM•ÍÍ¥½¹ôù9Õ•Ù„Í•Í§Í¸ğ½‰ÕÑÑ½¸ùô(€€€€€€ğ½‘¥Øø(€€€€€€ñÀ±…ÍÍ9…µ”ô‰±¥Ù”µÁÉ¥Ù…äµ¹½Ñ”ˆù1„¥µ…•¸ä•°…»…±¥Í¥Ì‘”™½Ñ½É…µ…ÌÁ•Éµ…¹••¸•¸ÑÔ¹…Ù•…‘½È¸1„…Á±¥…§Í¸¹¼É…‰„¹¤•¹Ûµ„…ÕÑ½·…Ñ¥…µ•¹Ñ”•°Ûµ‘•¼¸1…Ì‘•Ñ•¥½¹•ÌÍ½¸¡•ÕËµÍÑ¥…ÌèÉ•Ù¥Í„ä•±¥µ¥¹„±½Ì™…±Í½ÌÁ½Í¥Ñ¥Ù½Ì…¹Ñ•Ì‘”Õ…É‘…È¸ğ½Àø(€€€€ğ½Í•Ñ¥½¸ø((€€€€ñÍ•Ñ¥½¸±…ÍÍ9…µ”ô‰±¥Ù”µİ½É­ÍÁ…”µØàˆø(€€€€€€ñ…ÉÑ¥±”±…ÍÍ9…µ”ô‰Á…¹•°±¥Ù”µÙ¥‘•¼µÁ…¹•°ˆø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰±¥Ù”µÙ¥‘•¼µ¡•…ˆø(€€€€€€€€€€ñ‘¥ØøñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½ÜˆùY¥ÍÑ„•¸‘¥É•Ñ¼ğ½ÍÁ…¸øñ ÈùíÍ•±•Ñ•‘5…Àü¹¹…µ”ñğ€‰A…ÉÑ¥‘„‰ôğ½ Èøğ½‘¥Øø(€€€€€€€€€€ñÍÑÉ½¹œùí™½Éµ…Ñ1¥Ù•Q¥µ”¡•±…ÁÍ•¥ôğ½ÍÑÉ½¹œø(€€€€€€€€ğ½‘¥Øø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”õí±¥Ù”µÙ¥‘•¼µ™É…µ”€‘íÍÑ…ÑÕÍõôø(€€€€€€€€€€ñÙ¥‘•¼É•˜õíÙ¥‘•½I•™ôµÕÑ•Á±…åÍ%¹±¥¹”€¼ø(€€€€€€€€€íÍÑ…ÑÕÌ€„ôô€‰Í¡…É¥¹œˆ€˜˜±…ÍÑÉ…µ”€˜˜€ñ¥µœÍÉŒõí±…ÍÑÉ…µ•ô…±Ğô‹i±Ñ¥µ¼™½Ñ½É…µ„‘”±„Í•Í§Í¸ˆ€¼ùô(€€€€€€€€€íÍÑ…ÑÕÌ€ôôô€‰¥‘±”ˆ€˜˜€ñ‘¥Ø±…ÍÍ9…µ”ô‰±¥Ù”µÙ¥‘•¼µÁ±…•¡½±‘•Èˆø(€€€€€€€€€€€€ñˆù½µÁ…ÉÑ”	É…İ°MÑ…ÉÌ°Õ¸•µÕ±…‘½È¼±„Ù•¹Ñ…¹„‘½¹‘”‘ÕÁ±¥…Ì•°·ÍÙ¥°ğ½ˆø(€€€€€€€€€€€€ñÍÁ…¸ù°¹…Ù•…‘½ÈÑ”Á•Éµ¥Ñ¥Ë„•±•¥ÈÕ¹„Á…¹Ñ…±±„°Ù•¹Ñ…¹„¼Á•ÍÑ‡Å„¸ğ½ÍÁ…¸ø(€€€€€€€€€€ğ½‘¥Øùô(€€€€€€€€€íÍÑ…ÑÕÌ€ôôô€‰É•Ù¥•Üˆ€˜˜€…±…ÍÑÉ…µ”€˜˜€ñ‘¥Ø±…ÍÍ9…µ”ô‰±¥Ù”µÙ¥‘•¼µÁ±…•¡½±‘•Èˆøñˆù…ÁÑÕÉ„™¥¹…±¥é…‘„ğ½ˆøñÍÁ…¸ùI•Ù¥Í„±„É½¹½±½Ÿµ„äÕ…É‘„•°É•ÍÕ±Ñ…‘¼¸ğ½ÍÁ…¸øğ½‘¥Øùô(€€€€€€€€€íÍÑ…ÑÕÌ€ôôô€‰Í¡…É¥¹œˆ€˜˜€ñÍÁ…¸±…ÍÍ9…µ”ô‰±¥Ù”µÉ•½É‘¥¹œµ‘½Ğˆù1%Yğ½ÍÁ…¸ùô(€€€€€€€€€íÍÑ…ÑÕÌ€ôôô€‰Í¡…É¥¹œˆ€˜˜…ÕÑ½¹…±åÍ¥Ì€˜˜€ñÍÁ…¸±…ÍÍ9…µ”õí…ÕÑ¼µÙ¥Í¥½¸µ‰…‘”€‘í…ÕÑ½MÑ…ÑÕÍõôùí…ÕÑ½MÑ…ÑÕÍQ•áÑôğ½ÍÁ…¸ùô(€€€€€€€€ğ½‘¥Øø(€€€€€€ğ½…ÉÑ¥±”ø((€€€€€€ñ…ÉÑ¥±”±…ÍÍ9…µ”ô‰Á…¹•°±¥Ù”µ•Ù•¹ÑÌµÁ…¹•°ˆø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰±¥Ù”µ•Ù•¹ÑÌµ¡•…ˆø(€€€€€€€€€€ñ‘¥ØøñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½Üˆù5…É…‘½É•ÌË…Á¥‘½Ìğ½ÍÁ…¸øñ Èùí•Ù•¹ÑÌ¹±•¹Ñ¡ô•Ù•¹Ñ½Ìğ½ Èøğ½‘¥Øø(€€€€€€€€€í•Ù•¹ÑÌ¹±•¹Ñ €ø€À€˜˜€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ½¹±¥¬õì ¤€ôøÍ•ÑÙ•¹ÑÌ ¡ÕÉÉ•¹Ğ¤€ôøÕÉÉ•¹Ğ¹Í±¥” À°€´Ä¤¥ôù•Í¡…•Èƒé±Ñ¥µ¼ğ½‰ÕÑÑ½¸ùô(€€€€€€€€ğ½‘¥Øø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰±¥Ù”µ•Ù•¹Ğµ‰ÕÑÑ½¹Ìˆø(€€€€€€€€€íY9Q}Q5A1QL¹µ…À ¡Ñ•µÁ±…Ñ”¤€ôø€ñ‰ÕÑÑ½¸(€€€€€€€€€€€ÑåÁ”ô‰‰ÕÑÑ½¸ˆ(€€€€€€€€€€€±…ÍÍ9…µ”õíÑ½¹”´‘íÑ•µÁ±…Ñ”¹Ñ½¹•õô(€€€€€€€€€€€­•äõíÑ•µÁ±…Ñ”¹±…‰•±ô(€€€€€€€€€€€½¹±¥¬õì ¤€ôø…‘‘Ù•¹Ğ¡Ñ•µÁ±…Ñ”¥ô(€€€€€€€€€€€‘¥Í…‰±•õíÍÑ…ÑÕÌ€ôôô€‰¥‘±”‰ô(€€€€€€€€€€€Ñ¥Ñ±”õíÑ…©¼è€‘íÑ•µÁ±…Ñ”¹Í¡½ÉÑÕÑõô(€€€€€€€€€€ø(€€€€€€€€€€€€ñˆùíÑ•µÁ±…Ñ”¹±…‰•±ôğ½ˆøñÍµ…±°ùíÑ•µÁ±…Ñ”¹Í¡½ÉÑÕÑôğ½Íµ…±°ø(€€€€€€€€€€ğ½‰ÕÑÑ½¸ø¥ô(€€€€€€€€ğ½‘¥Øø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰±¥Ù”µÕÍÑ½´µ•Ù•¹Ğˆø(€€€€€€€€€€ñ¥¹ÁÕĞÙ…±Õ”õíÕÍÑ½µÙ•¹Ñô‘¥Í…‰±•õíÍÑ…ÑÕÌ€ôôô€‰¥‘±”‰ô½¹¡…¹”õì¡•Ù•¹Ğ¤€ôøÍ•ÑÕÍÑ½µÙ•¹Ğ¡•Ù•¹Ğ¹Ñ…É•Ğ¹Ù…±Õ”¥ô½¹-•å½İ¸õì¡•Ù•¹Ğ¤€ôøì(€€€€€€€€€€€¥˜€¡•Ù•¹Ğ¹­•ä€ôôô€‰¹Ñ•Èˆ¤…‘‘ÕÍÑ½µÙ•¹Ğ ¤ì(€€€€€€€€€õôÁ±…•¡½±‘•Èô‰Å…‘¥ÈÕ¹„¹½Ñ„Ë…Á¥‘‡Š˜ˆ€¼ø(€€€€€€€€€€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ½¹±¥¬õí…‘‘ÕÍÑ½µÙ•¹Ñô‘¥Í…‰±•õì…ÕÍÑ½µÙ•¹Ğ¹ÑÉ¥´ ¥ôùÅ…‘¥Èğ½‰ÕÑÑ½¸ø(€€€€€€€€ğ½‘¥Øø(€€€€€€ğ½…ÉÑ¥±”ø(€€€€ğ½Í•Ñ¥½¸ø((€€€€ñÍ•Ñ¥½¸±…ÍÍ9…µ”ô‰Á…¹•°…ÕÑ¼µ½µµ•¹ÑÌµÁ…¹•°µØäˆø(€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰Í•Ñ¥½¸µÑ¥Ñ±”ˆø(€€€€€€€€ñ‘¥ØøñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½Üˆù½… …ÕÑ½·…Ñ¥¼ğ½ÍÁ…¸øñ Èù½µ•¹Ñ…É¥½Ì•¹•É…‘½Ì•¸‘¥É•Ñ¼ğ½ Èøğ½‘¥Øø(€€€€€€€€ñÍÁ…¸ùíÕ¹É•Ù¥•İ•‘½µµ•¹ÑÌ¹±•¹Ñ¡ôÁ•¹‘¥•¹Ñ•Ìƒ
+Üí…ÕÑ½½µµ•¹ÑÌ¹±•¹Ñ¡ôÑ½Ñ…±•Ìğ½ÍÁ…¸ø(€€€€€€ğ½‘¥Øø((€€€€€í±…Ñ•ÍÑÕÑ½½µµ•¹Ğ€ü€ñ‘¥Ø±…ÍÍ9…µ”õí…ÕÑ¼µ±…Ñ•ÍĞµ½µµ•¹ĞÑ½¹”´‘í±…Ñ•ÍÑÕÑ½½µµ•¹Ğ¹Ñ½¹•ô™••‘‰…¬´‘í±…Ñ•ÍÑÕÑ½½µµ•¹Ğ¹™••‘‰…¬ñğ€‰Á•¹‘¥¹œ‰õôø(€€€€€€€€ñ‘¥Øø(€€€€€€€€€€ñÍÁ…¸ùí™½Éµ…Ñ1¥Ù•Q¥µ”¡±…Ñ•ÍÑÕÑ½½µµ•¹Ğ¹Í•½¹¥ôƒ
+Ü½¹™¥…¹é„í±…Ñ•ÍÑÕÑ½½µµ•¹Ğ¹½¹™¥‘•¹•ô”ƒ
+Üí±…Ñ•ÍÑÕÑ½½µµ•¹Ğ¹­¥¹€ôôô€‰Í•ÅÕ•¹”ˆ€ü€‰Í•Õ•¹¥„Ó…Ñ¥„ˆ€è€‰™½Ñ½É…µ„‰ôğ½ÍÁ…¸ø(€€€€€€€€€€ñˆùí±…Ñ•ÍÑÕÑ½½µµ•¹Ğ¹Ñ•áÑôğ½ˆø(€€€€€€€€ğ½‘¥Øø(€€€€€€€í±…Ñ•ÍÑÕÑ½½µµ•¹Ğ¹™••‘‰…¬€ü€ñÍÑÉ½¹œ±…ÍÍ9…µ”õí™••‘‰…¬µÉ•ÍÕ±Ğ€‘í±…Ñ•ÍÑÕÑ½½µµ•¹Ğ¹™••‘‰…­õôø(€€€€€€€€€í±…Ñ•ÍÑÕÑ½½µµ•¹Ğ¹™••‘‰…¬€ôôô€‰…•ÁÑ•ˆ€ü€‹ŠrL½ÉÉ•Ñ¼ˆ€è€‹\…±Í¼Á½Í¥Ñ¥Ù¼‰ô(€€€€€€€€ğ½ÍÑÉ½¹œø€è€ñ‘¥Ø±…ÍÍ9…µ”ô‰…ÕÑ¼µ™••‘‰…¬µ…Ñ¥½¹Ìˆø(€€€€€€€€€€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ±…ÍÍ9…µ”ô‰…•ÁĞˆ½¹±¥¬õì ¤€ôøÉ•Ù¥•İÕÑ½½µµ•¹Ğ¡±…Ñ•ÍÑÕÑ½½µµ•¹Ğ°€‰…•ÁÑ•ˆ¥ôù½ÉÉ•Ñ¼ğ½‰ÕÑÑ½¸ø(€€€€€€€€€€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ±…ÍÍ9…µ”ô‰É•©•Ğˆ½¹±¥¬õì ¤€ôøÉ•Ù¥•İÕÑ½½µµ•¹Ğ¡±…Ñ•ÍÑÕÑ½½µµ•¹Ğ°€‰É•©•Ñ•ˆ¥ôù…±Í¼ğ½‰ÕÑÑ½¸ø(€€€€€€€€ğ½‘¥Øùô(€€€€€€ğ½‘¥Øø€è€ñ‘¥Ø±…ÍÍ9…µ”ô‰…ÕÑ¼µ½µµ•¹Ğµ•µÁÑäˆø(€€€€€€€€ñˆùí…ÕÑ½MÑ…ÑÕÌ€ôôô€‰…±¥‰É…Ñ¥¹œˆ€ü…±¥‰É…¹‘¼±„¥µ…•¸è€‘í…±¥‰É…Ñ¥½¹ô•€€è…ÕÑ½¹…±åÍ¥Ì€ü€‰ÍÁ•É…¹‘¼Õ¸…µ‰¥¼É•±•Ù…¹Ñ”ˆ€è€‰•Ñ•§Í¸…ÕÑ½·…Ñ¥„‘•Í…Ñ¥Ù…‘„‰ôğ½ˆø(€€€€€€€€ñÍÁ…¸ù°Í¥ÍÑ•µ„…¹…±¥é„™½Ñ½É…µ…Ìä½µ‰¥¹„•Ù•¹Ñ½Ì•É…¹½ÌÁ…É„‘•Ñ•Ñ…ÈµÕ•ÉÑ•Ì½¸½ÍÑ”°ÍÕÁ•ÉÌÍ¥¸½¹Ù•ÉÍ§Í¸äÉ••¹ÑÉ…‘…Ì‘•µ…Í¥…‘¼Ë…Á¥‘…Ì¸ğ½ÍÁ…¸ø(€€€€€€ğ½‘¥Øùô((€€€€€í¡¥ÍÑ½Éå½µµ•¹ÑÌ¹±•¹Ñ €ø€À€˜˜€ñ‘¥Ø±…ÍÍ9…µ”ô‰…ÕÑ¼µ½µµ•¹Ğµ¡¥ÍÑ½Éäˆø(€€€€€€€í¡¥ÍÑ½Éå½µµ•¹ÑÌ¹µ…À ¡½µµ•¹Ğ¤€ôø€ñ…ÉÑ¥±”±…ÍÍ9…µ”õíÑ½¹”´‘í½µµ•¹Ğ¹Ñ½¹•ô™••‘‰…¬´‘í½µµ•¹Ğ¹™••‘‰…¬ñğ€‰Á•¹‘¥¹œ‰õô­•äõí½µµ•¹Ğ¹¥‘ôø(€€€€€€€€€€ñÑ¥µ”ùí™½Éµ…Ñ1¥Ù•Q¥µ”¡½µµ•¹Ğ¹Í•½¹¥ôğ½Ñ¥µ”ø(€€€€€€€€€€ñ‘¥Øøñˆùí½µµ•¹Ğ¹Ñ•áÑôğ½ˆøñÍµ…±°ùí½µµ•¹Ğ¹•Ù•¹Ñ1…‰•°ñğ€‰½µ•¹Ñ…É¥¼‰ôƒ
+Üí½µµ•¹Ğ¹½¹™¥‘•¹•ô”ƒ
+Üí½µµ•¹Ğ¹­¥¹€ôôô€‰Í•ÅÕ•¹”ˆ€ü€‰M•Õ•¹¥„ˆ€è€‰É…µ”‰ôğ½Íµ…±°øğ½‘¥Øø(€€€€€€€€€í½µµ•¹Ğ¹™••‘‰…¬€ü€ñÍÁ…¸±…ÍÍ9…µ”õí™••‘‰…¬µµ¥¹¤€‘í½µµ•¹Ğ¹™••‘‰…­õôùí½µµ•¹Ğ¹™••‘‰…¬€ôôô€‰…•ÁÑ•ˆ€ü€‹ŠrLˆ€è€‹\‰ôğ½ÍÁ…¸ø€è€ñ‘¥Ø±…ÍÍ9…µ”ô‰…ÕÑ¼µ™••‘‰…¬µµ¥¹¤µ…Ñ¥½¹Ìˆø(€€€€€€€€€€€€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ½¹±¥¬õì ¤€ôøÉ•Ù¥•İÕÑ½½µµ•¹Ğ¡½µµ•¹Ğ°€‰…•ÁÑ•ˆ¥ô…É¥„µ±…‰•°ô‰5…É…È‘•Ñ•§Í¸½ÉÉ•Ñ„ˆûŠrLğ½‰ÕÑÑ½¸ø(€€€€€€€€€€€€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ½¹±¥¬õì ¤€ôøÉ•Ù¥•İÕÑ½½µµ•¹Ğ¡½µµ•¹Ğ°€‰É•©•Ñ•ˆ¥ô…É¥„µ±…‰•°ô‰5…É…È™…±Í¼Á½Í¥Ñ¥Ù¼ˆû\ğ½‰ÕÑÑ½¸ø(€€€€€€€€€€ğ½‘¥Øùô(€€€€€€€€ğ½…ÉÑ¥±”ø¥ô(€€€€€€ğ½‘¥Øùô(€€€€ğ½Í•Ñ¥½¸ø((€€€€ñÍ•Ñ¥½¸±…ÍÍ9…µ”ô‰Á…¹•°±¥Ù”µÑ¥µ•±¥¹”µÁ…¹•°ˆø(€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰Í•Ñ¥½¸µÑ¥Ñ±”ˆøñ‘¥ØøñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½ÜˆùÉ½¹½±½Ÿµ„ğ½ÍÁ…¸øñ Èù5½µ•¹Ñ½Ì‘”±„Á…ÉÑ¥‘„ğ½ Èøğ½‘¥ØøñÍÁ…¸ùí™½Éµ…Ñ1¥Ù•Q¥µ”¡•±…ÁÍ•¥ôğ½ÍÁ…¸øğ½‘¥Øø(€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰±¥Ù”µÑ¥µ•±¥¹”µ±¥ÍĞˆø(€€€€€€€í•Ù•¹ÑÌ¹±•¹Ñ €ül¸¸¹•Ù•¹ÑÍt¹É•Ù•ÉÍ” ¤¹µ…À ¡•Ù•¹Ğ¤€ôø€ñ…ÉÑ¥±”±…ÍÍ9…µ”õíÑ½¹”´‘í•Ù•¹Ğ¹Ñ½¹•õô­•äõí•Ù•¹Ğ¹¥‘ôø(€€€€€€€€€€ñÑ¥µ”ùí™½Éµ…Ñ1¥Ù•Q¥µ”¡•Ù•¹Ğ¹Í•½¹¥ôğ½Ñ¥µ”ø(€€€€€€€€€€ñ‘¥Øøñˆùí•Ù•¹Ğ¹±…‰•±ôğ½ˆøñÍµ…±°ùí•Ù•¹Ğ¹…Ñ•½Éåõí•Ù•¹Ğ¹Í½ÕÉ”€ôôô€‰ÕÑ¼ˆ€ü€ƒ
+ÜÕÑ¼€‘í•Ù•¹Ğ¹½¹™¥‘•¹”ñğ€Áô”‘í•Ù•¹Ğ¹Í•ÅÕ•¹•-•ä€ü€ˆƒ
+ÜM•Õ•¹¥„ˆ€è€ˆ‰ô‘í•Ù•¹Ğ¹™••‘‰…¬€ôôô€‰…•ÁÑ•ˆ€ü€ˆƒ
+Ü½¹™¥Éµ…‘¼ˆ€è€ˆ‰õ€€è€ˆƒ
+Ü5…¹Õ…°‰ôğ½Íµ…±°øğ½‘¥Øø(€€€€€€€€€€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ½¹±¥¬õì ¤€ôøÉ•µ½Ù•Ù•¹Ğ¡•Ù•¹Ğ¹¥¥ô…É¥„µ±…‰•°õí±¥µ¥¹…È€‘í•Ù•¹Ğ¹±…‰•±õôû\ğ½‰ÕÑÑ½¸ø(€€€€€€€€ğ½…ÉÑ¥±”ø¤€è€ñ‘¥Ø±…ÍÍ9…µ”ô‰•µÁÑäµÍÑ…Ñ”ˆù1½Ìµ…É…‘½É•Ì…Á…É••Ë…¸…Å×´½¸•°Í•Õ¹‘¼•á…Ñ¼‘”±„Í•Í§Í¸¸ğ½‘¥Øùô(€€€€€€ğ½‘¥Øø(€€€€ğ½Í•Ñ¥½¸ø((€€€€ñÍ•Ñ¥½¸±…ÍÍ9…µ”ô‰±¥Ù”µÉ•Ù¥•ÜµÉ¥µØàˆø(€€€€€€ñ…ÉÑ¥±”±…ÍÍ9…µ”ô‰Á…¹•°±¥Ù”µÍÕµµ…ÉäµÁ…¹•°ˆø(€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½ÜˆùI•ÍÕµ•¸…ÕÑ½·…Ñ¥¼ğ½ÍÁ…¸ø(€€€€€€€€ñ ÈùíÍÕµµ…Éä¹¡•…‘±¥¹•ôğ½ Èø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰±¥Ù”µÍÕµµ…Éäµ½±Õµ¹Ìˆø(€€€€€€€€€€ñ‘¥Øøñˆù½ÉÑ…±•é…Ìğ½ˆùíÍÕµµ…Éä¹ÍÑÉ•¹Ñ¡Ì¹±•¹Ñ €üÍÕµµ…Éä¹ÍÑÉ•¹Ñ¡Ì¹µ…À ¡¥Ñ•´¤€ôø€ñÍÁ…¸±…ÍÍ9…µ”ô‰½½ˆ­•äõí¥Ñ•µôø¬í¥Ñ•µôğ½ÍÁ…¸ø¤€è€ñÍµ…±°ùM¥¸™½ÉÑ…±•é…ÌÍÕ™¥¥•¹Ñ•ÌÉ•¥ÍÑÉ…‘…Ì¸ğ½Íµ…±°ùôğ½‘¥Øø(€€€€€€€€€€ñ‘¥ØøñˆùÉÉ½É•Ìğ½ˆùíÍÕµµ…Éä¹µ¥ÍÑ…­•Ì¹±•¹Ñ €üÍÕµµ…Éä¹µ¥ÍÑ…­•Ì¹µ…À ¡¥Ñ•´¤€ôø€ñÍÁ…¸±…ÍÍ9…µ”ô‰‰…ˆ­•äõí¥Ñ•µôûŠ"Hí¥Ñ•µôğ½ÍÁ…¸ø¤€è€ñÍµ…±°ùM¥¸•ÉÉ½É•Ì•ÍÁ•µ™¥½ÌÉ•¥ÍÑÉ…‘½Ì¸ğ½Íµ…±°ùôğ½‘¥Øø(€€€€€€€€€€ñ‘¥ØøñˆùAËÍá¥µ¼™½¼ğ½ˆùíÍÕµµ…Éä¹É•½µµ•¹‘…Ñ¥½¹Ì¹µ…À ¡¥Ñ•´¤€ôø€ñÍÁ…¸­•äõí¥Ñ•µôûŠHí¥Ñ•µôğ½ÍÁ…¸ø¥ôğ½‘¥Øø(€€€€€€€€ğ½‘¥Øø(€€€€€€ğ½…ÉÑ¥±”ø((€€€€€€ñ…ÉÑ¥±”±…ÍÍ9…µ”ô‰Á…¹•°±¥Ù”µÍ…Ù”µÁ…¹•°ˆø(€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½Üˆù•ÉÉ…ÈÉ•Ù¥Í§Í¸ğ½ÍÁ…¸ø(€€€€€€€€ñ ÈùÕ…É‘…Èä…ÁÉ•¹‘•Èğ½ Èø(€€€€€€€€ñ±…‰•°ù9½Ñ„™¥¹…°ñÑ•áÑ…É•„Ù…±Õ”õí¹½Ñ•ô½¹¡…¹”õì¡•Ù•¹Ğ¤€ôøÍ•Ñ9½Ñ”¡•Ù•¹Ğ¹Ñ…É•Ğ¹Ù…±Õ”¥ôÁ±…•¡½±‘•Èô‰E×¤½ÕÉÉ§Ì•¸±„ÁÉ¥µ•É„µÕ•ÉÑ”°Á½ÈÅ×¤…µ‰¥…ÍÑ”‘”³µ¹•„°Å×¤‘•‰•ÌÉ•Á•Ñ¥ËŠ˜ˆ€¼øğ½±…‰•°ø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰±¥Ù”µÍ…Ù”µ…Ñ¥½¹Ìˆø(€€€€€€€€€€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ±…ÍÍ9…µ”ô‰ÁÉ¥µ…Éäµ‰ÕÑÑ½¸ˆ½¹±¥¬õíÍ…Ù•M•ÍÍ¥½¹ôùÕ…É‘…È1¥Ù”I•Ù¥•Üğ½‰ÕÑÑ½¸ø(€€€€€€€€€€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ±…ÍÍ9…µ”ô‰Í•½¹‘…Éäµ‰ÕÑÑ½¸ˆ½¹±¥¬õíÍ…Ù•Q½1•…É¹¥¹ô‘¥Í…‰±•õíÍ…Ù•‘Q½1•…É¹¥¹ôùíÍ…Ù•‘Q½1•…É¹¥¹œ€ü€‰Å…‘¥‘¼…°…ÁÉ•¹‘¥é…©”ˆ€è€‰¹Ù¥…È„ÁÉ•¹‘¥é…©”‰ôğ½‰ÕÑÑ½¸ø(€€€€€€€€€€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ±…ÍÍ9…µ”ô‰Í•½¹‘…Éäµ‰ÕÑÑ½¸ˆ½¹±¥¬õí•áÁ½ÉÑÕÉÉ•¹ÑôùáÁ½ÉÑ…È)M=8ğ½‰ÕÑÑ½¸ø(€€€€€€€€ğ½‘¥Øø(€€€€€€ğ½…ÉÑ¥±”ø(€€€€ğ½Í•Ñ¥½¸ø((€€€€ñÍ•Ñ¥½¸±…ÍÍ9…µ”ô‰Á…¹•°±¥Ù”µ¡¥ÍÑ½ÉäµÁ…¹•°ˆø(€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰Í•Ñ¥½¸µÑ¥Ñ±”ˆøñ‘¥ØøñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½Üˆù!¥ÍÑ½É¥…°±½…°ğ½ÍÁ…¸øñ Èûi±Ñ¥µ…ÌÉ•Ù¥Í¥½¹•Ìğ½ Èøğ½‘¥ØøñÍÁ…¸ùíÍ•ÍÍ¥½¹Ì¹±•¹Ñ¡ô¼ÔÀğ½ÍÁ…¸øğ½‘¥Øø(€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰±¥Ù”µÍ•ÍÍ¥½¸µ±¥ÍĞˆø(€€€€€€€íÍ•ÍÍ¥½¹Ì¹Í±¥” À°€ÄÀ¤¹µ…À ¡Í•ÍÍ¥½¸¤€ôø€ñ…ÉÑ¥±”­•äõíÍ•ÍÍ¥½¸¹¥‘ôø(€€€€€€€€€€ñ	É…İ±•ÉA½ÉÑÉ…¥Ğ¹…µ”õíÍ•ÍÍ¥½¸¹‰É…İ±•Éô±…ÍÍ9…µ”ô‰±¥Ù”µ¡¥ÍÑ½Éäµ…Ù…Ñ…Èˆ€¼ø(€€€€€€€€€€ñ‘¥ØøñˆùíÍ•ÍÍ¥½¸¹‰É…İ±•Éôƒ
+ÜíÍ•ÍÍ¥½¸¹µ…Á9…µ•ôğ½ˆøñÍµ…±°ùíÍ•ÍÍ¥½¸¹É•ÍÕ±Ğñğ€‰M¥¸É•ÍÕ±Ñ…‘¼‰ôƒ
+Üí™½Éµ…Ñ1¥Ù•Q¥µ”¡Í•ÍÍ¥½¸¹‘ÕÉ…Ñ¥½¸¥ôƒ
+ÜíÍ•ÍÍ¥½¸¹•Ù•¹ÑÌ¹±•¹Ñ¡ô•Ù•¹Ñ½ÍíÍ•ÍÍ¥½¸¹…ÕÑ½¹…±åÍ¥Ìü¹‘•Ñ•Ñ¥½¹Ì€ü€ƒ
+Ü€‘íÍ•ÍÍ¥½¸¹…ÕÑ½¹…±åÍ¥Ì¹‘•Ñ•Ñ¥½¹Íô…ÕÑ½€€è€ˆ‰õíÍ•ÍÍ¥½¸¹…ÕÑ½¹…±åÍ¥Ìü¹Í•ÅÕ•¹•%¹Í¥¡ÑÌ€ü€ƒ
+Ü€‘íÍ•ÍÍ¥½¸¹…ÕÑ½¹…±åÍ¥Ì¹Í•ÅÕ•¹•%¹Í¥¡ÑÍôÍ•Õ•¹¥…Í€€è€ˆ‰ôğ½Íµ…±°øñÀùíÍ•ÍÍ¥½¸¹ÍÕµµ…Éä¹¡•…‘±¥¹•ôğ½Àøğ½‘¥Øø(€€€€€€€€€€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ½¹±¥¬õì ¤€ôøÉ•µ½Ù•M•ÍÍ¥½¸¡Í•ÍÍ¥½¸¹¥¥ô…É¥„µ±…‰•°õí±¥µ¥¹…ÈÉ•Ù¥Í§Í¸‘”€‘íÍ•ÍÍ¥½¸¹‰É…İ±•Éõôû\ğ½‰ÕÑÑ½¸ø(€€€€€€€€ğ½…ÉÑ¥±”ø¥ô(€€€€€€€ì…Í•ÍÍ¥½¹Ì¹±•¹Ñ €˜˜€ñ‘¥Ø±…ÍÍ9…µ”ô‰•µÁÑäµÍÑ…Ñ”ˆù1…ÌÉ•Ù¥Í¥½¹•ÌÕ…É‘…‘…Ì…Á…É••Ë…¸…Å×´äÁ•Éµ…¹••Ë…¸•¸•ÍÑ”‘¥ÍÁ½Í¥Ñ¥Ù¼¸ğ½‘¥Øùô(€€€€€€ğ½‘¥Øø(€€€€ğ½Í•Ñ¥½¸ø(€€ğ½‘¥Øøì)ô

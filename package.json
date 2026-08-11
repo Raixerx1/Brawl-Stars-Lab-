@@ -1,6 +1,6 @@
 {
   "name": "brawl-stars-lab",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,10 +11,11 @@
     "audit:roster": "node scripts/audit-roster.mjs",
     "audit:first-picks": "node scripts/audit-first-picks.mjs",
     "audit:matchups": "node scripts/audit-matchups.mjs",
-    "audit:all": "npm run audit:roster && npm run audit:matchups && npm run audit:first-picks && npm run audit:first-pick-model && npm run audit:recommendations && npm run audit:queue-pairs",
+    "audit:all": "npm run audit:roster && npm run audit:matchups && npm run audit:first-picks && npm run audit:first-pick-model && npm run audit:recommendations && npm run audit:queue-pairs && npm run audit:resilience",
     "audit:first-pick-model": "node scripts/audit-first-pick-model.mjs",
     "audit:recommendations": "node scripts/audit-recommendation-balance.mjs",
-    "audit:queue-pairs": "node scripts/audit-queue-pairs.mjs"
+    "audit:queue-pairs": "node scripts/audit-queue-pairs.mjs",
+    "audit:resilience": "node scripts/audit-draft-resilience.mjs"
   },
   "dependencies": {
     "next": "16.2.12",

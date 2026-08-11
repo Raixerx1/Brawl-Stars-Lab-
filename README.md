@@ -1,6 +1,33 @@
-# Brawl Draft Lab v0.13
+# Brawl Draft Lab v0.14
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.14
+
+- Nueva **prueba de resiliencia** para picks que todavía pueden recibir respuesta rival.
+- El motor toma los cinco candidatos principales y simula las cuatro respuestas enemigas más probables contra cada uno.
+- Cada candidato obtiene:
+  - resiliencia 0–100;
+  - puntuación media tras la respuesta;
+  - puntuación del peor escenario;
+  - número de counters directos detectados;
+  - veredicto Blindado, Estable, Vigilable o Frágil.
+- El panel muestra la respuesta concreta, su impacto y si actúa como counter directo.
+- La recomendación principal solo se sustituye por un pick defensivo cuando la mejora de resiliencia es clara; una diferencia pequeña no genera recomendaciones contradictorias.
+- Botón **Usar pick robusto** y dos alternativas resistentes.
+- El análisis respeta mapa, picks, bans, pool personal, historial y tipo de cola Ranked.
+- Nueva auditoría determinista:
+  - 39 mapas;
+  - 780 respuestas simuladas;
+  - control de candidatos y escenarios duplicados;
+  - valores siempre dentro de 0–100;
+  - control de concentración de picks robustos y de R-T.
+- Nuevo comando:
+  - `npm run audit:resilience`
+- Nuevo informe técnico:
+  - `DRAFT_RESILIENCE.md`
+- Corregido el error de TypeScript de la ficha estructural de mapas.
+- Build de producción validado con las 159 páginas estáticas.
 
 ## Novedades v0.13
 

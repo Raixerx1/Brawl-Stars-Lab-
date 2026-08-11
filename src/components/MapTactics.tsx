@@ -59,8 +59,8 @@ const metricLabel: Record<string, string> = {
 
 export default function MapTactics({ map }: { map: MapProfile }) {
   const notes = notesFor(map);
-  const geometryEntries = map.geometry
-    ? ([
+  const geometryEntries: Array<[string, number]> = map.geometry
+    ? [
       ["openness", map.geometry.openness],
       ["bushDensity", map.geometry.bushDensity],
       ["wallDensity", map.geometry.wallDensity],
@@ -68,7 +68,7 @@ export default function MapTactics({ map }: { map: MapProfile }) {
       ["chokeDensity", map.geometry.chokeDensity],
       ["laneWidth", map.geometry.laneWidth],
       ["waterInfluence", map.geometry.waterInfluence],
-    ] as const)
+    ]
     : [];
 
   return <section className="panel map-tactics-panel map-tactics-v12">

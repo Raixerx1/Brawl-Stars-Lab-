@@ -1,3 +1,30 @@
 "use client";
-import { useMemo,useState } from "react";import type { Brawler } from "@/lib/types";import BrawlerCard from "./BrawlerCard";
-export default function BrawlerExplorer({brawlers}:{brawlers:Brawler[]}){const [q,setQ]=useState('');const [role,setRole]=useState('Todos');const roles=[...new Set(brawlers.map(b=>b.role))].sort();const list=useMemo(()=>brawlers.filter(b=>(role==='Todos'||b.role===role)&&`${b.name} ${b.role} ${b.rarity}`.toLowerCase().includes(q.toLowerCase())),[brawlers,q,role]);return <><div className="filters"><input value={q} onChange={e=>setQ(e.target.value)} placeholder="Buscar brawler…"/><select value={role} onChange={e=>setRole(e.target.value)}><option>Todos</option>{roles.map(r=><option key={r}>{r}</option>)}</select><span>{list.length} brawlers</span></div><div className="card-grid brawler-grid">{list.map(b=><BrawlerCard brawler={b} key={b.slug}/>)}</div></>}
+
+import { useState } from "react";
+import type { Brawler } from "@/lib/types";
+import BrawlerCard from "./BrawlerCard";
+
+export default function BrawlerExplorer({ brawlers }: { brawlers: Brawler[] }) {
+  const [query, setQuery] = useState("");
+  const [role, setRole] = useState("Todos");
+  const roles = [...new Set(brawlers.map((brawler) => brawler.role))].sort();
+  const search = query.toLocaleLowerCase("es");
+  const visible = brawlers.filter((brawler) =>
+    (role === "Todos" || brawler.role === role) &&
+    `${brawler.name} ${brawler.role} ${brawler.rarity}`.toLocaleLowerCase("es").includes(search)
+  );
+
+  return <>
+    <div className="filters">
+      <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar brawler…" />
+      <select value={role} onChange={(event) => setRole(event.target.value)}>
+        <option>Todos</option>
+        {roles.map((item) => <option key={item}>{item}</option>)}
+      </select>
+      <span>{visible.length} brawlers</span>
+    </div>
+    <div className="card-grid brawler-grid">
+      {visible.map((brawler) => <BrawlerCard brawler={brawler} key={brawler.slug} />)}
+    </div>
+  </>;
+}

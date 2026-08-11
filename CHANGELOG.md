@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.14 — Resiliencia frente a counters
+
+- Prueba de estrés de los cinco candidatos principales.
+- Cuatro respuestas rivales condicionadas a cada candidato.
+- Puntuación de resiliencia, media y peor escenario.
+- Detección de counters directos y pérdida de puntuación.
+- Veredictos Blindado, Estable, Vigilable y Frágil.
+- Umbral de mejora para evitar recomendaciones contradictorias por diferencias pequeñas.
+- Acción rápida para usar el pick robusto.
+- Dos alternativas resistentes comparables.
+- Auditoría de 780 respuestas en los 39 mapas.
+- Control específico de concentración de R-T.
+- Corrección del tipado de las métricas estructurales de mapa.
+- Compilación de producción validada: 159 páginas estáticas.
+
 ## v0.13 — Cola Ranked y doble pick
 
 - Modos SoloQ, Dúo y Trío.

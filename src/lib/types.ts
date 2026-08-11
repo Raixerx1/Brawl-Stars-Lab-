@@ -318,6 +318,32 @@ export type EnemyPickPrediction = {
   response: string;
 };
 
+export type DraftStressScenario = {
+  enemy: Brawler;
+  likelihood: number;
+  candidateScore: number;
+  scoreDrop: number;
+  directThreat: boolean;
+  reason: string;
+};
+
+export type DraftStressResult = {
+  recommendation: DraftRecommendation;
+  resilience: number;
+  averageScore: number;
+  worstScore: number;
+  directThreats: number;
+  verdict: "Blindado" | "Estable" | "Vigilable" | "Frágil";
+  scenarios: DraftStressScenario[];
+};
+
+export type DraftStressAnalysis = {
+  results: DraftStressResult[];
+  robustPick?: DraftStressResult;
+  scenarioCount: number;
+  summary: string;
+};
+
 export type TeamAssignment = {
   ally: string;
   enemy?: string;
