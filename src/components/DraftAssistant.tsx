@@ -393,16 +393,650 @@ export default function DraftAssistant({
         if (a.profileComplete !== b.profileComplete) return a.profileComplete ? -1 : 1;
         return a.name.localeCompare(b.name, "es");
       })
-      .slice(0ë¾w¶‰žËkºwµçIÍÐ¹‰É…Ý±•È¹¹…µ”°Á…¥ÉI•½µµ•¹‘…Ñ¥½¹ÍlÁt¹Í•½¹¹‰É…Ý±•È¹¹…µ”¥ôø(€€€€€€€€€€€íÅÕ•Õ•5½‘”€ôôô€‰M½±½Dˆ€ü€‰M¥µÕ±…ÈÁ…É•©„ˆ€è€‰Á±¥…ÈÁ…É•©„‰ô(€€€€€€€€€€ð½‰ÕÑÑ½¸ø(€€€€€€€€ð½‘¥Øø(€€€€€€€íÁ…¥ÉI•½µµ•¹‘…Ñ¥½¹Ì¹±•¹Ñ €ø€Ä€˜˜€ñ‘¥Ø±…ÍÍ9…µ”ô‰‘½Õ‰±”µÁ¥¬µ…±Ñ•É¹…Ñ¥Ù•ÌµØÄÌˆø(€€€€€€€€€íÁ…¥ÉI•½µµ•¹‘…Ñ¥½¹Ì¹Í±¥” Ä°€Ð¤¹µ…À ¡Á…¥È¤€ôø€ñ‰ÕÑÑ½¸(€€€€€€€€€€€ÑåÁ”ô‰‰ÕÑÑ½¸ˆ(€€€€€€€€€€€­•äõí€‘íÁ…¥È¹™¥ÉÍÐ¹‰É…Ý±•È¹Í±Õô´‘íÁ…¥È¹Í•½¹¹‰É…Ý±•È¹Í±Õõô(€€€€€€€€€€€½¹±¥¬õì ¤€ôø…ÁÁ±åA…¥È¡Á…¥È¹™¥ÉÍÐ¹‰É…Ý±•È¹¹…µ”°Á…¥È¹Í•½¹¹‰É…Ý±•È¹¹…µ”¥ô(€€€€€€€€€€ø(€€€€€€€€€€€€ñˆùíÁ…¥È¹™¥ÉÍÐ¹‰É…Ý±•È¹¹…µ•ô€¬íÁ…¥È¹Í•½¹¹‰É…Ý±•È¹¹…µ•ôð½ˆø(€€€€€€€€€€€€ñÍµ…±°ùíÁ…¥È¹Í½É•ô¼ÄÀÀƒ
-ÜíÁ…¥È¹É•…Í½¹ÍlÁtñð€‰A…É•©„•ÅÕ¥±¥‰É…‘„‰ôð½Íµ…±°ø(€€€€€€€€€€ð½‰ÕÑÑ½¸ø¥ô(€€€€€€€€ð½‘¥Øùô(€€€€€€ð½‘¥Øùô((€€€€€€ñ‘¥Ø±…ÍÍ9…µ”õí½µµ½¸µÁ¥¬µ•¹ÑÉä€‘í¹•áÑQ•…´€ôôô€‰…±±äˆ€ü€‰…±±äˆ€è€‰•¹•µä‰õôø(€€€€€€€€ñ‘¥Øø(€€€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½Üˆùí¹•áÑ%¹‘•à€ð€À€ü€‰É…™Ð½µÁ±•Ñ¼ˆ€èA¥¬€‘í¹•áÑ%¹‘•à€¬€Åôƒ
-Ü€‘í¹•áÑQ•…´€ôôô€‰…±±äˆ€ü€‰±¥…‘¼ˆ€è€‰I¥Ù…°‰õôð½ÍÁ…¸ø(€€€€€€€€€€ñ Ìùí¹•áÑ%¹‘•à€ð€À€ü€‰1½ÌÍ•¥ÌÁ¥­Ì•ÍÓ…¸½µÁ±•Ñ½Ìˆ€èÅ…‘¥ÈÍ¥Õ¥•¹Ñ”Á¥¬€‘í¹•áÑQ•…´€ôôô€‰…±±äˆ€ü€‰…±¥…‘¼ˆ€è€‰É¥Ù…°‰õôð½ Ìø(€€€€€€€€ð½‘¥Øø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰½µµ½¸µÁ¥¬µÍ•…É ˆø(€€€€€€€€€€ñ¥¹ÁÕÐ(€€€€€€€€€€€Ù…±Õ”õíÅÕ•Éåô(€€€€€€€€€€€‘¥Í…‰±•õí¹•áÑ%¹‘•à€ð€Áô(€€€€€€€€€€€½¹½ÕÌõì ¤€ôøÍ•Ñ½ÕÍ•¡ÑÉÕ”¥ô(€€€€€€€€€€€½¹	±ÕÈõì ¤€ôøÝ¥¹‘½Ü¹Í•ÑQ¥µ•½ÕÐ  ¤€ôøÍ•Ñ½ÕÍ•¡™…±Í”¤°€ÄÈÀ¥ô(€€€€€€€€€€€½¹¡…¹”õì¡•Ù•¹Ð¤€ôøÍ•ÑEÕ•Éä¡•Ù•¹Ð¹Ñ…É•Ð¹Ù…±Õ”¥ô(€€€€€€€€€€€½¹-•å½Ý¸õí¡…¹‘±•-•å½Ý¹ô(€€€€€€€€€€€Á±…•¡½±‘•Èõí¹•áÑ%¹‘•à€ð€À€ü€‰É…™Ð½µÁ±•Ñ¼ˆ€è€‰	ÕÍ…È‰É…Ý±•ËŠ˜‰ô(€€€€€€€€€€¼ø(€€€€€€€€€í™½ÕÍ•€˜˜¹•áÑ%¹‘•à€øô€À€˜˜ÍÕ•ÍÑ¥½¹Ì¹±•¹Ñ €ø€À€˜˜€ñ‘¥Ø±…ÍÍ9…µ”ô‰½µµ½¸µÁ¥¬µÍÕ•ÍÑ¥½¹Ìˆø(€€€€€€€€€€€íÍÕ•ÍÑ¥½¹Ì¹µ…À ¡‰É…Ý±•È¤€ôø€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ­•äõí‰É…Ý±•È¹Í±Õô½¹5½ÕÍ•½Ý¸õì ¤€ôø…‘‘9•áÑA¥¬¡‰É…Ý±•È¹¹…µ”¥ôø(€€€€€€€€€€€€€€ñ	É…Ý±•ÉA½ÉÑÉ…¥Ð¹…µ”õí‰É…Ý±•È¹¹…µ•ô±…ÍÍ9…µ”ô‰ÍÕ•ÍÑ¥½¸µ…Ù…Ñ…Èˆ€¼ø(€€€€€€€€€€€€€€ñÍÁ…¸øñˆùí‰É…Ý±•È¹¹…µ•ôð½ˆøñÍµ…±°ùí‰É…Ý±•È¹É½±•ôƒ
-Üí‰É…Ý±•È¹Ñ¥•Éôð½Íµ…±°øð½ÍÁ…¸ø(€€€€€€€€€€€€ð½‰ÕÑÑ½¸ø¥ô(€€€€€€€€€€ð½‘¥Øùô(€€€€€€€€ð½‘¥Øø(€€€€€€€€ñÍÑÉ½¹œ±…ÍÍ9…µ”õíÑÕÉ¸µÍÑ…ÑÕÌ€‘í¹•áÑQ•…´€ôôô€‰…±±äˆ€ü€‰…±±äˆ€è€‰•¹•µä‰õôø(€€€€€€€€€í¹•áÑ%¹‘•à€ð€À(€€€€€€€€€€€€ü€‰¥¹…±¥é…‘¼ˆ(€€€€€€€€€€€€è¹•áÑQ•…´€ôôô€‰…±±äˆ(€€€€€€€€€€€€€€üÁ½Í¥Ñ¥½¸€ôôô€‰¥ÉÍÐÁ¥¬ˆ€ü€‰±¥”Õ¸Á¥¬ÏÍ±¥‘¼ˆ€èÁ½Í¥Ñ¥½¸€ôôô€‰1…ÍÐÁ¥¬ˆ€ü€‰	ÕÍ„•°·…á¥µ¼½Õ¹Ñ•Èˆ€è€‰½Õ¹Ñ•É•„ä½µÁ±•Ñ„ˆ(€€€€€€€€€€€€€€è€‰%¹ÑÉ½‘Õ”•°Á¥¬É¥Ù…°‰ô(€€€€€€€€ð½ÍÑÉ½¹œø(€€€€€€ð½‘¥Øø(€€€€€€ñÍµ…±°±…ÍÍ9…µ”ô‰½É‘•É•µ•‘¥Ðµ¡¥¹ÐˆùAÕ±Í„Õ¸Á¥¬å„¥¹ÑÉ½‘Õ¥‘¼Á…É„½ÉÉ•¥É±¼ìÍ”‰½ÉÉ…Ë…¸Ñ…µ‰§¥¸±½ÌÁ¥­ÌÁ½ÍÑ•É¥½É•Ì¸ð½Íµ…±°ø(€€€€ð½Í•Ñ¥½¸ø((€€€í¹•áÑ%¹‘•à€ð€À€˜˜…±±¥•Ì¹±•¹Ñ €ôôô€Ì€˜˜•¹•µ¥•Ì¹±•¹Ñ €ôôô€Ì€˜˜€ñÍ•Ñ¥½¸±…ÍÍ9…µ”ô‰Á…¹•°‘É…™ÐµÉ•ÍÕ±ÐµÁ…¹•°µØÜˆø(€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰Í•Ñ¥½¸µÑ¥Ñ±”ˆøñ‘¥ØøñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½ÜˆùÁÉ•¹‘¥é…©”Á•ÉÍ½¹…°ð½ÍÁ…¸øñ ÈùÕ…É‘…ÈÉ•ÍÕ±Ñ…‘¼‘•°‘É…™Ðð½ Èøð½‘¥ØøñÍÁ…¸±…ÍÍ9…µ”ô‰ÍÑ…ÑÕÌµÁ¥±°ˆøÌÙÌ€Ì½µÁ±•Ñ¼ð½ÍÁ…¸øð½‘¥Øø(€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰‘É…™ÐµÉ•ÍÕ±Ðµ™½É´µØÜˆø(€€€€€€€€ñ±…‰•°û
-ýE×¤‰É…Ý±•È©Õ…ÍÑ”üñÍ•±•ÐÙ…±Õ”õíÁ±…å•‘	É…Ý±•Éô½¹¡…¹”õì¡•Ù•¹Ð¤€ôøÍ•ÑA±…å•‘	É…Ý±•È¡•Ù•¹Ð¹Ñ…É•Ð¹Ù…±Õ”¥ôøñ½ÁÑ¥½¸Ù…±Õ”ôˆˆùM•±•¥½¹…È…±¥…‘¿Š˜ð½½ÁÑ¥½¸ùí…±±¥•Ì¹µ…À ¡…±±ä¤€ôø€ñ½ÁÑ¥½¸­•äõí…±±åôùí…±±åôð½½ÁÑ¥½¸ø¥ôð½Í•±•Ðøð½±…‰•°ø(€€€€€€€€ñ±…‰•°ùI•ÍÕ±Ñ…‘¼ñÍ•±•ÐÙ…±Õ”õíµ…Ñ¡I•ÍÕ±Ñô½¹¡…¹”õì¡•Ù•¹Ð¤€ôøÍ•Ñ5…Ñ¡I•ÍÕ±Ð¡•Ù•¹Ð¹Ñ…É•Ð¹Ù…±Õ”…Ì5…Ñ¡I•ÍÕ±Ð¥ôøñ½ÁÑ¥½¸ùY¥Ñ½É¥„ð½½ÁÑ¥½¸øñ½ÁÑ¥½¸ù•ÉÉ½Ñ„ð½½ÁÑ¥½¸øð½Í•±•Ðøð½±…‰•°ø(€€€€€€€€ñ±…‰•°ù9½Ñ„Ë…Á¥‘„ñ¥¹ÁÕÐÙ…±Õ”õíµ…Ñ¡9½Ñ•ô½¹¡…¹”õì¡•Ù•¹Ð¤€ôøÍ•Ñ5…Ñ¡9½Ñ”¡•Ù•¹Ð¹Ñ…É•Ð¹Ù…±Õ”¥ôÁ±…•¡½±‘•Èô‰5…Ñ¡ÕÀ°•ÉÉ½È¼…¥•ÉÑ¼±…Ù”ˆ€¼øð½±…‰•°ø(€€€€€€€€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ±…ÍÍ9…µ”ô‰ÁÉ¥µ…Éäµ‰ÕÑÑ½¸ˆ‘¥Í…‰±•õì…Á±…å•‘	É…Ý±•Éô½¹±¥¬õíÍ…Ù•É…™ÑI•ÍÕ±ÑôùÕ…É‘…Èä…ÁÉ•¹‘•Èð½‰ÕÑÑ½¸ø(€€€€€€ð½‘¥Øø(€€€€€€ñÍµ…±°ù1„É•½µ•¹‘…§Í¸Á•ÉÍ½¹…°Í”…©ÕÍÑ„‘”™½Éµ„É…‘Õ…°ìÕ¹„Í½±„Á…ÉÑ¥‘„¹¼…µ‰¥„Í¥¹¥™¥…Ñ¥Ù…µ•¹Ñ”•°É…¹­¥¹œ¸ð½Íµ…±°ø(€€€€ð½Í•Ñ¥½¸ùô((€€€í¹•áÑ¹•µå%¹‘•à€øô€À€˜˜€ñÍ•Ñ¥½¸±…ÍÍ9…µ”õíÁ…¹•°‘É…™ÐµÍ¥µÕ±…Ñ½ÈµØØ€‘íÍ•¹…É¥½¹•µä€ü€‰Í•¹…É¥¼µ…Ñ¥Ù”ˆ€è€ˆ‰õôø(€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰Í•Ñ¥½¸µÑ¥Ñ±”ˆø(€€€€€€€€ñ‘¥Øø(€€€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½ÜˆùM¥µÕ±…‘½È‘•°É¥Ù…°ð½ÍÁ…¸ø(€€€€€€€€€€ñ Èû
-ýE×¤Á…Í„Í¤•°É¥Ù…°•±¥—Š˜üð½ Èø(€€€€€€€€ð½‘¥Øø(€€€€€€€íÍ•¹…É¥½¹•µä€˜˜€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ±…ÍÍ9…µ”ô‰Í•½¹‘…Éäµ‰ÕÑÑ½¸½µÁ…Ðµ‰ÕÑÑ½¸ˆ½¹±¥¬õì ¤€ôøÍ•ÑM•¹…É¥½¹•µä ˆˆ¥ôù•ÉÉ…ÈÍ¥µÕ±…§Í¸ð½‰ÕÑÑ½¸ùô(€€€€€€ð½‘¥Øø((€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰ÁÉ•‘¥Ñ¥½¸µÍÑÉ¥Àˆø(€€€€€€€íÁÉ•‘¥Ñ•‘¹•µåA¥­Ì¹µ…À ¡ÁÉ•‘¥Ñ¥½¸°¥¹‘•à¤€ôø€ñ‰ÕÑÑ½¸(€€€€€€€€€ÑåÁ”ô‰‰ÕÑÑ½¸ˆ(€€€€€€€€€±…ÍÍ9…µ”õí¹½Éµ…±¥é”¡Í•¹…É¥½¹•µä¤€ôôô¹½Éµ…±¥é”¡ÁÉ•‘¥Ñ¥½¸¹‰É…Ý±•È¹¹…µ”¤€ü€‰…Ñ¥Ù”ˆ€è€ˆ‰ô(€€€€€€€€€­•äõíÁÉ•‘¥Ñ¥½¸¹‰É…Ý±•È¹Í±Õô(€€€€€€€€€½¹±¥¬õì ¤€ôøÍ•ÑM•¹…É¥½¹•µä¡ÁÉ•‘¥Ñ¥½¸¹‰É…Ý±•È¹¹…µ”¥ô(€€€€€€€€ø(€€€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰ÁÉ•‘¥Ñ¥½¸µÉ…¹¬ˆùí¥¹‘•à€¬€Åôð½ÍÁ…¸ø(€€€€€€€€€€ñ	É…Ý±•ÉA½ÉÑÉ…¥Ð¹…µ”õíÁÉ•‘¥Ñ¥½¸¹‰É…Ý±•È¹¹…µ•ô±…ÍÍ9…µ”ô‰ÁÉ•‘¥Ñ¥½¸µ…Ù…Ñ…Èˆ€¼ø(€€€€€€€€€€ñ‘¥ØøñˆùíÁÉ•‘¥Ñ¥½¸¹‰É…Ý±•È¹¹…µ•ôð½ˆøñÍµ…±°ùíÁÉ•‘¥Ñ¥½¸¹É•…Í½¹ôð½Íµ…±°øð½‘¥Øø(€€€€€€€€€€ñÍÑÉ½¹œùíÁÉ•‘¥Ñ¥½¸¹Í½É•ôð½ÍÑÉ½¹œø(€€€€€€€€ð½‰ÕÑÑ½¸ø¥ô(€€€€€€ð½‘¥Øø((€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰Í•¹…É¥¼µÍ•±•Ñ½ÈµÉ½Üˆø(€€€€€€€€ñ±…‰•°ùM¥µÕ±…È½ÑÉ¼‰É…Ý±•ÈñÍ•±•ÐÙ…±Õ”õíÍ•¹…É¥½¹•µåô½¹¡…¹”õì¡•Ù•¹Ð¤€ôøÍ•ÑM•¹…É¥½¹•µä¡•Ù•¹Ð¹Ñ…É•Ð¹Ù…±Õ”¥ôø(€€€€€€€€€€ñ½ÁÑ¥½¸Ù…±Õ”ôˆˆùM•±•¥½¹…ËŠ˜ð½½ÁÑ¥½¸ø(€€€€€€€€€íÍ•¹…É¥½…¹‘¥‘…Ñ•Ì¹µ…À ¡‰É…Ý±•È¤€ôø€ñ½ÁÑ¥½¸Ù…±Õ”õí‰É…Ý±•È¹¹…µ•ô­•äõí‰É…Ý±•È¹Í±Õôùí‰É…Ý±•È¹¹…µ•ôƒ
-Üí‰É…Ý±•È¹É½±•ôð½½ÁÑ¥½¸ø¥ô(€€€€€€€€ð½Í•±•Ðøð½±…‰•°ø(€€€€€€€€ñ‘¥Øø(€€€€€€€€€€ñÍÁ…¸ùAËÍá¥µ¼¡Õ•¼É¥Ù…°ð½ÍÁ…¸ø(€€€€€€€€€€ñˆùí¹•áÑ¹•µå%¹‘•à€¬€Åôƒ
-ÜíÁ¡…Í•1…‰•°¡¹•áÑ¹•µå%¹‘•à¥ôð½ˆø(€€€€€€€€ð½‘¥Øø(€€€€€€ð½‘¥Øø((€€€€€íÍ•¹…É¥½¹•µä€˜˜Í•¹…É¥½¹…±åÍ¥Ì€˜˜Í•¹…É¥½I•ÍÁ½¹Í”€˜˜€ñ‘¥Ø±…ÍÍ9…µ”ô‰Í•¹…É¥¼µÉ•ÍÕ±ÐµÉ¥ˆø(€€€€€€€€ñ…ÉÑ¥±”±…ÍÍ9…µ”ô‰Í•¹…É¥¼µÑ¡É•…Ðµ…Éˆø(€€€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½Üˆùµ•¹…é„Í¥µÕ±…‘„ð½ÍÁ…¸ø(€€€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰Í•¹…É¥¼µ‰É…Ý±•Èµ¡•…ˆø(€€€€€€€€€€€€ñ	É…Ý±•ÉA½ÉÑÉ…¥Ð¹…µ”õíÍ•¹…É¥½¹•µåô±…ÍÍ9…µ”ô‰Í•¹…É¥¼µµ…¥¸µ…Ù…Ñ…Èˆ€¼ø(€€€€€€€€€€€€ñ‘¥Øøñ ÌùíÍ•¹…É¥½¹•µåôð½ ÌøñÀùíÍ•¹…É¥½AÉ•‘¥Ñ¥½¸ü¹É•…Í½¸ñð€‰Í•¹…É¥¼µ…¹Õ…°Í•±•¥½¹…‘¼‰ôð½Àøð½‘¥Øø(€€€€€€€€€€ð½‘¥Øø(€€€€€€€€€íÍ•¹…É¥½AÉ•‘¥Ñ¥½¸ü¹Ñ…É•Ð€˜˜€ñÍÑÉ½¹œùAÕ•‘”…ÍÑ¥…È„íÍ•¹…É¥½AÉ•‘¥Ñ¥½¸¹Ñ…É•Ñôð½ÍÑÉ½¹œùô(€€€€€€€€€€ñÍµ…±°ùíÍ•¹…É¥½AÉ•‘¥Ñ¥½¸ü¹É•ÍÁ½¹Í”ñð€‰°…Í¥ÍÑ•¹Ñ”É•…±Õ±„±„É•ÍÁÕ•ÍÑ„ƒÍÁÑ¥µ„½¸•°‘É…™Ð…ÑÕ…°¸‰ôð½Íµ…±°ø(€€€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰Í•¹…É¥¼µ…Ñ¥½¹Ìˆø(€€€€€€€€€€€í¹•áÑ¹•µå%¹‘•à€ôôô¹•áÑ%¹‘•à€˜˜¹•áÑQ•…´€ôôô€‰•¹•µäˆ€˜˜€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ±…ÍÍ9…µ”ô‰ÁÉ¥µ…Éäµ‰ÕÑÑ½¸ˆ½¹±¥¬õí½¹™¥ÉµM•¹…É¥½ôù½¹™¥Éµ…ÈÁ¥¬É¥Ù…°ð½‰ÕÑÑ½¸ùô(€€€€€€€€€€€€ñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ±…ÍÍ9…µ”ô‰Í•½¹‘…Éäµ‰ÕÑÑ½¸ˆ‘¥Í…‰±•õí‰…¹Ì¹±•¹Ñ €øô€Ùô½¹±¥¬õì ¤€ôø…‘‘MÕ•ÍÑ•‘	…¸¡Í•¹…É¥½¹•µä¥ôùÅ…‘¥È„‰…¹Ìð½‰ÕÑÑ½¸ø(€€€€€€€€€€ð½‘¥Øø(€€€€€€€€ð½…ÉÑ¥±”ø((€€€€€€€€ñ…ÉÑ¥±”±…ÍÍ9…µ”ô‰Í•¹…É¥¼µÉ•ÍÁ½¹Í”µ…Éˆø(€€€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½ÜˆùI•ÍÁÕ•ÍÑ„É•½µ•¹‘…‘„ð½ÍÁ…¸ø(€€€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰Í•¹…É¥¼µ‰É…Ý±•Èµ¡•…ˆø(€€€€€€€€€€€€ñ	É…Ý±•ÉA½ÉÑÉ…¥Ð¹…µ”õíÍ•¹…É¥½I•ÍÁ½¹Í”¹‰É…Ý±•È¹¹…µ•ô±…ÍÍ9…µ”ô‰Í•¹…É¥¼µµ…¥¸µ…Ù…Ñ…Èˆ€¼ø(€€€€€€€€€€€€ñ‘¥Øøñ ÌùíÍ•¹…É¥½I•ÍÁ½¹Í”¹‰É…Ý±•È¹¹…µ•ôð½ ÌøñÀùíÍ•¹…É¥½I•ÍÁ½¹Í”¹‰É¥•™ôð½Àøð½‘¥Øø(€€€€€€€€€€€€ñÍÑÉ½¹œùíÍ•¹…É¥½I•ÍÁ½¹Í”¹Í½É•ôð½ÍÑÉ½¹œø(€€€€€€€€€€ð½‘¥Øø(€€€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰Í•¹…É¥¼µÉ•ÍÁ½¹Í”µ‘•Ñ…¥±Ìˆø(€€€€€€€€€€€€ñÍÁ…¸øñˆù3µ¹•„ð½ˆùíÍ•¹…É¥½I•ÍÁ½¹Í”¹±…¹•A±…¸¹±…¹•ôð½ÍÁ…¸ø(€€€€€€€€€€€€ñÍÁ…¸øñˆù=‰©•Ñ¥Ù¼ð½ˆùíÍ•¹…É¥½I•ÍÁ½¹Í”¹±…¹•A±…¸¹Ñ…É•Ðñð€‰½µÁ±•Ñ…È½µÁ½Í¥§Í¸‰ôð½ÍÁ…¸ø(€€€€€€€€€€€€ñÍÁ…¸øñˆù	Õ¥±ð½ˆùíÍ•¹…É¥½I•ÍÁ½¹Í”¹‰Õ¥±¹•…ÉÌ¹©½¥¸ ˆ€¬€ˆ¥ôð½ÍÁ…¸ø(€€€€€€€€€€ð½‘¥Øø(€€€€€€€€€íÍ•¹…É¥½±Ñ•É¹…Ñ¥Ù•Ì¹±•¹Ñ €ø€À€˜˜€ñ‘¥Ø±…ÍÍ9…µ”ô‰Í•¹…É¥¼µ…±Ñ•É¹…Ñ¥Ù•Ìˆø(€€€€€€€€€€€€ñˆù±Ñ•É¹…Ñ¥Ù…Ìð½ˆø(€€€€€€€€€€€íÍ•¹…É¥½±Ñ•É¹…Ñ¥Ù•Ì¹µ…À ¡¥Ñ•´¤€ôø€ñÍÁ…¸­•äõí¥Ñ•´¹‰É…Ý±•È¹Í±Õôùí¥Ñ•´¹‰É…Ý±•È¹¹…µ•ôƒ
-Üí¥Ñ•´¹½Õ¹Ñ•É1…‰•±ôð½ÍÁ…¸ø¥ô(€€€€€€€€€€ð½‘¥Øùô(€€€€€€€€ð½…ÉÑ¥±”ø((€€€€€€€€ñ…ÉÑ¥±”±…ÍÍ9…µ”ô‰Í•¹…É¥¼µ¥µÁ…Ðµ…Éˆø(€€€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½Üˆù%µÁ…Ñ¼•ÍÑ¥µ…‘¼ð½ÍÁ…¸ø(€€€€€€€€€íÑåÁ•½˜Í•¹…É¥½]¥¸€ôôô€‰¹Õµ‰•Èˆ€ü€ðø(€€€€€€€€€€€€ñÍÑÉ½¹œùíÍ•¹…É¥½]¥¹ô”ð½ÍÑÉ½¹œø(€€€€€€€€€€€€ñÀùAÉ½‰…‰¥±¥‘……±¥…‘„½¸íÍ•¹…É¥½¹•µåôð½Àø(€€€€€€€€€€€íÑåÁ•½˜Í•¹…É¥½•±Ñ„€ôôô€‰¹Õµ‰•Èˆ€˜˜€ñÍÁ…¸±…ÍÍ9…µ”õíÍ•¹…É¥½•±Ñ„€ð€À€ü€‰¹•…Ñ¥Ù”ˆ€èÍ•¹…É¥½•±Ñ„€ø€À€ü€‰Á½Í¥Ñ¥Ù”ˆ€è€ˆ‰ôø(€€€€€€€€€€€€€íÍ•¹…É¥½•±Ñ„€ø€À€ü€ˆ¬ˆ€è€ˆ‰õíÍ•¹…É¥½•±Ñ…ôÁÕ¹Ñ½Ì™É•¹Ñ”…°•Í•¹…É¥¼…ÑÕ…°(€€€€€€€€€€€€ð½ÍÁ…¸ùô(€€€€€€€€€€ð¼ø€è€ðø(€€€€€€€€€€€€ñÍÑÉ½¹œûŠPð½ÍÑÉ½¹œø(€€€€€€€€€€€€ñÀùÅ…‘”…°µ•¹½ÌÕ¸Á¥¬…±¥…‘¼Á…É„•ÍÑ¥µ…È•°¥µÁ…Ñ¼¸ð½Àø(€€€€€€€€€€ð¼ùô(€€€€€€€€€€ñÍµ…±°ùÌÕ¹„•ÍÑ¥µ…§Í¸¡•ÕËµÍÑ¥„°¹¼Õ¸Ý¥¸É…Ñ”½‰Í•ÉÙ…‘¼¸ð½Íµ…±°ø(€€€€€€€€ð½…ÉÑ¥±”ø(€€€€€€ð½‘¥Øùô(€€€€ð½Í•Ñ¥½¸ùô((€€€€ñÍ•Ñ¥½¸±…ÍÍ9…µ”õíÁ…¹•°½É‘•É•µÉ•½µµ•¹‘…Ñ¥½¹Ì€‘íÅÕ¥­5½‘”€ü€‰ÅÕ¥¬µØÔˆ€è€ˆ‰õôø(€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰Í•Ñ¥½¸µÑ¥Ñ±”ˆø(€€€€€€€€ñ‘¥Øø(€€€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½ÜˆùíÍ•¹…É¥½¹•µä€üM¥µÕ±…§Í¸…Ñ¥Ù„ƒ
-Ü€‘íÍ•¹…É¥½¹•µåõ€€è¹•áÑQ•…´€ôôô€‰•¹•µäˆ€ü€‰I•½µ•¹‘…§Í¸ÁÉ½Ù¥Í¥½¹…°Á…É„ÑÔÁËÍá¥µ¼ÑÕÉ¹¼ˆ€è‘¥ÍÁ±…å¹…±åÍ¥Ì¹‘É…™ÑMÑ…•ôð½ÍÁ…¸ø(€€€€€€€€€€ñ ÈùíÍ•¹…É¥½¹•µä€üI•ÍÁÕ•ÍÑ„Í¤É¥Ù…°•±¥”€‘íÍ•¹…É¥½¹•µåõ€€è‘¥ÍÁ±…åA½Í¥Ñ¥½¸€ôôô€‰¥ÉÍÐÁ¥¬ˆ€ü€‰AÉ¥½É¥‘…‘”µ…Á„ˆ€è‘¥ÍÁ±…åA½Í¥Ñ¥½¸€ôôô€‰1…ÍÐÁ¥¬ˆ€ü€‰…ÍÑ¥¼™¥¹…°ˆ€è€‰½Õ¹Ñ•ÉÌ„±½ÌÁ¥­ÌÉ¥Ù…±•Ì‰ôð½ Èø(€€€€€€€€ð½‘¥Øø(€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰ÍÑ…ÑÕÌµÁ¥±°ˆùí‘¥ÍÁ±…åA½Í¥Ñ¥½¹ôð½ÍÁ…¸ø(€€€€€€ð½‘¥Øø(€€€€€€ñ‘¥Ø±…ÍÍ9…µ”õíÍ¥µÁ±”µÉ•ŒµÉ¥€‘íÅÕ¥­5½‘”€ü€‰ÅÕ¥¬µÉ•ŒµÉ¥ˆ€è€ˆ‰õôø(€€€€€€€€ñI•½µµ•¹‘…Ñ¥½¹…ÉÉ•ÍÕ±Ðõí‰•ÍÑô±…‰•°õí‰•ÍÑ1…‰•±ôÑ½¹”ô‰‰•ÍÐˆÁ½½±¹ÑÉäõíÁ½½±¹ÑÉå½È¡‰•ÍÐ¥ô€¼ø(€€€€€€€€ñI•½µµ•¹‘…Ñ¥½¹…ÉÉ•ÍÕ±ÐõíÍ…™•ô±…‰•°õíÍ…™•1…‰•±ôÑ½¹”ô‰Í…™”ˆÁ½½±¹ÑÉäõíÁ½½±¹ÑÉå½È¡Í…™”¥ô€¼ø(€€€€€€€€ñI•½µµ•¹‘…Ñ¥½¹…ÉÉ•ÍÕ±Ðõí½Õ¹Ñ•Éô±…‰•°õí½Õ¹Ñ•É1…‰•±ôÑ½¹”ô‰½Õ¹Ñ•ÈˆÁ½½±¹ÑÉäõíÁ½½±¹ÑÉå½È¡½Õ¹Ñ•È¥ô€¼ø(€€€€€€ð½‘¥Øø(€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰‘É…™Ðµ‘¥…¹½Í¥ÌµØÄÔˆø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰‘É…™Ðµ½¹™¥‘•¹”µØÄÔˆø(€€€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½Üˆù½¹™¥…¹é„‘”±„É•½µ•¹‘…§Í¸ð½ÍÁ…¸ø(€€€€€€€€€€ñÍÑÉ½¹œùí‘¥ÍÁ±…å¹…±åÍ¥Ì¹½¹™¥‘•¹”¹Í½É•ôñÍµ…±°ø¼ÄÀÀƒ
-Üí‘¥ÍÁ±…å¹…±åÍ¥Ì¹½¹™¥‘•¹”¹±…‰•±ôð½Íµ…±°øð½ÍÑÉ½¹œø(€€€€€€€€€€ñÀùí‘¥ÍÁ±…å¹…±åÍ¥Ì¹½¹™¥‘•¹”¹É•…Í½¹ÍlÁtñð€‰1„É•½µ•¹‘…§Í¸Í”É•…±Õ±„½¸…‘„Á¥¬¸‰ôð½Àø(€€€€€€€€€í‘¥ÍÁ±…å¹…±åÍ¥Ì¹½¹™¥‘•¹”¹…ÕÑ¥½¹Ì¹µ…À ¡¥Ñ•´¤€ôø€ñÍµ…±°±…ÍÍ9…µ”ô‰…ÕÑ¥½¸ˆ­•äõí¥Ñ•µôùí¥Ñ•µôð½Íµ…±°ø¥ô(€€€€€€€€ð½‘¥Øø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰‘É…™Ðµ¡•­±¥ÍÐµØÄÔˆø(€€€€€€€€€í‘¥ÍÁ±…å¹…±åÍ¥Ì¹¡•­±¥ÍÐ¹µ…À ¡¥Ñ•´¤€ôø€ñ…ÉÑ¥±”±…ÍÍ9…µ”õí¥Ñ•´¹ÍÑ…ÑÕÌ€ôôô€‰Õ‰¥•ÉÑ¼ˆ€ü€‰½Ù•É•ˆ€è¥Ñ•´¹ÍÑ…ÑÕÌ€ôôô€‰A…É¥…°ˆ€ü€‰Á…ÉÑ¥…°ˆ€è€‰µ¥ÍÍ¥¹œ‰ô­•äõí¥Ñ•´¹±…‰•±ôø(€€€€€€€€€€€€ñÍÁ…¸ùí¥Ñ•´¹ÍÑ…ÑÕÍôð½ÍÁ…¸øñˆùí¥Ñ•´¹±…‰•±ôð½ˆøñÍµ…±°ùí¥Ñ•´¹‘•Ñ…¥±ôð½Íµ…±°ø(€€€€€€€€€€ð½…ÉÑ¥±”ø¥ô(€€€€€€€€ð½‘¥Øø(€€€€€€ð½‘¥Øø(€€€€€í‰•ÍÐ€˜˜€ñ‘¥Ø±…ÍÍ9…µ”ô‰½¹Ñ•áÑÕ…°µ‰Õ¥±µÁ…¹•°ˆø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰½¹Ñ•áÑÕ…°µ‰Õ¥±µÑ¥Ñ±”ˆø(€€€€€€€€€€ñ	É…Ý±•ÉA½ÉÑÉ…¥Ð¹…µ”õí‰•ÍÐ¹‰É…Ý±•È¹¹…µ•ô±…ÍÍ9…µ”ô‰½¹Ñ•áÑÕ…°µ‰Õ¥±µ…Ù…Ñ…Èˆ€¼ø(€€€€€€€€€€ñ‘¥ØøñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½Üˆù	Õ¥±½¹Ñ•áÑÕ…°ƒ
-Üí‰•ÍÐ¹‰É…Ý±•È¹¹…µ•ôð½ÍÁ…¸øñ Ìùí‰•ÍÐ¹±…¹•A±…¸¹±…¹•õí‰•ÍÐ¹±…¹•A±…¸¹Ñ…É•Ð€ü€ƒŠH‰ÕÍ„„€‘í‰•ÍÐ¹±…¹•A±…¸¹Ñ…É•Ñõ€€è€ˆ‰ôð½ ÌøñÀùí‰•ÍÐ¹±…¹•A±…¸¹¥¹ÍÑÉÕÑ¥½¹ôð½Àøð½‘¥Øø(€€€€€€€€€í‰•ÍÑA½½±¹ÑÉä€˜˜Á½½±A½±¥ä€„ôô€‰=™˜ˆ€˜˜€ñÍÑÉ½¹œùí‰•ÍÑA½½±¹ÑÉä¹™…Ù½É¥Ñ”€ü€‹Šb€ˆ€è€ˆ‰õí‰•ÍÑA½½±¹ÑÉä¹µ…ÍÑ•Éåô¼Ôð½ÍÑÉ½¹œùô(€€€€€€€€ð½‘¥Øø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰½¹Ñ•áÑÕ…°µ‰Õ¥±µÉ¥ˆø(€€€€€€€€€€ñ‘¥ØøñÍÁ…¸ù…‘•Ðð½ÍÁ…¸øñˆùí‰•ÍÐ¹‰Õ¥±¹…‘•Ñôð½ˆøð½‘¥Øø(€€€€€€€€€€ñ‘¥ØøñÍÁ…¸ù!…‰¥±¥‘…•ÍÑ•±…Èð½ÍÁ…¸øñˆùí‰•ÍÐ¹‰Õ¥±¹ÍÑ…ÉA½Ý•Éôð½ˆøð½‘¥Øø(€€€€€€€€€€ñ‘¥ØøñÍÁ…¸ù¹É…¹…©•Ìð½ÍÁ…¸øñˆùí‰•ÍÐ¹‰Õ¥±¹•…ÉÌ¹©½¥¸ ˆ€¬€ˆ¥ôð½ˆøð½‘¥Øø(€€€€€€€€€€ñ‘¥ØøñÍÁ…¸ù!¥Á•É…É„ð½ÍÁ…¸øñˆùí‰•ÍÐ¹‰Õ¥±¹¡åÁ•É¡…É•ôð½ˆøð½‘¥Øø(€€€€€€€€ð½‘¥Øø(€€€€€€€€ñÍµ…±°ùí‰•ÍÐ¹‰Õ¥±¹É•…Í½¹ôð½Íµ…±°ø(€€€€€€ð½‘¥Øùô(€€€€ð½Í•Ñ¥½¸ø((€€€ì…ÅÕ¥­5½‘”€˜˜€¡‘¥ÍÁ±…å¹…±åÍ¥Ì¹Ý¥¹ÍÑ¥µ…Ñ”€ü€ñÍ•Ñ¥½¸±…ÍÍ9…µ”ô‰Á…¹•°½É‘•É•µÝ¥¸µÁ…¹•°ˆø(€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰½É‘•É•µÝ¥¸µ¡•…ˆø(€€€€€€€€ñ‘¥ØøñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½ÜˆùíÍ•¹…É¥½¹•µä€üAÉ½‰…‰¥±¥‘…½¸€‘íÍ•¹…É¥½¹•µåõ€€è€‰AÉ½‰…‰¥±¥‘…•ÍÑ¥µ…‘„‰ôð½ÍÁ…¸øñ Èùí‘¥ÍÁ±…å¹…±åÍ¥Ì¹Ý¥¹ÍÑ¥µ…Ñ”¹Ñ¥Ñ±•ôð½ ÈøñÀùí‘¥ÍÁ±…å¹…±åÍ¥Ì¹Ý¥¹ÍÑ¥µ…Ñ”¹½µÁ±•Ñ•¹•ÍÌ€ð€ÄÀÀ€ü€‰M”…ÑÕ…±¥é„½¸…‘„Á¥¬¥¹ÑÉ½‘Õ¥‘¼¸ˆ€è€‰É…™Ð€ÍØÌ½µÁ±•Ñ¼¸‰ôð½Àøð½‘¥Øø(€€€€€€€€ñ‘¥ØøñÍÑÉ½¹œùí‘¥ÍÁ±…å¹…±åÍ¥Ì¹Ý¥¹ÍÑ¥µ…Ñ”¹Á•É•¹Ñ…•ô”ð½ÍÑÉ½¹œøñÍÁ…¸ùí‘¥ÍÁ±…å¹…±åÍ¥Ì¹Ý¥¹ÍÑ¥µ…Ñ”¹±½Ý•É÷ŠMí‘¥ÍÁ±…å¹…±åÍ¥Ì¹Ý¥¹ÍÑ¥µ…Ñ”¹ÕÁÁ•Éô”ƒ
-Ü½¹™¥…¹é„í‘¥ÍÁ±…å¹…±åÍ¥Ì¹Ý¥¹ÍÑ¥µ…Ñ”¹½¹™¥‘•¹•ôð½ÍÁ…¸øð½‘¥Øø(€€€€€€ð½‘¥Øø(€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰Ý¥¸µµ•Ñ•ÈˆøñÍÁ…¸ÍÑå±”õíìÝ¥‘Ñ è€‘í‘¥ÍÁ±…å¹…±åÍ¥Ì¹Ý¥¹ÍÑ¥µ…Ñ”¹Á•É•¹Ñ…•ô•€õô€¼øð½‘¥Øø(€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰½É‘•É•µÝ¥¸µÍ½É•Ìˆø(€€€€€€€€ñÍÁ…¸ù±¥…‘½Ì€ñˆùí‘¥ÍÁ±…å¹…±åÍ¥Ì¹Ý¥¹ÍÑ¥µ…Ñ”¹…±±¥•‘M½É•ô¼ÄÀÀð½ˆøð½ÍÁ…¸ø(€€€€€€€€ñÍÁ…¸ùI¥Ù…±•Ì€ñˆùí‘¥ÍÁ±…å¹…±åÍ¥Ì¹Ý¥¹ÍÑ¥µ…Ñ”¹•¹•µåM½É•ô¼ÄÀÀð½ˆøð½ÍÁ…¸ø(€€€€€€€€ñÍÁ…¸ùÉ…™Ð€ñˆùí‘¥ÍÁ±…å¹…±åÍ¥Ì¹Ý¥¹ÍÑ¥µ…Ñ”¹½µÁ±•Ñ•¹•ÍÍô”ð½ˆøð½ÍÁ…¸ø(€€€€€€ð½‘¥Øø(€€€€€€ñÍµ…±°ùí‘¥ÍÁ±…å¹…±åÍ¥Ì¹Ý¥¹ÍÑ¥µ…Ñ”¹‘¥Í±…¥µ•Éôð½Íµ…±°ø(€€€€ð½Í•Ñ¥½¸ø€è€ñÍ•Ñ¥½¸±…ÍÍ9…µ”ô‰Á…¹•°½É‘•É•µÝ¥¸µ•µÁÑäˆø(€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½ÜˆùAÉ½‰…‰¥±¥‘…•ÍÑ¥µ…‘„ð½ÍÁ…¸ø(€€€€€€ñ ÈùÅ…‘”…°µ•¹½ÌÕ¸Á¥¬‘”…‘„•ÅÕ¥Á¼ð½ Èø(€€€€€€ñÀù°…±Õ±¼…Á…É••Ë„Õ…¹‘¼•á¥ÍÑ„¥¹™½Éµ…§Í¸‘”…µ‰½Ì±…‘½Ìä…¹…Ë„ÁÉ•¥Í§Í¸…°½µÁ±•Ñ…È•°‘É…™Ð¸ð½Àø(€€€€ð½Í•Ñ¥½¸ø¥ô((€€€ì…ÅÕ¥­5½‘”€˜˜€ñÍ•Ñ¥½¸±…ÍÍ9…µ”ô‰½É‘•É•µ½…¡¥¹œµÉ¥ˆø(€€€€€€ñ…ÉÑ¥±”±…ÍÍ9…µ”ô‰Á…¹•°ˆø(€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½Üˆù½¹Í•©½ÌË…Á¥‘½Ìð½ÍÁ…¸ø(€€€€€€€€ñ ÌùE×¤¹••Í¥Ñ„ÑÔ½µÁ½Í¥§Í¸ð½ Ìø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰ÅÕ¥¬µ…‘Ù¥”µ±¥ÍÐˆø(€€€€€€€€€í‘¥ÍÁ±…å¹…±åÍ¥Ì¹¹••‘Ì¹±•¹Ñ €ü‘¥ÍÁ±…å¹…±åÍ¥Ì¹¹••‘Ì¹Í±¥” À°€Ô¤¹µ…À ¡¥Ñ•´¤€ôø€ñÍÁ…¸­•äõí¥Ñ•µôùÕ‰É¥Èèí¥Ñ•µôð½ÍÁ…¸ø¤€è€ñÍÁ…¸ù1„½µÁ½Í¥§Í¸•ÍÓ„•ÅÕ¥±¥‰É…‘„¸ð½ÍÁ…¸ùô(€€€€€€€€€í‘¥ÍÁ±…å¹…±åÍ¥Ì¹Ñ¡É•…ÑÌ¹Í±¥” À°€Ì¤¹µ…À ¡¥Ñ•´¤€ôø€ñÍÁ…¸±…ÍÍ9…µ”ô‰‘…¹•Èˆ­•äõí¥Ñ•µôùí¥Ñ•µôð½ÍÁ…¸ø¥ô(€€€€€€€€€í‘¥ÍÁ±…å¹…±åÍ¥Ì¹ÍÑÉ•¹Ñ¡Ì¹Í±¥” À°€Ì¤¹µ…À ¡¥Ñ•´¤€ôø€ñÍÁ…¸±…ÍÍ9…µ”ô‰½½ˆ­•äõí¥Ñ•µôùí¥Ñ•µôð½ÍÁ…¸ø¥ô(€€€€€€€€ð½‘¥Øø(€€€€€€ð½…ÉÑ¥±”ø((€€€€€€ñ…ÉÑ¥±”±…ÍÍ9…µ”ô‰Á…¹•°ˆø(€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½Üˆù5…Ñ¡ÕÁÌä³µ¹•…Ìð½ÍÁ…¸ø(€€€€€€€€ñ ÌùµÁ…É•©…µ¥•¹Ñ½ÌÅÕ”‘•‰•Ì‰ÕÍ…Èð½ Ìø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰±¥¹”µµ…Ñ¡ÕÀµ±¥ÍÐˆø(€€€€€€€€€í‘¥ÍÁ±…å¹…±åÍ¥Ì¹Ñ•…µÍÍ¥¹µ•¹ÑÌ¹±•¹Ñ (€€€€€€€€€€€€ü‘¥ÍÁ±…å¹…±åÍ¥Ì¹Ñ•…µÍÍ¥¹µ•¹ÑÌ¹µ…À ¡…ÍÍ¥¹µ•¹Ð°¥¹‘•à¤€ôø€ñ‘¥Ø­•äõí€‘í…ÍÍ¥¹µ•¹Ð¹…±±åô´‘í¥¹‘•áõôø(€€€€€€€€€€€€€€ñˆùí…ÍÍ¥¹µ•¹Ð¹…±±åôð½ˆø(€€€€€€€€€€€€€€ñÍÁ…¸ùí…ÍÍ¥¹µ•¹Ð¹±…¹•ôð½ÍÁ…¸ø(€€€€€€€€€€€€€€ñÍÑÉ½¹œùí…ÍÍ¥¹µ•¹Ð¹•¹•µä€ü	ÕÍ„„€‘í…ÍÍ¥¹µ•¹Ð¹•¹•µåõ€€è€‰5…¹Ó¥¸ÑÔ³µ¹•„‰ôð½ÍÑÉ½¹œø(€€€€€€€€€€€€€€ñÍµ…±°ùí…ÍÍ¥¹µ•¹Ð¹¥¹ÍÑÉÕÑ¥½¹ôð½Íµ…±°ø(€€€€€€€€€€€€ð½‘¥Øø¤(€€€€€€€€€€€€è€ñÀùÅ…‘”·…ÌÁ¥­ÌÁ…É„•¹•É…È•°Á±…¸‘”³µ¹•…Ì¸ð½Àùô(€€€€€€€€ð½‘¥Øø(€€€€€€ð½…ÉÑ¥±”ø((€€€€€€ñ…ÉÑ¥±”±…ÍÍ9…µ”ô‰Á…¹•°ˆø(€€€€€€€€ñÍÁ…¸±…ÍÍ9…µ”ô‰•å•‰É½Üˆù1•ÑÕÉ„É¥Ù…°ð½ÍÁ…¸ø(€€€€€€€€ñ Ìù•‰¥±¥‘…‘•Ìä…µ•¹…é…Ìð½ Ìø(€€€€€€€€ñ‘¥Ø±…ÍÍ9…µ”ô‰ÅÕ¥¬µ…‘Ù¥”µ±¥ÍÐˆø(€€€€€€€€€í‘¥ÍÁ±…å¹…±åÍ¥Ì¹•¹•µå]•…­¹•ÍÍ•Ì¹±•¹Ñ €ü‘¥ÍÁ±…å¹…±åÍ¥Ì¹•¹•µå]•…­¹•ÍÍ•Ì¹Í±¥” À°€Ô¤¹µ…À ¡¥Ñ•´¤€ôø€ñÍÁ…¸±…ÍÍ9…µ”ô‰½½ˆ­•äõí¥Ñ•µôùí¥Ñ•µôð½ÍÁ…¸ø¤€è€ñÍÁ…¸ù…±Ñ…¸Á¥­ÌÉ¥Ù…±•ÌÁ…É„‘•Ñ•Ñ…ÈÕ¹„‘•‰¥±¥‘…±…É„¸ð½ÍÁ…¸ùô(€€€€€€€€€í‰•ÍÐü¹•áÁ½Í•‘Q¼¹Í±¥” À°€Ì¤¹µ…À ¡¹…µ”¤€ôø€ñÍÁ…¸±…ÍÍ9…µ”ô‰‘…¹•Èˆ­•äõí¹…µ•ôùí¹…µ•ôÁÕ•‘”™É•¹…È…°Á¥¬É•½µ•¹‘…‘¼¸ð½ÍÁ…¸ø¥ô(€€€€€€€€ð½‘¥Øø(€€€€€€ð½…ÉÑ¥±”ø(€€€€ð½Í•Ñ¥½¸ùô(€€ð½‘¥Øøì)ô(
+      .slice(0, 10);
+  }, [query, brawlers, selectedNames]);
+
+  const addNextPick = (name: string) => {
+    if (nextIndex < 0) return;
+    setOrderedPicks((current) => current.map((pick, index) => index === nextIndex ? name : pick));
+    setScenarioEnemy("");
+    setPlayedBrawler("");
+    setMatchNote("");
+    setQuery("");
+    setFocused(false);
+  };
+
+  const applyPair = (first: string, second: string) => {
+    if (
+      nextIndex < 0 ||
+      sequence[nextIndex] !== "ally" ||
+      sequence[nextIndex + 1] !== "ally"
+    ) return;
+
+    setOrderedPicks((current) => current.map((pick, index) => {
+      if (index === nextIndex) return first;
+      if (index === nextIndex + 1) return second;
+      return pick;
+    }));
+    setScenarioEnemy("");
+    setPlayedBrawler("");
+    setMatchNote("");
+    setQuery("");
+    setFocused(false);
+    setMessage(`Pareja registrada: ${first} + ${second}`);
+  };
+
+  const clearFrom = (index: number) => {
+    setOrderedPicks((current) => current.map((pick, pickIndex) => pickIndex >= index ? null : pick));
+    setScenarioEnemy("");
+    setQuery("");
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && suggestions[0] && nextIndex >= 0) {
+      event.preventDefault();
+      addNextPick(suggestions[0].name);
+    }
+    if (event.key === "Backspace" && !query) {
+      const lastFilled = [...orderedPicks].map((pick, index) => pick ? index : -1).filter((index) => index >= 0).pop();
+      if (typeof lastFilled === "number") clearFrom(lastFilled);
+    }
+  };
+
+  const changeMode = (nextMode: string) => {
+    setMode(nextMode);
+    const first = maps.find((item) => item.mode === nextMode && item.rotationStatus === "Actual")
+      || maps.find((item) => item.mode === nextMode);
+    if (first) setMapSlug(first.slug);
+    setOrderedPicks(Array(6).fill(null));
+    setBans([]);
+    setScenarioEnemy("");
+    setPlayedBrawler("");
+    setMatchNote("");
+  };
+
+  const resetDraft = () => {
+    setOrderedPicks(Array(6).fill(null));
+    setBans([]);
+    setScenarioEnemy("");
+    setQuery("");
+    setMessage("");
+  };
+
+  const shareDraft = async () => {
+    if (!map) return;
+    const params = new URLSearchParams({
+      map: map.slug,
+      first: firstPickOwner,
+      picks: orderedPicks.map((pick) => pick || "").join("|"),
+      bans: bans.join("|"),
+      pool: poolPolicy,
+      queue: queueMode,
+      quick: quickMode ? "1" : "0",
+      scenario: scenarioEnemy,
+      learn: learnFromHistory ? "1" : "0",
+    });
+    const url = `${window.location.origin}/draft?${params.toString()}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setMessage("Enlace copiado");
+    } catch {
+      setMessage("No se pudo copiar el enlace");
+    }
+  };
+
+  if (!map || !analysis || !displayAnalysis) return null;
+
+  const best = displayAnalysis.recommendations[0];
+  const safe = selectDistinct(
+    displayAnalysis.recommendations,
+    (a, b) => {
+      const aValue =
+        a.score * .42 +
+        a.metrics.safety * .32 +
+        a.metrics.mapFit * .15 +
+        a.metrics.composition * .08 -
+        a.metrics.risk * .20 +
+        (alternativeTierBonus[a.brawler.tier] || 0);
+      const bValue =
+        b.score * .42 +
+        b.metrics.safety * .32 +
+        b.metrics.mapFit * .15 +
+        b.metrics.composition * .08 -
+        b.metrics.risk * .20 +
+        (alternativeTierBonus[b.brawler.tier] || 0);
+      return bValue - aValue;
+    },
+    best ? [best.brawler.name] : [],
+  );
+  const counter = selectDistinct(
+    displayAnalysis.recommendations,
+    (a, b) => (
+      b.countersHit.length * 32 + b.softCounters.length * 12 + b.metrics.counter * .6 + b.score * .2
+    ) - (
+      a.countersHit.length * 32 + a.softCounters.length * 12 + a.metrics.counter * .6 + a.score * .2
+    ),
+    [best?.brawler.name, safe?.brawler.name].filter(Boolean) as string[],
+  );
+
+  const predictedEnemyPicks = analysis.predictedEnemyPicks
+    .filter((prediction) => !unavailableNames.has(normalize(prediction.brawler.name)))
+    .slice(0, 4);
+  const scenarioCandidates = brawlers
+    .filter((brawler) => !unavailableNames.has(normalize(brawler.name)))
+    .sort((a, b) => a.name.localeCompare(b.name, "es"));
+  const scenarioPrediction = analysis.predictedEnemyPicks.find(
+    (prediction) => normalize(prediction.brawler.name) === normalize(scenarioEnemy),
+  );
+  const baselineWin = analysis.winEstimate?.percentage;
+  const scenarioWin = scenarioAnalysis?.winEstimate?.percentage;
+  const scenarioDelta = typeof baselineWin === "number" && typeof scenarioWin === "number"
+    ? scenarioWin - baselineWin
+    : undefined;
+
+  const scenarioResponse = scenarioAnalysis?.recommendations[0];
+  const scenarioAlternatives = scenarioAnalysis?.recommendations.slice(1, 3) || [];
+  const suggestedBans = analysis.banRecommendations
+    .filter((item) => !bans.some((ban) => normalize(ban) === normalize(item.brawler.name)))
+    .filter((item) => normalize(item.brawler.name) !== normalize(scenarioEnemy))
+    .slice(0, 3);
+
+  const addSuggestedBan = (name: string) => {
+    if (bans.length >= 6 || bans.some((ban) => normalize(ban) === normalize(name))) return;
+    setBans((current) => [...current, name]);
+    if (normalize(scenarioEnemy) === normalize(name)) setScenarioEnemy("");
+  };
+
+  const confirmScenario = () => {
+    if (!scenarioEnemy || nextEnemyIndex < 0 || nextEnemyIndex !== nextIndex || nextTeam !== "enemy") return;
+    setOrderedPicks((current) => current.map((pick, index) => index === nextEnemyIndex ? scenarioEnemy : pick));
+    setScenarioEnemy("");
+  };
+
+  const saveDraftResult = () => {
+    if (!map || !playedBrawler || allies.length !== 3 || enemies.length !== 3) return;
+    const profile = brawlers.find((brawler) => brawler.name === playedBrawler);
+    const slotIndex = orderedPicks.findIndex((pick) => pick === playedBrawler);
+    const match: PersonalMatch = {
+      id: crypto.randomUUID(),
+      date: new Date().toISOString(),
+      mapSlug: map.slug,
+      mapName: map.name,
+      mode: map.mode,
+      brawler: playedBrawler,
+      brawlerSlug: profile?.slug,
+      role: profile?.role,
+      result: matchResult,
+      draftPosition: slotIndex === 0 ? "First pick" : slotIndex === 5 ? "Last pick" : "Pick intermedio",
+      allies,
+      enemies,
+      note: matchNote,
+      source: "Draft Coach",
+    };
+    const nextHistory = [match, ...matchHistory].slice(0, 300);
+    setMatchHistory(nextHistory);
+    saveMatchHistory(nextHistory);
+    setPersonalPerformance(buildPersonalPerformance(nextHistory));
+    setMessage("Resultado guardado; las recomendaciones se han actualizado");
+    setMatchNote("");
+  };
+
+  const poolEntryFor = (result?: DraftRecommendation) =>
+    result ? personalPool[result.brawler.slug] : undefined;
+
+  const bestPoolEntry = poolEntryFor(best);
+  const robustPick = stressAnalysis?.robustPick;
+  const robustAlternatives = stressAnalysis?.results
+    .filter((item) => item.recommendation.brawler.name !== robustPick?.recommendation.brawler.name)
+    .slice(0, 2) || [];
+
+  const bestLabel = displayPosition === "First pick"
+    ? "Mejor brawler del mapa"
+    : displayPosition === "Last pick"
+      ? "Mejor last pick"
+      : "Mejor counter";
+  const safeLabel = displayPosition === "First pick" ? "Alternativa segura" : "Counter seguro";
+  const counterLabel = displayPosition === "First pick" ? "OpciÃ³n flexible" : "Counter alternativo";
+
+  return <div className="ordered-draft-assistant">
+    <section className="panel ordered-draft-panel">
+      <div className="section-title">
+        <div><span className="eyebrow">Draft Coach v0.15</span><h2>Introduce los picks en orden</h2></div>
+        <div className="draft-action-row">
+          <button type="button" className="secondary-button compact-button" onClick={shareDraft}>Compartir</button>
+          <button type="button" className="secondary-button compact-button" onClick={resetDraft}>Reiniciar</button>
+        </div>
+      </div>
+      {message && <div className="draft-toast">{message}</div>}
+
+      <div className="ordered-draft-context ordered-draft-context-v5">
+        <label>Modo<select value={mode} onChange={(event) => changeMode(event.target.value)}>{modes.map((item) => <option key={item}>{item}</option>)}</select></label>
+        <label>Mapa<select value={mapSlug} onChange={(event) => { setMapSlug(event.target.value); setOrderedPicks(Array(6).fill(null)); setBans([]); setScenarioEnemy(""); }}>{availableMaps.map((item) => <option value={item.slug} key={item.slug}>{item.name}{item.rotationStatus === "HistÃ³rico" ? " Â· histÃ³rico" : ""}</option>)}</select></label>
+        <label>First pick<select value={firstPickOwner} onChange={(event) => { setFirstPickOwner(event.target.value as DraftFirstPickOwner); setOrderedPicks(Array(6).fill(null)); setScenarioEnemy(""); }}><option value="Aliado">Mi equipo</option><option value="Rival">Equipo rival</option></select></label>
+        <label>PolÃ­tica de pool<select value={poolPolicy} onChange={(event) => setPoolPolicy(event.target.value as PoolPolicy)}><option value="Off">No usar pool</option><option value="Preferir">Priorizar mi pool</option><option value="Solo pool">Solo brawlers disponibles</option></select></label>
+        <label>Cola Ranked<select value={queueMode} onChange={(event) => setQueueMode(event.target.value as QueueMode)}><option value="SoloQ">SoloQ</option><option value="DÃºo">DÃºo</option><option value="TrÃ­o">TrÃ­o premade</option></select></label>
+        <label className="auto-position-toggle"><input type="checkbox" checked={quickMode} onChange={(event) => setQuickMode(event.target.checked)} /><span><b>Modo ultrarrÃ¡pido</b><small>Pick, lÃ­nea y build</small></span></label>
+        <label className="auto-position-toggle learning-toggle-v7"><input type="checkbox" checked={learnFromHistory} onChange={(event) => setLearnFromHistory(event.target.checked)} /><span><b>Aprender de mi historial</b><small>{personalPerformance?.overall.games || 0} partidas registradas</small></span></label>
+      </div>
+
+      <div className="first-pick-audit-v11 first-pick-audit-v12">
+        <div className="first-pick-audit-heading">
+          <div>
+            <span className="eyebrow">First picks estructurales</span>
+            <small>{map.firstPickReviewedAt || "RevisiÃ³n editorial"} Â· confianza {map.firstPickConfidence || "Media"} Â· motor v0.15</small>
+          </div>
+          {map.geometry && <div className="map-geometry-chips-v12">
+            <span><b>{map.geometry.openness}</b>Apertura</span>
+            <span><b>{map.geometry.bushDensity}</b>Arbustos</span>
+            <span><b>{map.geometry.wallDensity}</b>Muros</span>
+            <span><b>{map.geometry.destructibility}</b>Muros rompibles</span>
+            <span><b>{map.geometry.chokeDensity}</b>Pasillos</span>
+          </div>}
+        </div>
+        <div className="first-pick-audit-brawlers">
+          {map.firstPicks.map((name, index) => {
+            const candidate = map.firstPickCandidates?.find((item) => item.name === name);
+            const profile = brawlers.find((item) => item.name === name);
+            const currentEvaluation = profile ? evaluateFirstPick(profile, map) : undefined;
+            return <span key={name}>
+              <BrawlerPortrait name={name} className="first-pick-audit-avatar" />
+              <span><b>{index + 1}. {name}</b><small>{currentEvaluation ? `${currentEvaluation.score}/100 Â· ${currentEvaluation.strengths[0] || candidate?.reasons[0] || "Pick ciego estable"}` : "Pick ciego auditado"}</small></span>
+            </span>;
+          })}
+        </div>
+        {map.geometry && <small className="opening-model-note-v15">La facilidad de romper muros no presupone que el campo vaya a abrirse: el motor exige una herramienta de wallbreak fiable para dar peso a ese escenario.</small>}
+        {map.firstPickNotes && <p>{map.firstPickNotes}</p>}
+      </div>
+
+      <div className="draft-ban-panel-v51">
+        <BrawlerDraftPicker
+          title="Bans"
+          subtitle="AÃ±ade los brawlers bloqueados antes o durante el draft"
+          values={bans}
+          max={6}
+          roster={brawlers}
+          unavailable={selectedNames}
+          tone="ban"
+          onChange={(values) => {
+            setBans(values);
+            if (scenarioEnemy && values.some((ban) => normalize(ban) === normalize(scenarioEnemy))) setScenarioEnemy("");
+          }}
+        />
+        {suggestedBans.length > 0 && <div className="suggested-ban-row">
+          <div><span className="eyebrow">Bans sugeridos</span><small>SegÃºn mapa, amenazas y tus picks</small></div>
+          {suggestedBans.map((item) => <button
+            type="button"
+            key={item.brawler.slug}
+            onClick={() => addSuggestedBan(item.brawler.name)}
+            disabled={bans.length >= 6}
+          >
+            <BrawlerPortrait name={item.brawler.name} className="suggested-ban-avatar" />
+            <span><b>{item.brawler.name}</b><small>{item.reasons[0] || "Amenaza prioritaria"}</small></span>
+            <strong>Ban</strong>
+          </button>)}
+        </div>}
+      </div>
+
+      <div className="ordered-phase-labels">
+        <span>First pick</span><span>2 picks</span><span>2 picks</span><span>Last pick</span>
+      </div>
+
+      <div className="ordered-pick-bar">
+        {orderedPicks.map((pick, index) => {
+          const team = sequence[index];
+          const isNext = index === nextIndex;
+          const simulatedPick = !pick && scenarioEnemy && index === nextEnemyIndex ? scenarioEnemy : "";
+          const visiblePick = pick || simulatedPick;
+          return <button
+            type="button"
+            key={index}
+            className={`ordered-pick-slot ${team === "ally" ? "ally" : "enemy"} ${pick ? "filled" : ""} ${simulatedPick ? "simulated" : ""} ${isNext ? "next" : ""}`}
+            onClick={() => pick && clearFrom(index)}
+            title={pick ? `Corregir desde ${pick}` : simulatedPick ? `SimulaciÃ³n: ${simulatedPick}` : `${phaseLabel(index)} Â· ${team === "ally" ? "Aliado" : "Rival"}`}
+          >
+            <small>{index + 1}</small>
+            {visiblePick ? <><BrawlerPortrait name={visiblePick} className="ordered-pick-avatar" /><b>{visiblePick}</b>{simulatedPick && <em>Simulado</em>}</> : <><span>+</span><b>{team === "ally" ? "Aliado" : "Rival"}</b></>}
+          </button>;
+        })}
+      </div>
+
+      {nextIndex >= 0 && best && <div className={`live-pick-recommendation-v121 ${nextTeam === "ally" ? "ready" : "provisional"}`}>
+        <div className="live-pick-recommendation-main-v121">
+          <BrawlerPortrait name={best.brawler.name} className="live-pick-recommendation-avatar-v121" priority />
+          <div>
+            <span className="eyebrow">{nextTeam === "ally" ? `Pick recomendado ahora Â· ${queueMode}` : `RecomendaciÃ³n para tu prÃ³ximo turno Â· ${queueMode}`}</span>
+            <h3>{best.brawler.name}</h3>
+            <p>{best.brief}</p>
+            <small>{best.reasons.slice(0, 2).join(" Â· ") || best.counterLabel}</small>
+          </div>
+          <strong>{best.score}</strong>
+          {nextTeam === "ally" && <button type="button" onClick={() => addNextPick(best.brawler.name)}>Usar pick</button>}
+        </div>
+        <div className="live-pick-alternatives-v121">
+          {safe && <span><b>Seguro</b>{safe.brawler.name}</span>}
+          {counter && <span><b>Alternativa</b>{counter.brawler.name}</span>}
+          <span><b>LÃ­nea</b>{best.suggestedLine}</span>
+          <span><b>Confianza {displayAnalysis.confidence.label}</b>{displayAnalysis.confidence.score}/100 Â· margen {displayAnalysis.confidence.gap}</span>
+        </div>
+      </div>}
+
+      {nextIndex >= 0 && robustPick && stressAnalysis && <div className="draft-stress-panel-v14">
+        <div className="draft-stress-heading-v14">
+          <div>
+            <span className="eyebrow">Prueba de respuestas probables</span>
+            <h3>{robustPick.recommendation.brawler.name} Â· {robustPick.verdict}</h3>
+            <p>{stressAnalysis.summary}</p>
+          </div>
+          <div className="draft-resilience-score-v14">
+            <strong>{robustPick.resilience}</strong>
+            <span>Resiliencia</span>
+          </div>
+        </div>
+
+        <div className="draft-stress-main-v14">
+          <div className="draft-stress-pick-v14">
+            <BrawlerPortrait name={robustPick.recommendation.brawler.name} className="draft-stress-avatar-v14" priority />
+            <div>
+              <b>Pick mÃ¡s robusto</b>
+              <strong>{robustPick.recommendation.brawler.name}</strong>
+              <small>{robustPick.recommendation.brief}</small>
+            </div>
+            {nextTeam === "ally" && <button type="button" onClick={() => addNextPick(robustPick.recommendation.brawler.name)}>Usar pick robusto</button>}
+          </div>
+          <div className="draft-stress-metrics-v14">
+            <span><b>{robustPick.averageScore}</b>Media tras respuesta</span>
+            <span><b>{robustPick.worstScore}</b>Peor escenario</span>
+            <span><b>{robustPick.directThreats}</b>Counters directos</span>
+            <span><b>{robustPick.scenarios.length}</b>Respuestas probadas</span>
+          </div>
+        </div>
+
+        <div className="draft-stress-scenarios-v14">
+          {robustPick.scenarios.map((stressScenario) => <article className={stressScenario.directThreat ? "danger" : "stable"} key={stressScenario.enemy.slug}>
+            <BrawlerPortrait name={stressScenario.enemy.name} className="draft-stress-enemy-v14" />
+            <div>
+              <b>{stressScenario.enemy.name}</b>
+              <small>{stressScenario.reason}</small>
+            </div>
+            <span>
+              <strong>{stressScenario.candidateScore}</strong>
+              <small>{stressScenario.scoreDrop ? `âˆ’${stressScenario.scoreDrop}` : "estable"}</small>
+            </span>
+          </article>)}
+        </div>
+
+        {robustAlternatives.length > 0 && <div className="draft-stress-alternatives-v14">
+          <span>Otras opciones resistentes</span>
+          {robustAlternatives.map((item) => <button type="button" key={item.recommendation.brawler.slug} onClick={() => nextTeam === "ally" && addNextPick(item.recommendation.brawler.name)} disabled={nextTeam !== "ally"}>
+            <b>{item.recommendation.brawler.name}</b>
+            <small>{item.resilience}/100 Â· {item.verdict} Â· peor caso {item.worstScore}</small>
+          </button>)}
+        </div>}
+      </div>}
+
+      {hasDoubleAllyTurn && pairRecommendations[0] && <div className="double-pick-panel-v13">
+        <div className="double-pick-heading-v13">
+          <div>
+            <span className="eyebrow">Doble pick recomendado Â· {queueMode}</span>
+            <h3>{pairRecommendations[0].first.brawler.name} + {pairRecommendations[0].second.brawler.name}</h3>
+            <p>{pairRecommendations[0].reasons.slice(0, 3).join(" Â· ")}</p>
+          </div>
+          <strong>{pairRecommendations[0].score}</strong>
+        </div>
+        <div className="double-pick-brawlers-v13">
+          {[pairRecommendations[0].first, pairRecommendations[0].second].map((item, index) => <article key={item.brawler.slug}>
+            <span>{index + 1}</span>
+            <BrawlerPortrait name={item.brawler.name} className="double-pick-avatar-v13" priority={index === 0} />
+            <div><b>{item.brawler.name}</b><small>{item.brawler.role} Â· {item.suggestedLine}</small></div>
+          </article>)}
+        </div>
+        <div className="double-pick-metrics-v13">
+          <span><b>{pairRecommendations[0].synergy}</b>Sinergia</span>
+          <span><b>{pairRecommendations[0].coverage}</b>Cobertura</span>
+          <span><b>{pairRecommendations[0].coordination}</b>CoordinaciÃ³n</span>
+          <span><b>{pairRecommendations[0].lanePlan}</b>Plan de lÃ­neas</span>
+        </div>
+        {pairRecommendations[0].risks.length > 0 && <small className="double-pick-risk-v13">Riesgo: {pairRecommendations[0].risks.join(" Â· ")}</small>}
+        <div className="double-pick-actions-v13">
+          <button type="button" onClick={() => addNextPick(pairRecommendations[0].first.brawler.name)}>Usar primero</button>
+          <button type="button" onClick={() => applyPair(pairRecommendations[0].first.brawler.name, pairRecommendations[0].second.brawler.name)}>
+            {queueMode === "SoloQ" ? "Simular pareja" : "Aplicar pareja"}
+          </button>
+        </div>
+        {pairRecommendations.length > 1 && <div className="double-pick-alternatives-v13">
+          {pairRecommendations.slice(1, 4).map((pair) => <button
+            type="button"
+            key={`${pair.first.brawler.slug}-${pair.second.brawler.slug}`}
+            onClick={() => applyPair(pair.first.brawler.name, pair.second.brawler.name)}
+          >
+            <b>{pair.first.brawler.name} + {pair.second.brawler.name}</b>
+            <small>{pair.score}/100 Â· {pair.reasons[0] || "Pareja equilibrada"}</small>
+          </button>)}
+        </div>}
+      </div>}
+
+      <div className={`common-pick-entry ${nextTeam === "ally" ? "ally" : "enemy"}`}>
+        <div>
+          <span className="eyebrow">{nextIndex < 0 ? "Draft completo" : `Pick ${nextIndex + 1} Â· ${nextTeam === "ally" ? "Aliado" : "Rival"}`}</span>
+          <h3>{nextIndex < 0 ? "Los seis picks estÃ¡n completos" : `AÃ±adir siguiente pick ${nextTeam === "ally" ? "aliado" : "rival"}`}</h3>
+        </div>
+        <div className="common-pick-search">
+          <input
+            value={query}
+            disabled={nextIndex < 0}
+            onFocus={() => setFocused(true)}
+            onBlur={() => window.setTimeout(() => setFocused(false), 120)}
+            onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={nextIndex < 0 ? "Draft completo" : "Buscar brawlerâ€¦"}
+          />
+          {focused && nextIndex >= 0 && suggestions.length > 0 && <div className="common-pick-suggestions">
+            {suggestions.map((brawler) => <button type="button" key={brawler.slug} onMouseDown={() => addNextPick(brawler.name)}>
+              <BrawlerPortrait name={brawler.name} className="suggestion-avatar" />
+              <span><b>{brawler.name}</b><small>{brawler.role} Â· {brawler.tier}</small></span>
+            </button>)}
+          </div>}
+        </div>
+        <strong className={`turn-status ${nextTeam === "ally" ? "ally" : "enemy"}`}>
+          {nextIndex < 0
+            ? "Finalizado"
+            : nextTeam === "ally"
+              ? position === "First pick" ? "Elige un pick sÃ³lido" : position === "Last pick" ? "Busca el mÃ¡ximo counter" : "Counterea y completa"
+              : "Introduce el pick rival"}
+        </strong>
+      </div>
+      <small className="ordered-edit-hint">Pulsa un pick ya introducido para corregirlo; se borrarÃ¡n tambiÃ©n los picks posteriores.</small>
+    </section>
+
+    {nextIndex < 0 && allies.length === 3 && enemies.length === 3 && <section className="panel draft-result-panel-v7">
+      <div className="section-title"><div><span className="eyebrow">Aprendizaje personal</span><h2>Guardar resultado del draft</h2></div><span className="status-pill">3 vs 3 completo</span></div>
+      <div className="draft-result-form-v7">
+        <label>Â¿QuÃ© brawler jugaste?<select value={playedBrawler} onChange={(event) => setPlayedBrawler(event.target.value)}><option value="">Seleccionar aliadoâ€¦</option>{allies.map((ally) => <option key={ally}>{ally}</option>)}</select></label>
+        <label>Resultado<select value={matchResult} onChange={(event) => setMatchResult(event.target.value as MatchResult)}><option>Victoria</option><option>Derrota</option></select></label>
+        <label>Nota rÃ¡pida<input value={matchNote} onChange={(event) => setMatchNote(event.target.value)} placeholder="Matchup, error o acierto clave" /></label>
+        <button type="button" className="primary-button" disabled={!playedBrawler} onClick={saveDraftResult}>Guardar y aprender</button>
+      </div>
+      <small>La recomendaciÃ³n personal se ajusta de forma gradual; una sola partida no cambia significativamente el ranking.</small>
+    </section>}
+
+    {nextEnemyIndex >= 0 && <section className={`panel draft-simulator-v6 ${scenarioEnemy ? "scenario-active" : ""}`}>
+      <div className="section-title">
+        <div>
+          <span className="eyebrow">Simulador del rival</span>
+          <h2>Â¿QuÃ© pasa si el rival eligeâ€¦?</h2>
+        </div>
+        {scenarioEnemy && <button type="button" className="secondary-button compact-button" onClick={() => setScenarioEnemy("")}>Cerrar simulaciÃ³n</button>}
+      </div>
+
+      <div className="prediction-strip">
+        {predictedEnemyPicks.map((prediction, index) => <button
+          type="button"
+          className={normalize(scenarioEnemy) === normalize(prediction.brawler.name) ? "active" : ""}
+          key={prediction.brawler.slug}
+          onClick={() => setScenarioEnemy(prediction.brawler.name)}
+        >
+          <span className="prediction-rank">{index + 1}</span>
+          <BrawlerPortrait name={prediction.brawler.name} className="prediction-avatar" />
+          <div><b>{prediction.brawler.name}</b><small>{prediction.reason}</small></div>
+          <strong>{prediction.score}</strong>
+        </button>)}
+      </div>
+
+      <div className="scenario-selector-row">
+        <label>Simular otro brawler<select value={scenarioEnemy} onChange={(event) => setScenarioEnemy(event.target.value)}>
+          <option value="">Seleccionarâ€¦</option>
+          {scenarioCandidates.map((brawler) => <option value={brawler.name} key={brawler.slug}>{brawler.name} Â· {brawler.role}</option>)}
+        </select></label>
+        <div>
+          <span>PrÃ³ximo hueco rival</span>
+          <b>{nextEnemyIndex + 1} Â· {phaseLabel(nextEnemyIndex)}</b>
+        </div>
+      </div>
+
+      {scenarioEnemy && scenarioAnalysis && scenarioResponse && <div className="scenario-result-grid">
+        <article className="scenario-threat-card">
+          <span className="eyebrow">Amenaza simulada</span>
+          <div className="scenario-brawler-head">
+            <BrawlerPortrait name={scenarioEnemy} className="scenario-main-avatar" />
+            <div><h3>{scenarioEnemy}</h3><p>{scenarioPrediction?.reason || "Escenario manual seleccionado"}</p></div>
+          </div>
+          {scenarioPrediction?.target && <strong>Puede castigar a {scenarioPrediction.target}</strong>}
+          <small>{scenarioPrediction?.response || "El asistente recalcula la respuesta Ã³ptima con el draft actual."}</small>
+          <div className="scenario-actions">
+            {nextEnemyIndex === nextIndex && nextTeam === "enemy" && <button type="button" className="primary-button" onClick={confirmScenario}>Confirmar pick rival</button>}
+            <button type="button" className="secondary-button" disabled={bans.length >= 6} onClick={() => addSuggestedBan(scenarioEnemy)}>AÃ±adir a bans</button>
+          </div>
+        </article>
+
+        <article className="scenario-response-card">
+          <span className="eyebrow">Respuesta recomendada</span>
+          <div className="scenario-brawler-head">
+            <BrawlerPortrait name={scenarioResponse.brawler.name} className="scenario-main-avatar" />
+            <div><h3>{scenarioResponse.brawler.name}</h3><p>{scenarioResponse.brief}</p></div>
+            <strong>{scenarioResponse.score}</strong>
+          </div>
+          <div className="scenario-response-details">
+            <span><b>LÃ­nea</b>{scenarioResponse.lanePlan.lane}</span>
+            <span><b>Objetivo</b>{scenarioResponse.lanePlan.target || "Completar composiciÃ³n"}</span>
+            <span><b>Build</b>{scenarioResponse.build.gears.join(" + ")}</span>
+          </div>
+          {scenarioAlternatives.length > 0 && <div className="scenario-alternatives">
+            <b>Alternativas</b>
+            {scenarioAlternatives.map((item) => <span key={item.brawler.slug}>{item.brawler.name} Â· {item.counterLabel}</span>)}
+          </div>}
+        </article>
+
+        <article className="scenario-impact-card">
+          <span className="eyebrow">Impacto estimado</span>
+          {typeof scenarioWin === "number" ? <>
+            <strong>{scenarioWin}%</strong>
+            <p>Probabilidad aliada con {scenarioEnemy}</p>
+            {typeof scenarioDelta === "number" && <span className={scenarioDelta < 0 ? "negative" : scenarioDelta > 0 ? "positive" : ""}>
+              {scenarioDelta > 0 ? "+" : ""}{scenarioDelta} puntos frente al escenario actual
+            </span>}
+          </> : <>
+            <strong>â€”</strong>
+            <p>AÃ±ade al menos un pick aliado para estimar el impacto.</p>
+          </>}
+          <small>Es una estimaciÃ³n heurÃ­stica, no un win rate observado.</small>
+        </article>
+      </div>}
+    </section>}
+
+    <section className={`panel ordered-recommendations ${quickMode ? "quick-v5" : ""}`}>
+      <div className="section-title">
+        <div>
+          <span className="eyebrow">{scenarioEnemy ? `SimulaciÃ³n activa Â· ${scenarioEnemy}` : nextTeam === "enemy" ? "RecomendaciÃ³n provisional para tu prÃ³ximo turno" : displayAnalysis.draftStage}</span>
+          <h2>{scenarioEnemy ? `Respuesta si rival elige ${scenarioEnemy}` : displayPosition === "First pick" ? "Prioridad de mapa" : displayPosition === "Last pick" ? "Castigo final" : "Counters a los picks rivales"}</h2>
+        </div>
+        <span className="status-pill">{displayPosition}</span>
+      </div>
+      <div className={`simple-rec-grid ${quickMode ? "quick-rec-grid" : ""}`}>
+        <RecommendationCard result={best} label={bestLabel} tone="best" poolEntry={poolEntryFor(best)} />
+        <RecommendationCard result={safe} label={safeLabel} tone="safe" poolEntry={poolEntryFor(safe)} />
+        <RecommendationCard result={counter} label={counterLabel} tone="counter" poolEntry={poolEntryFor(counter)} />
+      </div>
+      <div className="draft-diagnosis-v15">
+        <div className="draft-confidence-v15">
+          <span className="eyebrow">Confianza de la recomendaciÃ³n</span>
+          <strong>{displayAnalysis.confidence.score}<small>/100 Â· {displayAnalysis.confidence.label}</small></strong>
+          <p>{displayAnalysis.confidence.reasons[0] || "La recomendaciÃ³n se recalcula con cada pick."}</p>
+          {displayAnalysis.confidence.cautions.map((item) => <small className="caution" key={item}>{item}</small>)}
+        </div>
+        <div className="draft-checklist-v15">
+          {displayAnalysis.checklist.map((item) => <article className={item.status === "Cubierto" ? "covered" : item.status === "Parcial" ? "partial" : "missing"} key={item.label}>
+            <span>{item.status}</span><b>{item.label}</b><small>{item.detail}</small>
+          </article>)}
+        </div>
+      </div>
+      {best && <div className="contextual-build-panel">
+        <div className="contextual-build-title">
+          <BrawlerPortrait name={best.brawler.name} className="contextual-build-avatar" />
+          <div><span className="eyebrow">Build contextual Â· {best.brawler.name}</span><h3>{best.lanePlan.lane}{best.lanePlan.target ? ` â†’ busca a ${best.lanePlan.target}` : ""}</h3><p>{best.lanePlan.instruction}</p></div>
+          {bestPoolEntry && poolPolicy !== "Off" && <strong>{bestPoolEntry.favorite ? "â˜… " : ""}{bestPoolEntry.mastery}/5</strong>}
+        </div>
+        <div className="contextual-build-grid">
+          <div><span>Gadget</span><b>{best.build.gadget}</b></div>
+          <div><span>Habilidad estelar</span><b>{best.build.starPower}</b></div>
+          <div><span>Engranajes</span><b>{best.build.gears.join(" + ")}</b></div>
+          <div><span>Hipercarga</span><b>{best.build.hypercharge}</b></div>
+        </div>
+        <small>{best.build.reason}</small>
+      </div>}
+    </section>
+
+    {!quickMode && (displayAnalysis.winEstimate ? <section className="panel ordered-win-panel">
+      <div className="ordered-win-head">
+        <div><span className="eyebrow">{scenarioEnemy ? `Probabilidad con ${scenarioEnemy}` : "Probabilidad estimada"}</span><h2>{displayAnalysis.winEstimate.title}</h2><p>{displayAnalysis.winEstimate.completeness < 100 ? "Se actualiza con cada pick introducido." : "Draft 3v3 completo."}</p></div>
+        <div><strong>{displayAnalysis.winEstimate.percentage}%</strong><span>{displayAnalysis.winEstimate.lower}â€“{displayAnalysis.winEstimate.upper}% Â· confianza {displayAnalysis.winEstimate.confidence}</span></div>
+      </div>
+      <div className="win-meter"><span style={{ width: `${displayAnalysis.winEstimate.percentage}%` }} /></div>
+      <div className="ordered-win-scores">
+        <span>Aliados <b>{displayAnalysis.winEstimate.alliedScore}/100</b></span>
+        <span>Rivales <b>{displayAnalysis.winEstimate.enemyScore}/100</b></span>
+        <span>Draft <b>{displayAnalysis.winEstimate.completeness}%</b></span>
+      </div>
+      <small>{displayAnalysis.winEstimate.disclaimer}</small>
+    </section> : <section className="panel ordered-win-empty">
+      <span className="eyebrow">Probabilidad estimada</span>
+      <h2>AÃ±ade al menos un pick de cada equipo</h2>
+      <p>El cÃ¡lculo aparecerÃ¡ cuando exista informaciÃ³n de ambos lados y ganarÃ¡ precisiÃ³n al completar el draft.</p>
+    </section>)}
+
+    {!quickMode && <section className="ordered-coaching-grid">
+      <article className="panel">
+        <span className="eyebrow">Consejos rÃ¡pidos</span>
+        <h3>QuÃ© necesita tu composiciÃ³n</h3>
+        <div className="quick-advice-list">
+          {displayAnalysis.needs.length ? displayAnalysis.needs.slice(0, 5).map((item) => <span key={item}>Cubrir: {item}</span>) : <span>La composiciÃ³n estÃ¡ equilibrada.</span>}
+          {displayAnalysis.threats.slice(0, 3).map((item) => <span className="danger" key={item}>{item}</span>)}
+          {displayAnalysis.strengths.slice(0, 3).map((item) => <span className="good" key={item}>{item}</span>)}
+        </div>
+      </article>
+
+      <article className="panel">
+        <span className="eyebrow">Matchups y lÃ­neas</span>
+        <h3>Emparejamientos que debes buscar</h3>
+        <div className="line-matchup-list">
+          {displayAnalysis.teamAssignments.length
+            ? displayAnalysis.teamAssignments.map((assignment, index) => <div key={`${assignment.ally}-${index}`}>
+              <b>{assignment.ally}</b>
+              <span>{assignment.lane}</span>
+              <strong>{assignment.enemy ? `Busca a ${assignment.enemy}` : "MantÃ©n tu lÃ­nea"}</strong>
+              <small>{assignment.instruction}</small>
+            </div>)
+            : <p>AÃ±ade mÃ¡s picks para generar el plan de lÃ­neas.</p>}
+        </div>
+      </article>
+
+      <article className="panel">
+        <span className="eyebrow">Lectura rival</span>
+        <h3>Debilidades y amenazas</h3>
+        <div className="quick-advice-list">
+          {displayAnalysis.enemyWeaknesses.length ? displayAnalysis.enemyWeaknesses.slice(0, 5).map((item) => <span className="good" key={item}>{item}</span>) : <span>Faltan picks rivales para detectar una debilidad clara.</span>}
+          {best?.exposedTo.slice(0, 3).map((name) => <span className="danger" key={name}>{name} puede frenar al pick recomendado.</span>)}
+        </div>
+      </article>
+    </section>}
+  </div>;
+}
