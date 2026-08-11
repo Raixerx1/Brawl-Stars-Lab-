@@ -1,6 +1,14 @@
-# Brawl Draft Lab v0.16
+# Brawl Draft Lab v0.17
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.17
+
+- La recomendación principal aparece inmediatamente debajo de la fila de picks del draft.
+- El brawler #1 gana tamaño, contraste y una llamada a la acción inequívoca.
+- Las cuatro alternativas se muestran siempre como prioridades #2, #3, #4 y #5.
+- Se elimina el antiguo bloque duplicado de tres recomendaciones para mantener una sola jerarquía visual.
+- El bloque inferior se dedica únicamente al plan, la confianza, la composición y la build del pick #1.
 
 ## Novedades v0.16
 

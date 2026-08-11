@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.17 — Jerarquía única de picks
+
+- Pick principal grande justo debajo de los seis huecos del draft.
+- Cuatro alternativas visibles y numeradas por prioridad del #2 al #5.
+- Mayor contraste, retrato, nombre, score y botón de selección para la prioridad #1.
+- Eliminado el bloque antiguo de tres tarjetas que duplicaba y confundía las recomendaciones.
+- La sección inferior queda reservada al análisis y a la build del pick principal.
+- Caché de la aplicación renovada para evitar que el navegador conserve la interfaz anterior.
+
 ## v0.16 — Decisión de pick y Auto Review Scorecard
 
 - Jerarquía visual nueva para que el pick #1 sea inequívoco.

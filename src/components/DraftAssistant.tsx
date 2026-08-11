@@ -9,7 +9,6 @@ import type {
   DraftRecommendation,
   MapProfile,
   PlayerPool,
-  PlayerPoolEntry,
   PoolPolicy,
   QueueMode,
   MatchResult,
@@ -77,67 +76,6 @@ function selectDistinct(
   return [...results]
     .filter((result) => !excluded.includes(result.brawler.name))
     .sort(sorter)[0];
-}
-
-function RecommendationCard({
-  result,
-  label,
-  tone,
-  poolEntry,
-}: {
-  result?: DraftRecommendation;
-  label: string;
-  tone: "best" | "safe" | "counter";
-  poolEntry?: PlayerPoolEntry;
-}) {
-  if (!result) return null;
-  return <article className={`simple-rec-card simple-rec-${tone}`}>
-    <span className="simple-rec-label">{label}</span>
-    <div className="simple-rec-head">
-      <BrawlerPortrait name={result.brawler.name} className="simple-rec-avatar" priority={tone === "best"} />
-      <div><h3>{result.brawler.name}</h3><p>{result.brawler.role} · {result.suggestedLine}</p></div>
-      <strong>{result.score}</strong>
-    </div>
-    <p className="simple-rec-brief">{result.brief}</p>
-    {result.firstPickEvaluation && <div className="first-pick-evaluation-v12">
-      <span><b>{result.firstPickEvaluation.initialFit}</b>Mapa inicial</span>
-      <span><b>{result.firstPickEvaluation.afterBreakFit}</b>Tras wallbreak</span>
-      <span><b>{result.firstPickEvaluation.expectedMapFit}</b>Valor esperado</span>
-      <span><b>{result.firstPickEvaluation.openingProbability}%</b>Prob. apertura</span>
-      <span><b>{result.firstPickEvaluation.blindQuality}</b>Seguridad ciega</span>
-      <span><b>{result.firstPickEvaluation.modeUtility}</b>Utilidad del modo</span>
-    </div>}
-    <div className="draft-score-breakdown-v15">
-      <span><b>{result.metrics.meta}</b>Meta</span>
-      <span><b>{result.metrics.mapFit}</b>Mapa</span>
-      <span><b>{result.metrics.counter}</b>Counter</span>
-      <span><b>{result.metrics.composition}</b>Composición</span>
-      <span><b>{result.metrics.safety}</b>Seguridad</span>
-      <span className="risk"><b>{result.metrics.risk}</b>Riesgo</span>
-    </div>
-    {poolEntry && <div className="rec-pool-status">
-      {poolEntry.favorite && <span>★ Prioritario</span>}
-      {poolEntry.power11 && <span>F11</span>}
-      {poolEntry.hypercharge && <span>HC</span>}
-      <span>Dominio {poolEntry.mastery}/5</span>
-      {!poolEntry.available && <span className="bad">No disponible</span>}
-    </div>}
-    {result.personalHistory && result.personalHistory.games >= 2 && <div className="personal-history-badge-v7">
-      <span>{result.personalHistory.winRate}% personal</span>
-      <small>{result.personalHistory.games} partidas{result.personalMapHistory && result.personalMapHistory.games >= 2 ? ` · ${result.personalMapHistory.winRate}% en este mapa` : ""}</small>
-      {typeof result.personalAdjustment === "number" && Math.abs(result.personalAdjustment) >= 1 && <b className={result.personalAdjustment >= 0 ? "positive" : "negative"}>{result.personalAdjustment > 0 ? "+" : ""}{result.personalAdjustment}</b>}
-    </div>}
-    <div className="simple-rec-tags">
-      {result.countersHit.slice(0, 3).map((name) => <span className="good" key={name}>Frena {name}</span>)}
-      {result.softCounters.slice(0, 2).map((name) => <span className="soft" key={name}>Favorable vs {name}</span>)}
-      {result.exposedTo.slice(0, 2).map((name) => <span className="bad" key={name}>Lo frena {name}</span>)}
-    </div>
-    {result.matchups.length > 0 && <div className="draft-matchup-matrix-v15">
-      {result.matchups.map((matchup) => <span className={matchup.verdict === "Desventaja" || matchup.verdict === "Riesgo" ? "bad" : matchup.verdict === "Neutral" ? "neutral" : "good"} title={matchup.reason} key={matchup.enemy}>
-        <b>{matchup.enemy}</b>{matchup.verdict}
-      </span>)}
-    </div>}
-  </article>;
 }
 
 export default function DraftAssistant({
@@ -604,18 +542,10 @@ export default function DraftAssistant({
     .filter((item) => item.recommendation.brawler.name !== robustPick?.recommendation.brawler.name)
     .slice(0, 2) || [];
 
-  const bestLabel = displayPosition === "First pick"
-    ? "Mejor brawler del mapa"
-    : displayPosition === "Last pick"
-      ? "Mejor last pick"
-      : "Mejor counter";
-  const safeLabel = displayPosition === "First pick" ? "Alternativa segura" : "Counter seguro";
-  const counterLabel = displayPosition === "First pick" ? "Opción flexible" : "Counter alternativo";
-
   return <div className="ordered-draft-assistant">
     <section className="panel ordered-draft-panel">
       <div className="section-title">
-        <div><span className="eyebrow">Draft Coach v0.16</span><h2>Introduce los picks en orden</h2></div>
+        <div><span className="eyebrow">Draft Coach v0.17</span><h2>Introduce los picks en orden</h2></div>
         <div className="draft-action-row">
           <button type="button" className="secondary-button compact-button" onClick={shareDraft}>Compartir</button>
           <button type="button" className="secondary-button compact-button" onClick={resetDraft}>Reiniciar</button>
@@ -714,16 +644,16 @@ export default function DraftAssistant({
         })}
       </div>
 
-      {nextIndex >= 0 && best && <div className={`draft-pick-decision-v16 ${nextTeam === "ally" ? "ready" : "provisional"}`}>
+      {nextIndex >= 0 && best && <div className={`draft-pick-decision-v16 draft-pick-decision-v17 ${nextTeam === "ally" ? "ready" : "provisional"}`} data-testid="draft-pick-priorities">
         <section className="draft-primary-pick-v16">
           <div className="draft-primary-banner-v16">
-            <span>{nextTeam === "ally" ? "PICK RECOMENDADO AHORA" : "PREPARA TU PRÓXIMO PICK"}</span>
+            <span>{nextTeam === "ally" ? "PRIORIDAD #1 · PICKEA AHORA" : "PRIORIDAD #1 · PREPARA TU PRÓXIMO PICK"}</span>
             <b>Confianza {displayAnalysis.confidence.label} · {displayAnalysis.confidence.score}/100</b>
           </div>
           <div className="draft-primary-body-v16">
             <BrawlerPortrait name={best.brawler.name} className="draft-primary-avatar-v16" priority />
             <div className="draft-primary-copy-v16">
-              <small>#1 · {queueMode} · {displayPosition}</small>
+              <small>MI RECOMENDACIÓN PRINCIPAL · {queueMode} · {displayPosition}</small>
               <h2>{best.brawler.name}</h2>
               <p>{best.brief}</p>
               <div>
@@ -749,7 +679,7 @@ export default function DraftAssistant({
             onClick={() => addNextPick(result.brawler.name)}
             aria-label={`Pickear ${result.brawler.name}`}
           >
-            <em>{index + 2}</em>
+            <em>#{index + 2}</em>
             <BrawlerPortrait name={result.brawler.name} className="draft-compact-avatar-v16" />
             <span><b>{result.brawler.name}</b><small>{label} · {result.counterLabel}</small></span>
             <strong>{result.score}</strong>
@@ -983,15 +913,10 @@ export default function DraftAssistant({
     <section className={`panel ordered-recommendations ${quickMode ? "quick-v5" : ""}`}>
       <div className="section-title">
         <div>
-          <span className="eyebrow">{scenarioEnemy ? `Simulación activa · ${scenarioEnemy}` : nextTeam === "enemy" ? "Recomendación provisional para tu próximo turno" : displayAnalysis.draftStage}</span>
-          <h2>{scenarioEnemy ? `Respuesta si rival elige ${scenarioEnemy}` : displayPosition === "First pick" ? "Prioridad de mapa" : displayPosition === "Last pick" ? "Castigo final" : "Counters a los picks rivales"}</h2>
+          <span className="eyebrow">{scenarioEnemy ? `Simulación activa · ${scenarioEnemy}` : "Análisis de la prioridad #1"}</span>
+          <h2>{best ? `Cómo jugar a ${best.brawler.name}` : "Plan para el pick principal"}</h2>
         </div>
-        <span className="status-pill">{displayPosition}</span>
-      </div>
-      <div className={`simple-rec-grid ${quickMode ? "quick-rec-grid" : ""}`}>
-        <RecommendationCard result={best} label={bestLabel} tone="best" poolEntry={poolEntryFor(best)} />
-        <RecommendationCard result={safe} label={safeLabel} tone="safe" poolEntry={poolEntryFor(safe)} />
-        <RecommendationCard result={counter} label={counterLabel} tone="counter" poolEntry={poolEntryFor(counter)} />
+        <span className="status-pill">Pick #1 · {displayPosition}</span>
       </div>
       <div className="draft-diagnosis-v15">
         <div className="draft-confidence-v15">
