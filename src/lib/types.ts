@@ -34,6 +34,8 @@ export type FirstPickEvaluation = {
   score: number;
   initialFit: number;
   afterBreakFit: number;
+  expectedMapFit: number;
+  openingProbability: number;
   blindQuality: number;
   modeFit: number;
   modeUtility: number;
@@ -261,6 +263,7 @@ export type DraftInput = {
 };
 
 export type DraftMetrics = {
+  meta: number;
   mapFit: number;
   counter: number;
   synergy: number;
@@ -268,6 +271,27 @@ export type DraftMetrics = {
   composition: number;
   personal: number;
   risk: number;
+};
+
+export type DraftMatchupEvaluation = {
+  enemy: string;
+  verdict: "Ventaja clara" | "Ventaja" | "Neutral" | "Riesgo" | "Desventaja";
+  score: number;
+  reason: string;
+};
+
+export type DraftConfidence = {
+  score: number;
+  label: "Baja" | "Media" | "Alta";
+  gap: number;
+  reasons: string[];
+  cautions: string[];
+};
+
+export type DraftChecklistItem = {
+  label: string;
+  status: "Cubierto" | "Parcial" | "Falta";
+  detail: string;
 };
 
 export type DraftRecommendation = {
@@ -281,6 +305,7 @@ export type DraftRecommendation = {
   softCounters: string[];
   exposedTo: string[];
   uncoveredEnemies: string[];
+  matchups: DraftMatchupEvaluation[];
   counterLabel: string;
   suggestedLine: string;
   plan: string;
@@ -380,4 +405,6 @@ export type DraftAnalysis = {
   compositionScore: number;
   draftStage: string;
   availableCount: number;
+  confidence: DraftConfidence;
+  checklist: DraftChecklistItem[];
 };

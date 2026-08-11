@@ -5,6 +5,7 @@ import BrawlerCard from "@/components/BrawlerCard";
 import FavoriteButton from "@/components/FavoriteButton";
 import { MapArtwork } from "@/components/GameArtwork";
 import MapTactics from "@/components/MapTactics";
+import { evaluateFirstPick } from "@/lib/first-pick-model";
 
 export function generateStaticParams() {
   return maps.map((map) => ({ slug: map.slug }));
@@ -36,10 +37,12 @@ export default async function MapDetail({ params }: { params: Promise<{ slug: st
         <div className="draft-columns">
           <div className="map-first-picks-v12"><h3>First picks</h3>{map.firstPicks.map((name: string, index: number) => {
             const candidate = map.firstPickCandidates?.find((item) => item.name === name);
+            const profile = brawlerByName(name);
+            const evaluation = profile ? evaluateFirstPick(profile, map) : undefined;
             return <article key={name}>
               <b>{index + 1}.</b>
-              <span><strong>{name}</strong><small>{candidate?.reasons[0] || "Pick ciego auditado"}</small></span>
-              {candidate && <em>{candidate.score}</em>}
+              <span><strong>{name}</strong><small>{evaluation?.strengths[0] || candidate?.reasons[0] || "Pick ciego auditado"}</small></span>
+              {evaluation && <em>{evaluation.score}</em>}
             </article>;
           })}</div>
           <div><h3>Last picks</h3>{map.lastPicks.map((name: string, index: number) => <p key={name}><b>{index + 1}.</b> {name}</p>)}</div>
@@ -56,17 +59,21 @@ export default async function MapDetail({ params }: { params: Promise<{ slug: st
 
     {map.firstPickCandidates && <section className="panel map-first-pick-model-v12">
       <div className="section-title">
-        <div><span className="eyebrow">Modelo {map.firstPickModelVersion || "estructural"}</span><h2>Por qué estos first picks</h2></div>
+        <div><span className="eyebrow">Motor v0.15 · perfil {map.firstPickModelVersion || "estructural"}</span><h2>Por qué estos first picks</h2></div>
         <span className="status-pill">Confianza {map.firstPickConfidence || "Media"}</span>
       </div>
       <p>{map.firstPickNotes}</p>
       <div className="map-first-pick-candidates-v12">
-        {map.firstPickCandidates.slice(0, 6).map((candidate, index) => <article className={index < 3 ? "primary" : "alternative"} key={candidate.name}>
-          <div><b>{index < 3 ? `Top ${index + 1}` : "Alternativa"}</b><strong>{candidate.name}</strong></div>
-          <em>{candidate.score}/100</em>
-          <p>{candidate.reasons.join(" · ") || "Encaje global con la estructura del mapa."}</p>
-          {candidate.risks.length > 0 && <small>Riesgo: {candidate.risks.join(" · ")}</small>}
-        </article>)}
+        {map.firstPickCandidates.slice(0, 6).map((candidate, index) => {
+          const profile = brawlerByName(candidate.name);
+          const evaluation = profile ? evaluateFirstPick(profile, map) : undefined;
+          return <article className={index < 3 ? "primary" : "alternative"} key={candidate.name}>
+            <div><b>{index < 3 ? `Top ${index + 1}` : "Alternativa"}</b><strong>{candidate.name}</strong></div>
+            <em>{evaluation?.score ?? candidate.score}/100</em>
+            <p>{evaluation?.strengths.join(" · ") || candidate.reasons.join(" · ") || "Encaje global con la estructura del mapa."}</p>
+            {(evaluation?.risks.length ?? candidate.risks.length) > 0 && <small>Riesgo: {(evaluation?.risks || candidate.risks).join(" · ")}</small>}
+          </article>;
+        })}
       </div>
     </section>}
 

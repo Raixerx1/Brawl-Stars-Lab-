@@ -128,6 +128,7 @@ function firstPickStrengths(
   map: MapProfile,
   initialFit: number,
   afterBreakFit: number,
+  openingProbability: number,
   blindQuality: number,
   modeFit: number,
 ) {
@@ -141,8 +142,8 @@ function firstPickStrengths(
   if (geometry.wallDensity >= 68 && geometry.destructibility < 65 && profile.wallReliance >= 75) {
     strengths.push("Aprovecha muros que suelen permanecer");
   }
-  if (geometry.destructibility >= 70 && profile.wallBreak >= 72) strengths.push("Puede abrir el mapa a su favor");
-  if (geometry.destructibility >= 65 && afterBreakFit >= 76) strengths.push("Mantiene valor después del wallbreak");
+  if (geometry.destructibility >= 70 && profile.wallBreak >= 72) strengths.push("Puede abrir el mapa por sus propios medios");
+  if (openingProbability >= 45 && afterBreakFit >= 76) strengths.push("Mantiene valor si el mapa termina abierto");
   if (geometry.chokeDensity >= 68 && profile.chokeControl >= 76) strengths.push("Controla pasillos y accesos");
   if (geometry.waterInfluence >= 55 && profile.mobility >= 75) strengths.push("Movilidad útil alrededor del agua");
   if (profile.antiDive >= 80) strengths.push("Difícil de castigar con dive");
@@ -157,6 +158,7 @@ function firstPickRisks(
   geometry: MapGeometryProfile,
   initialFit: number,
   afterBreakFit: number,
+  openingProbability: number,
 ) {
   const risks: string[] = [];
 
@@ -166,11 +168,14 @@ function firstPickRisks(
   if (geometry.bushDensity >= 70 && profile.vision < 35 && profile.bushFit < 62) risks.push("Poca información en un mapa de arbustos");
   if (
     geometry.wallDensity >= 65 &&
-    geometry.destructibility >= 68 &&
+    openingProbability >= 42 &&
     profile.wallReliance >= 70 &&
     afterBreakFit < 58
   ) {
     risks.push("Pierde mucho valor si el rival rompe los muros");
+  }
+  if (afterBreakFit >= initialFit + 18 && openingProbability < 30) {
+    risks.push("Su mejor escenario exige abrir un mapa que probablemente siga intacto");
   }
   if (geometry.chokeDensity >= 70 && profile.chokeControl < 42) risks.push("Control limitado de los pasillos");
   if (initialFit < 48) risks.push("Encaje estructural bajo con el mapa");
@@ -204,17 +209,14 @@ export function evaluateFirstPick(
   const denseBushVision = geometry.bushDensity >= 75
     ? (profile.vision - 50) * bushWeight * .30
     : 0;
-  const breakableWallPenalty =
-    profile.wallReliance * wallWeight * destructibility * .12;
   const wallBreakReward =
-    profile.wallBreak * wallWeight * destructibility * .10;
+    profile.wallBreak * wallWeight * destructibility * .04;
 
   const initialFit = clamp(
     baseGeometry +
     (bushScore - 50) * bushWeight * denseBushMultiplier +
     denseBushVision +
-    (profile.wallReliance - 50) * wallWeight * (1 - destructibility * .58) * .24 -
-    breakableWallPenalty +
+    (profile.wallReliance - 50) * wallWeight * .24 +
     wallBreakReward +
     (profile.chokeControl - 50) * chokeWeight * .18 +
     (profile.openFit - 50) * laneWeight * .10 +
@@ -234,6 +236,21 @@ export function evaluateFirstPick(
     profile.wallReliance * destructibility * .08
   );
 
+  // Un muro rompible no se rompe necesariamente. Solo damos mucho peso al
+  // escenario abierto cuando el propio pick aporta una apertura fiable.
+  const modeOpeningIntent = map.mode === "Atraco"
+    ? .26
+    : map.mode === "Balón Brawl"
+      ? .18
+      : .10;
+  const openingProbability = clamp(
+    destructibility * (modeOpeningIntent + profile.wallBreak / 100 * .55) * 100
+  );
+  const expectedMapFit = clamp(
+    initialFit * (1 - openingProbability / 100) +
+    afterBreakFit * (openingProbability / 100)
+  );
+
   const blindQuality = clamp(
     profile.blindSafety * .50 +
     profile.antiDive * .19 +
@@ -246,12 +263,11 @@ export function evaluateFirstPick(
   const utility = modeUtility(brawler, map, profile, geometry);
 
   const score = clamp(
-    initialFit * .38 +
-    afterBreakFit * .15 +
+    expectedMapFit * .47 +
     blindQuality * .20 +
-    modeFit * .13 +
-    utility * .10 +
-    50 * .04 +
+    modeFit * .14 +
+    utility * .12 +
+    50 * .07 +
     (tierAdjustment[brawler.tier] || 0)
   );
 
@@ -259,6 +275,8 @@ export function evaluateFirstPick(
     score,
     initialFit,
     afterBreakFit,
+    expectedMapFit,
+    openingProbability,
     blindQuality,
     modeFit,
     modeUtility: utility,
@@ -268,10 +286,11 @@ export function evaluateFirstPick(
       map,
       initialFit,
       afterBreakFit,
+      openingProbability,
       blindQuality,
       modeFit,
     ),
-    risks: firstPickRisks(profile, geometry, initialFit, afterBreakFit),
+    risks: firstPickRisks(profile, geometry, initialFit, afterBreakFit, openingProbability),
   };
 }
 

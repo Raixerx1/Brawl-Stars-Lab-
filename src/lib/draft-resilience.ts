@@ -92,11 +92,13 @@ function stressCandidate(
   const worstScore = Math.min(...scenarios.map((scenario) => scenario.candidateScore));
   const directThreats = scenarios.filter((scenario) => scenario.directThreat).length;
   const resilience = clamp(
-    candidate.score * .24 +
-    averageScore * .38 +
-    worstScore * .28 +
-    candidate.metrics.safety * .10 -
-    directThreats * 2,
+    candidate.score * .30 +
+    averageScore * .25 +
+    worstScore * .18 +
+    candidate.metrics.mapFit * .12 +
+    candidate.metrics.meta * .10 +
+    candidate.metrics.safety * .05 -
+    directThreats * 3,
   );
 
   return {

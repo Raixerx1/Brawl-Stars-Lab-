@@ -1,6 +1,24 @@
-# Brawl Draft Lab v0.14
+# Brawl Draft Lab v0.15
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.15
+
+- Motor de Draft 2.0 con puntuaciones normalizadas de meta, mapa, counter, composición, seguridad, sinergia, dominio personal y riesgo.
+- El score final es ahora la autoridad del ranking; las listas editoriales y la cobertura de counters solo desempatan.
+- Pesos diferentes para first pick, picks intermedios y last pick.
+- El meta global 24 h y 30 d se ha sincronizado con la instantánea del 11/08/2026.
+- El modelo ya no supone que un mapa rompible terminará abierto:
+  - calcula el encaje con el campo intacto;
+  - calcula el encaje tras wallbreak;
+  - estima la probabilidad real de apertura según el modo y el wallbreak propio;
+  - usa un valor esperado entre ambos escenarios.
+- Matriz individual contra cada pick rival.
+- Confianza de la recomendación basada en margen, información visible y calidad de los perfiles.
+- Checklist proyectado de roles, rango, control, antidive, antitanque, objetivo y apertura del mapa.
+- Recalibración de la prueba de resiliencia para conservar el peso del mapa y del meta.
+- Nueva auditoría `npm run audit:draft-v2` con 4.134 escenarios de apertura y 1.248 recomendaciones.
+- Informe técnico: `DRAFT_V2.md`.
 
 ## Novedades v0.14
 

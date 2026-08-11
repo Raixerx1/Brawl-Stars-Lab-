@@ -5,6 +5,8 @@ import type {
   Brawler,
   DraftAnalysis,
   DraftInput,
+  DraftChecklistItem,
+  DraftConfidence,
   DraftPosition,
   DraftRecommendation,
   EnemyPickPrediction,
@@ -25,6 +27,19 @@ const tierScore: Record<string, number> = {
   D: 38,
   F: 32,
   "Sin evaluar": 40,
+};
+
+const tierMetric: Record<string, number> = {
+  "S+": 92,
+  S: 88,
+  "A+": 82,
+  A: 76,
+  "B+": 69,
+  B: 63,
+  C: 53,
+  D: 43,
+  F: 32,
+  "Sin evaluar": 48,
 };
 
 const norm = (value: string) => value.trim().toLowerCase();
@@ -229,840 +244,4 @@ function softCounterReason(candidate: Brawler, enemy: Brawler, input: DraftInput
   return undefined;
 }
 
-function finalCounterWeightedScore(
-  rawScore: number,
-  input: DraftInput,
-  metrics: DraftRecommendation["metrics"],
-  enemies: Brawler[],
-  directCount: number,
-  softCount: number,
-  exposedCount: number,
-) {
-  // First pick: mapa, seguridad y flexibilidad. No buscamos un counter a ciegas.
-  if (input.position === "First pick") {
-    return clamp(
-      metrics.mapFit * .34 +
-      metrics.safety * .28 +
-      metrics.composition * .14 +
-      metrics.synergy * .10 +
-      metrics.personal * .06 +
-      metrics.counter * .03 -
-      metrics.risk * .14 +
-      rawScore * .08
-    );
-  }
-
-  if (!enemies.length) {
-    return clamp(
-      metrics.mapFit * .30 +
-      metrics.safety * .23 +
-      metrics.composition * .18 +
-      metrics.synergy * .14 +
-      metrics.personal * .07 +
-      metrics.counter * .05 -
-      metrics.risk * .11 +
-      rawScore * .07
-    );
-  }
-
-  const priority = input.priority || "Counter";
-  const isLastPick = input.position === "Last pick";
-  const weights = isLastPick
-    ? { counter: .59, map: .10, composition: .11, synergy: .06, safety: .05, personal: .03, risk: .17, raw: .04 }
-    : priority === "Seguro"
-      ? { counter: .31, map: .18, composition: .17, synergy: .10, safety: .20, personal: .04, risk: .13, raw: .06 }
-      : priority === "Equilibrado"
-        ? { counter: .40, map: .17, composition: .17, synergy: .11, safety: .10, personal: .04, risk: .12, raw: .06 }
-        : { counter: .46, map: .14, composition: .16, synergy: .09, safety: .08, personal: .04, risk: .14, raw: .05 };
-
-  const coverageBonus = isLastPick
-    ? directCount >= 3 ? 18 : directCount === 2 ? 13 : directCount === 1 ? 7 : softCount >= 2 ? 4 : 0
-    : directCount >= 3 ? 14 : directCount === 2 ? 10 : directCount === 1 ? 5 : softCount >= 2 ? 3 : 0;
-  const exposurePenalty = exposedCount * (isLastPick ? 10 : priority === "Counter" ? 8 : 6);
-  const noAnswerPenalty = directCount === 0 && softCount === 0 && enemies.length >= 2
-    ? isLastPick ? 15 : 9
-    : 0;
-
-  return clamp(
-    metrics.counter * weights.counter +
-    metrics.mapFit * weights.map +
-    metrics.composition * weights.composition +
-    metrics.synergy * weights.synergy +
-    metrics.safety * weights.safety +
-    metrics.personal * weights.personal -
-    metrics.risk * weights.risk +
-    rawScore * weights.raw +
-    coverageBonus -
-    exposurePenalty -
-    noAnswerPenalty
-  );
-}
-
-function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], enemies: Brawler[], needs: string[]): DraftRecommendation {
-  let score = tierScore[brawler.tier] ?? 41;
-  const reasons: string[] = [];
-  const warnings: string[] = [];
-  const countersHit: string[] = [];
-  const softCounters: string[] = [];
-  const exposedTo: string[] = [];
-
-  let mapFit = 45;
-  let counter = 50;
-  let synergy = 50;
-  let safety = 50;
-  let composition = 50;
-  let personal = 50;
-  let risk = 35;
-
-  const matchupMultiplier =
-    input.position === "Last pick" ? 1.28 :
-    input.position === "Pick intermedio" ? 1 :
-    .62;
-  const exposureMultiplier =
-    input.position === "Last pick" ? 1.22 :
-    input.position === "Pick intermedio" ? 1 :
-    .72;
-
-  const modeScore = brawler.modes[input.map.mode] ?? 0;
-  score += modeScore * 1.55;
-  mapFit += modeScore * 4;
-  if (modeScore >= 8) reasons.push(`Afinidad alta con ${input.map.mode}`);
-
-  const sIndex = input.map.tierS.indexOf(brawler.name);
-  const aIndex = input.map.tierA.indexOf(brawler.name);
-  const firstPickIndex = input.map.firstPicks.indexOf(brawler.name);
-  const firstPickEvaluation = input.position === "First pick"
-    ? evaluateFirstPick(brawler, input.map)
-    : undefined;
-  if (sIndex >= 0) {
-    const mapBonus =
-      input.position === "First pick" ? 17 - sIndex * 1.4 :
-      input.position === "Pick intermedio" ? 8 - sIndex * .7 :
-      4 - sIndex * .35;
-    score += Math.max(1, mapBonus);
-    mapFit += input.position === "First pick"
-      ? 24 - sIndex * 2
-      : input.position === "Pick intermedio"
-        ? 13 - sIndex
-        : 8 - sIndex * .6;
-    reasons.push("Tier S editorial del mapa");
-  } else if (aIndex >= 0) {
-    const mapBonus =
-      input.position === "First pick" ? 10 - aIndex :
-      input.position === "Pick intermedio" ? 4 - aIndex * .35 :
-      2 - aIndex * .18;
-    score += Math.max(.5, mapBonus);
-    mapFit += input.position === "First pick"
-      ? 14 - aIndex
-      : input.position === "Pick intermedio"
-        ? 7 - aIndex * .5
-        : 4 - aIndex * .25;
-    reasons.push("Tier A editorial del mapa");
-  }
-
-  if (firstPickEvaluation) {
-    const modelBonus = (firstPickEvaluation.score - 50) * .72;
-    score += modelBonus;
-    mapFit = Math.round(firstPickEvaluation.initialFit * .62 + firstPickEvaluation.afterBreakFit * .38);
-    safety = Math.round(firstPickEvaluation.blindQuality * .82 + safety * .18);
-    risk = clamp(
-      100 - firstPickEvaluation.blindQuality +
-      (brawler.firstPickProfile?.counterRisk || 50) * .18
-    );
-
-    reasons.push(...firstPickEvaluation.strengths);
-    warnings.push(...firstPickEvaluation.risks);
-
-    if (firstPickIndex >= 0) {
-      score += Math.max(0, 4 - firstPickIndex);
-      reasons.push(`Top estructural ${firstPickIndex + 1} del mapa`);
-    }
-
-    if (firstPickEvaluation.afterBreakFit >= 76 && input.map.geometry?.destructibility && input.map.geometry.destructibility >= 65) {
-      reasons.push("Conserva valor aunque se abra el mapa");
-    }
-  }
-  if (input.position === "Pick intermedio" && (hasTag(brawler, "safe", "control") || isControl(brawler))) {
-    score += 4;
-    safety += 8;
-  }
-  if (input.position === "Last pick" && (hasTag(brawler, "lastpick", "assassin") || brawler.role === "Asesino" || isFrontline(brawler))) {
-    score += 9;
-    counter += 8;
-    reasons.push("Escala como counterpick");
-  }
-
-  for (const enemy of enemies) {
-    const directCounter = includesName(brawler.counters, enemy.name);
-    const reciprocalCounter = includesName(enemy.counteredBy, brawler.name);
-    const directlyExposed = includesName(brawler.counteredBy, enemy.name);
-    const enemyClaimsCounter = includesName(enemy.counters, brawler.name);
-
-    if (directCounter) {
-      const counterBreadth = brawler.counters.length;
-      const specificity =
-        counterBreadth >= 8 ? .70 :
-        counterBreadth >= 6 ? .82 :
-        counterBreadth >= 4 ? .92 :
-        1;
-      score += Math.round(24 * matchupMultiplier * specificity);
-      counter += Math.round(32 * matchupMultiplier * specificity);
-      countersHit.push(enemy.name);
-      reasons.push(`Counter directo de ${enemy.name}`);
-    } else if (reciprocalCounter) {
-      score += Math.round(11 * matchupMultiplier);
-      counter += Math.round(16 * matchupMultiplier);
-      countersHit.push(enemy.name);
-      reasons.push(`Matchup favorable contra ${enemy.name}`);
-    } else {
-      const softReason = softCounterReason(brawler, enemy, input);
-      if (softReason) {
-        score += Math.round(8 * matchupMultiplier);
-        counter += Math.round(12 * matchupMultiplier);
-        softCounters.push(enemy.name);
-        reasons.push(`${softReason} frente a ${enemy.name}`);
-      }
-    }
-
-    if (directlyExposed) {
-      score -= Math.round(27 * exposureMultiplier);
-      counter -= Math.round(38 * exposureMultiplier);
-      safety -= Math.round(18 * exposureMultiplier);
-      risk += Math.round(34 * exposureMultiplier);
-      exposedTo.push(enemy.name);
-      warnings.push(`${enemy.name} lo frena claramente`);
-    } else if (enemyClaimsCounter) {
-      score -= Math.round(13 * exposureMultiplier);
-      counter -= Math.round(19 * exposureMultiplier);
-      safety -= Math.round(8 * exposureMultiplier);
-      risk += Math.round(16 * exposureMultiplier);
-      exposedTo.push(enemy.name);
-      warnings.push(`${enemy.name} tiene ventaja`);
-    }
-  }
-
-  const directCoverage = unique(countersHit).length;
-  const softCoverage = unique(softCounters).filter((name) => !includesName(countersHit, name)).length;
-  if (directCoverage >= 2) {
-    const stageBonus = input.position === "Last pick" ? 1.35 : 1;
-    score += Math.round((directCoverage === 3 ? 22 : 14) * stageBonus);
-    counter += Math.round((directCoverage === 3 ? 24 : 16) * stageBonus);
-    reasons.push(`Counterea ${directCoverage} picks rivales`);
-  }
-  if (input.position === "Last pick" && directCoverage >= 1) {
-    score += 8;
-    counter += 10;
-    reasons.push("Aprovecha la informaciÃ³n completa del last pick");
-  }
-  if (directCoverage === 0 && softCoverage === 0 && enemies.length >= 2) {
-    const penalty = input.position === "Last pick" ? 16 : 9;
-    score -= penalty;
-    counter -= input.position === "Last pick" ? 20 : 12;
-    warnings.push(input.position === "Last pick" ? "Desaprovecha el last pick: no castiga al rival" : "No castiga directamente la composiciÃ³n rival");
-  }
-
-  const enemyHasTank = enemies.some((enemy) => enemy.role === "Tanque" || hasTag(enemy, "tank", "tanque"));
-  const enemyHasDive = enemies.some((enemy) => enemy.role === "Asesino" || hasTag(enemy, "assassin", "asesino", "mobile"));
-  const enemyHasThrower = enemies.some(isThrower);
-
-  if (enemyHasTank && isAntitank(brawler)) {
-    const alreadyCountersTank = countersHit.some((name) => {
-      const enemy = enemies.find((item) => item.name === name);
-      return enemy?.role === "Tanque" || Boolean(enemy && hasTag(enemy, "tank", "tanque"));
-    });
-    score += alreadyCountersTank ? 5 : 12;
-    counter += alreadyCountersTank ? 7 : 17;
-    composition += 8;
-    reasons.push("Cubre antitanque");
-  }
-  if (enemyHasDive && isAntidive(brawler)) {
-    const alreadyCountersDive = countersHit.some((name) => {
-      const enemy = enemies.find((item) => item.name === name);
-      return enemy?.role === "Asesino" || Boolean(enemy && hasTag(enemy, "assassin", "asesino", "mobile"));
-    });
-    score += alreadyCountersDive ? 5 : 13;
-    counter += alreadyCountersDive ? 7 : 18;
-    composition += 9;
-    reasons.push("Protege frente a dive");
-  }
-  if (enemyHasThrower && (brawler.role === "Asesino" || hasTag(brawler, "mobile"))) {
-    const alreadyCountersThrower = countersHit.some((name) => {
-      const enemy = enemies.find((item) => item.name === name);
-      return Boolean(enemy && isThrower(enemy));
-    });
-    score += alreadyCountersThrower ? 4 : 10;
-    counter += alreadyCountersThrower ? 6 : 14;
-    reasons.push("Acceso contra artilleros");
-  }
-
-  if (input.map.layout === "Abierto" && isLongRange(brawler)) {
-    score += 8; mapFit += 15; reasons.push("Aprovecha el mapa abierto");
-  }
-  if (input.map.layout === "Abierto" && (brawler.role === "Tanque" || isThrower(brawler)) && !hasTag(brawler, "safe")) {
-    score -= 7; mapFit -= 12; risk += 9;
-  }
-  if (input.map.layout === "Cerrado" && (isFrontline(brawler) || isThrower(brawler) || hasTag(brawler, "walls"))) {
-    score += 7; mapFit += 13; reasons.push("Aprovecha cobertura y pasillos");
-  }
-
-  const allyRoles = allies.map((ally) => ally.role);
-  const duplicateRoleCount = allyRoles.filter((role) => role === brawler.role).length;
-  if (!allyRoles.includes(brawler.role)) {
-    score += 3; synergy += 8;
-  } else if (duplicateRoleCount >= 1) {
-    score -= 3 * duplicateRoleCount; synergy -= 7 * duplicateRoleCount;
-  }
-
-  if (allies.length && allies.every(isLongRange) && (isControl(brawler) || isFrontline(brawler))) {
-    score += 7; synergy += 13; composition += 12; reasons.push("Equilibra un backline de rango");
-  }
-  if (allies.some(isSupport) && (brawler.role === "Tanque" || brawler.role === "Asesino" || hasTag(brawler, "carry"))) {
-    score += 4; synergy += 9; reasons.push("Aprovecha el soporte aliado");
-  }
-  if (allies.some(isThrower) && isAntidive(brawler)) {
-    score += 6; synergy += 11; reasons.push("Protege al artillero aliado");
-  }
-
-  const coveredNeeds = needs.filter((need) => coversNeed(brawler, need));
-  coveredNeeds.forEach((need, index) => {
-    const scoreBonus = index === 0 ? 7 : index === 1 ? 4 : index === 2 ? 2 : 0;
-    const compositionBonus = index === 0 ? 15 : index === 1 ? 9 : index === 2 ? 4 : 0;
-    score += scoreBonus;
-    composition += compositionBonus;
-    if (index < 3) reasons.push(`Cubre: ${need}`);
-  });
-  if (coveredNeeds.length >= 4) {
-    warnings.push("Cubre muchas funciones, pero no debe desplazar un counter mÃ¡s especÃ­fico");
-  }
-
-  const queueMode = input.queueMode || "SoloQ";
-  const teamDependence = brawler.firstPickProfile?.teamDependence
-    ?? (isSupport(brawler) ? 72 : hasTag(brawler, "carry", "safe") ? 30 : 48);
-  const autonomy = 100 - teamDependence;
-
-  if (queueMode === "SoloQ") {
-    const autonomyAdjustment = Math.round((autonomy - 50) * .12);
-    score += autonomyAdjustment;
-    safety += Math.round((autonomy - 50) * .16);
-    risk += Math.round((teamDependence - 50) * .14);
-
-    if (isSupport(brawler) && !hasTag(brawler, "carry", "damage")) {
-      score -= allies.length ? 5 : 9;
-      composition -= allies.length ? 2 : 7;
-      warnings.push("En SoloQ depende de que los aliados conviertan su utilidad");
-    }
-    if (hasTag(brawler, "carry", "safe") || brawler.firstPickProfile?.blindSafety && brawler.firstPickProfile.blindSafety >= 76) {
-      score += 4;
-      safety += 6;
-      reasons.push("Autosuficiente para SoloQ");
-    }
-  } else if (queueMode === "DÃºo") {
-    score += Math.round((autonomy - 50) * .04);
-    if (allies.length && isSupport(brawler)) {
-      score += 3;
-      synergy += 6;
-      reasons.push("Puede coordinarse con tu compaÃ±ero de dÃºo");
-    }
-  } else {
-    if (isSupport(brawler)) {
-      score += allies.length ? 8 : 4;
-      synergy += allies.length ? 14 : 8;
-      composition += 7;
-      reasons.push("La coordinaciÃ³n de trÃ­o aumenta su valor");
-    }
-    if (teamDependence >= 65) {
-      score += 4;
-      synergy += 7;
-      risk -= 6;
-      reasons.push("La premade reduce su dependencia de coordinaciÃ³n");
-    }
-    if (allies.some(isSupport) && (isFrontline(brawler) || hasTag(brawler, "carry", "damage"))) {
-      score += 5;
-      synergy += 10;
-      reasons.push("Convierte la utilidad del soporte coordinado");
-    }
-  }
-
-  const poolEntry = input.personalPool?.[brawler.slug];
-  const poolPolicy = input.poolPolicy || (input.usePersonalPool ? "Solo pool" : "Off");
-  if (poolPolicy !== "Off" && poolEntry) {
-    if (poolEntry.available) { score += 2; personal += 7; }
-    else { score -= poolPolicy === "Solo pool" ? 45 : 13; personal -= 20; warnings.push("No disponible en tu pool"); }
-    if (poolEntry.power11) { score += 5; personal += 13; reasons.push("Fuerza 11 en tu pool"); }
-    if (poolEntry.hypercharge) { score += 4; personal += 9; reasons.push("Hipercarga disponible"); }
-    if (poolEntry.favorite) { score += 5; personal += 12; reasons.push("Brawler prioritario de tu pool"); }
-    if (poolEntry.mastery > 3) { score += (poolEntry.mastery - 3) * 4; personal += (poolEntry.mastery - 3) * 13; reasons.push(`Dominio personal ${poolEntry.mastery}/5`); }
-    if (poolEntry.mastery <= 2) { score -= 6; personal -= 16; warnings.push("Dominio personal bajo"); }
-    if (poolEntry.avoid) { score -= poolPolicy === "Solo pool" ? 55 : 28; personal = 0; warnings.push("Marcado para evitar en tu pool"); }
-  }
-
-  const learned = input.learnFromHistory
-    ? personalAdjustment(brawler.slug, input.map.slug, input.personalPerformance)
-    : { adjustment: 0, brawler: undefined, map: undefined };
-  if (learned.adjustment) {
-    score += learned.adjustment;
-    personal += learned.adjustment * 2.8;
-    if (learned.adjustment >= 2) reasons.push(`Buen rendimiento personal: +${Math.round(learned.adjustment)} puntos`);
-    if (learned.adjustment <= -2) warnings.push(`Tu historial personal penaliza este pick: ${Math.round(learned.adjustment)} puntos`);
-  }
-  if (learned.map && learned.map.games >= 3) {
-    reasons.push(`${learned.map.winRate}% en ${input.map.name} con ${brawler.name} (${learned.map.games} partidas)`);
-  } else if (learned.brawler && learned.brawler.games >= 3) {
-    reasons.push(`${learned.brawler.winRate}% personal con ${brawler.name} (${learned.brawler.games} partidas)`);
-  }
-
-  if (hasTag(brawler, "safe")) safety += 13;
-  if (hasTag(brawler, "carry")) synergy += 5;
-  if (brawler.profileComplete) safety += 4;
-  if (!brawler.profileComplete) { score -= 4; safety -= 6; risk += 6; }
-
-  const direct = unique(countersHit);
-  const soft = unique(softCounters).filter((name) => !includesName(direct, name));
-  const exposed = unique(exposedTo);
-  const covered = new Set([...direct, ...soft].map(norm));
-  const uncoveredEnemies = enemies
-    .map((enemy) => enemy.name)
-    .filter((name) => !covered.has(norm(name)) && !includesName(exposed, name));
-
-  const metrics = {
-    mapFit: clamp(mapFit),
-    counter: clamp(counter),
-    synergy: clamp(synergy),
-    safety: clamp(safety),
-    composition: clamp(composition),
-    personal: clamp(personal),
-    risk: clamp(risk),
-  };
-  const finalScore = finalCounterWeightedScore(score, input, metrics, enemies, direct.length, soft.length, exposed.length);
-  const counterLabel =
-    direct.length >= 2 ? `Counter mÃºltiple Â· ${direct.length}/${enemies.length}` :
-    direct.length === 1 ? "Counter directo" :
-    soft.length >= 2 ? "Respuesta favorable mÃºltiple" :
-    soft.length === 1 ? "Respuesta de arquetipo" :
-    exposed.length ? "Matchup arriesgado" :
-    enemies.length ? "Neutral frente al rival" : "Pick flexible";
-
-  const warning = warnings.length
-    ? unique(warnings).slice(0, 2).join(" Â· ")
-    : !brawler.profileComplete
-      ? "Build exacta pendiente de validaciÃ³n; se muestra una recomendaciÃ³n tÃ¡ctica"
-      : undefined;
-  const brief = direct.length
-    ? `Frena a ${direct.slice(0, 2).join(" y ")}${direct.length > 2 ? ` y ${direct.length - 2} mÃ¡s` : ""}. ${exposed.length ? `Evita a ${exposed[0]}.` : "Busca su lÃ­nea."}`
-    : soft.length
-      ? `Respuesta favorable contra ${soft.slice(0, 2).join(" y ")}. ${exposed.length ? `${exposed[0]} puede frenarlo.` : "Gana valor por arquetipo."}`
-      : exposed.length
-        ? `No es un counter limpio: ${exposed[0]} lo frena.`
-        : `${reasons[0] || "Pick flexible"}. ${enemies.length ? "No obtiene ventaja directa de matchup." : reasons[1] || "Mantiene opciones abiertas."}`;
-
-  return {
-    brawler,
-    score: finalScore,
-    reasons: unique(reasons).slice(0, 8),
-    brief,
-    warning,
-    metrics,
-    countersHit: direct,
-    softCounters: soft,
-    exposedTo: exposed,
-    uncoveredEnemies,
-    counterLabel,
-    suggestedLine: lineFor(brawler, input),
-    plan: planFor(brawler, direct.length ? direct : soft, exposed, input),
-    personalHistory: learned.brawler,
-    personalMapHistory: learned.map,
-    personalAdjustment: Math.round(learned.adjustment * 10) / 10,
-    build: tacticalBuild(brawler, input, enemies),
-    lanePlan: lanePlanFor(brawler, direct.length ? direct : soft, exposed, input),
-    firstPickEvaluation,
-  };
-}
-
-function banRecommendations(input: DraftInput, roster: Brawler[], allies: Brawler[]): BanRecommendation[] {
-  const excluded = new Set([...input.allies, ...input.enemies, ...input.bans, input.myPick || ""].filter(Boolean).map(norm));
-  return roster
-    .filter((brawler) => !excluded.has(norm(brawler.name)))
-    .map((brawler) => {
-      let score = 25;
-      const reasons: string[] = [];
-      const mapBanIndex = input.map.bans.indexOf(brawler.name);
-      const tierIndex = input.map.tierS.indexOf(brawler.name);
-      if (mapBanIndex >= 0) { score += 35 - mapBanIndex * 5; reasons.push("Ban prioritario del mapa"); }
-      if (tierIndex >= 0) { score += 18 - tierIndex * 2; reasons.push("Tier S del mapa"); }
-      const threatened = allies.filter((ally) => includesName(ally.counteredBy, brawler.name));
-      if (threatened.length) { score += threatened.length * 17; reasons.push(`Protege a ${threatened.map((ally) => ally.name).join(" y ")}`); }
-      if (input.position === "First pick" && (isLongRange(brawler) || isControl(brawler))) score += 4;
-      return { brawler, score: clamp(score), reasons: unique(reasons).slice(0, 3) };
-    })
-    .filter((item) => item.score >= 42)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5);
-}
-
-function predictEnemyPicks(input: DraftInput, roster: Brawler[], allies: Brawler[], enemies: Brawler[]): EnemyPickPrediction[] {
-  const excluded = new Set([...input.allies, ...input.enemies, ...input.bans, input.myPick || ""].filter(Boolean).map(norm));
-  const enemyRoles = enemies.map((enemy) => enemy.role);
-  const alliedTank = allies.some((ally) => ally.role === "Tanque" || hasTag(ally, "tank", "tanque"));
-  const alliedDive = allies.some((ally) => ally.role === "Asesino" || hasTag(ally, "assassin", "asesino", "mobile"));
-  const enemyNeedsControl = !enemies.some(isControl);
-  const enemyNeedsAntitank = alliedTank && !enemies.some(isAntitank);
-  const enemyNeedsAntidive = alliedDive && !enemies.some(isAntidive);
-
-  return roster
-    .filter((brawler) => !excluded.has(norm(brawler.name)))
-    .map((brawler) => {
-      let score = tierScore[brawler.tier] ?? 40;
-      const reasons: string[] = [];
-      const tierIndex = input.map.tierS.indexOf(brawler.name);
-      const aIndex = input.map.tierA.indexOf(brawler.name);
-
-      if (tierIndex >= 0) {
-        score += 18 - tierIndex * 2;
-        reasons.push("Prioridad natural del mapa");
-      } else if (aIndex >= 0) {
-        score += 9 - aIndex;
-        reasons.push("Buen encaje con el mapa");
-      }
-
-      const targets = allies.filter((ally) =>
-        includesName(brawler.counters, ally.name) ||
-        includesName(ally.counteredBy, brawler.name)
-      );
-      if (targets.length) {
-        score += targets.length * 16;
-        reasons.unshift(`Puede castigar a ${targets.map((ally) => ally.name).slice(0, 2).join(" y ")}`);
-      }
-
-      if (enemyNeedsAntitank && isAntitank(brawler)) {
-        score += 12;
-        reasons.push("Completa el antitanque rival");
-      }
-      if (enemyNeedsAntidive && isAntidive(brawler)) {
-        score += 11;
-        reasons.push("Protege su backline");
-      }
-      if (enemyNeedsControl && isControl(brawler) && ["Zona Restringida", "Atrapagemas", "BalÃ³n Brawl"].includes(input.map.mode)) {
-        score += 8;
-        reasons.push("AÃ±ade control de espacio");
-      }
-      if (input.map.mode === "Atraco" && isObjective(brawler)) {
-        score += 8;
-        reasons.push("Aporta presiÃ³n a la caja");
-      }
-      if (input.map.layout === "Abierto" && isLongRange(brawler)) score += 7;
-      if (input.map.layout === "Cerrado" && (isFrontline(brawler) || isThrower(brawler))) score += 6;
-      if (enemies.some(isSupport) && isFrontline(brawler)) score += 5;
-
-      const repeatedRole = enemyRoles.filter((role) => role === brawler.role).length;
-      if (repeatedRole >= 2) score -= 10;
-      else if (repeatedRole === 1 && ["Apoyo", "Artillero"].includes(brawler.role)) score -= 5;
-
-      const target = targets[0]?.name;
-      const response = brawler.counteredBy.find((name) => !excluded.has(norm(name)))
-        || "Reserva un pick seguro que cubra su arquetipo";
-
-      return {
-        brawler,
-        score: clamp(score),
-        target,
-        reason: unique(reasons)[0] || "Completa el draft rival con flexibilidad",
-        response,
-      };
-    })
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 6);
-}
-
-function laneAssignments(candidate: Brawler | undefined, allies: Brawler[], enemies: Brawler[], input: DraftInput): TeamAssignment[] {
-  const team = candidate ? [...allies, candidate].slice(0, 3) : allies.slice(0, 3);
-  if (!team.length) return [];
-  const remaining = [...enemies];
-  const mids = team.filter((ally) => isSupport(ally) || isControl(ally) || (input.map.mode === "Atrapagemas" && isLongRange(ally)));
-  const preferredMid = mids[0];
-  const laneByName = new Map<string, string>();
-  if (preferredMid) laneByName.set(preferredMid.name, "Centro");
-  const sidePlayers = team.filter((ally) => ally.name !== preferredMid?.name);
-  sidePlayers.forEach((ally, index) => laneByName.set(ally.name, index === 0 ? "Izquierda" : "Derecha"));
-  if (!preferredMid && team.length === 3) laneByName.set(team[1].name, "Centro");
-
-  return team.map((ally) => {
-    let bestEnemy: Brawler | undefined;
-    let bestScore = -999;
-    remaining.forEach((enemy) => {
-      let matchup = 0;
-      if (includesName(ally.counters, enemy.name)) matchup += 5;
-      if (includesName(ally.counteredBy, enemy.name)) matchup -= 6;
-      if (isAntitank(ally) && enemy.role === "Tanque") matchup += 4;
-      if (isAntidive(ally) && enemy.role === "Asesino") matchup += 4;
-      if (matchup > bestScore) { bestScore = matchup; bestEnemy = enemy; }
-    });
-    if (bestEnemy) remaining.splice(remaining.indexOf(bestEnemy), 1);
-    const lane = laneByName.get(ally.name) || "LÃ­nea flexible";
-    const instruction = bestEnemy
-      ? bestScore >= 3
-        ? `Busca a ${bestEnemy.name} y conserva esa lÃ­nea.`
-        : bestScore <= -3
-          ? `Evita a ${bestEnemy.name}; cambia con un compaÃ±ero.`
-          : `Matchup equilibrado contra ${bestEnemy.name}; gana por municiÃ³n y posiciÃ³n.`
-      : lineFor(ally, input);
-    return { ally: ally.name, enemy: bestEnemy?.name, lane, instruction };
-  });
-}
-
-function compositionScore(allies: Brawler[], candidate: Brawler | undefined, needs: string[]) {
-  const team = candidate ? [...allies, candidate] : allies;
-  if (!team.length) return 50;
-  let score = 60;
-  const roles = new Set(team.map((item) => item.role));
-  score += roles.size * 6;
-  score -= needs.length * 5;
-  if (team.some(isControl)) score += 5;
-  if (team.some(isAntidive)) score += 5;
-  if (team.some(isAntitank)) score += 5;
-  if (team.filter(isSupport).length >= 2) score -= 12;
-  if (team.filter(isLongRange).length === 3) score -= 10;
-  return clamp(score);
-}
-
-
-function brawlerMapStrength(brawler: Brawler, input: DraftInput) {
-  let score = tierScore[brawler.tier] ?? 41;
-  score += (brawler.modes[input.map.mode] ?? 0) * 2;
-
-  const sIndex = input.map.tierS.indexOf(brawler.name);
-  const aIndex = input.map.tierA.indexOf(brawler.name);
-  if (sIndex >= 0) score += 18 - sIndex * 1.8;
-  else if (aIndex >= 0) score += 10 - aIndex * 1.2;
-
-  if (input.map.layout === "Abierto") {
-    if (isLongRange(brawler)) score += 7;
-    if (isShortRange(brawler) && !hasTag(brawler, "mobile", "safe")) score -= 5;
-  }
-  if (input.map.layout === "Cerrado") {
-    if (isFrontline(brawler) || isThrower(brawler) || hasTag(brawler, "walls")) score += 6;
-    if (isLongRange(brawler) && !hasTag(brawler, "safe")) score -= 2;
-  }
-  if (input.map.mode === "Atraco" && isObjective(brawler)) score += 6;
-  if (input.map.mode === "Zona Restringida" && isControl(brawler)) score += 5;
-  if (input.map.mode === "BalÃ³n Brawl" && isFrontline(brawler)) score += 4;
-  return clamp(score);
-}
-
-function paddedAverage(values: number[], totalSlots = 3) {
-  const filled = values.slice(0, totalSlots);
-  const total = filled.reduce((sum, value) => sum + value, 0) + Math.max(0, totalSlots - filled.length) * 50;
-  return total / totalSlots;
-}
-
-function teamCompositionQuality(team: Brawler[], input: DraftInput) {
-  if (!team.length) return 50;
-  let score = 48;
-  score += new Set(team.map((brawler) => brawler.role)).size * 5;
-  if (team.some(isControl)) score += 6;
-  if (team.some(isAntidive)) score += 6;
-  if (team.some(isAntitank)) score += 6;
-  if (team.some(hasWallbreak) && input.map.traits.some((trait) => trait.includes("muro"))) score += 4;
-  if (input.map.layout === "Abierto" && team.some(isLongRange)) score += 5;
-  if (input.map.layout === "Cerrado" && team.some(isFrontline)) score += 5;
-  if (input.map.mode === "Atraco" && team.some(isObjective)) score += 7;
-  if (input.map.mode === "Zona Restringida" && team.some(isControl)) score += 6;
-  if (input.map.mode === "Atrapagemas" && team.some((brawler) => isSupport(brawler) || isControl(brawler) || isLongRange(brawler))) score += 4;
-  if (team.filter(isSupport).length >= 2) score -= 12;
-  if (team.filter(isLongRange).length === 3) score -= 9;
-  if (team.filter(isShortRange).length === 3 && input.map.layout === "Abierto") score -= 12;
-  if (team.filter(isThrower).length >= 2) score -= 7;
-  return clamp(score);
-}
-
-function matchupQuality(team: Brawler[], opponents: Brawler[]) {
-  if (!team.length || !opponents.length) return 50;
-  let edge = 0;
-  for (const ally of team) {
-    for (const enemy of opponents) {
-      if (includesName(ally.counters, enemy.name)) edge += 6;
-      if (includesName(ally.counteredBy, enemy.name)) edge -= 7;
-      if (includesName(enemy.counteredBy, ally.name)) edge += 3;
-      if (includesName(enemy.counters, ally.name)) edge -= 3;
-      if (isAntitank(ally) && enemy.role === "Tanque") edge += 2;
-      if (isAntidive(ally) && enemy.role === "Asesino") edge += 2;
-    }
-  }
-  return clamp(50 + edge);
-}
-
-function estimateWinProbability(input: DraftInput, allies: Brawler[], enemies: Brawler[]): WinEstimate | undefined {
-  if (allies.length === 0 || enemies.length === 0) return undefined;
-
-  const allyBase = paddedAverage(allies.map((brawler) => brawlerMapStrength(brawler, input)));
-  const enemyBase = paddedAverage(enemies.map((brawler) => brawlerMapStrength(brawler, input)));
-  const allyComposition = teamCompositionQuality(allies, input);
-  const enemyComposition = teamCompositionQuality(enemies, input);
-  const allyMatchups = matchupQuality(allies, enemies);
-  const enemyMatchups = matchupQuality(enemies, allies);
-
-  let alliedScore = allyBase * 0.34 + allyComposition * 0.24 + allyMatchups * 0.42;
-  let enemyScore = enemyBase * 0.34 + enemyComposition * 0.24 + enemyMatchups * 0.42;
-
-  const selected = allies.find((brawler) => norm(brawler.name) === norm(input.myPick || ""));
-  const poolEntry = selected ? input.personalPool?.[selected.slug] : undefined;
-  const poolPolicy = input.poolPolicy || (input.usePersonalPool ? "Solo pool" : "Off");
-  if (poolPolicy !== "Off" && poolEntry) {
-    if (poolEntry.power11) alliedScore += 1.5;
-    if (poolEntry.hypercharge) alliedScore += 1.2;
-    if (poolEntry.favorite) alliedScore += .8;
-    alliedScore += (poolEntry.mastery - 3) * 1.1;
-    if (!poolEntry.available) alliedScore -= 2.5;
-    if (poolEntry.avoid) alliedScore -= 5;
-  }
-
-  alliedScore = Math.max(0, Math.min(100, alliedScore));
-  enemyScore = Math.max(0, Math.min(100, enemyScore));
-
-  const delta = alliedScore - enemyScore;
-  const rawProbability = 100 / (1 + Math.exp(-delta / 13));
-  const visiblePicks = Math.min(6, allies.length + enemies.length);
-  const completeness = Math.round((visiblePicks / 6) * 100);
-  const shrinkFactor = 0.32 + 0.68 * (visiblePicks / 6);
-  const percentage = Math.max(18, Math.min(82, Math.round(50 + (rawProbability - 50) * shrinkFactor)));
-
-  const allComplete = [...allies, ...enemies].every((brawler) => brawler.profileComplete);
-  const confidence: WinEstimate["confidence"] =
-    visiblePicks === 6 && allComplete ? "Alta" :
-    visiblePicks >= 5 ? "Media" : "Baja";
-  const margin = confidence === "Alta" ? 5 : confidence === "Media" ? 9 : 14;
-
-  const favorablePairs: string[] = [];
-  const unfavorablePairs: string[] = [];
-  for (const ally of allies) {
-    for (const enemy of enemies) {
-      if (includesName(ally.counters, enemy.name)) favorablePairs.push(`${ally.name} frena a ${enemy.name}`);
-      if (includesName(ally.counteredBy, enemy.name)) unfavorablePairs.push(`${enemy.name} frena a ${ally.name}`);
-    }
-  }
-
-  const advantages: string[] = [];
-  const risks: string[] = [];
-  if (allyBase >= enemyBase + 3) advantages.push("Mejor encaje medio con el mapa y el modo");
-  if (allyComposition >= enemyComposition + 4) advantages.push("ComposiciÃ³n aliada mÃ¡s equilibrada");
-  if (allyMatchups >= enemyMatchups + 4) advantages.push("Ventaja global de matchups");
-  advantages.push(...unique(favorablePairs).slice(0, 2));
-
-  if (enemyBase >= allyBase + 3) risks.push("El rival tiene mejor adaptaciÃ³n media al mapa");
-  if (enemyComposition >= allyComposition + 4) risks.push("La composiciÃ³n rival estÃ¡ mÃ¡s completa");
-  if (enemyMatchups >= allyMatchups + 4) risks.push("El rival domina mÃ¡s emparejamientos directos");
-  risks.push(...unique(unfavorablePairs).slice(0, 2));
-  if (visiblePicks < 6) risks.push(`EstimaciÃ³n provisional: faltan ${6 - visiblePicks} picks por introducir`);
-
-  const title = percentage >= 57 ? "Ventaja aliada" : percentage <= 43 ? "Ventaja rival" : "Draft equilibrado";
-
-  return {
-    percentage,
-    lower: Math.max(10, percentage - margin),
-    upper: Math.min(90, percentage + margin),
-    confidence,
-    completeness,
-    alliedScore: Math.round(alliedScore),
-    enemyScore: Math.round(enemyScore),
-    title,
-    advantages: unique(advantages).slice(0, 4),
-    risks: unique(risks).slice(0, 4),
-    disclaimer: "EstimaciÃ³n heurÃ­stica del draft; no es un win rate observado ni garantiza el resultado de la partida.",
-  };
-}
-
-export function analyzeDraft(input: DraftInput, roster: Brawler[]): DraftAnalysis {
-  const unavailable = new Set([...input.allies, ...input.enemies, ...input.bans, input.myPick || ""].filter(Boolean).map(norm));
-  const enemies = findProfiles(input.enemies, roster);
-  const otherAllies = findProfiles(input.allies, roster);
-  const selectedProfile = input.myPick
-    ? roster.find((brawler) => norm(brawler.name) === norm(input.myPick || ""))
-    : undefined;
-  const fullAllies = selectedProfile ? [...otherAllies, selectedProfile] : otherAllies;
-
-  const recommendationNeeds = teamNeeds(input, otherAllies, enemies);
-  const finalNeeds = teamNeeds(input, fullAllies, enemies);
-  const threats = draftThreats(fullAllies, enemies);
-  const strengths = draftStrengths(input, fullAllies, enemies);
-
-  const recommendations = roster
-    .filter((brawler) => !unavailable.has(norm(brawler.name)))
-    .filter((brawler) => {
-      const poolPolicy = input.poolPolicy || (input.usePersonalPool ? "Solo pool" : "Off");
-      if (poolPolicy !== "Solo pool") return true;
-      const entry = input.personalPool?.[brawler.slug];
-      if (!entry) return false;
-      return entry.available && !entry.avoid;
-    })
-    .map((brawler) => scoreCandidate(brawler, input, otherAllies, enemies, recommendationNeeds))
-    .sort((a, b) => {
-      const priority = input.priority || "Counter";
-      if (input.position === "First pick") {
-        const aCurated = input.map.firstPicks.indexOf(a.brawler.name);
-        const bCurated = input.map.firstPicks.indexOf(b.brawler.name);
-
-        // El top 3 auditado del mapa prevalece. Los bans y "Solo pool"
-        // ya han filtrado los brawlers no disponibles antes de ordenar.
-        if (aCurated >= 0 && bCurated < 0) return -1;
-        if (bCurated >= 0 && aCurated < 0) return 1;
-        if (aCurated >= 0 && bCurated >= 0) return aCurated - bCurated;
-
-        const aModel = a.firstPickEvaluation?.score || 0;
-        const bModel = b.firstPickEvaluation?.score || 0;
-        const aPrepared = (a.metrics.personal - 50) * .10;
-        const bPrepared = (b.metrics.personal - 50) * .10;
-        const aFirst = aModel + aPrepared - a.metrics.risk * .025;
-        const bFirst = bModel + bPrepared - b.metrics.risk * .025;
-        return bFirst - aFirst || b.score - a.score;
-      }
-      if (input.position === "Last pick" && enemies.length) {
-        const aCoverage = a.countersHit.length * 4 + a.softCounters.length * 1.4 - a.exposedTo.length * 3;
-        const bCoverage = b.countersHit.length * 4 + b.softCounters.length * 1.4 - b.exposedTo.length * 3;
-        return bCoverage - aCoverage || b.metrics.counter - a.metrics.counter || a.metrics.risk - b.metrics.risk || b.score - a.score;
-      }
-      if (enemies.length && priority === "Counter") {
-        const aCoverage = a.countersHit.length * 2.5 + a.softCounters.length - a.exposedTo.length * 1.5;
-        const bCoverage = b.countersHit.length * 2.5 + b.softCounters.length - b.exposedTo.length * 1.5;
-        return bCoverage - aCoverage || b.metrics.counter - a.metrics.counter || b.metrics.composition - a.metrics.composition || b.score - a.score;
-      }
-      if (priority === "Seguro") return b.metrics.safety - a.metrics.safety || b.metrics.mapFit - a.metrics.mapFit || b.score - a.score;
-      return b.score - a.score || b.metrics.counter - a.metrics.counter || b.metrics.safety - a.metrics.safety;
-    })
-    .slice(0, 16);
-
-  const selectedPick = selectedProfile
-    ? scoreCandidate(selectedProfile, input, otherAllies, enemies, recommendationNeeds)
-    : undefined;
-  const coachCandidate = selectedProfile || (fullAllies.length < 3 ? recommendations[0]?.brawler : undefined);
-  const visiblePicks = fullAllies.length + enemies.length;
-  const draftStage = selectedProfile
-    ? visiblePicks >= 6
-      ? "Draft completo: evaluando los dos equipos"
-      : "Tu pick estÃ¡ seleccionado: evaluaciÃ³n provisional"
-    : input.position === "First pick"
-      ? "First pick: priorizando solidez, meta del mapa y baja exposiciÃ³n"
-      : input.position === "Last pick"
-        ? "Last pick: buscando el mÃ¡ximo castigo contra la composiciÃ³n completa"
-        : input.enemies.length
-          ? "Picks intermedios: counterear al rival sin romper la composiciÃ³n"
-          : "Picks intermedios: esperando informaciÃ³n rival y manteniendo flexibilidad";
-
-  return {
-    recommendations,
-    selectedPick,
-    winEstimate: fullAllies.length && enemies.length ? estimateWinProbability(input, fullAllies, enemies) : undefined,
-    needs: finalNeeds,
-    threats,
-    strengths,
-    enemyWeaknesses: enemyWeaknesses(input, enemies),
-    banRecommendations: banRecommendations(input, roster, fullAllies),
-    predictedEnemyPicks: predictEnemyPicks(input, roster, fullAllies, enemies),
-    teamAssignments: laneAssignments(coachCandidate, selectedProfile ? otherAllies : fullAllies, enemies, input),
-    compositionScore: compositionScore(selectedProfile ? otherAllies : fullAllies, coachCandidate, finalNeeds),
-    draftStage,
-    availableCount: roster.length - unavailable.size,
-  };
-}
-
-export function recommendDraft(input: DraftInput, roster: Brawler[]): DraftRecommendation[] {
-  return analyzeDraft(input, roster).recommendations;
-}
+funct÷ž7¶‰žËkºwµçx‰É…Ý±•È¹É½±”¤¤¹Í¥é”€¨€Ôì(€¥˜€¡Ñ•…´¹Í½µ”¡¥Í½¹ÑÉ½°¤¤Í½É”€¬ô€Øì(€¥˜€¡Ñ•…´¹Í½µ”¡¥Í¹Ñ¥‘¥Ù”¤¤Í½É”€¬ô€Øì(€¥˜€¡Ñ•…´¹Í½µ”¡¥Í¹Ñ¥Ñ…¹¬¤¤Í½É”€¬ô€Øì(€¥˜€¡Ñ•…´¹Í½µ”¡¡…Í]…±±‰É•…¬¤€˜˜¥¹ÁÕÐ¹µ…À¹ÑÉ…¥ÑÌ¹Í½µ” ¡ÑÉ…¥Ð¤€ôøÑÉ…¥Ð¹¥¹±Õ‘•Ì ‰µÕÉ¼ˆ¤¤¤Í½É”€¬ô€Ðì(€¥˜€¡¥¹ÁÕÐ¹µ…À¹±…å½ÕÐ€ôôô€‰‰¥•ÉÑ¼ˆ€˜˜Ñ•…´¹Í½µ”¡¥Í1½¹I…¹”¤¤Í½É”€¬ô€Ôì(€¥˜€¡¥¹ÁÕÐ¹µ…À¹±…å½ÕÐ€ôôô€‰•ÉÉ…‘¼ˆ€˜˜Ñ•…´¹Í½µ”¡¥ÍÉ½¹Ñ±¥¹”¤¤Í½É”€¬ô€Ôì(€¥˜€¡¥¹ÁÕÐ¹µ…À¹µ½‘”€ôôô€‰ÑÉ…¼ˆ€˜˜Ñ•…´¹Í½µ”¡¥Í=‰©•Ñ¥Ù”¤¤Í½É”€¬ô€Üì(€¥˜€¡¥¹ÁÕÐ¹µ…À¹µ½‘”€ôôô€‰i½¹„I•ÍÑÉ¥¹¥‘„ˆ€˜˜Ñ•…´¹Í½µ”¡¥Í½¹ÑÉ½°¤¤Í½É”€¬ô€Øì(€¥˜€¡¥¹ÁÕÐ¹µ…À¹µ½‘”€ôôô€‰ÑÉ…Á…•µ…Ìˆ€˜˜Ñ•…´¹Í½µ” ¡‰É…Ý±•È¤€ôø¥ÍMÕÁÁ½ÉÐ¡‰É…Ý±•È¤ñð¥Í½¹ÑÉ½°¡‰É…Ý±•È¤ñð¥Í1½¹I…¹”¡‰É…Ý±•È¤¤¤Í½É”€¬ô€Ðì(€¥˜€¡Ñ•…´¹™¥±Ñ•È¡¥ÍMÕÁÁ½ÉÐ¤¹±•¹Ñ €øô€È¤Í½É”€´ô€ÄÈì(€¥˜€¡Ñ•…´¹™¥±Ñ•È¡¥Í1½¹I…¹”¤¹±•¹Ñ €ôôô€Ì¤Í½É”€´ô€äì(€¥˜€¡Ñ•…´¹™¥±Ñ•È¡¥ÍM¡½ÉÑI…¹”¤¹±•¹Ñ €ôôô€Ì€˜˜¥¹ÁÕÐ¹µ…À¹±…å½ÕÐ€ôôô€‰‰¥•ÉÑ¼ˆ¤Í½É”€´ô€ÄÈì(€¥˜€¡Ñ•…´¹™¥±Ñ•È¡¥ÍQ¡É½Ý•È¤¹±•¹Ñ €øô€È¤Í½É”€´ô€Üì(€É•ÑÕÉ¸±…µÀ¡Í½É”¤ì)ô()™Õ¹Ñ¥½¸µ…Ñ¡ÕÁEÕ…±¥Ñä¡Ñ•…´è	É…Ý±•Émt°½ÁÁ½¹•¹ÑÌè	É…Ý±•Émt¤ì(€¥˜€ …Ñ•…´¹±•¹Ñ ñð€…½ÁÁ½¹•¹ÑÌ¹±•¹Ñ ¤É•ÑÕÉ¸€ÔÀì(€±•Ð•‘”€ô€Àì(€™½È€¡½¹ÍÐ…±±ä½˜Ñ•…´¤ì(€€€™½È€¡½¹ÍÐ•¹•µä½˜½ÁÁ½¹•¹ÑÌ¤ì(€€€€€¥˜€¡¥¹±Õ‘•Í9…µ”¡…±±ä¹½Õ¹Ñ•ÉÌ°•¹•µä¹¹…µ”¤¤•‘”€¬ô€Øì(€€€€€¥˜€¡¥¹±Õ‘•Í9…µ”¡…±±ä¹½Õ¹Ñ•É•‘	ä°•¹•µä¹¹…µ”¤¤•‘”€´ô€Üì(€€€€€¥˜€¡¥¹±Õ‘•Í9…µ”¡•¹•µä¹½Õ¹Ñ•É•‘	ä°…±±ä¹¹…µ”¤¤•‘”€¬ô€Ìì(€€€€€¥˜€¡¥¹±Õ‘•Í9…µ”¡•¹•µä¹½Õ¹Ñ•ÉÌ°…±±ä¹¹…µ”¤¤•‘”€´ô€Ìì(€€€€€¥˜€¡¥Í¹Ñ¥Ñ…¹¬¡…±±ä¤€˜˜•¹•µä¹É½±”€ôôô€‰Q…¹ÅÕ”ˆ¤•‘”€¬ô€Èì(€€€€€¥˜€¡¥Í¹Ñ¥‘¥Ù”¡…±±ä¤€˜˜•¹•µä¹É½±”€ôôô€‰Í•Í¥¹¼ˆ¤•‘”€¬ô€Èì(€€€ô(€ô(€É•ÑÕÉ¸±…µÀ ÔÀ€¬•‘”¤ì)ô()™Õ¹Ñ¥½¸•ÍÑ¥µ…Ñ•]¥¹AÉ½‰…‰¥±¥Ñä¡¥¹ÁÕÐèÉ…™Ñ%¹ÁÕÐ°…±±¥•Ìè	É…Ý±•Émt°•¹•µ¥•Ìè	É…Ý±•Émt¤è]¥¹ÍÑ¥µ…Ñ”ðÕ¹‘•™¥¹•ì(€¥˜€¡…±±¥•Ì¹±•¹Ñ €ôôô€Àñð•¹•µ¥•Ì¹±•¹Ñ €ôôô€À¤É•ÑÕÉ¸Õ¹‘•™¥¹•ì((€½¹ÍÐ…±±å	…Í”€ôÁ…‘‘•‘Ù•É…”¡…±±¥•Ì¹µ…À ¡‰É…Ý±•È¤€ôø‰É…Ý±•É5…ÁMÑÉ•¹Ñ ¡‰É…Ý±•È°¥¹ÁÕÐ¤¤¤ì(€½¹ÍÐ•¹•µå	…Í”€ôÁ…‘‘•‘Ù•É…”¡•¹•µ¥•Ì¹µ…À ¡‰É…Ý±•È¤€ôø‰É…Ý±•É5…ÁMÑÉ•¹Ñ ¡‰É…Ý±•È°¥¹ÁÕÐ¤¤¤ì(€½¹ÍÐ…±±å½µÁ½Í¥Ñ¥½¸€ôÑ•…µ½µÁ½Í¥Ñ¥½¹EÕ…±¥Ñä¡…±±¥•Ì°¥¹ÁÕÐ¤ì(€½¹ÍÐ•¹•µå½µÁ½Í¥Ñ¥½¸€ôÑ•…µ½µÁ½Í¥Ñ¥½¹EÕ…±¥Ñä¡•¹•µ¥•Ì°¥¹ÁÕÐ¤ì(€½¹ÍÐ…±±å5…Ñ¡ÕÁÌ€ôµ…Ñ¡ÕÁEÕ…±¥Ñä¡…±±¥•Ì°•¹•µ¥•Ì¤ì(€½¹ÍÐ•¹•µå5…Ñ¡ÕÁÌ€ôµ…Ñ¡ÕÁEÕ…±¥Ñä¡•¹•µ¥•Ì°…±±¥•Ì¤ì((€±•Ð…±±¥•‘M½É”€ô…±±å	…Í”€¨€À¸ÌÐ€¬…±±å½µÁ½Í¥Ñ¥½¸€¨€À¸ÈÐ€¬…±±å5…Ñ¡ÕÁÌ€¨€À¸ÐÈì(€±•Ð•¹•µåM½É”€ô•¹•µå	…Í”€¨€À¸ÌÐ€¬•¹•µå½µÁ½Í¥Ñ¥½¸€¨€À¸ÈÐ€¬•¹•µå5…Ñ¡ÕÁÌ€¨€À¸ÐÈì((€½¹ÍÐÍ•±•Ñ•€ô…±±¥•Ì¹™¥¹ ¡‰É…Ý±•È¤€ôø¹½É´¡‰É…Ý±•È¹¹…µ”¤€ôôô¹½É´¡¥¹ÁÕÐ¹µåA¥¬ñð€ˆˆ¤¤ì(€½¹ÍÐÁ½½±¹ÑÉä€ôÍ•±•Ñ•€ü¥¹ÁÕÐ¹Á•ÉÍ½¹…±A½½°ü¹mÍ•±•Ñ•¹Í±Õt€èÕ¹‘•™¥¹•ì(€½¹ÍÐÁ½½±A½±¥ä€ô¥¹ÁÕÐ¹Á½½±A½±¥äñð€¡¥¹ÁÕÐ¹ÕÍ•A•ÉÍ½¹…±A½½°€ü€‰M½±¼Á½½°ˆ€è€‰=™˜ˆ¤ì(€¥˜€¡Á½½±A½±¥ä€„ôô€‰=™˜ˆ€˜˜Á½½±¹ÑÉä¤ì(€€€¥˜€¡Á½½±¹ÑÉä¹Á½Ý•ÈÄÄ¤…±±¥•‘M½É”€¬ô€Ä¸Ôì(€€€¥˜€¡Á½½±¹ÑÉä¹¡åÁ•É¡…É”¤…±±¥•‘M½É”€¬ô€Ä¸Èì(€€€¥˜€¡Á½½±¹ÑÉä¹™…Ù½É¥Ñ”¤…±±¥•‘M½É”€¬ô€¸àì(€€€…±±¥•‘M½É”€¬ô€¡Á½½±¹ÑÉä¹µ…ÍÑ•Éä€´€Ì¤€¨€Ä¸Äì(€€€¥˜€ …Á½½±¹ÑÉä¹…Ù…¥±…‰±”¤…±±¥•‘M½É”€´ô€È¸Ôì(€€€¥˜€¡Á½½±¹ÑÉä¹…Ù½¥¤…±±¥•‘M½É”€´ô€Ôì(€ô((€…±±¥•‘M½É”€ô5…Ñ ¹µ…à À°5…Ñ ¹µ¥¸ ÄÀÀ°…±±¥•‘M½É”¤¤ì(€•¹•µåM½É”€ô5…Ñ ¹µ…à À°5…Ñ ¹µ¥¸ ÄÀÀ°•¹•µåM½É”¤¤ì((€½¹ÍÐ‘•±Ñ„€ô…±±¥•‘M½É”€´•¹•µåM½É”ì(€½¹ÍÐÉ…ÝAÉ½‰…‰¥±¥Ñä€ô€ÄÀÀ€¼€ Ä€¬5…Ñ ¹•áÀ µ‘•±Ñ„€¼€ÄÌ¤¤ì(€½¹ÍÐÙ¥Í¥‰±•A¥­Ì€ô5…Ñ ¹µ¥¸ Ø°…±±¥•Ì¹±•¹Ñ €¬•¹•µ¥•Ì¹±•¹Ñ ¤ì(€½¹ÍÐ½µÁ±•Ñ•¹•ÍÌ€ô5…Ñ ¹É½Õ¹ ¡Ù¥Í¥‰±•A¥­Ì€¼€Ø¤€¨€ÄÀÀ¤ì(€½¹ÍÐÍ¡É¥¹­…Ñ½È€ô€À¸ÌÈ€¬€À¸Øà€¨€¡Ù¥Í¥‰±•A¥­Ì€¼€Ø¤ì(€½¹ÍÐÁ•É•¹Ñ…”€ô5…Ñ ¹µ…à Äà°5…Ñ ¹µ¥¸ àÈ°5…Ñ ¹É½Õ¹ ÔÀ€¬€¡É…ÝAÉ½‰…‰¥±¥Ñä€´€ÔÀ¤€¨Í¡É¥¹­…Ñ½È¤¤¤ì((€½¹ÍÐ…±±½µÁ±•Ñ”€ôl¸¸¹…±±¥•Ì°€¸¸¹•¹•µ¥•Ít¹•Ù•Éä ¡‰É…Ý±•È¤€ôø‰É…Ý±•È¹ÁÉ½™¥±•½µÁ±•Ñ”¤ì(€½¹ÍÐ½¹™¥‘•¹”è]¥¹ÍÑ¥µ…Ñ•l‰½¹™¥‘•¹”‰t€ô(€€€Ù¥Í¥‰±•A¥­Ì€ôôô€Ø€˜˜…±±½µÁ±•Ñ”€ü€‰±Ñ„ˆ€è(€€€Ù¥Í¥‰±•A¥­Ì€øô€Ô€ü€‰5•‘¥„ˆ€è€‰	…©„ˆì(€½¹ÍÐµ…É¥¸€ô½¹™¥‘•¹”€ôôô€‰±Ñ„ˆ€ü€Ô€è½¹™¥‘•¹”€ôôô€‰5•‘¥„ˆ€ü€ä€è€ÄÐì((€½¹ÍÐ™…Ù½É…‰±•A…¥ÉÌèÍÑÉ¥¹mt€ômtì(€½¹ÍÐÕ¹™…Ù½É…‰±•A…¥ÉÌèÍÑÉ¥¹mt€ômtì(€™½È€¡½¹ÍÐ…±±ä½˜…±±¥•Ì¤ì(€€€™½È€¡½¹ÍÐ•¹•µä½˜•¹•µ¥•Ì¤ì(€€€€€¥˜€¡¥¹±Õ‘•Í9…µ”¡…±±ä¹½Õ¹Ñ•ÉÌ°•¹•µä¹¹…µ”¤¤™…Ù½É…‰±•A…¥ÉÌ¹ÁÕÍ ¡€‘í…±±ä¹¹…µ•ô™É•¹„„€‘í•¹•µä¹¹…µ•õ€¤ì(€€€€€¥˜€¡¥¹±Õ‘•Í9…µ”¡…±±ä¹½Õ¹Ñ•É•‘	ä°•¹•µä¹¹…µ”¤¤Õ¹™…Ù½É…‰±•A…¥ÉÌ¹ÁÕÍ ¡€‘í•¹•µä¹¹…µ•ô™É•¹„„€‘í…±±ä¹¹…µ•õ€¤ì(€€€ô(€ô((€½¹ÍÐ…‘Ù…¹Ñ…•ÌèÍÑÉ¥¹mt€ômtì(€½¹ÍÐÉ¥Í­ÌèÍÑÉ¥¹mt€ômtì(€¥˜€¡…±±å	…Í”€øô•¹•µå	…Í”€¬€Ì¤…‘Ù…¹Ñ…•Ì¹ÁÕÍ  ‰5•©½È•¹…©”µ•‘¥¼½¸•°µ…Á„ä•°µ½‘¼ˆ¤ì(€¥˜€¡…±±å½µÁ½Í¥Ñ¥½¸€øô•¹•µå½µÁ½Í¥Ñ¥½¸€¬€Ð¤…‘Ù…¹Ñ…•Ì¹ÁÕÍ  ‰½µÁ½Í¥§Í¸…±¥…‘„·…Ì•ÅÕ¥±¥‰É…‘„ˆ¤ì(€¥˜€¡…±±å5…Ñ¡ÕÁÌ€øô•¹•µå5…Ñ¡ÕÁÌ€¬€Ð¤…‘Ù…¹Ñ…•Ì¹ÁÕÍ  ‰Y•¹Ñ…©„±½‰…°‘”µ…Ñ¡ÕÁÌˆ¤ì(€…‘Ù…¹Ñ…•Ì¹ÁÕÍ  ¸¸¹Õ¹¥ÅÕ”¡™…Ù½É…‰±•A…¥ÉÌ¤¹Í±¥” À°€È¤¤ì((€¥˜€¡•¹•µå	…Í”€øô…±±å	…Í”€¬€Ì¤É¥Í­Ì¹ÁÕÍ  ‰°É¥Ù…°Ñ¥•¹”µ•©½È…‘…ÁÑ…§Í¸µ•‘¥„…°µ…Á„ˆ¤ì(€¥˜€¡•¹•µå½µÁ½Í¥Ñ¥½¸€øô…±±å½µÁ½Í¥Ñ¥½¸€¬€Ð¤É¥Í­Ì¹ÁÕÍ  ‰1„½µÁ½Í¥§Í¸É¥Ù…°•ÍÓ„·…Ì½µÁ±•Ñ„ˆ¤ì(€¥˜€¡•¹•µå5…Ñ¡ÕÁÌ€øô…±±å5…Ñ¡ÕÁÌ€¬€Ð¤É¥Í­Ì¹ÁÕÍ  ‰°É¥Ù…°‘½µ¥¹„·…Ì•µÁ…É•©…µ¥•¹Ñ½Ì‘¥É•Ñ½Ìˆ¤ì(€É¥Í­Ì¹ÁÕÍ  ¸¸¹Õ¹¥ÅÕ”¡Õ¹™…Ù½É…‰±•A…¥ÉÌ¤¹Í±¥” À°€È¤¤ì(€¥˜€¡Ù¥Í¥‰±•A¥­Ì€ð€Ø¤É¥Í­Ì¹ÁÕÍ ¡ÍÑ¥µ…§Í¸ÁÉ½Ù¥Í¥½¹…°è™…±Ñ…¸€‘ìØ€´Ù¥Í¥‰±•A¥­ÍôÁ¥­ÌÁ½È¥¹ÑÉ½‘Õ¥É€¤ì((€½¹ÍÐÑ¥Ñ±”€ôÁ•É•¹Ñ…”€øô€ÔÜ€ü€‰Y•¹Ñ…©„…±¥…‘„ˆ€èÁ•É•¹Ñ…”€ðô€ÐÌ€ü€‰Y•¹Ñ…©„É¥Ù…°ˆ€è€‰É…™Ð•ÅÕ¥±¥‰É…‘¼ˆì((€É•ÑÕÉ¸ì(€€€Á•É•¹Ñ…”°(€€€±½Ý•Èè5…Ñ ¹µ…à ÄÀ°Á•É•¹Ñ…”€´µ…É¥¸¤°(€€€ÕÁÁ•Èè5…Ñ ¹µ¥¸ äÀ°Á•É•¹Ñ…”€¬µ…É¥¸¤°(€€€½¹™¥‘•¹”°(€€€½µÁ±•Ñ•¹•ÍÌ°(€€€…±±¥•‘M½É”è5…Ñ ¹É½Õ¹¡…±±¥•‘M½É”¤°(€€€•¹•µåM½É”è5…Ñ ¹É½Õ¹¡•¹•µåM½É”¤°(€€€Ñ¥Ñ±”°(€€€…‘Ù…¹Ñ…•ÌèÕ¹¥ÅÕ”¡…‘Ù…¹Ñ…•Ì¤¹Í±¥” À°€Ð¤°(€€€É¥Í­ÌèÕ¹¥ÅÕ”¡É¥Í­Ì¤¹Í±¥” À°€Ð¤°(€€€‘¥Í±…¥µ•Èè€‰ÍÑ¥µ…§Í¸¡•ÕËµÍÑ¥„‘•°‘É…™Ðì¹¼•ÌÕ¸Ý¥¸É…Ñ”½‰Í•ÉÙ…‘¼¹¤…É…¹Ñ¥é„•°É•ÍÕ±Ñ…‘¼‘”±„Á…ÉÑ¥‘„¸ˆ°(€ôì)ô()™Õ¹Ñ¥½¸É•½µµ•¹‘…Ñ¥½¹½¹™¥‘•¹” (€¥¹ÁÕÐèÉ…™Ñ%¹ÁÕÐ°(€É•½µµ•¹‘…Ñ¥½¹ÌèÉ…™ÑI•½µµ•¹‘…Ñ¥½¹mt°(€Ù¥Í¥‰±•A¥­Ìè¹Õµ‰•È°(¤èÉ…™Ñ½¹™¥‘•¹”ì(€½¹ÍÐ‰•ÍÐ€ôÉ•½µµ•¹‘…Ñ¥½¹ÍlÁtì(€½¹ÍÐÍ•½¹€ôÉ•½µµ•¹‘…Ñ¥½¹ÍlÅtì(€½¹ÍÐ…À€ô‰•ÍÐ€˜˜Í•½¹€ü5…Ñ ¹µ…à À°‰•ÍÐ¹Í½É”€´Í•½¹¹Í½É”¤€è€Àì(€½¹ÍÐÁÉ½™¥±•EÕ…±¥Ñä€ôÉ•½µµ•¹‘…Ñ¥½¹Ì¹Í±¥” À°€Ì¤¹™¥±Ñ•È ¡¥Ñ•´¤€ôø¥Ñ•´¹‰É…Ý±•È¹ÁÉ½™¥±•½µÁ±•Ñ”¤¹±•¹Ñ ì(€½¹ÍÐµ…Á½¹™¥‘•¹”€ô¥¹ÁÕÐ¹µ…À¹™¥ÉÍÑA¥­½¹™¥‘•¹”€ôôô€‰±Ñ„ˆ€ü€Ü€è¥¹ÁÕÐ¹µ…À¹™¥ÉÍÑA¥­½¹™¥‘•¹”€ôôô€‰	…©„ˆ€ü€´Ø€è€Àì(€½¹ÍÐ¥¹™½Éµ…Ñ¥½¸€ô¥¹ÁÕÐ¹Á½Í¥Ñ¥½¸€ôôô€‰¥ÉÍÐÁ¥¬ˆ€ü€È€è5…Ñ ¹µ¥¸ ÄÔ°Ù¥Í¥‰±•A¥­Ì€¨€Ì¤ì(€½¹ÍÐ•áÁ½ÍÕÉ•A•¹…±Ñä€ô‰•ÍÐ€ü‰•ÍÐ¹•áÁ½Í•‘Q¼¹±•¹Ñ €¨€Ü€è€ÄÀì(€½¹ÍÐÍ½É”€ô±…µÀ Ðà€¬…À€¨€Ð€¬ÁÉ½™¥±•EÕ…±¥Ñä€¨€Ì€¬µ…Á½¹™¥‘•¹”€¬¥¹™½Éµ…Ñ¥½¸€´•áÁ½ÍÕÉ•A•¹…±Ñä¤ì(€½¹ÍÐ±…‰•°èÉ…™Ñ½¹™¥‘•¹•l‰±…‰•°‰t€ôÍ½É”€øô€ÜÔ€ü€‰±Ñ„ˆ€èÍ½É”€øô€Ôà€ü€‰5•‘¥„ˆ€è€‰	…©„ˆì(€½¹ÍÐÉ•…Í½¹ÌèÍÑÉ¥¹mt€ômtì(€½¹ÍÐ…ÕÑ¥½¹ÌèÍÑÉ¥¹mt€ômtì((€¥˜€¡…À€øô€Ü¤É•…Í½¹Ì¹ÁÕÍ ¡Y•¹Ñ…©„±…É„‘”€‘í…ÁôÁÕ¹Ñ½ÌÍ½‰É”±„Í•Õ¹‘„½Á§Í¹€¤ì(€•±Í”¥˜€¡…À€øô€Ì¤É•…Í½¹Ì¹ÁÕÍ ¡5…É•¸‘”€‘í…ÁôÁÕ¹Ñ½ÌÍ½‰É”±„…±Ñ•É¹…Ñ¥Ù…€¤ì(€•±Í”…ÕÑ¥½¹Ì¹ÁÕÍ  ‰1…ÌÁÉ¥µ•É…Ì½Á¥½¹•Ì•ÍÓ…¸µÕä¥Õ…±…‘…Ìˆ¤ì(€¥˜€¡Ù¥Í¥‰±•A¥­Ì€øô€Ô¤É•…Í½¹Ì¹ÁÕÍ  ‰°‘É…™Ð…Á½ÉÑ„…Í¤Ñ½‘„±„¥¹™½Éµ…§Í¸‘”µ…Ñ¡ÕÁÌˆ¤ì(€¥˜€¡ÁÉ½™¥±•EÕ…±¥Ñä€ôôô€Ì¤É•…Í½¹Ì¹ÁÕÍ  ‰1½ÌÑÉ•Ì…¹‘¥‘…Ñ½ÌÁÉ¥¹¥Á…±•ÌÑ¥•¹•¸Á•É™¥°½µÁ±•Ñ¼ˆ¤ì(€¥˜€¡¥¹ÁÕÐ¹Á½Í¥Ñ¥½¸€ôôô€‰¥ÉÍÐÁ¥¬ˆ¤…ÕÑ¥½¹Ì¹ÁÕÍ  ‰é¸¹¼Í”½¹½•¸±½Ì½Õ¹Ñ•ÉÌÉ¥Ù…±•Ìˆ¤ì(€¥˜€¡‰•ÍÐü¹•áÁ½Í•‘Q¼¹±•¹Ñ ¤…ÕÑ¥½¹Ì¹ÁÕÍ ¡°Á¥¬ÁÉ¥¹¥Á…°ÅÕ•‘„•áÁÕ•ÍÑ¼„€‘í‰•ÍÐ¹•áÁ½Í•‘Q¼¹©½¥¸ ˆä€ˆ¥õ€¤ì(€¥˜€ (€€€‰•ÍÐü¹™¥ÉÍÑA¥­Ù…±Õ…Ñ¥½¸€˜˜(€€€‰•ÍÐ¹™¥ÉÍÑA¥­Ù…±Õ…Ñ¥½¸¹…™Ñ•É	É•…­¥Ð€øô‰•ÍÐ¹™¥ÉÍÑA¥­Ù…±Õ…Ñ¥½¸¹¥¹¥Ñ¥…±¥Ð€¬€ÄÔ€˜˜(€€€‰•ÍÐ¹™¥ÉÍÑA¥­Ù…±Õ…Ñ¥½¸¹½Á•¹¥¹AÉ½‰…‰¥±¥Ñä€ð€ÌÀ(€€¤ì(€€€…ÕÑ¥½¹Ì¹ÁÕÍ  ‰A…ÉÑ”‘”ÍÔÙ…±½È‘•Á•¹‘”‘”ÅÕ”•°…µÁ¼Í”…‰É„ˆ¤ì(€ô((€É•ÑÕÉ¸ìÍ½É”°±…‰•°°…À°É•…Í½¹ÌèÕ¹¥ÅÕ”¡É•…Í½¹Ì¤¹Í±¥” À°€Ì¤°…ÕÑ¥½¹ÌèÕ¹¥ÅÕ”¡…ÕÑ¥½¹Ì¤¹Í±¥” À°€Ì¤ôì)ô()™Õ¹Ñ¥½¸‘É…™Ñ¡•­±¥ÍÐ¡¥¹ÁÕÐèÉ…™Ñ%¹ÁÕÐ°…±±¥•Ìè	É…Ý±•Émt°•¹•µ¥•Ìè	É…Ý±•Émt¤èÉ…™Ñ¡•­±¥ÍÑ%Ñ•µmtì(€½¹ÍÐ¥Ñ•µÌèÉ…™Ñ¡•­±¥ÍÑ%Ñ•µmt€ômtì(€½¹ÍÐ…‘€ô€¡±…‰•°èÍÑÉ¥¹œ°½Ù•É•è‰½½±•…¸°Á…ÉÑ¥…°è‰½½±•…¸°‘•Ñ…¥°èÍÑÉ¥¹œ¤€ôø¥Ñ•µÌ¹ÁÕÍ ¡ì(€€€±…‰•°°(€€€ÍÑ…ÑÕÌè½Ù•É•€ü€‰Õ‰¥•ÉÑ¼ˆ€èÁ…ÉÑ¥…°€ü€‰A…É¥…°ˆ€è€‰…±Ñ„ˆ°(€€€‘•Ñ…¥°°(€ô¤ì((€½¹ÍÐÉ½±•Ì€ô¹•ÜM•Ð¡…±±¥•Ì¹µ…À ¡…±±ä¤€ôø…±±ä¹É½±”¤¤ì(€…‘ ‰¥Ù•ÉÍ¥‘…‘”É½±•Ìˆ°É½±•Ì¹Í¥é”€øô5…Ñ ¹µ¥¸ Ì°…±±¥•Ì¹±•¹Ñ ¤°É½±•Ì¹Í¥é”€øô€È°É½±•Ì¹Í¥é”€øô€È€ü€‘íÉ½±•Ì¹Í¥é•ô™Õ¹¥½¹•Ì‘¥ÍÑ¥¹Ñ…Í€€è€‰•µ…Í¥…‘½ÌÁ¥­Ì½¸±„µ¥Íµ„™Õ¹§Í¸ˆ¤ì((€¥˜€¡¥¹ÁÕÐ¹µ…À¹±…å½ÕÐ€ôôô€‰‰¥•ÉÑ¼ˆñð€¡¥¹ÁÕÐ¹µ…À¹•½µ•ÑÉäü¹½Á•¹¹•ÍÌñð€À¤€øô€ØÀ¤ì(€€€½¹ÍÐÉ…¹•€ô…±±¥•Ì¹™¥±Ñ•È¡¥Í1½¹I…¹”¤¹±•¹Ñ ì(€€€…‘ ‰I…¹¼•ÍÑ…‰±”ˆ°É…¹•€øô€Ä°É…¹•€ôôô€À€˜˜…±±¥•Ì¹Í½µ”¡¥Í½¹ÑÉ½°¤°É…¹•€ü€‘íÉ…¹•‘ô½Á§Í¸‘íÉ…¹•€ø€Ä€ü€‰•Ìˆ€è€ˆ‰ô‘”É…¹¼±…É½€€è€‰…±Ñ„…±…¹”Á…É„±…Ì³µ¹•…Ì¥¹¥¥…±•Ìˆ¤ì(€ô(€¥˜€¡l‰i½¹„I•ÍÑÉ¥¹¥‘„ˆ°€‰ÑÉ…Á…•µ…Ìˆ°€‰	…³Í¸	É…Ý°‰t¹¥¹±Õ‘•Ì¡¥¹ÁÕÐ¹µ…À¹µ½‘”¤¤ì(€€€…‘ ‰½¹ÑÉ½°‘”•ÍÁ…¥¼ˆ°…±±¥•Ì¹Í½µ”¡¥Í½¹ÑÉ½°¤°…±±¥•Ì¹Í½µ”¡¥ÍMÕÁÁ½ÉÐ¤°…±±¥•Ì¹Í½µ”¡¥Í½¹ÑÉ½°¤€ü€‰!…äÕ¹„¡•ÉÉ…µ¥•¹Ñ„±…É„‘”½¹ÑÉ½°ˆ€è€‰°µ½‘¼•á¥”‘¥ÍÁÕÑ…Èé½¹…Ìä…•Í½Ìˆ¤ì(€ô(€¥˜€¡•¹•µ¥•Ì¹Í½µ” ¡•¹•µä¤€ôø•¹•µä¹É½±”€ôôô€‰Q…¹ÅÕ”ˆñð¡…ÍQ…œ¡•¹•µä°€‰Ñ…¹¬ˆ°€‰Ñ…¹ÅÕ”ˆ¤¤¤ì(€€€…‘ ‰I•ÍÁÕ•ÍÑ„…¹Ñ¥Ñ…¹ÅÕ”ˆ°…±±¥•Ì¹Í½µ”¡¥Í¹Ñ¥Ñ…¹¬¤°…±±¥•Ì¹Í½µ”¡¥Í½¹ÑÉ½°¤°…±±¥•Ì¹Í½µ”¡¥Í¹Ñ¥Ñ…¹¬¤€ü€‰‡Å¼Í½ÍÑ•¹¥‘¼½¹ÑÉ„ÁÉ¥µ•É„³µ¹•„ˆ€è€‰°É¥Ù…°ÁÕ•‘”…Ù…¹é…ÈÍ¥¸…ÍÑ¥¼•ÍÁ•µ™¥¼ˆ¤ì(€ô(€¥˜€¡•¹•µ¥•Ì¹Í½µ” ¡•¹•µä¤€ôø•¹•µä¹É½±”€ôôô€‰Í•Í¥¹¼ˆñð¡…ÍQ…œ¡•¹•µä°€‰…ÍÍ…ÍÍ¥¸ˆ°€‰…Í•Í¥¹¼ˆ°€‰µ½‰¥±”ˆ¤¤¤ì(€€€…‘ ‰AÉ½Ñ•§Í¸…¹Ñ¥‘¥Ù”ˆ°…±±¥•Ì¹Í½µ”¡¥Í¹Ñ¥‘¥Ù”¤°…±±¥•Ì¹Í½µ”¡¥ÍÉ½¹Ñ±¥¹”¤°…±±¥•Ì¹Í½µ”¡¥Í¹Ñ¥‘¥Ù”¤€ü€‰°‰…­±¥¹”‘¥ÍÁ½¹”‘”Á••°ˆ€è€‰…±Ñ„Õ¹„É•ÍÁÕ•ÍÑ„™¥…‰±”„±„•¹ÑÉ…‘„É¥Ù…°ˆ¤ì(€ô(€¥˜€¡¥¹ÁÕÐ¹µ…À¹µ½‘”€ôôô€‰ÑÉ…¼ˆ¤ì(€€€…‘ ‰‡Å¼…°½‰©•Ñ¥Ù¼ˆ°…±±¥•Ì¹Í½µ”¡¥Í=‰©•Ñ¥Ù”¤°…±±¥•Ì¹Í½µ” ¡…±±ä¤€ôø¡…ÍQ…œ¡…±±ä°€‰‘…µ…”ˆ¤¤°…±±¥•Ì¹Í½µ”¡¥Í=‰©•Ñ¥Ù”¤€ü€‰1„½µÁ½Í¥§Í¸…µ•¹…é„±„…©„ˆ€è€‰A½„½¹Ù•ÉÍ§Í¸Í½‰É”•°½‰©•Ñ¥Ù¼ˆ¤ì(€ô((€½¹ÍÐ•½µ•ÑÉä€ô¥¹ÁÕÐ¹µ…À¹•½µ•ÑÉäì(€¥˜€¡•½µ•ÑÉä€˜˜•½µ•ÑÉä¹Ý…±±•¹Í¥Ñä€øô€ÔÔ€˜˜•½µ•ÑÉä¹‘•ÍÑÉÕÑ¥‰¥±¥Ñä€øô€ÔÔ¤ì(€€€½¹ÍÐ‰É•…­•ÉÌ€ô…±±¥•Ì¹™¥±Ñ•È¡¡…Í]…±±‰É•…¬¤¹±•¹Ñ ì(€€€…‘ (€€€€€€‰Á•ÉÑÕÉ„‘•°…µÁ¼ˆ°(€€€€€‰É•…­•ÉÌ€øô€Ä°(€€€€€•½µ•ÑÉä¹‘•ÍÑÉÕÑ¥‰¥±¥Ñä€øô€ÜÔ°(€€€€€‰É•…­•ÉÌ€øô€Ä(€€€€€€€€ü€‘í‰É•…­•ÉÍô¡•ÉÉ…µ¥•¹Ñ„‘í‰É•…­•ÉÌ€ø€Ä€ü€‰Ìˆ€è€ˆ‰ôÁÉ½Á¥„‘í‰É•…­•ÉÌ€ø€Ä€ü€‰Ìˆ€è€ˆ‰ôÁ…É„…‰É¥ÈµÕÉ½Í€(€€€€€€€€è€‰°µ…Á„•ÌÉ½µÁ¥‰±”°Á•É¼ÑÔ½µÁ½Í¥§Í¸¹¼…É…¹Ñ¥é„…‰É¥É±¼ˆ°(€€€€¤ì(€ô((€É•ÑÕÉ¸¥Ñ•µÌ¹Í±¥” À°€Ø¤ì)ô()•áÁ½ÉÐ™Õ¹Ñ¥½¸…¹…±åé•É…™Ð¡¥¹ÁÕÐèÉ…™Ñ%¹ÁÕÐ°É½ÍÑ•Èè	É…Ý±•Émt¤èÉ…™Ñ¹…±åÍ¥Ìì(€½¹ÍÐÕ¹…Ù…¥±…‰±”€ô¹•ÜM•Ð¡l¸¸¹¥¹ÁÕÐ¹…±±¥•Ì°€¸¸¹¥¹ÁÕÐ¹•¹•µ¥•Ì°€¸¸¹¥¹ÁÕÐ¹‰…¹Ì°¥¹ÁÕÐ¹µåA¥¬ñð€ˆ‰t¹™¥±Ñ•È¡	½½±•…¸¤¹µ…À¡¹½É´¤¤ì(€½¹ÍÐ•¹•µ¥•Ì€ô™¥¹‘AÉ½™¥±•Ì¡¥¹ÁÕÐ¹•¹•µ¥•Ì°É½ÍÑ•È¤ì(€½¹ÍÐ½Ñ¡•É±±¥•Ì€ô™¥¹‘AÉ½™¥±•Ì¡¥¹ÁÕÐ¹…±±¥•Ì°É½ÍÑ•È¤ì(€½¹ÍÐÍ•±•Ñ•‘AÉ½™¥±”€ô¥¹ÁÕÐ¹µåA¥¬(€€€€üÉ½ÍÑ•È¹™¥¹ ¡‰É…Ý±•È¤€ôø¹½É´¡‰É…Ý±•È¹¹…µ”¤€ôôô¹½É´¡¥¹ÁÕÐ¹µåA¥¬ñð€ˆˆ¤¤(€€€€èÕ¹‘•™¥¹•ì(€½¹ÍÐ™Õ±±±±¥•Ì€ôÍ•±•Ñ•‘AÉ½™¥±”€ül¸¸¹½Ñ¡•É±±¥•Ì°Í•±•Ñ•‘AÉ½™¥±•t€è½Ñ¡•É±±¥•Ìì((€½¹ÍÐÉ•½µµ•¹‘…Ñ¥½¹9••‘Ì€ôÑ•…µ9••‘Ì¡¥¹ÁÕÐ°½Ñ¡•É±±¥•Ì°•¹•µ¥•Ì¤ì(€½¹ÍÐ™¥¹…±9••‘Ì€ôÑ•…µ9••‘Ì¡¥¹ÁÕÐ°™Õ±±±±¥•Ì°•¹•µ¥•Ì¤ì(€½¹ÍÐÑ¡É•…ÑÌ€ô‘É…™ÑQ¡É•…ÑÌ¡™Õ±±±±¥•Ì°•¹•µ¥•Ì¤ì(€½¹ÍÐÍÑÉ•¹Ñ¡Ì€ô‘É…™ÑMÑÉ•¹Ñ¡Ì¡¥¹ÁÕÐ°™Õ±±±±¥•Ì°•¹•µ¥•Ì¤ì((€½¹ÍÐÉ•½µµ•¹‘…Ñ¥½¹Ì€ôÉ½ÍÑ•È(€€€€¹™¥±Ñ•È ¡‰É…Ý±•È¤€ôø€…Õ¹…Ù…¥±…‰±”¹¡…Ì¡¹½É´¡‰É…Ý±•È¹¹…µ”¤¤¤(€€€€¹™¥±Ñ•È ¡‰É…Ý±•È¤€ôøì(€€€€€½¹ÍÐÁ½½±A½±¥ä€ô¥¹ÁÕÐ¹Á½½±A½±¥äñð€¡¥¹ÁÕÐ¹ÕÍ•A•ÉÍ½¹…±A½½°€ü€‰M½±¼Á½½°ˆ€è€‰=™˜ˆ¤ì(€€€€€¥˜€¡Á½½±A½±¥ä€„ôô€‰M½±¼Á½½°ˆ¤É•ÑÕÉ¸ÑÉÕ”ì(€€€€€½¹ÍÐ•¹ÑÉä€ô¥¹ÁÕÐ¹Á•ÉÍ½¹…±A½½°ü¹m‰É…Ý±•È¹Í±Õtì(€€€€€¥˜€ …•¹ÑÉä¤É•ÑÕÉ¸™…±Í”ì(€€€€€É•ÑÕÉ¸•¹ÑÉä¹…Ù…¥±…‰±”€˜˜€…•¹ÑÉä¹…Ù½¥ì(€€€ô¤(€€€€¹µ…À ¡‰É…Ý±•È¤€ôøÍ½É•…¹‘¥‘…Ñ”¡‰É…Ý±•È°¥¹ÁÕÐ°½Ñ¡•É±±¥•Ì°•¹•µ¥•Ì°É•½µµ•¹‘…Ñ¥½¹9••‘Ì¤¤(€€€€¹Í½ÉÐ ¡„°ˆ¤€ôøì(€€€€€¥˜€¡¥¹ÁÕÐ¹Á½Í¥Ñ¥½¸€ôôô€‰¥ÉÍÐÁ¥¬ˆ¤ì(€€€€€€€½¹ÍÐ…ÕÉ…Ñ•€ô¥¹ÁÕÐ¹µ…À¹™¥ÉÍÑA¥­Ì¹¥¹‘•á=˜¡„¹‰É…Ý±•È¹¹…µ”¤ì(€€€€€€€½¹ÍÐ‰ÕÉ…Ñ•€ô¥¹ÁÕÐ¹µ…À¹™¥ÉÍÑA¥­Ì¹¥¹‘•á=˜¡ˆ¹‰É…Ý±•È¹¹…µ”¤ì(€€€€€€€É•ÑÕÉ¸ˆ¹Í½É”€´„¹Í½É”ñð(€€€€€€€€€€¡ˆ¹™¥ÉÍÑA¥­Ù…±Õ…Ñ¥½¸ü¹•áÁ•Ñ•‘5…Á¥Ðñð€À¤€´€¡„¹™¥ÉÍÑA¥­Ù…±Õ…Ñ¥½¸ü¹•áÁ•Ñ•‘5…Á¥Ðñð€À¤ñð(€€€€€€€€€€¡…ÕÉ…Ñ•€ð€À€ü€ää€è…ÕÉ…Ñ•¤€´€¡‰ÕÉ…Ñ•€ð€À€ü€ää€è‰ÕÉ…Ñ•¤ì(€€€€€ô(€€€€€¥˜€¡¥¹ÁÕÐ¹Á½Í¥Ñ¥½¸€ôôô€‰1…ÍÐÁ¥¬ˆ€˜˜•¹•µ¥•Ì¹±•¹Ñ ¤ì(€€€€€€€½¹ÍÐ…½Ù•É…”€ô„¹½Õ¹Ñ•ÉÍ!¥Ð¹±•¹Ñ €¨€Ð€¬„¹Í½™Ñ½Õ¹Ñ•ÉÌ¹±•¹Ñ €¨€Ä¸Ð€´„¹•áÁ½Í•‘Q¼¹±•¹Ñ €¨€Ìì(€€€€€€€½¹ÍÐ‰½Ù•É…”€ôˆ¹½Õ¹Ñ•ÉÍ!¥Ð¹±•¹Ñ €¨€Ð€¬ˆ¹Í½™Ñ½Õ¹Ñ•ÉÌ¹±•¹Ñ €¨€Ä¸Ð€´ˆ¹•áÁ½Í•‘Q¼¹±•¹Ñ €¨€Ìì(€€€€€€€É•ÑÕÉ¸ˆ¹Í½É”€´„¹Í½É”ñð‰½Ù•É…”€´…½Ù•É…”ñðˆ¹µ•ÑÉ¥Ì¹½Õ¹Ñ•È€´„¹µ•ÑÉ¥Ì¹½Õ¹Ñ•Èñð„¹µ•ÑÉ¥Ì¹É¥Í¬€´ˆ¹µ•ÑÉ¥Ì¹É¥Í¬ì(€€€€€ô(€€€€€¥˜€¡•¹•µ¥•Ì¹±•¹Ñ ¤ì(€€€€€€€½¹ÍÐ…½Ù•É…”€ô„¹½Õ¹Ñ•ÉÍ!¥Ð¹±•¹Ñ €¨€È¸Ô€¬„¹Í½™Ñ½Õ¹Ñ•ÉÌ¹±•¹Ñ €´„¹•áÁ½Í•‘Q¼¹±•¹Ñ €¨€Ä¸Ôì(€€€€€€€½¹ÍÐ‰½Ù•É…”€ôˆ¹½Õ¹Ñ•ÉÍ!¥Ð¹±•¹Ñ €¨€È¸Ô€¬ˆ¹Í½™Ñ½Õ¹Ñ•ÉÌ¹±•¹Ñ €´ˆ¹•áÁ½Í•‘Q¼¹±•¹Ñ €¨€Ä¸Ôì(€€€€€€€É•ÑÕÉ¸ˆ¹Í½É”€´„¹Í½É”ñð‰½Ù•É…”€´…½Ù•É…”ñðˆ¹µ•ÑÉ¥Ì¹½Õ¹Ñ•È€´„¹µ•ÑÉ¥Ì¹½Õ¹Ñ•Èñðˆ¹µ•ÑÉ¥Ì¹½µÁ½Í¥Ñ¥½¸€´„¹µ•ÑÉ¥Ì¹½µÁ½Í¥Ñ¥½¸ì(€€€€€ô(€€€€€É•ÑÕÉ¸ˆ¹Í½É”€´„¹Í½É”ñðˆ¹µ•ÑÉ¥Ì¹½Õ¹Ñ•È€´„¹µ•ÑÉ¥Ì¹½Õ¹Ñ•Èñðˆ¹µ•ÑÉ¥Ì¹Í…™•Ñä€´„¹µ•ÑÉ¥Ì¹Í…™•Ñäì(€€€ô¤(€€€€¹Í±¥” À°€ÄØ¤ì((€½¹ÍÐÍ•±•Ñ•‘A¥¬€ôÍ•±•Ñ•‘AÉ½™¥±”(€€€€üÍ½É•…¹‘¥‘…Ñ”¡Í•±•Ñ•‘AÉ½™¥±”°¥¹ÁÕÐ°½Ñ¡•É±±¥•Ì°•¹•µ¥•Ì°É•½µµ•¹‘…Ñ¥½¹9••‘Ì¤(€€€€èÕ¹‘•™¥¹•ì(€½¹ÍÐ½…¡…¹‘¥‘…Ñ”€ôÍ•±•Ñ•‘AÉ½™¥±”ñð€¡™Õ±±±±¥•Ì¹±•¹Ñ €ð€Ì€üÉ•½µµ•¹‘…Ñ¥½¹ÍlÁtü¹‰É…Ý±•È€èÕ¹‘•™¥¹•¤ì(€½¹ÍÐÙ¥Í¥‰±•A¥­Ì€ô™Õ±±±±¥•Ì¹±•¹Ñ €¬•¹•µ¥•Ì¹±•¹Ñ ì(€½¹ÍÐÁÉ½©•Ñ•‘±±¥•Ì€ôÍ•±•Ñ•‘AÉ½™¥±”(€€€€ü™Õ±±±±¥•Ì(€€€€èÉ•½µµ•¹‘…Ñ¥½¹ÍlÁt(€€€€€€ül¸¸¹™Õ±±±±¥•Ì°É•½µµ•¹‘…Ñ¥½¹ÍlÁt¹‰É…Ý±•Ét(€€€€€€è™Õ±±±±¥•Ìì(€½¹ÍÐ‘É…™ÑMÑ…”€ôÍ•±•Ñ•‘AÉ½™¥±”(€€€€üÙ¥Í¥‰±•A¥­Ì€øô€Ø(€€€€€€ü€‰É…™Ð½µÁ±•Ñ¼è•Ù…±Õ…¹‘¼±½Ì‘½Ì•ÅÕ¥Á½Ìˆ(€€€€€€è€‰QÔÁ¥¬•ÍÓ„Í•±•¥½¹…‘¼è•Ù…±Õ…§Í¸ÁÉ½Ù¥Í¥½¹…°ˆ(€€€€è¥¹ÁÕÐ¹Á½Í¥Ñ¥½¸€ôôô€‰¥ÉÍÐÁ¥¬ˆ(€€€€€€ü€‰¥ÉÍÐÁ¥¬èÁÉ¥½É¥é…¹‘¼Í½±¥‘•è°µ•Ñ„‘•°µ…Á„ä‰…©„•áÁ½Í¥§Í¸ˆ(€€€€€€è¥¹ÁÕÐ¹Á½Í¥Ñ¥½¸€ôôô€‰1…ÍÐÁ¥¬ˆ(€€€€€€€€ü€‰1…ÍÐÁ¥¬è‰ÕÍ…¹‘¼•°·…á¥µ¼…ÍÑ¥¼½¹ÑÉ„±„½µÁ½Í¥§Í¸½µÁ±•Ñ„ˆ(€€€€€€€€è¥¹ÁÕÐ¹•¹•µ¥•Ì¹±•¹Ñ (€€€€€€€€€€ü€‰A¥­Ì¥¹Ñ•Éµ•‘¥½Ìè½Õ¹Ñ•É•…È…°É¥Ù…°Í¥¸É½µÁ•È±„½µÁ½Í¥§Í¸ˆ(€€€€€€€€€€è€‰A¥­Ì¥¹Ñ•Éµ•‘¥½Ìè•ÍÁ•É…¹‘¼¥¹™½Éµ…§Í¸É¥Ù…°äµ…¹Ñ•¹¥•¹‘¼™±•á¥‰¥±¥‘…ˆì((€É•ÑÕÉ¸ì(€€€É•½µµ•¹‘…Ñ¥½¹Ì°(€€€Í•±•Ñ•‘A¥¬°(€€€Ý¥¹ÍÑ¥µ…Ñ”è™Õ±±±±¥•Ì¹±•¹Ñ €˜˜•¹•µ¥•Ì¹±•¹Ñ €ü•ÍÑ¥µ…Ñ•]¥¹AÉ½‰…‰¥±¥Ñä¡¥¹ÁÕÐ°™Õ±±±±¥•Ì°•¹•µ¥•Ì¤€èÕ¹‘•™¥¹•°(€€€¹••‘Ìè™¥¹…±9••‘Ì°(€€€Ñ¡É•…ÑÌ°(€€€ÍÑÉ•¹Ñ¡Ì°(€€€•¹•µå]•…­¹•ÍÍ•Ìè•¹•µå]•…­¹•ÍÍ•Ì¡¥¹ÁÕÐ°•¹•µ¥•Ì¤°(€€€‰…¹I•½µµ•¹‘…Ñ¥½¹Ìè‰…¹I•½µµ•¹‘…Ñ¥½¹Ì¡¥¹ÁÕÐ°É½ÍÑ•È°™Õ±±±±¥•Ì¤°(€€€ÁÉ•‘¥Ñ•‘¹•µåA¥­ÌèÁÉ•‘¥Ñ¹•µåA¥­Ì¡¥¹ÁÕÐ°É½ÍÑ•È°™Õ±±±±¥•Ì°•¹•µ¥•Ì¤°(€€€Ñ•…µÍÍ¥¹µ•¹ÑÌè±…¹•ÍÍ¥¹µ•¹ÑÌ¡½…¡…¹‘¥‘…Ñ”°Í•±•Ñ•‘AÉ½™¥±”€ü½Ñ¡•É±±¥•Ì€è™Õ±±±±¥•Ì°•¹•µ¥•Ì°¥¹ÁÕÐ¤°(€€€½µÁ½Í¥Ñ¥½¹M½É”è½µÁ½Í¥Ñ¥½¹M½É”¡Í•±•Ñ•‘AÉ½™¥±”€ü½Ñ¡•É±±¥•Ì€è™Õ±±±±¥•Ì°½…¡…¹‘¥‘…Ñ”°™¥¹…±9••‘Ì¤°(€€€‘É…™ÑMÑ…”°(€€€…Ù…¥±…‰±•½Õ¹ÐèÉ½ÍÑ•È¹±•¹Ñ €´Õ¹…Ù…¥±…‰±”¹Í¥é”°(€€€½¹™¥‘•¹”èÉ•½µµ•¹‘…Ñ¥½¹½¹™¥‘•¹”¡¥¹ÁÕÐ°É•½µµ•¹‘…Ñ¥½¹Ì°Ù¥Í¥‰±•A¥­Ì¤°(€€€¡•­±¥ÍÐè‘É…™Ñ¡•­±¥ÍÐ¡¥¹ÁÕÐ°ÁÉ½©•Ñ•‘±±¥•Ì°•¹•µ¥•Ì¤°(€ôì)ô()•áÁ½ÉÐ™Õ¹Ñ¥½¸É•½µµ•¹‘É…™Ð¡¥¹ÁÕÐèÉ…™Ñ%¹ÁÕÐ°É½ÍÑ•Èè	É…Ý±•Émt¤èÉ…™ÑI•½µµ•¹‘…Ñ¥½¹mtì(€É•ÑÕÉ¸…¹…±åé•É…™Ð¡¥¹ÁÕÐ°É½ÍÑ•È¤¹É•½µµ•¹‘…Ñ¥½¹Ìì)ô

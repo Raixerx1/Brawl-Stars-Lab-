@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.15 — Motor de Draft 2.0
+
+- Ranking gobernado por el score normalizado, sin ordenamientos rígidos posteriores.
+- Métrica de meta explícita y pesos adaptados a cada fase del draft.
+- Mayor peso del meta actual en picks intermedios y last pick para evitar falsos counters fuera de parche.
+- Dos estados del mapa: inicial y posterior al wallbreak.
+- Probabilidad de apertura condicionada al modo y a las herramientas propias, no solo a la destructibilidad.
+- Valor esperado de mapa que penaliza recomendaciones dependientes de una apertura improbable.
+- Matriz de matchups, confianza y checklist de composición visibles.
+- Meta de 24 h y 30 d actualizado al 11/08/2026.
+- R-T reducido al 1,3% como recomendación principal en 1.443 escenarios de balance.
+- Diversidad de first picks: siete ganadores distintos en los 39 mapas; máximo 11 mapas para un mismo brawler.
+- Resiliencia recalibrada: el pick más frecuente queda en 14 de 39 mapas.
+- Auditoría específica del Motor de Draft 2.0.
+
 ## v0.14 — Resiliencia frente a counters
 
 - Prueba de estrés de los cinco candidatos principales.
