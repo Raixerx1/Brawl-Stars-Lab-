@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.16 — Decisión de pick y Auto Review Scorecard
+
+- Jerarquía visual nueva para que el pick #1 sea inequívoco.
+- Botón de confirmación dominante y cuatro alternativas compactas al lado.
+- Cada alternativa mantiene score, categoría y acceso directo para seleccionarla.
+- Marcador Auto Review 0–100 con posicionamiento, recursos, objetivo y tempo.
+- Regularización por cantidad de evidencia para no exagerar muestras pequeñas.
+- Las detecciones rechazadas se excluyen del cálculo.
+- Cobertura de revisión y momento clave visibles.
+- Detección temporal de presión convertida y matchup corregido.
+- Auditoría determinista de escenarios favorables, críticos, feedback y secuencias.
+
 ## v0.15 — Motor de Draft 2.0
 
 - Ranking gobernado por el score normalizado, sin ordenamientos rígidos posteriores.

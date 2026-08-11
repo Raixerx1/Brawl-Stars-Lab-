@@ -200,11 +200,28 @@ export type AutoLiveComment = {
   kind?: "frame" | "sequence";
 };
 
+export type AutoReviewScorecard = {
+  overall: number;
+  positioning: number;
+  resources: number;
+  objective: number;
+  tempo: number;
+  reviewCoverage: number;
+  verdict: "Excelente" | "Sólida" | "Mejorable" | "Crítica" | "Sin datos";
+  keyMoment?: {
+    second: number;
+    label: string;
+    impact: "Positivo" | "Negativo" | "Neutral";
+    reason: string;
+  };
+};
+
 export type LiveReviewSummary = {
   strengths: string[];
   mistakes: string[];
   recommendations: string[];
   headline: string;
+  scorecard: AutoReviewScorecard;
 };
 
 export type LiveReviewSession = {

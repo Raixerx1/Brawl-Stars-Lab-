@@ -207,6 +207,34 @@ export function deriveSequenceInsights(
           comment: "La super precedió a un cambio de objetivo. Puede haber generado espacio o ventaja real; confirma si fue una buena ventana.",
         });
       }
+
+      const recentCombat = recentBefore(ordered, "Interacción intensa", event.second, 7);
+      if (recentCombat && !recentDeath) {
+        add({
+          key: `combat-objective:${recentCombat.id}:${event.id}`,
+          second: event.second,
+          label: "Presión convertida",
+          category: "Auto · Secuencia",
+          tone: "good",
+          confidence: Math.min(88, Math.max(66, Math.round(((event.confidence || 70) + (recentCombat.confidence || 65)) / 2 + 4))),
+          comment: "La interacción intensa terminó en un cambio de objetivo sin una muerte propia cercana. Probable presión bien convertida.",
+        });
+      }
+    }
+
+    if (event.label === "Cambio de línea") {
+      const badMatchup = recentBefore(ordered, "Matchup desfavorable", event.second, 14);
+      if (badMatchup) {
+        add({
+          key: `matchup-lane:${badMatchup.id}:${event.id}`,
+          second: event.second,
+          label: "Matchup corregido",
+          category: "Auto · Secuencia",
+          tone: "good",
+          confidence: 82,
+          comment: "Cambiaste de línea poco después de detectar un matchup desfavorable. Buena corrección antes de seguir perdiendo presión.",
+        });
+      }
     }
   }
 

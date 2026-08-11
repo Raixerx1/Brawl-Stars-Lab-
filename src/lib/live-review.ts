@@ -1,4 +1,5 @@
 import type {
+  AutoReviewScorecard,
   LiveMatchEvent,
   LiveReviewSession,
   LiveReviewSummary,
@@ -11,6 +12,126 @@ const count = (events: LiveMatchEvent[], label: string) =>
 
 const countAny = (events: LiveMatchEvent[], labels: string[]) =>
   events.filter((event) => labels.includes(event.label)).length;
+
+const clampScore = (value: number) => Math.max(0, Math.min(100, Math.round(value)));
+
+const eventWeight = (event: LiveMatchEvent) => {
+  if (event.source !== "Auto" || event.feedback === "accepted") return 1;
+  return Math.max(.45, Math.min(.88, (event.confidence || 65) / 100));
+};
+
+const weightedCount = (events: LiveMatchEvent[], labels: string[]) => events
+  .filter((event) => labels.includes(event.label))
+  .reduce((total, event) => total + eventWeight(event), 0);
+
+function dimensionScore(delta: number, evidence: number) {
+  const reliability = Math.min(1, evidence / 6);
+  return clampScore(50 + delta * reliability);
+}
+
+function keyMomentFor(events: LiveMatchEvent[]): AutoReviewScorecard["keyMoment"] {
+  const negativePriority: Record<string, [number, string]> = {
+    "Muerte con coste de objetivo": [10, "La muerte abrió una ventana directa sobre la condición de victoria."],
+    "Muerte encadenada": [9, "La reentrada rápida terminó en otra pérdida de tempo."],
+    "Cadena de muertes": [9, "Dos muertes cercanas condicionaron la siguiente fase."],
+    "Super sin conversión": [8, "Se gastó el recurso sin una conversión clara."],
+    "Entrada castigada": [8, "La interacción intensa terminó en una muerte evitable."],
+    "Objetivo perdido": [8, "El rival convirtió la presión en progreso de objetivo."],
+    "Hipercarga desperdiciada": [7, "La hipercarga no produjo una ventaja suficiente."],
+    "Super desperdiciada": [7, "La super no produjo una ventaja suficiente."],
+    "Sobreextensión": [6, "La posición dejó pocas opciones de retirada."],
+    "Muerte": [5, "La baja alteró el tempo de la partida."],
+  };
+  const positivePriority: Record<string, [number, string]> = {
+    "Objetivo ganado": [9, "La presión se convirtió en progreso real sobre el objetivo."],
+    "Super con impacto": [8, "La super generó espacio o progreso de objetivo."],
+    "Hipercarga decisiva": [8, "La hipercarga ganó una interacción importante."],
+    "Super decisiva": [7, "La super produjo una ventaja clara."],
+    "Presión convertida": [7, "La interacción intensa terminó en control del objetivo."],
+    "Buena rotación": [6, "La rotación corrigió la presión o el matchup."],
+    "Eliminación": [5, "La eliminación creó una ventana de ventaja."],
+  };
+
+  const candidates = events
+    .filter((event) => event.feedback !== "rejected")
+    .flatMap((event) => {
+      const negative = negativePriority[event.label];
+      const positive = positivePriority[event.label];
+      const match = negative || positive;
+      if (!match) return [];
+      return [{
+        event,
+        priority: match[0] * eventWeight(event),
+        reason: match[1],
+        impact: negative ? "Negativo" as const : "Positivo" as const,
+      }];
+    })
+    .sort((a, b) => b.priority - a.priority || b.event.second - a.event.second);
+
+  const best = candidates[0];
+  return best ? {
+    second: best.event.second,
+    label: best.event.label,
+    impact: best.impact,
+    reason: best.reason,
+  } : undefined;
+}
+
+export function buildAutoReviewScorecard(events: LiveMatchEvent[]): AutoReviewScorecard {
+  const usable = events.filter((event) => event.feedback !== "rejected");
+  if (!usable.length) {
+    return { overall: 0, positioning: 0, resources: 0, objective: 0, tempo: 0, reviewCoverage: 0, verdict: "Sin datos" };
+  }
+
+  const positioningDelta =
+    weightedCount(usable, ["Buena rotación"]) * 11 +
+    weightedCount(usable, ["Matchup favorable"]) * 8 +
+    weightedCount(usable, ["Cambio de línea"]) * 4 -
+    weightedCount(usable, ["Sobreextensión"]) * 14 -
+    weightedCount(usable, ["Matchup desfavorable"]) * 9 -
+    weightedCount(usable, ["Entrada castigada"]) * 11 -
+    weightedCount(usable, ["Muerte encadenada", "Cadena de muertes"]) * 9;
+  const resourcesDelta =
+    weightedCount(usable, ["Super decisiva", "Hipercarga decisiva"]) * 14 +
+    weightedCount(usable, ["Super con impacto"]) * 10 -
+    weightedCount(usable, ["Super desperdiciada", "Hipercarga desperdiciada"]) * 15 -
+    weightedCount(usable, ["Super sin conversión"]) * 11;
+  const objectiveDelta =
+    weightedCount(usable, ["Objetivo ganado", "Presión convertida"]) * 14 +
+    weightedCount(usable, ["Super con impacto"]) * 7 -
+    weightedCount(usable, ["Objetivo perdido"]) * 16 -
+    weightedCount(usable, ["Muerte con coste de objetivo"]) * 13;
+  const tempoDelta =
+    weightedCount(usable, ["Eliminación"]) * 6 +
+    weightedCount(usable, ["Buena rotación"]) * 5 -
+    weightedCount(usable, ["Muerte"]) * 6 -
+    weightedCount(usable, ["Entrada castigada"]) * 7 -
+    weightedCount(usable, ["Muerte encadenada", "Cadena de muertes"]) * 12;
+
+  const positioning = dimensionScore(positioningDelta, usable.length);
+  const resources = dimensionScore(resourcesDelta, usable.length);
+  const objective = dimensionScore(objectiveDelta, usable.length);
+  const tempo = dimensionScore(tempoDelta, usable.length);
+  const overall = clampScore(positioning * .28 + resources * .23 + objective * .28 + tempo * .21);
+  const autoEvents = events.filter((event) => event.source === "Auto");
+  const reviewed = autoEvents.filter((event) => Boolean(event.feedback)).length;
+  const reviewCoverage = autoEvents.length ? clampScore(reviewed / autoEvents.length * 100) : 100;
+  const verdict: AutoReviewScorecard["verdict"] =
+    overall >= 78 ? "Excelente" :
+    overall >= 63 ? "Sólida" :
+    overall >= 45 ? "Mejorable" : "Crítica";
+
+  return {
+    overall,
+    positioning,
+    resources,
+    objective,
+    tempo,
+    reviewCoverage,
+    verdict,
+    keyMoment: keyMomentFor(usable),
+  };
+}
 
 export function formatLiveTime(totalSeconds: number) {
   const safe = Math.max(0, Math.floor(totalSeconds));
@@ -43,6 +164,8 @@ export function buildLiveSummary(events: LiveMatchEvent[], duration: number): Li
   const favorableMatchups = count(events, "Matchup favorable");
   const badMatchups = count(events, "Matchup desfavorable");
   const laneChanges = count(events, "Cambio de línea");
+  const convertedPressure = count(events, "Presión convertida");
+  const correctedMatchups = count(events, "Matchup corregido");
 
   const strengths: string[] = [];
   const mistakes: string[] = [];
@@ -56,6 +179,8 @@ export function buildLiveSummary(events: LiveMatchEvent[], duration: number): Li
   if (favorableMatchups) strengths.push(`Conservaste ${favorableMatchups} matchups favorables.`);
   if (detectedObjectiveChanges && objectives >= lostObjectives) strengths.push(`${detectedObjectiveChanges} cambios de objetivo detectados y registrados para revisión.`);
   if (impactfulSupers) strengths.push(`${impactfulSupers} secuencias compatibles con una super que generó impacto sobre el objetivo.`);
+  if (convertedPressure) strengths.push(`${convertedPressure} interacciones intensas convertidas en progreso de objetivo.`);
+  if (correctedMatchups) strengths.push(`${correctedMatchups} cambios de línea corrigieron un matchup desfavorable.`);
 
   if (deaths > eliminations) mistakes.push(`Balance negativo de interacciones: ${deaths} muertes frente a ${eliminations} eliminaciones.`);
   if (overextensions) mistakes.push(`${overextensions} sobreextensiones marcadas.`);
@@ -100,6 +225,7 @@ export function buildLiveSummary(events: LiveMatchEvent[], duration: number): Li
     strengths: strengths.slice(0, 5),
     mistakes: mistakes.slice(0, 5),
     recommendations: recommendations.slice(0, 5),
+    scorecard: buildAutoReviewScorecard(events),
   };
 }
 

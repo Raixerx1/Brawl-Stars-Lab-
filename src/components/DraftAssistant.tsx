@@ -518,6 +518,20 @@ export default function DraftAssistant({
     ),
     [best?.brawler.name, safe?.brawler.name].filter(Boolean) as string[],
   );
+  const compactAlternativeResults: DraftRecommendation[] = [];
+  for (const candidate of [safe, counter, ...displayAnalysis.recommendations]) {
+    if (!candidate || candidate.brawler.name === best?.brawler.name) continue;
+    if (compactAlternativeResults.some((item) => item.brawler.name === candidate.brawler.name)) continue;
+    compactAlternativeResults.push(candidate);
+    if (compactAlternativeResults.length === 4) break;
+  }
+  const compactAlternatives = compactAlternativeResults.map((result, index) => ({
+    result,
+    label:
+      result.brawler.name === safe?.brawler.name ? "Más seguro" :
+      result.brawler.name === counter?.brawler.name ? "Counter puro" :
+      `Opción #${index + 2}`,
+  }));
 
   const predictedEnemyPicks = analysis.predictedEnemyPicks
     .filter((prediction) => !unavailableNames.has(normalize(prediction.brawler.name)))
@@ -601,7 +615,7 @@ export default function DraftAssistant({
   return <div className="ordered-draft-assistant">
     <section className="panel ordered-draft-panel">
       <div className="section-title">
-        <div><span className="eyebrow">Draft Coach v0.15</span><h2>Introduce los picks en orden</h2></div>
+        <div><span className="eyebrow">Draft Coach v0.16</span><h2>Introduce los picks en orden</h2></div>
         <div className="draft-action-row">
           <button type="button" className="secondary-button compact-button" onClick={shareDraft}>Compartir</button>
           <button type="button" className="secondary-button compact-button" onClick={resetDraft}>Reiniciar</button>
@@ -700,24 +714,47 @@ export default function DraftAssistant({
         })}
       </div>
 
-      {nextIndex >= 0 && best && <div className={`live-pick-recommendation-v121 ${nextTeam === "ally" ? "ready" : "provisional"}`}>
-        <div className="live-pick-recommendation-main-v121">
-          <BrawlerPortrait name={best.brawler.name} className="live-pick-recommendation-avatar-v121" priority />
-          <div>
-            <span className="eyebrow">{nextTeam === "ally" ? `Pick recomendado ahora · ${queueMode}` : `Recomendación para tu próximo turno · ${queueMode}`}</span>
-            <h3>{best.brawler.name}</h3>
-            <p>{best.brief}</p>
-            <small>{best.reasons.slice(0, 2).join(" · ") || best.counterLabel}</small>
+      {nextIndex >= 0 && best && <div className={`draft-pick-decision-v16 ${nextTeam === "ally" ? "ready" : "provisional"}`}>
+        <section className="draft-primary-pick-v16">
+          <div className="draft-primary-banner-v16">
+            <span>{nextTeam === "ally" ? "PICK RECOMENDADO AHORA" : "PREPARA TU PRÓXIMO PICK"}</span>
+            <b>Confianza {displayAnalysis.confidence.label} · {displayAnalysis.confidence.score}/100</b>
           </div>
-          <strong>{best.score}</strong>
-          {nextTeam === "ally" && <button type="button" onClick={() => addNextPick(best.brawler.name)}>Usar pick</button>}
-        </div>
-        <div className="live-pick-alternatives-v121">
-          {safe && <span><b>Seguro</b>{safe.brawler.name}</span>}
-          {counter && <span><b>Alternativa</b>{counter.brawler.name}</span>}
-          <span><b>Línea</b>{best.suggestedLine}</span>
-          <span><b>Confianza {displayAnalysis.confidence.label}</b>{displayAnalysis.confidence.score}/100 · margen {displayAnalysis.confidence.gap}</span>
-        </div>
+          <div className="draft-primary-body-v16">
+            <BrawlerPortrait name={best.brawler.name} className="draft-primary-avatar-v16" priority />
+            <div className="draft-primary-copy-v16">
+              <small>#1 · {queueMode} · {displayPosition}</small>
+              <h2>{best.brawler.name}</h2>
+              <p>{best.brief}</p>
+              <div>
+                <span>{best.counterLabel}</span>
+                <span>{best.suggestedLine}</span>
+                <span>Meta {best.metrics.meta}</span>
+                <span>Mapa {best.metrics.mapFit}</span>
+              </div>
+            </div>
+            <strong className="draft-primary-score-v16">{best.score}<small>score</small></strong>
+          </div>
+          <div className="draft-primary-action-v16">
+            <p>{best.reasons.slice(0, 2).join(" · ") || "La opción con mejor equilibrio para este turno."}</p>
+            {nextTeam === "ally" ? <button type="button" onClick={() => addNextPick(best.brawler.name)}>PICKEAR {best.brawler.name}</button> : <span>Se actualizará al registrar el pick rival</span>}
+          </div>
+        </section>
+        <aside className="draft-compact-alternatives-v16">
+          <div><span className="eyebrow">Otras 4 opciones</span><small>Ordenadas para comparar sin quitar foco al #1</small></div>
+          {compactAlternatives.map(({ result, label }, index) => <button
+            type="button"
+            key={result.brawler.slug}
+            disabled={nextTeam !== "ally"}
+            onClick={() => addNextPick(result.brawler.name)}
+            aria-label={`Pickear ${result.brawler.name}`}
+          >
+            <em>{index + 2}</em>
+            <BrawlerPortrait name={result.brawler.name} className="draft-compact-avatar-v16" />
+            <span><b>{result.brawler.name}</b><small>{label} · {result.counterLabel}</small></span>
+            <strong>{result.score}</strong>
+          </button>)}
+        </aside>
       </div>}
 
       {nextIndex >= 0 && robustPick && stressAnalysis && <div className="draft-stress-panel-v14">

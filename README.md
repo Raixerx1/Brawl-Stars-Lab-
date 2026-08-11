@@ -1,6 +1,20 @@
-# Brawl Draft Lab v0.15
+# Brawl Draft Lab v0.16
 
 Aplicación web competitiva para Brawl Stars Ranked.
+
+## Novedades v0.16
+
+- La recomendación inmediata del Draft Coach pasa a ser el foco visual principal.
+- CTA grande **PICKEAR [BRAWLER]**, score, confianza, línea y señales clave en una sola tarjeta.
+- Cuatro alternativas compactas y accionables junto al pick principal.
+- Auto Review incorpora una nota de ejecución 0–100 y veredicto.
+- Cuatro dimensiones: posicionamiento, recursos, objetivo y tempo.
+- Cobertura de revisión para saber cuántas detecciones automáticas han sido confirmadas o rechazadas.
+- Identificación automática del momento más influyente de la partida.
+- Nuevas secuencias positivas: presión convertida y matchup corregido.
+- Los falsos positivos rechazados dejan de afectar al marcador.
+- Nueva auditoría `npm run audit:auto-review`.
+- Informe técnico: `AUTO_REVIEW_V16.md`.
 
 ## Novedades v0.15
 
