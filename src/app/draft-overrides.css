@@ -1,0 +1,58 @@
+/* Ajustes de interfaz del Draft Coach: eliminar redundancias visuales sin tocar el motor. */
+
+/* El panel antiguo de first picks estructurales deja de mostrarse. Sus datos siguen
+   disponibles en MapProfile y continúan alimentando el motor de recomendaciones. */
+.first-pick-audit-v11.first-pick-audit-v12 {
+  display: none !important;
+}
+
+/* Reordenamos únicamente la presentación dentro del panel principal para que el
+   bloque de prioridades v0.17 ocupe el lugar del panel estructural retirado. */
+.ordered-draft-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.ordered-draft-panel > .section-title { order: 0; }
+.ordered-draft-panel > .draft-toast { order: 1; }
+.ordered-draft-panel > .ordered-draft-context { order: 2; }
+.ordered-draft-panel > .draft-pick-decision-v17 { order: 3; }
+.ordered-draft-panel > .draft-ban-panel-v51 { order: 4; }
+.ordered-draft-panel > .ordered-phase-labels { order: 5; }
+.ordered-draft-panel > .ordered-pick-bar { order: 6; }
+.ordered-draft-panel > .draft-stress-panel-v14 { order: 7; }
+.ordered-draft-panel > .double-pick-panel-v13 { order: 8; }
+.ordered-draft-panel > .common-pick-entry { order: 9; }
+.ordered-draft-panel > .ordered-edit-hint { order: 10; }
+
+/* Título único del bloque que sustituye a “First picks estructurales”. */
+.draft-pick-decision-v17 {
+  position: relative;
+  margin-top: 48px !important;
+}
+
+.draft-pick-decision-v17::before {
+  content: "PICKS RECOMENDADOS";
+  position: absolute;
+  left: 2px;
+  top: -36px;
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* En móvil mantenemos el título compacto y el bloque pegado al contexto. */
+@media (max-width: 650px) {
+  .draft-pick-decision-v17 {
+    margin-top: 42px !important;
+  }
+
+  .draft-pick-decision-v17::before {
+    top: -31px;
+    font-size: 11px;
+    letter-spacing: .12em;
+  }
+}
