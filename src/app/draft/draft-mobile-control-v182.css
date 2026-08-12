@@ -1,0 +1,221 @@
+/* v0.18.2 — Control de draft móvil sin duplicidades.
+   Prioridad de interacción:
+   1) picks visibles,
+   2) si juega el rival: registrar rival,
+   3) si juega tu equipo: recomendación + búsqueda manual,
+   4) detalles secundarios después. */
+
+@media (max-width: 900px) {
+  .page > .page-heading {
+    display: none;
+  }
+
+  .ordered-draft-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .ordered-draft-panel > * {
+    order: 20;
+  }
+
+  .ordered-draft-panel > .section-title { order: 1; }
+  .ordered-draft-panel > .draft-toast { order: 2; }
+  .ordered-draft-panel > .ordered-draft-context-v5 { order: 3; }
+  .ordered-draft-panel > .first-pick-audit-v12 { order: 4; }
+  .ordered-draft-panel > .draft-ban-panel-v51 { order: 5; }
+  .ordered-draft-panel > .ordered-phase-labels { order: 6; }
+  .ordered-draft-panel > .ordered-pick-bar { order: 7; }
+  .ordered-draft-panel > .draft-pick-decision-v17 { order: 8; }
+  .ordered-draft-panel > .common-pick-entry { order: 9; }
+  .ordered-draft-panel > .double-pick-panel-v13 { order: 10; }
+  .ordered-draft-panel > .ordered-edit-hint { order: 11; }
+  .ordered-draft-panel > .draft-stress-panel-v14 { order: 12; }
+
+  /* Antes de conocer el pick rival no mostramos una recomendación provisional:
+     ocupa espacio y queda obsoleta en cuanto se registra el rival. */
+  .draft-pick-decision-v17.provisional {
+    display: none !important;
+  }
+
+  /* El panel de resiliencia repite la recomendación principal en móvil.
+     El motor sigue calculándolo, pero se reserva para pantallas grandes. */
+  .ordered-draft-panel > .draft-stress-panel-v14 {
+    display: none !important;
+  }
+
+  /* La auditoría estructural es información de contexto, no una acción del temporizador. */
+  .ordered-draft-panel > .first-pick-audit-v11.first-pick-audit-v12 {
+    display: none !important;
+  }
+
+  .ordered-phase-labels {
+    display: none !important;
+  }
+
+  /* Ajustes disponibles sin crear una columna vertical enorme. */
+  .ordered-draft-context-v5 {
+    display: flex !important;
+    gap: 5px !important;
+    margin: 4px 0 7px;
+    padding-bottom: 2px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ordered-draft-context-v5::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ordered-draft-context-v5 > label {
+    flex: 0 0 138px;
+    min-width: 138px;
+    margin: 0;
+  }
+
+  .ordered-draft-context-v5 > label select,
+  .ordered-draft-context-v5 > label input {
+    min-height: 34px;
+  }
+
+  .ordered-draft-context-v5 .auto-position-toggle {
+    flex-basis: 148px;
+    min-width: 148px;
+  }
+
+  /* Zona de introducción del siguiente brawler: compacta y pegada al bloque de decisión. */
+  .ordered-draft-panel > .common-pick-entry {
+    position: relative;
+    z-index: 32;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px;
+    align-items: center;
+    margin: 0 0 8px;
+    padding: 7px 8px;
+    border-radius: 0 0 12px 12px;
+    background: rgba(8, 12, 24, .96);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .22);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  /* El título largo de "Añadir siguiente pick..." duplica el estado del turno. */
+  .common-pick-entry > div:first-child {
+    display: none;
+  }
+
+  .common-pick-entry .common-pick-search {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .common-pick-entry .common-pick-search input {
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .common-pick-entry .turn-status {
+    min-width: 92px;
+    margin: 0;
+    padding: 8px 9px;
+    font-size: 7px;
+    line-height: 1.2;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .common-pick-entry.enemy {
+    border-color: rgba(255, 104, 123, .30);
+    border-radius: 0 0 12px 12px;
+  }
+
+  .common-pick-entry.enemy .common-pick-search input {
+    border-color: rgba(255, 104, 123, .32);
+  }
+
+  .common-pick-entry.ally {
+    border-color: rgba(80, 223, 160, .28);
+  }
+
+  /* El desplegable de brawlers debe caber en una pantalla de teléfono. */
+  .common-pick-suggestions {
+    z-index: 120 !important;
+    max-height: min(44vh, 330px) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Doble pick: conservar lo útil, quitar comparativas redundantes en móvil. */
+  .double-pick-panel-v13 {
+    margin: 0 0 8px;
+    padding: 9px;
+  }
+
+  .double-pick-panel-v13 .double-pick-heading-v13 p,
+  .double-pick-panel-v13 .double-pick-metrics-v13,
+  .double-pick-panel-v13 .double-pick-alternatives-v13,
+  .double-pick-panel-v13 .double-pick-risk-v13 {
+    display: none !important;
+  }
+
+  .double-pick-panel-v13 .double-pick-brawlers-v13 {
+    margin-top: 6px;
+  }
+
+  .double-pick-panel-v13 .double-pick-actions-v13 {
+    margin-top: 6px;
+  }
+
+  .ordered-edit-hint {
+    margin: 0 0 5px;
+    font-size: 6px;
+  }
+}
+
+@media (max-width: 560px) {
+  .ordered-draft-panel {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .ordered-draft-panel > .section-title {
+    margin-bottom: 3px;
+  }
+
+  .ordered-draft-panel > .section-title h2 {
+    font-size: 15px;
+  }
+
+  .ordered-draft-panel > .section-title .eyebrow {
+    display: none;
+  }
+
+  .draft-action-row .compact-button {
+    padding: 6px 7px;
+    font-size: 6px;
+  }
+
+  .common-pick-entry .turn-status {
+    min-width: 76px;
+    max-width: 86px;
+    padding: 7px 6px;
+    font-size: 6px;
+  }
+
+  .common-pick-entry .common-pick-search input {
+    min-height: 38px;
+    font-size: 11px;
+  }
+
+  .double-pick-panel-v13 .double-pick-heading-v13 h3 {
+    font-size: 15px;
+  }
+}
