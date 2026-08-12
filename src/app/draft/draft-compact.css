@@ -1,0 +1,308 @@
+/* v0.18.1 — Draft Assist compacto para móvil/tablet.
+   La recomendación principal queda visualmente unida a la barra de picks
+   y permanece visible al desplazarse por el formulario. */
+
+@media (max-width: 1180px) {
+  .ordered-draft-panel .ordered-pick-bar {
+    margin-bottom: 0;
+    position: relative;
+    z-index: 31;
+  }
+
+  .ordered-draft-panel .ordered-pick-bar + .draft-pick-decision-v16 {
+    margin-top: 0;
+  }
+
+  .draft-pick-decision-v16.draft-pick-decision-v17 {
+    position: sticky;
+    top: 62px;
+    z-index: 30;
+    display: block;
+    margin: 0 0 10px;
+    overflow: hidden;
+    border: 1px solid rgba(80, 223, 160, .28);
+    border-top: 0;
+    border-radius: 0 0 14px 14px;
+    background: rgba(8, 12, 24, .94);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .30);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+  }
+
+  .draft-pick-decision-v16.draft-pick-decision-v17.provisional {
+    border-color: rgba(69, 183, 255, .28);
+  }
+
+  .draft-pick-decision-v16 .draft-primary-pick-v16 {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-banner-v16 {
+    min-height: 0;
+    padding: 5px 9px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-banner-v16 span,
+  .draft-pick-decision-v16 .draft-primary-banner-v16 b {
+    font-size: 6px;
+    line-height: 1.2;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-body-v16 {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 40px;
+    gap: 8px;
+    align-items: center;
+    padding: 7px 9px 4px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-avatar-v16 {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-copy-v16 {
+    min-width: 0;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-copy-v16 > small {
+    display: block;
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 6px;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-copy-v16 h2 {
+    margin: 1px 0 2px;
+    font-size: 19px;
+    line-height: 1;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-copy-v16 p {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    color: #dce4f2;
+    font-size: 7px;
+    line-height: 1.3;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-copy-v16 > div {
+    display: none;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-score-v16 {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-score-v16 small {
+    font-size: 5px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-action-v16 {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 7px;
+    align-items: center;
+    padding: 4px 9px 7px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-action-v16 p {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 6.5px;
+    line-height: 1.25;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-action-v16 button {
+    min-height: 30px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-size: 7px;
+    white-space: nowrap;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-action-v16 > span {
+    color: var(--muted);
+    font-size: 7px;
+    text-align: right;
+  }
+
+  .draft-pick-decision-v16 .draft-compact-alternatives-v16 {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .page > .page-heading {
+    margin-bottom: 8px;
+  }
+
+  .ordered-draft-panel .section-title {
+    margin-bottom: 8px;
+  }
+
+  .ordered-draft-context-v5 {
+    gap: 5px;
+  }
+
+  /* En teléfono la auditoría estructural completa queda más abajo en importancia:
+     el motor ya usa esos datos para generar la recomendación principal. */
+  .first-pick-audit-v11.first-pick-audit-v12 {
+    display: none;
+  }
+
+  .ordered-phase-labels {
+    display: none;
+  }
+
+  .ordered-draft-panel .ordered-pick-bar {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 3px;
+    padding-top: 3px;
+  }
+
+  .ordered-draft-panel .ordered-pick-slot {
+    min-width: 0;
+    min-height: 58px;
+    padding: 4px 2px;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .ordered-draft-panel .ordered-pick-slot small {
+    font-size: 5px;
+  }
+
+  .ordered-draft-panel .ordered-pick-slot b {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 5.5px;
+    line-height: 1.1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ordered-draft-panel .ordered-pick-slot > span {
+    font-size: 16px;
+  }
+
+  .ordered-draft-panel .ordered-pick-avatar {
+    width: 30px;
+    height: 30px;
+    margin: 1px auto;
+    border-radius: 7px;
+  }
+
+  .draft-pick-decision-v16.draft-pick-decision-v17 {
+    top: 52px;
+    border-radius: 0 0 11px 11px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-banner-v16 {
+    display: none;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-body-v16 {
+    grid-template-columns: 42px minmax(0, 1fr) 38px;
+    gap: 7px;
+    padding: 6px 7px 3px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-avatar-v16 {
+    width: 42px;
+    height: 42px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-copy-v16 > small {
+    display: none;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-copy-v16 h2 {
+    margin: 0 0 2px;
+    font-size: 20px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-copy-v16 p {
+    font-size: 7px;
+    -webkit-line-clamp: 2;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-score-v16 {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    font-size: 13px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-action-v16 {
+    grid-template-columns: 1fr;
+    padding: 3px 7px 6px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-action-v16 p {
+    display: none;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-action-v16 button {
+    width: 100%;
+    min-height: 28px;
+    padding: 6px 8px;
+    font-size: 7px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-action-v16 > span {
+    padding: 4px 0;
+    font-size: 6px;
+    text-align: left;
+  }
+
+  .ordered-edit-hint {
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 420px) {
+  .ordered-draft-panel .ordered-pick-slot {
+    min-height: 54px;
+  }
+
+  .ordered-draft-panel .ordered-pick-avatar {
+    width: 27px;
+    height: 27px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-body-v16 {
+    grid-template-columns: 38px minmax(0, 1fr) 34px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-avatar-v16 {
+    width: 38px;
+    height: 38px;
+  }
+
+  .draft-pick-decision-v16 .draft-primary-score-v16 {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    font-size: 12px;
+  }
+}
