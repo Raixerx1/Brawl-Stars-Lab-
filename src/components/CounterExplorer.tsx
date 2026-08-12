@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Brawler } from "@/lib/types";
-import { favorableReason, threatReason } from "@/lib/matchups";
+import { rankCountersAgainst, rankTargetsFor } from "@/lib/counter-engine";
 import { auditRoster } from "@/lib/roster-audit";
 import { BrawlerPortrait } from "./GameArtwork";
 
@@ -43,7 +43,15 @@ export default function CounterExplorer({ brawlers }: { brawlers: Brawler[] }) {
     [ordered, selectedSlug],
   );
 
-  const lookup = (name: string) => ordered.find((brawler) => brawler.name === name);
+  const favorableRank = useMemo(
+    () => source ? rankTargetsFor(source, ordered, 6) : [],
+    [source, ordered],
+  );
+
+  const threatRank = useMemo(
+    () => source ? rankCountersAgainst(source, ordered, 6) : [],
+    [source, ordered],
+  );
 
   const visible = useMemo(() => {
     const search = normalize(query);
@@ -70,17 +78,20 @@ export default function CounterExplorer({ brawlers }: { brawlers: Brawler[] }) {
       <section className="panel counter-roster-panel">
         <div className="section-title">
           <div>
-            <span className="eyebrow">Roster completo</span>
+            <span className="eyebrow">Roster completo · motor v0.18</span>
             <h2>Busca cualquier brawler</h2>
-            <p>Todos los brawlers registrados aparecen en este listado, aunque su perfil táctico todavía esté pendiente de validación.</p>
+            <p>
+              El ranking ya no usa una plantilla fija por rol. Se evalúa cada pareja de brawlers por relaciones explícitas,
+              movilidad, antidive, control, alcance, wallbreak y dependencia de cobertura.
+            </p>
           </div>
           <span className="counter-roster-count">{visible.length}/{audit.total}</span>
         </div>
 
         <div className="counter-audit-strip">
           <span><b>{audit.total}</b> brawlers</span>
-          <span><b>{audit.withCounters}</b> con counters</span>
-          <span><b>{audit.withThreats}</b> con amenazas</span>
+          <span><b>{audit.withCounters}</b> con relaciones explícitas</span>
+          <span><b>6</b> mejores counters por objetivo</span>
           <span className={audit.brokenReferences.length ? "warning" : "ok"}>
             <b>{audit.brokenReferences.length}</b> referencias rotas
           </span>
@@ -128,9 +139,9 @@ export default function CounterExplorer({ brawlers }: { brawlers: Brawler[] }) {
           <h1>{source.name}</h1>
           <p>{source.build}</p>
           <div className="counter-source-status">
-            <span>{source.counters.length} buenos matchups</span>
-            <span>{source.counteredBy.length} amenazas</span>
-            <span>{source.profileComplete ? "Perfil táctico completo" : "Perfil base pendiente de validación"}</span>
+            <span>Top 6 favorable calculado</span>
+            <span>Top 6 counters calculado</span>
+            <span>Ranking individual 1 vs 1</span>
             {source.matchupReviewedAt && <span className="counter-reviewed-chip">Revisión específica: {source.matchupReviewedAt}</span>}
           </div>
         </div>
@@ -143,34 +154,44 @@ export default function CounterExplorer({ brawlers }: { brawlers: Brawler[] }) {
 
       <div className="two-column-matchups">
         <section className="panel">
-          <span className="eyebrow">Lo suele castigar</span>
-          <h2>Buenos enfrentamientos</h2>
+          <span className="eyebrow">A quién castiga mejor</span>
+          <h2>Mejores enfrentamientos de {source.name}</h2>
           <div className="matchup-grid">
-            {source.counters.map((name) => {
-              const target = lookup(name);
-              if (!target) return null;
-              return <article className="matchup-card favorable" key={name}>
+            {favorableRank.map((matchup, index) => {
+              const target = matchup.target;
+              return <article className="matchup-card favorable" key={target.slug}>
                 <BrawlerPortrait name={target.name} className="matchup-avatar" />
-                <div><h3>{target.name}</h3><p>{favorableReason(source, target)}</p>{source.matchupNotes?.favorable?.[target.name] && <small>Matchup revisado manualmente</small>}</div>
+                <div>
+                  <h3>{index + 1}. {target.name}</h3>
+                  <p>{matchup.reason}</p>
+                  <small>
+                    {matchup.score}/100 · confianza {matchup.confidence}
+                    {matchup.explicit ? " · relación explícita" : " · interacción calculada"}
+                  </small>
+                </div>
               </article>;
             })}
-            {!source.counters.length && <div className="empty-state">Todavía no se han definido counters para {source.name}.</div>}
           </div>
         </section>
 
         <section className="panel">
-          <span className="eyebrow danger-text">Amenazas</span>
-          <h2>Quién lo frena</h2>
+          <span className="eyebrow danger-text">Counters específicos</span>
+          <h2>Quién frena mejor a {source.name}</h2>
           <div className="matchup-grid">
-            {source.counteredBy.map((name) => {
-              const threat = lookup(name);
-              if (!threat) return null;
-              return <article className="matchup-card threat" key={name}>
+            {threatRank.map((matchup, index) => {
+              const threat = matchup.candidate;
+              return <article className="matchup-card threat" key={threat.slug}>
                 <BrawlerPortrait name={threat.name} className="matchup-avatar" />
-                <div><h3>{threat.name}</h3><p>{threatReason(source, threat)}</p>{source.matchupNotes?.threats?.[threat.name] && <small>Matchup revisado manualmente</small>}</div>
+                <div>
+                  <h3>{index + 1}. {threat.name}</h3>
+                  <p>{matchup.reason}</p>
+                  <small>
+                    {matchup.score}/100 · confianza {matchup.confidence}
+                    {matchup.explicit ? " · relación explícita" : " · interacción calculada"}
+                  </small>
+                </div>
               </article>;
             })}
-            {!source.counteredBy.length && <div className="empty-state">Todavía no se han definido amenazas para {source.name}.</div>}
           </div>
         </section>
       </div>
