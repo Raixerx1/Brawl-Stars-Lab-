@@ -1,6 +1,6 @@
 {
   "name": "brawl-stars-lab",
-  "version": "0.18.0",
+  "version": "0.18.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
