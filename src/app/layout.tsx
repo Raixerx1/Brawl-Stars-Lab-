@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: "Draft Lab",
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "black",
   },
 };
 
