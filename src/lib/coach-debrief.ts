@@ -1,6 +1,7 @@
 import type { LiveMatchEvent, LiveReviewSession } from "./types";
 
 export type CoachPriority = "Crítica" | "Alta" | "Media";
+export type CoachEvidence = "Alta" | "Media" | "Baja";
 
 export type CoachDecision = {
   label: string;
@@ -28,17 +29,41 @@ export type CoachPhase = {
   label: "Inicio" | "Medio" | "Final";
   negative: number;
   positive: number;
+  score: number;
+  evidence: CoachEvidence;
   verdict: string;
+};
+
+export type CoachTurningPoint = {
+  second: number;
+  label: string;
+  category: string;
+  impact: "Negativo" | "Positivo";
+  score: number;
+  evidence: CoachEvidence;
+  reason: string;
+};
+
+export type CoachChain = {
+  startSecond: number;
+  endSecond: number;
+  from: string;
+  to: string;
+  impact: "Negativo" | "Positivo";
+  confidence: number;
+  interpretation: string;
 };
 
 export type CoachDebrief = {
   headline: string;
   confidence: number;
-  confidenceLabel: "Baja" | "Media" | "Alta";
+  confidenceLabel: CoachEvidence;
   priorities: CoachDecision[];
   strengths: CoachStrength[];
   nextGames: string[];
   phases: CoachPhase[];
+  turningPoints: CoachTurningPoint[];
+  chains: CoachChain[];
   recurringProblem?: string;
   sampleNote: string;
 };
@@ -52,83 +77,17 @@ type Rule = {
 };
 
 const NEGATIVE_RULES: Record<string, Rule> = {
-  "Muerte con coste de objetivo": {
-    category: "Objetivo",
-    base: 100,
-    cause: "Asumiste una interacción cuando tu supervivencia valía más que el posible intercambio.",
-    correction: "Antes de entrar, comprueba si tu muerte abre gol, zona, gemas, estrellas o daño directo a caja fuerte.",
-    drill: "Durante 3 partidas, si eres el último recurso defensivo, prioriza vivir sobre perseguir la eliminación.",
-  },
-  "Objetivo perdido": {
-    category: "Objetivo",
-    base: 94,
-    cause: "La presión rival se convirtió en progreso porque la respuesta llegó tarde o fuera de la zona útil.",
-    correction: "Corta persecuciones y vuelve al objetivo un ciclo de munición antes de que el rival pueda convertir.",
-    drill: "Durante 3 partidas, verbaliza mentalmente «objetivo primero» cada vez que un rival salga de tu alcance.",
-  },
-  "Entrada castigada": {
-    category: "Posicionamiento",
-    base: 90,
-    cause: "La entrada se hizo sin suficiente ventaja de munición, vida, apoyo o ruta de salida.",
-    correction: "No profundices después del primer intercambio salvo que tengas una segunda ventaja clara para sostener la entrada.",
-    drill: "Durante 3 partidas, tras gastar dos municiones en una entrada, reevalúa antes de avanzar otro tile.",
-  },
-  "Muerte encadenada": {
-    category: "Tempo",
-    base: 88,
-    cause: "La reentrada intentó recuperar demasiado terreno antes de reagrupar recursos o compañeros.",
-    correction: "Tras reaparecer, recupera primero una posición defendible y sincroniza la siguiente entrada.",
-    drill: "Durante 3 partidas, después de morir espera a tener una referencia de tus dos aliados antes de forzar.",
-  },
-  "Cadena de muertes": {
-    category: "Tempo",
-    base: 88,
-    cause: "Varias bajas seguidas impidieron estabilizar el mapa y regalaron tempo adicional.",
-    correction: "Rompe la cadena con una reentrada defensiva: vida completa, munición y línea segura antes de pelear.",
-    drill: "Durante 3 partidas, tras una muerte juega la primera interacción de vuelta con prioridad absoluta a no morir.",
-  },
-  "Super sin conversión": {
-    category: "Recursos",
-    base: 84,
-    cause: "La super se utilizó sin una conversión definida en eliminación, espacio, objetivo o supervivencia.",
-    correction: "Antes de pulsarla, identifica explícitamente qué ventaja concreta debe producir en los siguientes segundos.",
-    drill: "Durante 3 partidas, no uses la primera super hasta poder nombrar su conversión: kill, control, objetivo o escape.",
-  },
-  "Super desperdiciada": {
-    category: "Recursos",
-    base: 82,
-    cause: "El recurso se gastó con bajo valor marginal o cuando la interacción ya estaba perdida/ganada.",
-    correction: "Reserva la super para la siguiente interacción si no cambia el resultado de la actual.",
-    drill: "Durante 3 partidas, pregúntate «¿cambia esta pelea?» antes de cada super.",
-  },
-  "Hipercarga desperdiciada": {
-    category: "Recursos",
-    base: 86,
-    cause: "La hipercarga se activó sin suficiente tiempo, posición o recursos para explotar su ventana.",
-    correction: "Actívala antes del intercambio decisivo y con munición/vida suficientes para encadenar acciones.",
-    drill: "Durante 3 partidas, evita activar hipercarga con menos de dos municiones salvo emergencia defensiva.",
-  },
-  "Sobreextensión": {
-    category: "Posicionamiento",
-    base: 78,
-    cause: "La posición avanzada dejó de estar respaldada por alcance aliado, cobertura o una retirada realista.",
-    correction: "Mantén una salida limpia y no cruces la línea de presión de tus aliados sin una ventaja material.",
-    drill: "Durante 3 partidas, usa a tu aliado más adelantado como límite visual salvo que tengas superioridad clara.",
-  },
-  "Matchup desfavorable": {
-    category: "Líneas",
-    base: 72,
-    cause: "Permaneciste demasiado tiempo en una línea donde el rival tenía ventaja estructural.",
-    correction: "Busca el cambio de línea en la primera pausa segura en vez de intentar resolver repetidamente el mismo matchup.",
-    drill: "Durante 3 partidas, si pierdes dos interacciones seguidas contra el mismo rival, rota en la siguiente ventana.",
-  },
-  "Muerte": {
-    category: "Tempo",
-    base: 56,
-    cause: "La baja cedió presencia de mapa; necesita contexto para saber si fue intercambio aceptable.",
-    correction: "Revisa qué recurso faltaba antes de morir: vida, munición, cobertura, super o apoyo.",
-    drill: "Durante 3 partidas, tras cada muerte identifica una sola causa antes de reaparecer.",
-  },
+  "Muerte con coste de objetivo": { category: "Objetivo", base: 100, cause: "Asumiste una interacción cuando tu supervivencia valía más que el posible intercambio.", correction: "Antes de entrar, comprueba si tu muerte abre gol, zona, gemas, estrellas o daño directo a caja fuerte.", drill: "Durante 3 partidas, si eres el último recurso defensivo, prioriza vivir sobre perseguir la eliminación." },
+  "Objetivo perdido": { category: "Objetivo", base: 94, cause: "La presión rival se convirtió en progreso porque la respuesta llegó tarde o fuera de la zona útil.", correction: "Corta persecuciones y vuelve al objetivo un ciclo de munición antes de que el rival pueda convertir.", drill: "Durante 3 partidas, verbaliza mentalmente «objetivo primero» cada vez que un rival salga de tu alcance." },
+  "Entrada castigada": { category: "Posicionamiento", base: 90, cause: "La entrada se hizo sin suficiente ventaja de munición, vida, apoyo o ruta de salida.", correction: "No profundices después del primer intercambio salvo que tengas una segunda ventaja clara para sostener la entrada.", drill: "Durante 3 partidas, tras gastar dos municiones en una entrada, reevalúa antes de avanzar otro tile." },
+  "Muerte encadenada": { category: "Tempo", base: 88, cause: "La reentrada intentó recuperar demasiado terreno antes de reagrupar recursos o compañeros.", correction: "Tras reaparecer, recupera primero una posición defendible y sincroniza la siguiente entrada.", drill: "Durante 3 partidas, después de morir espera a tener una referencia de tus dos aliados antes de forzar." },
+  "Cadena de muertes": { category: "Tempo", base: 88, cause: "Varias bajas seguidas impidieron estabilizar el mapa y regalaron tempo adicional.", correction: "Rompe la cadena con una reentrada defensiva: vida completa, munición y línea segura antes de pelear.", drill: "Durante 3 partidas, tras una muerte juega la primera interacción de vuelta con prioridad absoluta a no morir." },
+  "Super sin conversión": { category: "Recursos", base: 84, cause: "La super se utilizó sin una conversión definida en eliminación, espacio, objetivo o supervivencia.", correction: "Antes de pulsarla, identifica explícitamente qué ventaja concreta debe producir en los siguientes segundos.", drill: "Durante 3 partidas, no uses la primera super hasta poder nombrar su conversión: kill, control, objetivo o escape." },
+  "Super desperdiciada": { category: "Recursos", base: 82, cause: "El recurso se gastó con bajo valor marginal o cuando la interacción ya estaba perdida o ganada.", correction: "Reserva la super para la siguiente interacción si no cambia el resultado de la actual.", drill: "Durante 3 partidas, pregúntate «¿cambia esta pelea?» antes de cada super." },
+  "Hipercarga desperdiciada": { category: "Recursos", base: 86, cause: "La hipercarga se activó sin suficiente tiempo, posición o recursos para explotar su ventana.", correction: "Actívala antes del intercambio decisivo y con munición y vida suficientes para encadenar acciones.", drill: "Durante 3 partidas, evita activar hipercarga con menos de dos municiones salvo emergencia defensiva." },
+  "Sobreextensión": { category: "Posicionamiento", base: 78, cause: "La posición avanzada dejó de estar respaldada por alcance aliado, cobertura o una retirada realista.", correction: "Mantén una salida limpia y no cruces la línea de presión de tus aliados sin una ventaja material.", drill: "Durante 3 partidas, usa a tu aliado más adelantado como límite visual salvo que tengas superioridad clara." },
+  "Matchup desfavorable": { category: "Líneas", base: 72, cause: "Permaneciste demasiado tiempo en una línea donde el rival tenía ventaja estructural.", correction: "Busca el cambio de línea en la primera pausa segura en vez de intentar resolver repetidamente el mismo matchup.", drill: "Durante 3 partidas, si pierdes dos interacciones seguidas contra el mismo rival, rota en la siguiente ventana." },
+  "Muerte": { category: "Tempo", base: 56, cause: "La baja cedió presencia de mapa; necesita contexto para saber si fue intercambio aceptable.", correction: "Revisa qué recurso faltaba antes de morir: vida, munición, cobertura, super o apoyo.", drill: "Durante 3 partidas, tras cada muerte identifica una sola causa antes de reaparecer." },
 };
 
 const POSITIVE_RULES: Record<string, string> = {
@@ -143,6 +102,22 @@ const POSITIVE_RULES: Record<string, string> = {
   "Eliminación": "Mantén la eliminación solo cuando abra espacio, tempo u objetivo.",
 };
 
+const TURNING_POINT_WEIGHT: Record<string, number> = {
+  "Muerte con coste de objetivo": 100,
+  "Objetivo perdido": 94,
+  "Cadena de muertes": 90,
+  "Muerte encadenada": 88,
+  "Entrada castigada": 84,
+  "Hipercarga desperdiciada": 82,
+  "Super sin conversión": 78,
+  "Objetivo ganado": 92,
+  "Presión convertida": 86,
+  "Super con impacto": 82,
+  "Hipercarga decisiva": 84,
+  "Super decisiva": 80,
+  "Matchup corregido": 72,
+};
+
 const reliability = (event: LiveMatchEvent) => {
   if (event.feedback === "rejected") return 0;
   if (event.source !== "Auto" || event.feedback === "accepted") return 1;
@@ -151,6 +126,9 @@ const reliability = (event: LiveMatchEvent) => {
 };
 
 const usable = (session: LiveReviewSession) => session.events.filter((event) => event.feedback !== "rejected");
+const round1 = (value: number) => Math.round(value * 10) / 10;
+const clamp = (value: number, min = 0, max = 100) => Math.max(min, Math.min(max, Math.round(value)));
+const evidenceLabel = (value: number): CoachEvidence => value >= .82 ? "Alta" : value >= .58 ? "Media" : "Baja";
 
 function countLabel(session: LiveReviewSession, label: string) {
   return usable(session).filter((event) => event.label === label).reduce((sum, event) => sum + reliability(event), 0);
@@ -164,10 +142,80 @@ function phaseFor(second: number, duration: number) {
   return 2;
 }
 
-export function buildCoachDebrief(
-  session: LiveReviewSession | undefined,
-  history: LiveReviewSession[],
-): CoachDebrief | undefined {
+function buildChains(events: LiveMatchEvent[]): CoachChain[] {
+  const ordered = [...events].sort((a, b) => a.second - b.second);
+  const chains: CoachChain[] = [];
+  const add = (from: LiveMatchEvent, to: LiveMatchEvent, impact: "Negativo" | "Positivo", interpretation: string, bonus = 0) => {
+    const base = (reliability(from) + reliability(to)) / 2;
+    const gapPenalty = Math.min(.18, Math.max(0, to.second - from.second - 4) * .015);
+    const confidence = clamp((base - gapPenalty + bonus) * 100);
+    if (confidence < 42) return;
+    const key = `${from.id}:${to.id}:${interpretation}`;
+    if (chains.some((item) => `${item.startSecond}:${item.endSecond}:${item.interpretation}` === `${from.second}:${to.second}:${interpretation}`)) return;
+    chains.push({ startSecond: from.second, endSecond: to.second, from: from.label, to: to.label, impact, confidence, interpretation });
+    void key;
+  };
+
+  for (let i = 0; i < ordered.length; i += 1) {
+    const from = ordered[i];
+    for (let j = i + 1; j < ordered.length; j += 1) {
+      const to = ordered[j];
+      const gap = to.second - from.second;
+      if (gap > 12) break;
+      if (["Super utilizada", "Super decisiva", "Super con impacto"].includes(from.label) && ["Muerte", "Super sin conversión"].includes(to.label)) {
+        add(from, to, "Negativo", "Recurso ofensivo → pérdida de tempo: revisa si la super se usó sin salida o sin ventaja suficiente.", .02);
+      }
+      if (from.label === "Muerte" && ["Cambio de objetivo", "Objetivo perdido", "Muerte con coste de objetivo"].includes(to.label)) {
+        add(from, to, "Negativo", "Muerte → conversión rival: tu supervivencia tenía valor directo sobre la condición de victoria.", .06);
+      }
+      if (["Interacción intensa", "Entrada castigada"].includes(from.label) && ["Muerte", "Muerte con coste de objetivo"].includes(to.label)) {
+        add(from, to, "Negativo", "Entrada → castigo: la secuencia sugiere profundidad excesiva o retirada tardía.", .04);
+      }
+      if (from.label === "Reaparición" && ["Muerte", "Muerte encadenada"].includes(to.label)) {
+        add(from, to, "Negativo", "Reaparición → nueva muerte: la reentrada probablemente fue demasiado rápida o descoordinada.", .04);
+      }
+      if (["Super utilizada", "Super decisiva", "Super con impacto"].includes(from.label) && ["Cambio de objetivo", "Objetivo ganado", "Presión convertida"].includes(to.label)) {
+        add(from, to, "Positivo", "Recurso → conversión: la super generó una ventaja medible en los segundos siguientes.", .04);
+      }
+      if (from.label === "Matchup desfavorable" && ["Cambio de línea", "Matchup corregido"].includes(to.label)) {
+        add(from, to, "Positivo", "Lectura de matchup → rotación: corregiste la línea antes de seguir cediendo presión.", .06);
+      }
+      if (["Interacción intensa", "Eliminación"].includes(from.label) && ["Objetivo ganado", "Presión convertida", "Cambio de objetivo"].includes(to.label)) {
+        add(from, to, "Positivo", "Presión → objetivo: la ventaja mecánica se convirtió en progreso real.", .04);
+      }
+    }
+  }
+
+  return chains.sort((a, b) => b.confidence - a.confidence || a.startSecond - b.startSecond).slice(0, 6);
+}
+
+function buildTurningPoints(events: LiveMatchEvent[], duration: number): CoachTurningPoint[] {
+  const candidates = events.flatMap((event): CoachTurningPoint[] => {
+    const base = TURNING_POINT_WEIGHT[event.label];
+    if (!base) return [];
+    const rel = reliability(event);
+    if (!rel) return [];
+    const nearby = events.filter((other) => other.id !== event.id && Math.abs(other.second - event.second) <= 10);
+    const cluster = Math.min(12, nearby.reduce((sum, other) => sum + reliability(other), 0) * 2.3);
+    const lateBoost = phaseFor(event.second, duration) === 2 ? 7 : 0;
+    const negative = Boolean(NEGATIVE_RULES[event.label]);
+    const score = clamp(base * (.55 + rel * .45) + cluster + lateBoost);
+    const reason = negative
+      ? `${event.label} concentró una secuencia de alto coste${lateBoost ? " en el tramo final" : ""}. Revisa los 10 s anteriores, no solo el evento aislado.`
+      : `${event.label} produjo una ventaja clara${lateBoost ? " en el cierre" : ""}. Identifica qué recursos y posición permitieron convertirla.`;
+    return [{ second: event.second, label: event.label, category: NEGATIVE_RULES[event.label]?.category || "Conversión", impact: negative ? "Negativo" : "Positivo", score, evidence: evidenceLabel(rel), reason }];
+  });
+
+  const selected: CoachTurningPoint[] = [];
+  for (const item of candidates.sort((a, b) => b.score - a.score)) {
+    if (selected.some((existing) => Math.abs(existing.second - item.second) <= 8 && existing.impact === item.impact)) continue;
+    selected.push(item);
+    if (selected.length >= 4) break;
+  }
+  return selected;
+}
+
+export function buildCoachDebrief(session: LiveReviewSession | undefined, history: LiveReviewSession[]): CoachDebrief | undefined {
   if (!session) return undefined;
 
   const currentEvents = usable(session);
@@ -196,71 +244,59 @@ export function buildCoachDebrief(
     const recurrenceText = priorSessions
       ? `También aparece en ${priorSessions} revisiones previas${sameBrawlerSessions ? ` (${sameBrawlerSessions} con ${session.brawler})` : ""}${sameMapSessions ? ` y ${sameMapSessions} en ${session.mapName}` : ""}.`
       : "No hay recurrencia histórica suficiente todavía.";
-
-    return {
-      label,
-      category: rule.category,
-      priority,
-      score,
-      currentSignals: counts.raw,
-      priorSessions,
-      sameBrawlerSessions,
-      sameMapSessions,
-      cause: rule.cause,
-      correction: rule.correction,
-      drill: rule.drill,
-      evidence: `${counts.raw} señal${counts.raw === 1 ? "" : "es"} en esta partida. ${recurrenceText}`,
-    };
+    return { label, category: rule.category, priority, score, currentSignals: counts.raw, priorSessions, sameBrawlerSessions, sameMapSessions, cause: rule.cause, correction: rule.correction, drill: rule.drill, evidence: `${counts.raw} señal${counts.raw === 1 ? "" : "es"} en esta partida. ${recurrenceText}` };
   }).sort((a, b) => b.score - a.score || b.currentSignals - a.currentSignals).slice(0, 3);
 
   const strengths = Object.entries(POSITIVE_RULES).flatMap(([label, instruction]): CoachStrength[] => {
     const currentSignals = currentEvents.filter((event) => event.label === label).reduce((sum, event) => sum + reliability(event), 0);
     if (currentSignals < .55) return [];
     const priorSessions = previous.filter((item) => countLabel(item, label) >= .55).length;
-    return [{
-      label,
-      currentSignals: Math.max(1, Math.round(currentSignals)),
-      priorSessions,
-      instruction,
-    }];
+    return [{ label, currentSignals: Math.max(1, Math.round(currentSignals)), priorSessions, instruction }];
   }).sort((a, b) => b.currentSignals - a.currentSignals || b.priorSessions - a.priorSessions).slice(0, 3);
 
   const phaseStats = [
-    { label: "Inicio" as const, negative: 0, positive: 0 },
-    { label: "Medio" as const, negative: 0, positive: 0 },
-    { label: "Final" as const, negative: 0, positive: 0 },
+    { label: "Inicio" as const, negative: 0, positive: 0, evidence: 0 },
+    { label: "Medio" as const, negative: 0, positive: 0, evidence: 0 },
+    { label: "Final" as const, negative: 0, positive: 0, evidence: 0 },
   ];
   for (const event of currentEvents) {
     const phase = phaseStats[phaseFor(event.second, session.duration)];
     const weight = reliability(event);
+    phase.evidence += weight;
     if (NEGATIVE_RULES[event.label]) phase.negative += weight;
     if (POSITIVE_RULES[event.label]) phase.positive += weight;
   }
   const phases: CoachPhase[] = phaseStats.map((phase) => {
-    const diff = phase.positive - phase.negative;
+    const score = clamp(52 + phase.positive * 10 - phase.negative * 12);
+    const evidenceRatio = Math.min(1, phase.evidence / 4);
     return {
-      ...phase,
-      negative: Math.round(phase.negative * 10) / 10,
-      positive: Math.round(phase.positive * 10) / 10,
-      verdict: diff >= 1 ? "Fase favorable" : diff <= -1 ? "Fase a revisar" : "Fase equilibrada",
+      label: phase.label,
+      negative: round1(phase.negative),
+      positive: round1(phase.positive),
+      score,
+      evidence: evidenceLabel(evidenceRatio),
+      verdict: score >= 68 ? "Fase favorable" : score <= 42 ? "Fase a revisar" : "Fase equilibrada",
     };
   });
 
   const reviewedAuto = currentEvents.filter((event) => event.source === "Auto" && Boolean(event.feedback)).length;
   const pendingAuto = currentEvents.filter((event) => event.source === "Auto" && !event.feedback).length;
   const manualOrAccepted = currentEvents.filter((event) => event.source !== "Auto" || event.feedback === "accepted").length;
-  const confidence = Math.max(20, Math.min(100, Math.round(
-    35 + Math.min(32, currentEvents.length * 4) + Math.min(22, manualOrAccepted * 5) + Math.min(11, reviewedAuto * 3) - Math.min(18, pendingAuto * 2),
-  )));
+  const confidence = Math.max(20, Math.min(100, Math.round(35 + Math.min(32, currentEvents.length * 4) + Math.min(22, manualOrAccepted * 5) + Math.min(11, reviewedAuto * 3) - Math.min(18, pendingAuto * 2))));
   const confidenceLabel = confidence >= 75 ? "Alta" : confidence >= 52 ? "Media" : "Baja";
 
+  const turningPoints = buildTurningPoints(currentEvents, session.duration);
+  const chains = buildChains(currentEvents);
   const primary = priorities[0];
   const recurringProblem = priorities.find((item) => item.priorSessions >= 2);
-  const headline = primary
-    ? `${primary.label}: principal foco de esta partida`
-    : strengths[0]
-      ? `Ejecución estable: consolida ${strengths[0].label.toLowerCase()}`
-      : "Muestra insuficiente para señalar un error dominante";
+  const decisive = turningPoints[0];
+  const headline = decisive && decisive.score >= 82
+    ? `${decisive.label}: punto de inflexión de la partida`
+    : primary
+      ? `${primary.label}: principal foco de esta partida`
+      : strengths[0]
+        ? `Ejecución estable: consolida ${strengths[0].label.toLowerCase()}`
+        : "Muestra insuficiente para señalar un error dominante";
 
   const nextGames = priorities.length
     ? priorities.map((item) => item.drill)
@@ -276,11 +312,9 @@ export function buildCoachDebrief(
     strengths,
     nextGames: nextGames.slice(0, 3),
     phases,
-    recurringProblem: recurringProblem
-      ? `Patrón recurrente: «${recurringProblem.label}» aparece en ${recurringProblem.priorSessions} revisiones anteriores.`
-      : undefined,
-    sampleNote: pendingAuto
-      ? `${pendingAuto} detecciones automáticas siguen sin validar; su peso se reduce para no sobreentrenar falsos positivos.`
-      : "Las señales automáticas pendientes no están dominando este informe.",
+    turningPoints,
+    chains,
+    recurringProblem: recurringProblem ? `Patrón recurrente: «${recurringProblem.label}» aparece en ${recurringProblem.priorSessions} revisiones anteriores.` : undefined,
+    sampleNote: pendingAuto ? `${pendingAuto} detecciones automáticas siguen sin validar; su peso se reduce para no sobreentrenar falsos positivos.` : "Las señales automáticas pendientes no están dominando este informe.",
   };
 }
