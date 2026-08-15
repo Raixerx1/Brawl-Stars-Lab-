@@ -14,6 +14,10 @@ import { BrawlerPortrait } from "./GameArtwork";
 
 type RecorderStatus = "idle" | "recording" | "ready";
 
+type OptionalDisplayMediaDevices = Partial<MediaDevices> & {
+  getDisplayMedia?: (constraints?: DisplayMediaStreamOptions) => Promise<MediaStream>;
+};
+
 const MIME_CANDIDATES = [
   "video/webm;codecs=vp9,opus",
   "video/webm;codecs=vp8,opus",
@@ -30,6 +34,11 @@ const readableBytes = (bytes: number) => {
 function bestMimeType() {
   if (typeof MediaRecorder === "undefined") return "";
   return MIME_CANDIDATES.find((type) => MediaRecorder.isTypeSupported(type)) || "";
+}
+
+function displayMediaDevices(): OptionalDisplayMediaDevices | undefined {
+  if (typeof navigator === "undefined") return undefined;
+  return navigator.mediaDevices as OptionalDisplayMediaDevices | undefined;
 }
 
 export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; brawlers: Brawler[] }) {
@@ -71,7 +80,8 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
   };
 
   useEffect(() => {
-    setSupported(Boolean(navigator.mediaDevices?.getDisplayMedia && typeof MediaRecorder !== "undefined"));
+    const mediaDevices = displayMediaDevices();
+    setSupported(typeof mediaDevices?.getDisplayMedia === "function" && typeof MediaRecorder !== "undefined");
     void refreshLibrary();
     return () => {
       streamRef.current?.getTracks().forEach((track) => track.stop());
@@ -101,13 +111,15 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
     setElapsed(0);
     chunksRef.current = [];
 
-    if (!supported || !navigator.mediaDevices?.getDisplayMedia) {
+    const mediaDevices = displayMediaDevices();
+    const getDisplayMedia = mediaDevices?.getDisplayMedia?.bind(mediaDevices);
+    if (!supported || !getDisplayMedia) {
       setMessage("La grabación de pantalla no está disponible en este navegador; puedes importar un vídeo ya grabado.");
       return;
     }
 
     try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
+      const stream = await getDisplayMedia({
         video: { frameRate: { ideal: 30, max: 60 } },
         audio: recordAudio,
       });
