@@ -1,0 +1,114 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import { buildCoachDebrief } from "@/lib/coach-debrief";
+import { formatLiveTime, readLiveReviews } from "@/lib/live-review";
+import type { LiveReviewSession } from "@/lib/types";
+
+function sessionLabel(session: LiveReviewSession) {
+  const date = new Date(session.date);
+  const when = Number.isNaN(date.getTime()) ? "" : date.toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit" });
+  return `${when ? `${when} · ` : ""}${session.brawler} · ${session.mapName} · ${session.result || "Sin resultado"}`;
+}
+
+export default function CoachDebriefDashboard() {
+  const [sessions, setSessions] = useState<LiveReviewSession[]>([]);
+  const [selectedId, setSelectedId] = useState("");
+
+  const refresh = () => {
+    const next = readLiveReviews();
+    setSessions(next);
+    setSelectedId((current) => current && next.some((item) => item.id === current) ? current : next[0]?.id || "");
+  };
+
+  useEffect(() => {
+    refresh();
+    const interval = window.setInterval(refresh, 2500);
+    return () => window.clearInterval(interval);
+  }, []);
+
+  const selected = sessions.find((session) => session.id === selectedId) || sessions[0];
+  const debrief = useMemo(() => buildCoachDebrief(selected, sessions), [selected, sessions]);
+
+  return <section className="panel coach-debrief-v19">
+    <div className="section-title coach-debrief-head-v19">
+      <div>
+        <span className="eyebrow">Entrenador de partidas v0.19</span>
+        <h2>Debrief: qué cambiar en la siguiente</h2>
+      </div>
+      <div className="coach-debrief-actions-v19">
+        {sessions.length > 0 && <select value={selected?.id || ""} onChange={(event) => setSelectedId(event.target.value)} aria-label="Seleccionar revisión">
+          {sessions.slice(0, 15).map((session) => <option value={session.id} key={session.id}>{sessionLabel(session)}</option>)}
+        </select>}
+        <button type="button" className="secondary-button compact-button" onClick={refresh}>Actualizar</button>
+      </div>
+    </div>
+
+    {!selected || !debrief ? <div className="coach-debrief-empty-v19">
+      <b>Guarda una Live Review para activar el debrief.</b>
+      <span>El entrenador cruzará esa partida con tus revisiones anteriores y priorizará decisiones repetidas, no solo eventos aislados.</span>
+    </div> : <>
+      <div className="coach-debrief-hero-v19">
+        <div>
+          <span>{selected.brawler} · {selected.mode} · {selected.mapName}</span>
+          <h3>{debrief.headline}</h3>
+          <p>{debrief.recurringProblem || "Todavía no hay recurrencia histórica fuerte para el principal error de esta partida."}</p>
+        </div>
+        <div className={`coach-confidence-v19 confidence-${debrief.confidenceLabel.toLowerCase()}`}>
+          <b>{debrief.confidence}%</b>
+          <span>confianza {debrief.confidenceLabel.toLowerCase()}</span>
+          <small>{formatLiveTime(selected.duration)} analizados</small>
+        </div>
+      </div>
+
+      <div className="coach-priority-grid-v19">
+        <article className="coach-priorities-v19">
+          <div className="coach-column-title-v19">
+            <span>Decisiones prioritarias</span>
+            <small>Impacto actual + recurrencia histórica + contexto de derrota/objetivo</small>
+          </div>
+          {debrief.priorities.map((item, index) => <div className={`coach-priority-v19 priority-${item.priority.toLowerCase()}`} key={item.label}>
+            <div className="coach-priority-rank-v19">#{index + 1}</div>
+            <div className="coach-priority-copy-v19">
+              <div><b>{item.label}</b><span>{item.category} · prioridad {item.priority}</span></div>
+              <p><strong>Causa probable:</strong> {item.cause}</p>
+              <p><strong>Corrección:</strong> {item.correction}</p>
+              <small>{item.evidence}</small>
+            </div>
+            <div className="coach-impact-v19"><b>{item.score}</b><span>impacto</span></div>
+          </div>)}
+          {!debrief.priorities.length && <div className="empty-state">No hay un error negativo dominante con evidencia suficiente en esta revisión.</div>}
+        </article>
+
+        <article className="coach-next-games-v19">
+          <div className="coach-column-title-v19">
+            <span>Plan para las próximas 3 partidas</span>
+            <small>Pocas reglas, medibles y repetibles</small>
+          </div>
+          {debrief.nextGames.map((item, index) => <div key={item}><b>{index + 1}</b><span>{item}</span></div>)}
+          <p>{debrief.sampleNote}</p>
+        </article>
+      </div>
+
+      <div className="coach-phase-grid-v19">
+        {debrief.phases.map((phase) => <article className={phase.verdict === "Fase a revisar" ? "bad" : phase.verdict === "Fase favorable" ? "good" : ""} key={phase.label}>
+          <span>{phase.label}</span>
+          <b>{phase.verdict}</b>
+          <small>{phase.positive} señales + · {phase.negative} señales −</small>
+        </article>)}
+      </div>
+
+      <div className="coach-strengths-v19">
+        <div className="coach-column-title-v19"><span>Qué conservar</span><small>El entrenador también evita que corrijas cosas que ya están funcionando.</small></div>
+        <div>
+          {debrief.strengths.map((item) => <article key={item.label}>
+            <b>{item.label}</b>
+            <span>{item.instruction}</span>
+            <small>{item.currentSignals} señal{item.currentSignals === 1 ? "" : "es"} ahora · presente en {item.priorSessions} revisiones previas</small>
+          </article>)}
+          {!debrief.strengths.length && <span className="coach-muted-v19">Todavía no hay suficientes patrones positivos en esta partida.</span>}
+        </div>
+      </div>
+    </>}
+  </section>;
+}
