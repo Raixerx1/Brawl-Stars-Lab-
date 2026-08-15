@@ -1,58 +1,332 @@
-/* Ajustes de interfaz del Draft Coach: eliminar redundancias visuales sin tocar el motor. */
+/* Draft Coach UI overrides — v0.18
+   Objetivo: lectura instantánea durante Ranked. Los picks forman una única fila visual
+   y la recomendación #1 aparece inmediatamente debajo, seguida por 4 alternativas. */
 
-/* El panel antiguo de first picks estructurales deja de mostrarse. Sus datos siguen
-   disponibles en MapProfile y continúan alimentando el motor de recomendaciones. */
+/* El panel estructural antiguo sigue alimentando el motor, pero no duplica información en UI. */
 .first-pick-audit-v11.first-pick-audit-v12 {
   display: none !important;
 }
 
-/* Reordenamos únicamente la presentación dentro del panel principal para que el
-   bloque de prioridades v0.17 ocupe el lugar del panel estructural retirado. */
 .ordered-draft-panel {
   display: flex;
   flex-direction: column;
 }
 
+/* Orden de lectura: contexto → bans → picks → recomendación → análisis secundario. */
 .ordered-draft-panel > .section-title { order: 0; }
 .ordered-draft-panel > .draft-toast { order: 1; }
 .ordered-draft-panel > .ordered-draft-context { order: 2; }
-.ordered-draft-panel > .draft-pick-decision-v17 { order: 3; }
-.ordered-draft-panel > .draft-ban-panel-v51 { order: 4; }
-.ordered-draft-panel > .ordered-phase-labels { order: 5; }
-.ordered-draft-panel > .ordered-pick-bar { order: 6; }
+.ordered-draft-panel > .draft-ban-panel-v51 { order: 3; }
+.ordered-draft-panel > .ordered-phase-labels { order: 4; }
+.ordered-draft-panel > .ordered-pick-bar { order: 5; }
+.ordered-draft-panel > .draft-pick-decision-v17 { order: 6; }
 .ordered-draft-panel > .draft-stress-panel-v14 { order: 7; }
 .ordered-draft-panel > .double-pick-panel-v13 { order: 8; }
 .ordered-draft-panel > .common-pick-entry { order: 9; }
 .ordered-draft-panel > .ordered-edit-hint { order: 10; }
 
-/* Título único del bloque que sustituye a “First picks estructurales”. */
+/* Fila de draft: seis cartas grandes y reconocibles de un vistazo. */
+.ordered-pick-bar {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px !important;
+  margin: 8px 0 0 !important;
+}
+
+.ordered-pick-slot {
+  position: relative;
+  min-height: 126px !important;
+  padding: 10px 8px 9px !important;
+  border-width: 2px !important;
+  border-radius: 18px !important;
+  overflow: hidden;
+  transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease, opacity .14s ease;
+}
+
+.ordered-pick-slot:hover {
+  transform: translateY(-2px);
+}
+
+.ordered-pick-slot.ally {
+  background: linear-gradient(180deg, rgba(44, 124, 255, .18), rgba(14, 23, 47, .86)) !important;
+  border-color: rgba(82, 150, 255, .46) !important;
+}
+
+.ordered-pick-slot.enemy {
+  background: linear-gradient(180deg, rgba(255, 74, 96, .16), rgba(42, 16, 29, .86)) !important;
+  border-color: rgba(255, 91, 113, .42) !important;
+}
+
+.ordered-pick-slot.next {
+  transform: translateY(-4px) scale(1.025);
+  box-shadow: 0 0 0 2px rgba(255, 215, 88, .82), 0 14px 28px rgba(0, 0, 0, .22) !important;
+  z-index: 2;
+}
+
+.ordered-pick-slot.next::after {
+  content: "AHORA";
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: rgba(255, 215, 88, .96);
+  color: #121521;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.ordered-pick-slot > small {
+  position: absolute;
+  left: 8px;
+  top: 7px;
+  z-index: 2;
+  font-weight: 900 !important;
+  opacity: .8;
+}
+
+.ordered-pick-avatar {
+  width: 72px !important;
+  height: 72px !important;
+  margin: 4px auto 5px !important;
+  border-radius: 16px !important;
+  object-fit: cover;
+}
+
+.ordered-pick-slot > b {
+  display: block;
+  font-size: 14px !important;
+  line-height: 1.08;
+  text-align: center;
+}
+
+.ordered-pick-slot:not(.filled):not(.simulated) {
+  opacity: .72;
+}
+
+.ordered-pick-slot:not(.filled):not(.simulated) > span {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: 18px auto 8px;
+  border: 1px dashed currentColor;
+  border-radius: 14px;
+  font-size: 28px;
+  opacity: .72;
+}
+
+/* La recomendación queda físicamente pegada a los picks. */
 .draft-pick-decision-v17 {
   position: relative;
-  margin-top: 48px !important;
+  margin-top: 14px !important;
+  padding-top: 30px;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.45fr) minmax(290px, .75fr);
+  gap: 12px !important;
 }
 
 .draft-pick-decision-v17::before {
-  content: "PICKS RECOMENDADOS";
+  content: "RECOMENDACIÓN PARA EL SIGUIENTE PICK";
   position: absolute;
   left: 2px;
-  top: -36px;
+  top: 4px;
   color: var(--blue);
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: .14em;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .12em;
   line-height: 1;
   text-transform: uppercase;
 }
 
-/* En móvil mantenemos el título compacto y el bloque pegado al contexto. */
-@media (max-width: 650px) {
+.draft-primary-pick-v16 {
+  border-width: 2px !important;
+  border-radius: 22px !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, .20);
+  overflow: hidden;
+}
+
+.draft-pick-decision-v17.ready .draft-primary-pick-v16 {
+  box-shadow: 0 0 0 1px rgba(64, 152, 255, .36), 0 18px 42px rgba(0, 0, 0, .24);
+}
+
+.draft-primary-body-v16 {
+  align-items: center !important;
+  min-height: 150px;
+}
+
+.draft-primary-avatar-v16 {
+  width: 108px !important;
+  height: 108px !important;
+  border-radius: 22px !important;
+}
+
+.draft-primary-copy-v16 h2 {
+  font-size: clamp(30px, 4vw, 48px) !important;
+  line-height: .96 !important;
+  margin: 5px 0 8px !important;
+}
+
+.draft-primary-score-v16 {
+  min-width: 72px;
+  font-size: 34px !important;
+}
+
+.draft-primary-action-v16 button {
+  min-height: 52px;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+  letter-spacing: .035em;
+}
+
+/* #2–#5: cuatro alternativas visibles a la vez, sin duplicar el pick principal. */
+.draft-compact-alternatives-v16 {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px !important;
+  align-content: stretch;
+}
+
+.draft-compact-alternatives-v16 > div:first-child {
+  grid-column: 1 / -1;
+  min-height: 42px;
+}
+
+.draft-compact-alternatives-v16 > button {
+  position: relative;
+  min-height: 112px !important;
+  padding: 10px !important;
+  border-radius: 17px !important;
+  display: grid !important;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px !important;
+  text-align: left;
+}
+
+.draft-compact-alternatives-v16 > button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.draft-compact-alternatives-v16 > button > em {
+  position: absolute;
+  left: 7px;
+  top: 6px;
+  z-index: 2;
+  min-width: 27px;
+  padding: 2px 5px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 900;
+  text-align: center;
+}
+
+.draft-compact-avatar-v16 {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 13px !important;
+}
+
+.draft-compact-alternatives-v16 > button span b {
+  display: block;
+  font-size: 15px !important;
+  line-height: 1.05;
+}
+
+.draft-compact-alternatives-v16 > button span small {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px !important;
+  line-height: 1.25;
+}
+
+.draft-compact-alternatives-v16 > button > strong {
+  font-size: 20px !important;
+}
+
+@media (max-width: 900px) {
+  .ordered-pick-bar {
+    grid-template-columns: repeat(6, minmax(92px, 1fr));
+    overflow-x: auto;
+    padding: 4px 2px 10px;
+    scroll-snap-type: x proximity;
+  }
+
+  .ordered-pick-slot {
+    scroll-snap-align: start;
+  }
+
   .draft-pick-decision-v17 {
-    margin-top: 42px !important;
+    grid-template-columns: 1fr;
+  }
+
+  .draft-compact-alternatives-v16 {
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    overflow-x: auto;
+    padding-bottom: 5px;
+  }
+
+  .draft-compact-alternatives-v16 > div:first-child {
+    position: sticky;
+    left: 0;
+  }
+}
+
+@media (max-width: 650px) {
+  .ordered-pick-bar {
+    gap: 7px !important;
+    grid-template-columns: repeat(6, minmax(82px, 1fr));
+  }
+
+  .ordered-pick-slot {
+    min-height: 108px !important;
+    border-radius: 15px !important;
+  }
+
+  .ordered-pick-avatar {
+    width: 58px !important;
+    height: 58px !important;
+  }
+
+  .ordered-pick-slot > b {
+    font-size: 12px !important;
+  }
+
+  .draft-pick-decision-v17 {
+    margin-top: 8px !important;
+    padding-top: 28px;
   }
 
   .draft-pick-decision-v17::before {
-    top: -31px;
-    font-size: 11px;
-    letter-spacing: .12em;
+    top: 5px;
+    font-size: 10px;
+    letter-spacing: .09em;
+  }
+
+  .draft-primary-avatar-v16 {
+    width: 86px !important;
+    height: 86px !important;
+  }
+
+  .draft-primary-copy-v16 h2 {
+    font-size: 34px !important;
+  }
+
+  .draft-compact-alternatives-v16 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: visible;
+  }
+
+  .draft-compact-alternatives-v16 > button {
+    min-height: 96px !important;
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    padding: 8px !important;
+  }
+
+  .draft-compact-avatar-v16 {
+    width: 42px !important;
+    height: 42px !important;
   }
 }
