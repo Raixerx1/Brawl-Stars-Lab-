@@ -30,11 +30,11 @@ export default function CoachDebriefDashboard() {
   const selected = sessions.find((session) => session.id === selectedId) || sessions[0];
   const debrief = useMemo(() => buildCoachDebrief(selected, sessions), [selected, sessions]);
 
-  return <section className="panel coach-debrief-v19">
+  return <section className="panel coach-debrief-v19 coach-debrief-v20">
     <div className="section-title coach-debrief-head-v19">
       <div>
-        <span className="eyebrow">Entrenador de partidas v0.19</span>
-        <h2>Debrief: qué cambiar en la siguiente</h2>
+        <span className="eyebrow">Analizador de partidas v0.20</span>
+        <h2>Qué cambió la partida y por qué</h2>
       </div>
       <div className="coach-debrief-actions-v19">
         {sessions.length > 0 && <select value={selected?.id || ""} onChange={(event) => setSelectedId(event.target.value)} aria-label="Seleccionar revisión">
@@ -45,8 +45,8 @@ export default function CoachDebriefDashboard() {
     </div>
 
     {!selected || !debrief ? <div className="coach-debrief-empty-v19">
-      <b>Guarda una Live Review para activar el debrief.</b>
-      <span>El entrenador cruzará esa partida con tus revisiones anteriores y priorizará decisiones repetidas, no solo eventos aislados.</span>
+      <b>Guarda una Live Review para activar el análisis avanzado.</b>
+      <span>El sistema agrupará secuencias cercanas, buscará puntos de inflexión y separará la ejecución por fases.</span>
     </div> : <>
       <div className="coach-debrief-hero-v19">
         <div>
@@ -56,9 +56,42 @@ export default function CoachDebriefDashboard() {
         </div>
         <div className={`coach-confidence-v19 confidence-${debrief.confidenceLabel.toLowerCase()}`}>
           <b>{debrief.confidence}%</b>
-          <span>confianza {debrief.confidenceLabel.toLowerCase()}</span>
+          <span>evidencia {debrief.confidenceLabel.toLowerCase()}</span>
           <small>{formatLiveTime(selected.duration)} analizados</small>
         </div>
+      </div>
+
+      <div className="coach-turning-grid-v20">
+        <article className="coach-turning-points-v20">
+          <div className="coach-column-title-v19">
+            <span>Puntos de inflexión</span>
+            <small>No cuenta síntomas repetidos como errores independientes; agrupa el contexto de ±10 s.</small>
+          </div>
+          {debrief.turningPoints.map((item, index) => <div className={`coach-turning-point-v20 impact-${item.impact.toLowerCase()}`} key={`${item.second}-${item.label}`}>
+            <time>{formatLiveTime(item.second)}</time>
+            <div>
+              <span>#{index + 1} · {item.category} · evidencia {item.evidence.toLowerCase()}</span>
+              <b>{item.label}</b>
+              <p>{item.reason}</p>
+            </div>
+            <strong>{item.score}</strong>
+          </div>)}
+          {!debrief.turningPoints.length && <div className="empty-state">No hay todavía un punto de inflexión con señal suficiente.</div>}
+        </article>
+
+        <article className="coach-causal-chains-v20">
+          <div className="coach-column-title-v19">
+            <span>Secuencias causa → consecuencia</span>
+            <small>Relaciona eventos próximos para explicar decisiones, no solo enumerarlas.</small>
+          </div>
+          {debrief.chains.map((chain) => <div className={`coach-chain-v20 impact-${chain.impact.toLowerCase()}`} key={`${chain.startSecond}-${chain.endSecond}-${chain.from}-${chain.to}`}>
+            <div><time>{formatLiveTime(chain.startSecond)}</time><span>→</span><time>{formatLiveTime(chain.endSecond)}</time></div>
+            <b>{chain.from} → {chain.to}</b>
+            <p>{chain.interpretation}</p>
+            <small>{chain.confidence}% de confianza</small>
+          </div>)}
+          {!debrief.chains.length && <div className="empty-state">Faltan eventos próximos entre sí para inferir cadenas tácticas con fiabilidad.</div>}
+        </article>
       </div>
 
       <div className="coach-priority-grid-v19">
@@ -90,11 +123,12 @@ export default function CoachDebriefDashboard() {
         </article>
       </div>
 
-      <div className="coach-phase-grid-v19">
+      <div className="coach-phase-grid-v19 coach-phase-grid-v20">
         {debrief.phases.map((phase) => <article className={phase.verdict === "Fase a revisar" ? "bad" : phase.verdict === "Fase favorable" ? "good" : ""} key={phase.label}>
+          <div className="coach-phase-score-v20"><strong>{phase.score}</strong><small>/100</small></div>
           <span>{phase.label}</span>
           <b>{phase.verdict}</b>
-          <small>{phase.positive} señales + · {phase.negative} señales −</small>
+          <small>{phase.positive} + · {phase.negative} − · evidencia {phase.evidence.toLowerCase()}</small>
         </article>)}
       </div>
 
