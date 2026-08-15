@@ -162,6 +162,10 @@
   border-radius: 22px !important;
 }
 
+.draft-primary-copy-v16 {
+  min-width: 0;
+}
+
 .draft-primary-copy-v16 h2 {
   font-size: clamp(30px, 4vw, 48px) !important;
   line-height: .96 !important;
@@ -305,13 +309,47 @@
     letter-spacing: .09em;
   }
 
-  .draft-primary-avatar-v16 {
-    width: 86px !important;
-    height: 86px !important;
+  /* En móvil la foto del pick #1 ocupa una columna fija y nunca puede invadir el texto. */
+  .draft-pick-decision-v17 .draft-primary-body-v16 {
+    grid-template-columns: 72px minmax(0, 1fr) !important;
+    gap: 11px !important;
+    align-items: start !important;
+    min-height: 0 !important;
+    padding: 14px !important;
   }
 
-  .draft-primary-copy-v16 h2 {
-    font-size: 34px !important;
+  .draft-pick-decision-v17 .draft-primary-avatar-v16 {
+    width: 72px !important;
+    height: 72px !important;
+    max-width: 72px !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    align-self: start;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-copy-v16 {
+    min-width: 0 !important;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-copy-v16 h2 {
+    font-size: 30px !important;
+    line-height: 1 !important;
+    overflow-wrap: anywhere;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-copy-v16 p,
+  .draft-pick-decision-v17 .draft-primary-copy-v16 small,
+  .draft-pick-decision-v17 .draft-primary-copy-v16 span {
+    overflow-wrap: anywhere;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-score-v16 {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 48px !important;
   }
 
   .draft-compact-alternatives-v16 {
@@ -328,5 +366,23 @@
   .draft-compact-avatar-v16 {
     width: 42px !important;
     height: 42px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .draft-pick-decision-v17 .draft-primary-body-v16 {
+    grid-template-columns: 64px minmax(0, 1fr) !important;
+    gap: 9px !important;
+    padding: 12px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-avatar-v16 {
+    width: 64px !important;
+    height: 64px !important;
+    max-width: 64px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-copy-v16 h2 {
+    font-size: 27px !important;
   }
 }
