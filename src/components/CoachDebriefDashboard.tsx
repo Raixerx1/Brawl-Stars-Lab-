@@ -33,7 +33,7 @@ export default function CoachDebriefDashboard() {
   return <section className="panel coach-debrief-v19 coach-debrief-v20">
     <div className="section-title coach-debrief-head-v19">
       <div>
-        <span className="eyebrow">Analizador de partidas v0.20</span>
+        <span className="eyebrow">Analizador de partidas v0.21</span>
         <h2>Qué cambió la partida y por qué</h2>
       </div>
       <div className="coach-debrief-actions-v19">
@@ -46,7 +46,7 @@ export default function CoachDebriefDashboard() {
 
     {!selected || !debrief ? <div className="coach-debrief-empty-v19">
       <b>Guarda una Live Review para activar el análisis avanzado.</b>
-      <span>El sistema agrupará secuencias cercanas, buscará puntos de inflexión y separará la ejecución por fases.</span>
+      <span>El sistema agrupa secuencias cercanas, busca puntos de inflexión y separa la ejecución por fases.</span>
     </div> : <>
       <div className="coach-debrief-hero-v19">
         <div>
@@ -65,7 +65,7 @@ export default function CoachDebriefDashboard() {
         <article className="coach-turning-points-v20">
           <div className="coach-column-title-v19">
             <span>Puntos de inflexión</span>
-            <small>No cuenta síntomas repetidos como errores independientes; agrupa el contexto de ±10 s.</small>
+            <small>Agrupa el contexto de ±10 s y reduce el peso cuando aparecen señales contradictorias.</small>
           </div>
           {debrief.turningPoints.map((item, index) => <div className={`coach-turning-point-v20 impact-${item.impact.toLowerCase()}`} key={`${item.second}-${item.label}`}>
             <time>{formatLiveTime(item.second)}</time>
@@ -82,7 +82,7 @@ export default function CoachDebriefDashboard() {
         <article className="coach-causal-chains-v20">
           <div className="coach-column-title-v19">
             <span>Secuencias causa → consecuencia</span>
-            <small>Relaciona eventos próximos para explicar decisiones, no solo enumerarlas.</small>
+            <small>Relaciona eventos próximos y penaliza cadenas con evidencia opuesta dentro de la misma ventana.</small>
           </div>
           {debrief.chains.map((chain) => <div className={`coach-chain-v20 impact-${chain.impact.toLowerCase()}`} key={`${chain.startSecond}-${chain.endSecond}-${chain.from}-${chain.to}`}>
             <div><time>{formatLiveTime(chain.startSecond)}</time><span>→</span><time>{formatLiveTime(chain.endSecond)}</time></div>
