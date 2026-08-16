@@ -28,6 +28,9 @@ type SpeechWindow = Window & {
   webkitSpeechRecognition?: SpeechRecognitionConstructor;
 };
 type AliasMap = Record<string, string[]>;
+export type VoiceDraftTarget = "ban" | "pick";
+
+const VOICE_START_EVENT = "brawl-draft-lab:voice-start";
 
 const MANUAL_ALIASES: AliasMap = {
   "8 bit": ["ocho bit", "ocho bits", "eight bit", "eibit", "ait bit"],
@@ -58,7 +61,9 @@ const MANUAL_ALIASES: AliasMap = {
 
 const COMMAND_WORDS = new Set([
   "ban", "banea", "banear", "baneamos", "banead", "quita", "bloquea", "bloquear",
-  "mete", "pon", "poner", "añade", "anade", "rival", "enemigo", "enemiga", "brawler", "browler", "ahora", "siguiente",
+  "pick", "pickea", "piquea", "pique", "elige", "selecciona",
+  "mete", "meter", "pon", "poner", "añade", "anade", "rival", "enemigo", "enemiga",
+  "aliado", "aliada", "brawler", "browler", "ahora", "siguiente",
 ]);
 
 function normalizeVoice(value: string) {
@@ -152,20 +157,41 @@ function nativeSetInputValue(input: HTMLInputElement, value: string) {
 
 const sleep = (milliseconds: number) => new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 
-async function commitVoiceBan(name: string) {
-  const input = document.querySelector<HTMLInputElement>(".draft-picker-ban .draft-search-wrap input:not(:disabled)");
+async function commitVoiceEntry(name: string, targetMode: VoiceDraftTarget) {
+  const rootSelector = targetMode === "ban" ? ".draft-picker-ban" : ".common-pick-search";
+  const input = document.querySelector<HTMLInputElement>(`${rootSelector} input:not(:disabled)`);
   if (!input) return false;
+
   input.focus();
   nativeSetInputValue(input, name);
   await sleep(90);
 
-  const buttons = [...document.querySelectorAll<HTMLButtonElement>(".draft-picker-ban .draft-suggestions button")];
+  const suggestionSelector = targetMode === "ban"
+    ? ".draft-picker-ban .draft-suggestions button"
+    : ".common-pick-suggestions button";
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>(suggestionSelector)];
   const exact = buttons.find((button) => normalizeVoice(button.querySelector("b")?.textContent || "") === normalizeVoice(name));
-  if (!exact) return false;
-  exact.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true, view: window }));
-  exact.dispatchEvent(new MouseEvent("mouseup", { bubbles: true, cancelable: true, view: window }));
-  await sleep(170);
-  return true;
+
+  if (exact) {
+    exact.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true, view: window }));
+    exact.dispatchEvent(new MouseEvent("mouseup", { bubbles: true, cancelable: true, view: window }));
+    await sleep(targetMode === "pick" ? 190 : 170);
+    return true;
+  }
+
+  if (targetMode === "pick") {
+    input.dispatchEvent(new KeyboardEvent("keydown", {
+      key: "Enter",
+      code: "Enter",
+      bubbles: true,
+      cancelable: true,
+    }));
+    await sleep(190);
+    const currentInput = document.querySelector<HTMLInputElement>(".common-pick-search input");
+    return currentInput?.value === "";
+  }
+
+  return false;
 }
 
 function bestAlternative(result: SpeechResultLike, roster: Brawler[]) {
@@ -181,37 +207,58 @@ function bestAlternative(result: SpeechResultLike, roster: Brawler[]) {
   return best;
 }
 
-export default function VoiceDraftControl({ roster }: { roster: Brawler[] }) {
+export default function VoiceDraftControl({
+  roster,
+  targetMode,
+}: {
+  roster: Brawler[];
+  targetMode: VoiceDraftTarget;
+}) {
   const [target, setTarget] = useState<Element | null>(null);
   const [supported, setSupported] = useState(true);
   const [listening, setListening] = useState(false);
-  const [status, setStatus] = useState("Di los bans");
+  const defaultStatus = targetMode === "ban" ? "Di los bans" : "Di los picks";
+  const listeningStatus = targetMode === "ban" ? "Escuchando bans…" : "Escuchando picks…";
+  const [status, setStatus] = useState(defaultStatus);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const keepListeningRef = useRef(false);
   const lastTranscriptRef = useRef({ value: "", at: 0 });
   const rosterSignature = useMemo(() => roster.map((brawler) => brawler.name).join("|"), [roster]);
 
   useEffect(() => {
-    const locate = () => setTarget(document.querySelector(".draft-picker-ban .draft-search-wrap"));
+    const selector = targetMode === "ban" ? ".draft-picker-ban .draft-search-wrap" : ".common-pick-search";
+    const locate = () => setTarget(document.querySelector(selector));
     locate();
     const observer = new MutationObserver(locate);
     observer.observe(document.body, { subtree: true, childList: true });
     return () => observer.disconnect();
-  }, []);
+  }, [targetMode]);
 
   useEffect(() => {
     const speechWindow = window as SpeechWindow;
     setSupported(Boolean(speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition));
+
+    const stopWhenOtherStarts = (event: Event) => {
+      const detail = (event as CustomEvent<VoiceDraftTarget>).detail;
+      if (detail === targetMode) return;
+      keepListeningRef.current = false;
+      recognitionRef.current?.abort();
+      setListening(false);
+      setStatus(defaultStatus);
+    };
+    window.addEventListener(VOICE_START_EVENT, stopWhenOtherStarts);
+
     return () => {
+      window.removeEventListener(VOICE_START_EVENT, stopWhenOtherStarts);
       keepListeningRef.current = false;
       recognitionRef.current?.abort();
     };
-  }, []);
+  }, [targetMode, defaultStatus]);
 
   useEffect(() => {
     if (!recognitionRef.current) return;
-    setStatus(listening ? "Escuchando bans…" : "Di los bans");
-  }, [listening, rosterSignature]);
+    setStatus(listening ? listeningStatus : defaultStatus);
+  }, [listening, rosterSignature, listeningStatus, defaultStatus]);
 
   const stopListening = () => {
     keepListeningRef.current = false;
@@ -229,6 +276,8 @@ export default function VoiceDraftControl({ roster }: { roster: Brawler[] }) {
     const Recognition = speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition;
     if (!Recognition) return;
 
+    window.dispatchEvent(new CustomEvent<VoiceDraftTarget>(VOICE_START_EVENT, { detail: targetMode }));
+
     let recognition = recognitionRef.current;
     if (!recognition) {
       recognition = new Recognition();
@@ -238,7 +287,7 @@ export default function VoiceDraftControl({ roster }: { roster: Brawler[] }) {
       recognition.maxAlternatives = 5;
       recognition.onstart = () => {
         setListening(true);
-        setStatus("Escuchando bans…");
+        setStatus(listeningStatus);
       };
       recognition.onresult = (event) => {
         void (async () => {
@@ -257,11 +306,13 @@ export default function VoiceDraftControl({ roster }: { roster: Brawler[] }) {
               continue;
             }
 
-            setStatus(`Ban oído: ${alternative.names.join(" + ")}`);
+            setStatus(`${targetMode === "ban" ? "Ban" : "Pick"} oído: ${alternative.names.join(" + ")}`);
             for (const name of alternative.names) {
-              const added = await commitVoiceBan(name);
+              const added = await commitVoiceEntry(name, targetMode);
               if (!added) {
-                setStatus(`${name} no se pudo banear: puede estar ya usado, baneado o haberse llenado los 6 bans`);
+                setStatus(targetMode === "ban"
+                  ? `${name} no se pudo banear: puede estar ya usado, baneado o haberse llenado los 6 bans`
+                  : `${name} no se pudo añadir: puede estar ya usado, baneado o el draft estar completo`);
                 break;
               }
             }
@@ -271,13 +322,13 @@ export default function VoiceDraftControl({ roster }: { roster: Brawler[] }) {
       recognition.onerror = (event) => {
         const error = event.error || "unknown";
         if (error === "no-speech") {
-          setStatus("No oí ningún ban. Sigo escuchando…");
+          setStatus(targetMode === "ban" ? "No oí ningún ban. Sigo escuchando…" : "No oí ningún pick. Sigo escuchando…");
           return;
         }
         if (error === "not-allowed" || error === "service-not-allowed") {
           keepListeningRef.current = false;
           setListening(false);
-          setStatus("Permite el micrófono para introducir bans por voz");
+          setStatus("Permite el micrófono para usar la entrada por voz");
           return;
         }
         if (error === "audio-capture") {
@@ -315,11 +366,13 @@ export default function VoiceDraftControl({ roster }: { roster: Brawler[] }) {
   if (!target) return null;
 
   return createPortal(
-    <div className={`voice-draft-control-v185 ${listening ? "listening" : ""} ${!supported ? "unsupported" : ""}`}>
+    <div className={`voice-draft-control-v185 voice-target-${targetMode} ${listening ? "listening" : ""} ${!supported ? "unsupported" : ""}`}>
       <button
         type="button"
         className="voice-draft-button-v185"
-        aria-label={listening ? "Detener bans por voz" : "Introducir bans por voz"}
+        aria-label={listening
+          ? `Detener ${targetMode === "ban" ? "bans" : "picks"} por voz`
+          : `Introducir ${targetMode === "ban" ? "bans" : "picks"} por voz`}
         aria-pressed={listening}
         disabled={!supported}
         onClick={listening ? stopListening : startListening}
