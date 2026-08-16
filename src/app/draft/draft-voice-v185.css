@@ -1,14 +1,19 @@
-/* v0.18.6 — Entrada por voz integrada exclusivamente en los bans */
-.draft-picker-ban .draft-search-wrap{position:relative}
-.draft-picker-ban .draft-search-wrap input{padding-right:54px}
+/* v0.18.7 — Entrada por voz independiente para bans y picks */
+.draft-picker-ban .draft-search-wrap,.common-pick-search{position:relative}
+.draft-picker-ban .draft-search-wrap input,.common-pick-search input{padding-right:54px}
 .voice-draft-control-v185{position:absolute;right:6px;top:50%;z-index:18;display:flex;align-items:center;transform:translateY(-50%)}
-.voice-draft-button-v185{display:grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid rgba(255,104,123,.30);border-radius:10px;background:rgba(255,104,123,.09);color:#ffd9de;font-size:16px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.18)}
-.voice-draft-button-v185:hover{border-color:rgba(255,104,123,.52);background:rgba(255,104,123,.14)}
+.voice-draft-button-v185{display:grid;place-items:center;width:38px;height:38px;padding:0;border-radius:10px;font-size:16px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.voice-target-ban .voice-draft-button-v185{border:1px solid rgba(255,104,123,.30);background:rgba(255,104,123,.09);color:#ffd9de}
+.voice-target-ban .voice-draft-button-v185:hover{border-color:rgba(255,104,123,.52);background:rgba(255,104,123,.14)}
+.voice-target-pick .voice-draft-button-v185{border:1px solid rgba(69,183,255,.30);background:rgba(69,183,255,.10);color:#dff2ff}
+.voice-target-pick .voice-draft-button-v185:hover{border-color:rgba(80,223,160,.45);background:rgba(80,223,160,.10)}
 .voice-draft-button-v185:disabled{cursor:not-allowed;opacity:.38}
-.voice-draft-control-v185.listening .voice-draft-button-v185{border-color:rgba(255,104,123,.70);background:rgba(255,104,123,.18);color:#ff9cac;animation:voice-draft-pulse-v185 1.15s ease-in-out infinite}
+.voice-draft-control-v185.listening .voice-draft-button-v185{animation:voice-draft-pulse-v185 1.15s ease-in-out infinite}
+.voice-target-ban.listening .voice-draft-button-v185{border-color:rgba(255,104,123,.70);background:rgba(255,104,123,.18);color:#ff9cac}
+.voice-target-pick.listening .voice-draft-button-v185{border-color:rgba(80,223,160,.65);background:rgba(80,223,160,.15);color:#8df0c2}
 .voice-draft-status-v185{position:absolute;right:0;bottom:calc(100% + 7px);display:none;width:max-content;max-width:min(300px,72vw);padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:rgba(8,12,24,.96);box-shadow:0 10px 28px rgba(0,0,0,.28);color:var(--muted);font-size:7px;line-height:1.3;white-space:normal}
 .voice-draft-control-v185.listening .voice-draft-status-v185,.voice-draft-control-v185.unsupported .voice-draft-status-v185{display:block}
 .voice-draft-control-v185.unsupported .voice-draft-status-v185{color:#ffc8ce}
-@keyframes voice-draft-pulse-v185{0%,100%{box-shadow:0 0 0 0 rgba(255,104,123,.30)}50%{box-shadow:0 0 0 7px rgba(255,104,123,0)}}
-@media(max-width:720px){.draft-picker-ban .draft-search-wrap input{padding-right:48px}.voice-draft-control-v185{right:5px}.voice-draft-button-v185{width:34px;height:34px;border-radius:9px;font-size:14px}.voice-draft-status-v185{position:fixed;left:50%;right:auto;bottom:max(14px,calc(env(safe-area-inset-bottom) + 10px));z-index:170;max-width:calc(100vw - 28px);transform:translateX(-50%);font-size:8px;text-align:center;white-space:normal}.voice-draft-control-v185.listening .voice-draft-status-v185{display:block}}
+@keyframes voice-draft-pulse-v185{0%,100%{box-shadow:0 0 0 0 rgba(80,223,160,.24)}50%{box-shadow:0 0 0 7px rgba(80,223,160,0)}}
+@media(max-width:720px){.draft-picker-ban .draft-search-wrap input,.common-pick-search input{padding-right:48px}.voice-draft-control-v185{right:5px}.voice-draft-button-v185{width:34px;height:34px;border-radius:9px;font-size:14px}.voice-draft-status-v185{position:fixed;left:50%;right:auto;bottom:max(14px,calc(env(safe-area-inset-bottom) + 10px));z-index:170;max-width:calc(100vw - 28px);transform:translateX(-50%);font-size:8px;text-align:center;white-space:normal}.voice-draft-control-v185.listening .voice-draft-status-v185{display:block}}
 @media(display-mode:standalone) and (max-width:720px){.voice-draft-status-v185{bottom:max(16px,calc(env(safe-area-inset-bottom) + 12px))}}
