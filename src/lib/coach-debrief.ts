@@ -122,13 +122,38 @@ const reliability = (event: LiveMatchEvent) => {
   if (event.feedback === "rejected") return 0;
   if (event.source !== "Auto" || event.feedback === "accepted") return 1;
   const confidence = Math.max(0, Math.min(100, event.confidence || 60)) / 100;
-  return Math.max(.35, Math.min(.78, confidence * .82));
+  return Math.max(.32, Math.min(.72, confidence * .78));
 };
 
 const usable = (session: LiveReviewSession) => session.events.filter((event) => event.feedback !== "rejected");
 const round1 = (value: number) => Math.round(value * 10) / 10;
 const clamp = (value: number, min = 0, max = 100) => Math.max(min, Math.min(max, Math.round(value)));
 const evidenceLabel = (value: number): CoachEvidence => value >= .82 ? "Alta" : value >= .58 ? "Media" : "Baja";
+
+function eventPolarity(event: LiveMatchEvent) {
+  if (NEGATIVE_RULES[event.label]) return -1;
+  if (POSITIVE_RULES[event.label]) return 1;
+  return 0;
+}
+
+function contradictionPairs(events: LiveMatchEvent[]) {
+  const ordered = [...events].sort((a, b) => a.second - b.second);
+  let contradictions = 0;
+  for (let index = 0; index < ordered.length; index += 1) {
+    const current = ordered[index];
+    const polarity = eventPolarity(current);
+    if (!polarity) continue;
+    for (let nextIndex = index + 1; nextIndex < ordered.length; nextIndex += 1) {
+      const next = ordered[nextIndex];
+      if (next.second - current.second > 8) break;
+      const nextPolarity = eventPolarity(next);
+      if (nextPolarity && nextPolarity !== polarity) {
+        contradictions += Math.min(reliability(current), reliability(next));
+      }
+    }
+  }
+  return contradictions;
+}
 
 function countLabel(session: LiveReviewSession, label: string) {
   return usable(session).filter((event) => event.label === label).reduce((sum, event) => sum + reliability(event), 0);
@@ -148,12 +173,18 @@ function buildChains(events: LiveMatchEvent[]): CoachChain[] {
   const add = (from: LiveMatchEvent, to: LiveMatchEvent, impact: "Negativo" | "Positivo", interpretation: string, bonus = 0) => {
     const base = (reliability(from) + reliability(to)) / 2;
     const gapPenalty = Math.min(.18, Math.max(0, to.second - from.second - 4) * .015);
-    const confidence = clamp((base - gapPenalty + bonus) * 100);
+    const conflicting = ordered.some((event) =>
+      event.id !== from.id &&
+      event.id !== to.id &&
+      event.second >= from.second &&
+      event.second <= to.second &&
+      eventPolarity(event) === (impact === "Negativo" ? 1 : -1)
+    );
+    const conflictPenalty = conflicting ? .08 : 0;
+    const confidence = clamp((base - gapPenalty - conflictPenalty + bonus) * 100);
     if (confidence < 42) return;
-    const key = `${from.id}:${to.id}:${interpretation}`;
     if (chains.some((item) => `${item.startSecond}:${item.endSecond}:${item.interpretation}` === `${from.second}:${to.second}:${interpretation}`)) return;
     chains.push({ startSecond: from.second, endSecond: to.second, from: from.label, to: to.label, impact, confidence, interpretation });
-    void key;
   };
 
   for (let i = 0; i < ordered.length; i += 1) {
@@ -195,15 +226,26 @@ function buildTurningPoints(events: LiveMatchEvent[], duration: number): CoachTu
     if (!base) return [];
     const rel = reliability(event);
     if (!rel) return [];
+    const polarity = eventPolarity(event);
     const nearby = events.filter((other) => other.id !== event.id && Math.abs(other.second - event.second) <= 10);
-    const cluster = Math.min(12, nearby.reduce((sum, other) => sum + reliability(other), 0) * 2.3);
+    const supporting = nearby.reduce((sum, other) => {
+      const otherPolarity = eventPolarity(other);
+      if (otherPolarity === polarity) return sum + reliability(other);
+      if (otherPolarity === 0) return sum + reliability(other) * .35;
+      return sum;
+    }, 0);
+    const contradicting = nearby.reduce((sum, other) =>
+      eventPolarity(other) === -polarity ? sum + reliability(other) : sum, 0);
+    const clusterBoost = Math.min(12, supporting * 2.4);
+    const contradictionPenalty = Math.min(14, contradicting * 4.5);
     const lateBoost = phaseFor(event.second, duration) === 2 ? 7 : 0;
     const negative = Boolean(NEGATIVE_RULES[event.label]);
-    const score = clamp(base * (.55 + rel * .45) + cluster + lateBoost);
+    const score = clamp(base * (.55 + rel * .45) + clusterBoost + lateBoost - contradictionPenalty);
+    const ambiguity = contradictionPenalty >= 5 ? " Hay señales opuestas en la misma ventana, por lo que el impacto se modera." : "";
     const reason = negative
-      ? `${event.label} concentró una secuencia de alto coste${lateBoost ? " en el tramo final" : ""}. Revisa los 10 s anteriores, no solo el evento aislado.`
-      : `${event.label} produjo una ventaja clara${lateBoost ? " en el cierre" : ""}. Identifica qué recursos y posición permitieron convertirla.`;
-    return [{ second: event.second, label: event.label, category: NEGATIVE_RULES[event.label]?.category || "Conversión", impact: negative ? "Negativo" : "Positivo", score, evidence: evidenceLabel(rel), reason }];
+      ? `${event.label} concentró una secuencia de alto coste${lateBoost ? " en el tramo final" : ""}. Revisa los 10 s anteriores, no solo el evento aislado.${ambiguity}`
+      : `${event.label} produjo una ventaja clara${lateBoost ? " en el cierre" : ""}. Identifica qué recursos y posición permitieron convertirla.${ambiguity}`;
+    return [{ second: event.second, label: event.label, category: NEGATIVE_RULES[event.label]?.category || "Conversión", impact: negative ? "Negativo" : "Positivo", score, evidence: evidenceLabel(Math.max(0, rel - contradicting * .08)), reason }];
   });
 
   const selected: CoachTurningPoint[] = [];
@@ -282,7 +324,16 @@ export function buildCoachDebrief(session: LiveReviewSession | undefined, histor
   const reviewedAuto = currentEvents.filter((event) => event.source === "Auto" && Boolean(event.feedback)).length;
   const pendingAuto = currentEvents.filter((event) => event.source === "Auto" && !event.feedback).length;
   const manualOrAccepted = currentEvents.filter((event) => event.source !== "Auto" || event.feedback === "accepted").length;
-  const confidence = Math.max(20, Math.min(100, Math.round(35 + Math.min(32, currentEvents.length * 4) + Math.min(22, manualOrAccepted * 5) + Math.min(11, reviewedAuto * 3) - Math.min(18, pendingAuto * 2))));
+  const weightedEvidence = currentEvents.reduce((sum, event) => sum + reliability(event), 0);
+  const contradictions = contradictionPairs(currentEvents);
+  const confidence = Math.max(18, Math.min(100, Math.round(
+    22 +
+    Math.min(34, weightedEvidence * 5.5) +
+    Math.min(30, manualOrAccepted * 6.5) +
+    Math.min(10, reviewedAuto * 2.5) -
+    Math.min(22, pendingAuto * 2.5) -
+    Math.min(18, contradictions * 6)
+  )));
   const confidenceLabel = confidence >= 75 ? "Alta" : confidence >= 52 ? "Media" : "Baja";
 
   const turningPoints = buildTurningPoints(currentEvents, session.duration);
@@ -304,6 +355,11 @@ export function buildCoachDebrief(session: LiveReviewSession | undefined, histor
       ? strengths.slice(0, 2).map((item) => item.instruction)
       : ["Registra o confirma más eventos de la partida para que el entrenador pueda aislar decisiones repetidas."];
 
+  const evidenceNotes: string[] = [];
+  if (pendingAuto) evidenceNotes.push(`${pendingAuto} detecciones automáticas siguen sin validar y tienen peso reducido`);
+  if (contradictions >= .8) evidenceNotes.push("hay señales positivas y negativas muy próximas, por lo que se modera la causalidad");
+  if (!evidenceNotes.length) evidenceNotes.push("las señales automáticas pendientes no están dominando este informe");
+
   return {
     headline,
     confidence,
@@ -315,6 +371,6 @@ export function buildCoachDebrief(session: LiveReviewSession | undefined, histor
     turningPoints,
     chains,
     recurringProblem: recurringProblem ? `Patrón recurrente: «${recurringProblem.label}» aparece en ${recurringProblem.priorSessions} revisiones anteriores.` : undefined,
-    sampleNote: pendingAuto ? `${pendingAuto} detecciones automáticas siguen sin validar; su peso se reduce para no sobreentrenar falsos positivos.` : "Las señales automáticas pendientes no están dominando este informe.",
+    sampleNote: `${evidenceNotes.join("; ")}.`,
   };
 }
