@@ -15,9 +15,9 @@ export const metadata: Metadata = {
 export default function LiveReviewPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Brawl Draft Lab · Coach v0.20</span>
+      <span className="eyebrow">Brawl Draft Lab · Coach v0.21</span>
       <h1>Auto Review + Entrenador</h1>
-      <p>Analiza una partida en directo, graba o importa el vídeo completo y convierte cada revisión en puntos de inflexión, secuencias tácticas y decisiones concretas para mejorar la siguiente partida.</p>
+      <p>Analiza una partida en directo, graba o importa el vídeo completo y convierte cada revisión en puntos de inflexión, secuencias tácticas y decisiones concretas. El detector v0.21 separa mejor transiciones de pantalla, HUD, combate y uso de recursos para reducir falsos positivos.</p>
     </div>
     <MatchRecorder maps={maps} brawlers={brawlers} />
     <LiveMatchAnalyzer maps={maps} brawlers={brawlers} />
