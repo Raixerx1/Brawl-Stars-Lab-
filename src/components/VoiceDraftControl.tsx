@@ -4,31 +4,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Brawler } from "@/lib/types";
 
-type SpeechAlternativeLike = {
-  transcript: string;
-  confidence?: number;
-};
-
-type SpeechResultLike = {
-  isFinal: boolean;
-  length: number;
-  [index: number]: SpeechAlternativeLike;
-};
-
-type SpeechResultListLike = {
-  length: number;
-  [index: number]: SpeechResultLike;
-};
-
-type SpeechEventLike = {
-  resultIndex: number;
-  results: SpeechResultListLike;
-};
-
-type SpeechErrorLike = {
-  error?: string;
-};
-
+type SpeechAlternativeLike = { transcript: string; confidence?: number };
+type SpeechResultLike = { isFinal: boolean; length: number; [index: number]: SpeechAlternativeLike };
+type SpeechResultListLike = { length: number; [index: number]: SpeechResultLike };
+type SpeechEventLike = { resultIndex: number; results: SpeechResultListLike };
+type SpeechErrorLike = { error?: string };
 type SpeechRecognitionLike = {
   continuous: boolean;
   interimResults: boolean;
@@ -42,14 +22,11 @@ type SpeechRecognitionLike = {
   onerror: ((event: SpeechErrorLike) => void) | null;
   onresult: ((event: SpeechEventLike) => void) | null;
 };
-
 type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
-
 type SpeechWindow = Window & {
   SpeechRecognition?: SpeechRecognitionConstructor;
   webkitSpeechRecognition?: SpeechRecognitionConstructor;
 };
-
 type AliasMap = Record<string, string[]>;
 
 const MANUAL_ALIASES: AliasMap = {
@@ -80,8 +57,8 @@ const MANUAL_ALIASES: AliasMap = {
 };
 
 const COMMAND_WORDS = new Set([
-  "mete", "meter", "pon", "poner", "pick", "piquea", "pique", "elige", "añade", "anade",
-  "rival", "enemigo", "enemiga", "aliado", "aliada", "brawler", "browler", "ahora", "siguiente",
+  "ban", "banea", "banear", "baneamos", "banead", "quita", "bloquea", "bloquear",
+  "mete", "pon", "poner", "añade", "anade", "rival", "enemigo", "enemiga", "brawler", "browler", "ahora", "siguiente",
 ]);
 
 function normalizeVoice(value: string) {
@@ -98,11 +75,7 @@ function normalizeVoice(value: string) {
 function aliasesFor(brawler: Brawler) {
   const canonical = normalizeVoice(brawler.name);
   const slug = normalizeVoice(brawler.slug.replace(/-/g, " "));
-  return [...new Set([
-    canonical,
-    slug,
-    ...(MANUAL_ALIASES[canonical] || []),
-  ].map(normalizeVoice).filter(Boolean))];
+  return [...new Set([canonical, slug, ...(MANUAL_ALIASES[canonical] || [])].map(normalizeVoice).filter(Boolean))];
 }
 
 function levenshtein(left: string, right: string) {
@@ -115,11 +88,7 @@ function levenshtein(left: string, right: string) {
     for (let column = 1; column < columns; column += 1) {
       matrix[row][column] = right[row - 1] === left[column - 1]
         ? matrix[row - 1][column - 1]
-        : Math.min(
-          matrix[row - 1][column - 1] + 1,
-          matrix[row][column - 1] + 1,
-          matrix[row - 1][column] + 1,
-        );
+        : Math.min(matrix[row - 1][column - 1] + 1, matrix[row][column - 1] + 1, matrix[row - 1][column] + 1);
     }
   }
   return matrix[rows - 1][columns - 1];
@@ -127,16 +96,11 @@ function levenshtein(left: string, right: string) {
 
 function fuzzySimilarity(left: string, right: string) {
   const longest = Math.max(left.length, right.length);
-  if (!longest) return 1;
-  return 1 - levenshtein(left, right) / longest;
+  return longest ? 1 - levenshtein(left, right) / longest : 1;
 }
 
 function stripCommands(value: string) {
-  return normalizeVoice(value)
-    .split(" ")
-    .filter((word) => !COMMAND_WORDS.has(word))
-    .join(" ")
-    .trim();
+  return normalizeVoice(value).split(" ").filter((word) => !COMMAND_WORDS.has(word)).join(" ").trim();
 }
 
 function matchBrawlers(transcript: string, roster: Brawler[]) {
@@ -151,12 +115,7 @@ function matchBrawlers(transcript: string, roster: Brawler[]) {
       while (from < padded.length) {
         const index = padded.indexOf(needle, from);
         if (index < 0) break;
-        candidates.push({
-          name: brawler.name,
-          start: index + 1,
-          end: index + 1 + alias.length,
-          aliasLength: alias.length,
-        });
+        candidates.push({ name: brawler.name, start: index + 1, end: index + 1 + alias.length, aliasLength: alias.length });
         from = index + needle.length;
       }
     }
@@ -169,14 +128,10 @@ function matchBrawlers(transcript: string, roster: Brawler[]) {
     if (chosen.some((item) => item.name === candidate.name)) continue;
     chosen.push(candidate);
   }
-
-  if (chosen.length) {
-    return chosen.sort((a, b) => a.start - b.start).map((item) => item.name);
-  }
+  if (chosen.length) return chosen.sort((a, b) => a.start - b.start).map((item) => item.name);
 
   const cleaned = stripCommands(transcript);
   if (!cleaned || cleaned.length < 2) return [];
-
   let best: { name: string; score: number } | undefined;
   for (const brawler of roster) {
     for (const alias of aliasesFor(brawler)) {
@@ -184,7 +139,6 @@ function matchBrawlers(transcript: string, roster: Brawler[]) {
       if (!best || score > best.score) best = { name: brawler.name, score };
     }
   }
-
   const threshold = cleaned.length <= 4 ? .72 : .66;
   return best && best.score >= threshold ? [best.name] : [];
 }
@@ -198,37 +152,20 @@ function nativeSetInputValue(input: HTMLInputElement, value: string) {
 
 const sleep = (milliseconds: number) => new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 
-async function commitVoicePick(name: string) {
-  const input = document.querySelector<HTMLInputElement>(".common-pick-search input:not(:disabled)");
+async function commitVoiceBan(name: string) {
+  const input = document.querySelector<HTMLInputElement>(".draft-picker-ban .draft-search-wrap input:not(:disabled)");
   if (!input) return false;
-
   input.focus();
   nativeSetInputValue(input, name);
   await sleep(90);
 
-  const buttons = [...document.querySelectorAll<HTMLButtonElement>(".common-pick-suggestions button")];
-  const exact = buttons.find((button) => {
-    const label = button.querySelector("b")?.textContent || "";
-    return normalizeVoice(label) === normalizeVoice(name);
-  });
-
-  if (exact) {
-    exact.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true, view: window }));
-    exact.dispatchEvent(new MouseEvent("mouseup", { bubbles: true, cancelable: true, view: window }));
-    await sleep(180);
-    return true;
-  }
-
-  input.dispatchEvent(new KeyboardEvent("keydown", {
-    key: "Enter",
-    code: "Enter",
-    bubbles: true,
-    cancelable: true,
-  }));
-  await sleep(180);
-
-  const currentInput = document.querySelector<HTMLInputElement>(".common-pick-search input");
-  return currentInput?.value === "";
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>(".draft-picker-ban .draft-suggestions button")];
+  const exact = buttons.find((button) => normalizeVoice(button.querySelector("b")?.textContent || "") === normalizeVoice(name));
+  if (!exact) return false;
+  exact.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true, view: window }));
+  exact.dispatchEvent(new MouseEvent("mouseup", { bubbles: true, cancelable: true, view: window }));
+  await sleep(170);
+  return true;
 }
 
 function bestAlternative(result: SpeechResultLike, roster: Brawler[]) {
@@ -237,11 +174,7 @@ function bestAlternative(result: SpeechResultLike, roster: Brawler[]) {
     const alternative = result[index];
     const names = matchBrawlers(alternative.transcript, roster);
     const confidence = alternative.confidence || 0;
-    if (
-      !best ||
-      names.length > best.names.length ||
-      (names.length === best.names.length && confidence > best.confidence)
-    ) {
+    if (!best || names.length > best.names.length || (names.length === best.names.length && confidence > best.confidence)) {
       best = { transcript: alternative.transcript, names, confidence };
     }
   }
@@ -252,15 +185,14 @@ export default function VoiceDraftControl({ roster }: { roster: Brawler[] }) {
   const [target, setTarget] = useState<Element | null>(null);
   const [supported, setSupported] = useState(true);
   const [listening, setListening] = useState(false);
-  const [status, setStatus] = useState("Di el nombre del brawler");
+  const [status, setStatus] = useState("Di los bans");
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const keepListeningRef = useRef(false);
   const lastTranscriptRef = useRef({ value: "", at: 0 });
-
   const rosterSignature = useMemo(() => roster.map((brawler) => brawler.name).join("|"), [roster]);
 
   useEffect(() => {
-    const locate = () => setTarget(document.querySelector(".common-pick-search"));
+    const locate = () => setTarget(document.querySelector(".draft-picker-ban .draft-search-wrap"));
     locate();
     const observer = new MutationObserver(locate);
     observer.observe(document.body, { subtree: true, childList: true });
@@ -278,7 +210,7 @@ export default function VoiceDraftControl({ roster }: { roster: Brawler[] }) {
 
   useEffect(() => {
     if (!recognitionRef.current) return;
-    setStatus(listening ? "Escuchando…" : "Di el nombre del brawler");
+    setStatus(listening ? "Escuchando bans…" : "Di los bans");
   }, [listening, rosterSignature]);
 
   const stopListening = () => {
@@ -293,7 +225,6 @@ export default function VoiceDraftControl({ roster }: { roster: Brawler[] }) {
       setStatus("Reconocimiento de voz no disponible en este navegador");
       return;
     }
-
     const speechWindow = window as SpeechWindow;
     const Recognition = speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition;
     if (!Recognition) return;
@@ -305,12 +236,10 @@ export default function VoiceDraftControl({ roster }: { roster: Brawler[] }) {
       recognition.continuous = true;
       recognition.interimResults = false;
       recognition.maxAlternatives = 5;
-
       recognition.onstart = () => {
         setListening(true);
-        setStatus("Escuchando… di un brawler");
+        setStatus("Escuchando bans…");
       };
-
       recognition.onresult = (event) => {
         void (async () => {
           for (let resultIndex = event.resultIndex; resultIndex < event.results.length; resultIndex += 1) {
@@ -318,13 +247,9 @@ export default function VoiceDraftControl({ roster }: { roster: Brawler[] }) {
             if (!result.isFinal) continue;
             const alternative = bestAlternative(result, roster);
             if (!alternative) continue;
-
             const now = Date.now();
             const normalizedTranscript = normalizeVoice(alternative.transcript);
-            if (
-              normalizedTranscript === lastTranscriptRef.current.value &&
-              now - lastTranscriptRef.current.at < 1200
-            ) continue;
+            if (normalizedTranscript === lastTranscriptRef.current.value && now - lastTranscriptRef.current.at < 1200) continue;
             lastTranscriptRef.current = { value: normalizedTranscript, at: now };
 
             if (!alternative.names.length) {
@@ -332,28 +257,27 @@ export default function VoiceDraftControl({ roster }: { roster: Brawler[] }) {
               continue;
             }
 
-            setStatus(`Oído: ${alternative.names.join(" + ")}`);
+            setStatus(`Ban oído: ${alternative.names.join(" + ")}`);
             for (const name of alternative.names) {
-              const added = await commitVoicePick(name);
+              const added = await commitVoiceBan(name);
               if (!added) {
-                setStatus(`${name} no se pudo añadir: puede estar usado, baneado o el draft estar completo`);
+                setStatus(`${name} no se pudo banear: puede estar ya usado, baneado o haberse llenado los 6 bans`);
                 break;
               }
             }
           }
         })();
       };
-
       recognition.onerror = (event) => {
         const error = event.error || "unknown";
         if (error === "no-speech") {
-          setStatus("No oí ningún nombre. Sigo escuchando…");
+          setStatus("No oí ningún ban. Sigo escuchando…");
           return;
         }
         if (error === "not-allowed" || error === "service-not-allowed") {
           keepListeningRef.current = false;
           setListening(false);
-          setStatus("Permite el micrófono para usar el draft por voz");
+          setStatus("Permite el micrófono para introducir bans por voz");
           return;
         }
         if (error === "audio-capture") {
@@ -364,7 +288,6 @@ export default function VoiceDraftControl({ roster }: { roster: Brawler[] }) {
         }
         setStatus(`Voz: ${error}`);
       };
-
       recognition.onend = () => {
         setListening(false);
         if (!keepListeningRef.current) return;
@@ -377,7 +300,6 @@ export default function VoiceDraftControl({ roster }: { roster: Brawler[] }) {
           }
         }, 220);
       };
-
       recognitionRef.current = recognition;
     }
 
@@ -397,7 +319,7 @@ export default function VoiceDraftControl({ roster }: { roster: Brawler[] }) {
       <button
         type="button"
         className="voice-draft-button-v185"
-        aria-label={listening ? "Detener entrada por voz" : "Introducir picks por voz"}
+        aria-label={listening ? "Detener bans por voz" : "Introducir bans por voz"}
         aria-pressed={listening}
         disabled={!supported}
         onClick={listening ? stopListening : startListening}
