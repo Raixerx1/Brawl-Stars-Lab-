@@ -11,6 +11,7 @@ import {
 } from "@/lib/recording-store";
 import { formatLiveTime } from "@/lib/live-review";
 import { BrawlerPortrait } from "./GameArtwork";
+import VideoMatchAnalyzer from "./VideoMatchAnalyzer";
 
 type RecorderStatus = "idle" | "recording" | "ready";
 
@@ -47,6 +48,7 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
   const chunksRef = useRef<BlobPart[]>([]);
   const startedAtRef = useRef<number | null>(null);
   const previewUrlRef = useRef<string | null>(null);
+  const previewVideoRef = useRef<HTMLVideoElement | null>(null);
 
   const [status, setStatus] = useState<RecorderStatus>("idle");
   const [mapSlug, setMapSlug] = useState(maps[0]?.slug || "");
@@ -142,7 +144,7 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
         setPreview(blob);
         recorderRef.current = null;
         setStatus("ready");
-        setMessage(blob.size ? "Grabación lista para revisar, guardar o descargar" : "La grabación terminó sin datos de vídeo");
+        setMessage(blob.size ? "Grabación lista para revisar, guardar o analizar" : "La grabación terminó sin datos de vídeo");
       });
 
       const videoTrack = stream.getVideoTracks()[0];
@@ -169,7 +171,7 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
     setSource("import");
     setElapsed(0);
     setStatus("ready");
-    setMessage(`Vídeo importado: ${file.name}`);
+    setMessage(`Vídeo importado: ${file.name} · listo para análisis completo`);
   };
 
   const saveToLibrary = async () => {
@@ -221,7 +223,7 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
       setSource(recording.source);
       setPreview(recording.blob);
       setStatus("ready");
-      setMessage("Grabación abierta desde la biblioteca local");
+      setMessage("Grabación abierta desde la biblioteca local · puedes reanalizarla completa");
     } catch {
       setMessage("No se pudo abrir la grabación");
     }
@@ -237,6 +239,15 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
     }
   };
 
+  const seekPreview = (second: number) => {
+    const video = previewVideoRef.current;
+    if (!video) return;
+    video.pause();
+    const max = Number.isFinite(video.duration) && video.duration > 0 ? Math.max(0, video.duration - .05) : second;
+    video.currentTime = Math.max(0, Math.min(second, max));
+    video.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
   const reset = () => {
     stopRecorder();
     startedAtRef.current = null;
@@ -246,9 +257,9 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
     setMessage("");
   };
 
-  return <section className="panel match-recorder-v18">
+  return <section className="panel match-recorder-v18 match-recorder-v22">
     <div className="section-title">
-      <div><span className="eyebrow">Grabación local v0.18</span><h2>Grabar y revisar partidas completas</h2></div>
+      <div><span className="eyebrow">Grabación + análisis local v0.22</span><h2>Grabar, importar y analizar partidas completas</h2></div>
       <span className={`recording-state-v18 state-${status}`}>{status === "recording" ? `● REC ${formatLiveTime(elapsed)}` : status === "ready" ? "Vídeo listo" : "Local"}</span>
     </div>
 
@@ -263,7 +274,7 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
 
     <div className="recording-workspace-v18">
       <div className="recording-preview-v18">
-        {previewUrl ? <video src={previewUrl} controls playsInline onLoadedMetadata={(event) => {
+        {previewUrl ? <video ref={previewVideoRef} src={previewUrl} controls playsInline onLoadedMetadata={(event) => {
           const duration = event.currentTarget.duration;
           if (Number.isFinite(duration) && duration > 0 && source === "import") setElapsed(Math.round(duration));
         }} /> : <div className="recording-placeholder-v18">
@@ -283,6 +294,13 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
       </div>
     </div>
 
+    <VideoMatchAnalyzer
+      src={previewUrl}
+      mode={selectedMap?.mode || ""}
+      durationHint={elapsed}
+      onSeek={seekPreview}
+    />
+
     <div className="recording-library-v18">
       <div><span className="eyebrow">Biblioteca local</span><b>{library.length} grabaciones guardadas</b><small>Los vídeos permanecen en IndexedDB del navegador; borrar datos del sitio los elimina.</small></div>
       <div className="recording-library-list-v18">
@@ -296,6 +314,6 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
       </div>
     </div>
 
-    <p className="live-privacy-note">La grabación y la biblioteca son locales. Brawl Draft Lab no sube el vídeo a un servidor. Para sesiones largas conviene descargar una copia porque el navegador puede liberar almacenamiento si el dispositivo se queda sin espacio.</p>
+    <p className="live-privacy-note">La grabación, el barrido de fotogramas y la biblioteca son locales. Brawl Draft Lab no sube el vídeo a un servidor. Para sesiones largas conviene descargar una copia porque el navegador puede liberar almacenamiento si el dispositivo se queda sin espacio.</p>
   </section>;
 }
