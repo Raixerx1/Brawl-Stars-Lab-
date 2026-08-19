@@ -1,0 +1,52 @@
+/* v0.19.3 — Orden de interacción móvil del Draft Assist.
+   Secuencia única: picks -> buscador/voz -> recomendación -> detalles. */
+
+@media (max-width: 900px) {
+  .ordered-draft-panel > .ordered-pick-bar {
+    order: 7 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .ordered-draft-panel > .common-pick-entry {
+    order: 8 !important;
+    margin: 0 !important;
+    border-top: 0 !important;
+    border-radius: 0 0 11px 11px !important;
+    box-shadow: 0 7px 18px rgba(0, 0, 0, .20) !important;
+  }
+
+  .ordered-draft-panel > .draft-pick-decision-v16.draft-pick-decision-v17 {
+    order: 9 !important;
+    position: relative !important;
+    top: auto !important;
+    z-index: 20 !important;
+    margin: 6px 0 8px !important;
+    border-top: 1px solid rgba(80, 223, 160, .24) !important;
+    border-radius: 11px !important;
+  }
+
+  .ordered-draft-panel > .double-pick-panel-v13 { order: 10 !important; }
+  .ordered-draft-panel > .ordered-edit-hint { order: 11 !important; }
+  .ordered-draft-panel > .draft-stress-panel-v14 { order: 12 !important; }
+
+  .common-pick-entry .common-pick-search input {
+    font-size: 16px !important;
+  }
+
+  .common-pick-entry .turn-status {
+    align-self: stretch;
+    display: grid;
+    place-items: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .ordered-draft-panel > .common-pick-entry {
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+  }
+
+  .ordered-draft-panel > .draft-pick-decision-v16.draft-pick-decision-v17 {
+    margin-top: 5px !important;
+  }
+}
