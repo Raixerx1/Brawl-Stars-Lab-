@@ -128,7 +128,7 @@ export default function VideoMatchAnalyzer({
 
       const detector = createAutoDetectorState();
       let previousGray: Uint8Array | undefined;
-      const events = [];
+      const events: Array<ReturnType<typeof detectionToVideoEvent>> = [];
       let detectionIndex = 0;
 
       setMessage(`Barrido temporal · ${sampleTimes.length} fotogramas`);
