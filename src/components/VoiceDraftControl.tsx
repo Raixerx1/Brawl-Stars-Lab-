@@ -36,6 +36,8 @@ type QueueItem = {
 };
 
 const VOICE_START_EVENT = "brawl-draft-lab:voice-start";
+const MAX_SLOTS = 6;
+const MAX_COMMIT_ATTEMPTS = 3;
 const sleep = (milliseconds: number) => new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 
 function nativeSetInputValue(input: HTMLInputElement, value: string) {
@@ -59,18 +61,38 @@ function hasSelected(name: string, targetMode: VoiceDraftTarget) {
   return selectedEntries(targetMode).some((value) => normalizeVoice(value) === target);
 }
 
-async function waitForSuggestion(name: string, targetMode: VoiceDraftTarget, timeout = 900) {
-  const selector = targetMode === "ban"
+function inputFor(targetMode: VoiceDraftTarget) {
+  const rootSelector = targetMode === "ban" ? ".draft-picker-ban" : ".common-pick-search";
+  return document.querySelector<HTMLInputElement>(`${rootSelector} input:not(:disabled)`);
+}
+
+function suggestionSelector(targetMode: VoiceDraftTarget) {
+  return targetMode === "ban"
     ? ".draft-picker-ban .draft-suggestions button"
     : ".common-pick-suggestions button";
-  const started = Date.now();
+}
 
+async function reopenSearch(input: HTMLInputElement) {
+  // React cierra el desplegable tras cada alta. En iPhone el input puede seguir siendo
+  // document.activeElement, así que focus() por sí solo no vuelve a disparar onFocus.
+  if (document.activeElement === input) {
+    input.blur();
+    await sleep(45);
+  }
+  input.focus();
+  input.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  input.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
+  await sleep(55);
+}
+
+async function waitForSuggestion(name: string, targetMode: VoiceDraftTarget, timeout = 1100) {
+  const started = Date.now();
   while (Date.now() - started < timeout) {
-    const exact = [...document.querySelectorAll<HTMLButtonElement>(selector)].find((button) =>
+    const exact = [...document.querySelectorAll<HTMLButtonElement>(suggestionSelector(targetMode))].find((button) =>
       normalizeVoice(button.querySelector("b")?.textContent || "") === normalizeVoice(name)
     );
     if (exact) return exact;
-    await sleep(35);
+    await sleep(40);
   }
   return undefined;
 }
@@ -79,7 +101,7 @@ async function waitForCommit(
   name: string,
   targetMode: VoiceDraftTarget,
   beforeCount: number,
-  timeout = 1300,
+  timeout = 1600,
 ) {
   const started = Date.now();
   while (Date.now() - started < timeout) {
@@ -88,36 +110,53 @@ async function waitForCommit(
       entries.length > beforeCount &&
       entries.some((value) => normalizeVoice(value) === normalizeVoice(name))
     ) return true;
-    await sleep(45);
+    await sleep(50);
   }
   return false;
 }
 
 async function commitVoiceEntry(name: string, targetMode: VoiceDraftTarget) {
-  if (hasSelected(name, targetMode)) return false;
+  if (hasSelected(name, targetMode)) return true;
 
-  const rootSelector = targetMode === "ban" ? ".draft-picker-ban" : ".common-pick-search";
-  const input = document.querySelector<HTMLInputElement>(`${rootSelector} input:not(:disabled)`);
-  if (!input) return false;
+  for (let attempt = 1; attempt <= MAX_COMMIT_ATTEMPTS; attempt += 1) {
+    if (hasSelected(name, targetMode)) return true;
+    const beforeCount = selectedEntries(targetMode).length;
+    if (beforeCount >= MAX_SLOTS) return false;
 
-  const beforeCount = selectedEntries(targetMode).length;
-  input.focus();
-  nativeSetInputValue(input, name);
+    const input = inputFor(targetMode);
+    if (!input) {
+      await sleep(140);
+      continue;
+    }
 
-  const exact = await waitForSuggestion(name, targetMode);
-  if (!exact) {
     nativeSetInputValue(input, "");
-    return false;
+    await reopenSearch(input);
+    nativeSetInputValue(input, name);
+
+    const exact = await waitForSuggestion(name, targetMode, 850 + attempt * 180);
+    if (!exact) {
+      nativeSetInputValue(input, "");
+      await sleep(120 + attempt * 70);
+      continue;
+    }
+
+    // Los pickers existentes confirman con onMouseDown. Usamos la misma ruta que el toque manual.
+    exact.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true, view: window }));
+    exact.dispatchEvent(new MouseEvent("mouseup", { bubbles: true, cancelable: true, view: window }));
+    exact.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+
+    const committed = await waitForCommit(name, targetMode, beforeCount);
+    if (committed) {
+      await sleep(150);
+      return true;
+    }
+
+    const currentInput = inputFor(targetMode);
+    if (currentInput) nativeSetInputValue(currentInput, "");
+    await sleep(150 + attempt * 80);
   }
 
-  // Los pickers existentes usan onMouseDown. Dispararlo conserva exactamente la misma
-  // validación de bans, duplicados y huecos que la entrada manual.
-  exact.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true, view: window }));
-  exact.dispatchEvent(new MouseEvent("mouseup", { bubbles: true, cancelable: true, view: window }));
-
-  const committed = await waitForCommit(name, targetMode, beforeCount);
-  if (!committed) nativeSetInputValue(input, "");
-  return committed;
+  return hasSelected(name, targetMode);
 }
 
 function bestAlternative(result: SpeechResultLike, roster: Brawler[]) {
@@ -148,16 +187,18 @@ export default function VoiceDraftControl({
   const [supported, setSupported] = useState(true);
   const [listening, setListening] = useState(false);
   const [busy, setBusy] = useState(false);
-  const defaultStatus = targetMode === "ban" ? "Di los bans" : "Di los picks";
+  const defaultStatus = targetMode === "ban" ? "Di hasta 6 bans seguidos" : "Di hasta 6 picks seguidos";
   const listeningStatus = targetMode === "ban" ? "Escuchando bans…" : "Escuchando picks…";
   const [status, setStatus] = useState(defaultStatus);
 
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const keepListeningRef = useRef(false);
-  const lastTranscriptRef = useRef({ value: "", at: 0 });
   const queueRef = useRef<QueueItem[]>([]);
   const processingRef = useRef(false);
   const generationRef = useRef(0);
+  const sessionSeenRef = useRef(new Set<string>());
+  const activeNameRef = useRef<string | null>(null);
+  const recognizedOrderRef = useRef<string[]>([]);
 
   useEffect(() => {
     const selector = targetMode === "ban" ? ".draft-picker-ban .draft-search-wrap" : ".common-pick-search";
@@ -177,6 +218,9 @@ export default function VoiceDraftControl({
       if (detail === targetMode) return;
       generationRef.current += 1;
       queueRef.current = [];
+      activeNameRef.current = null;
+      sessionSeenRef.current.clear();
+      recognizedOrderRef.current = [];
       keepListeningRef.current = false;
       recognitionRef.current?.abort();
       setListening(false);
@@ -189,6 +233,7 @@ export default function VoiceDraftControl({
       window.removeEventListener(VOICE_START_EVENT, stopWhenOtherStarts);
       generationRef.current += 1;
       queueRef.current = [];
+      activeNameRef.current = null;
       keepListeningRef.current = false;
       recognitionRef.current?.abort();
     };
@@ -200,73 +245,93 @@ export default function VoiceDraftControl({
     setBusy(true);
 
     try {
-      while (queueRef.current.length && generation === generationRef.current) {
+      while (generation === generationRef.current) {
         const item = queueRef.current.shift();
         if (!item) break;
 
+        activeNameRef.current = item.name;
+
         if (hasSelected(item.name, targetMode)) {
-          setStatus(`${item.name} ya estaba introducido · ${queueRef.current.length} pendientes`);
+          activeNameRef.current = null;
           continue;
         }
 
         const current = selectedEntries(targetMode).length;
-        const max = 6;
-        if (current >= max) {
+        if (current >= MAX_SLOTS) {
           queueRef.current = [];
-          setStatus(targetMode === "ban" ? "Los 6 bans ya están completos" : "Los 6 picks ya están completos");
+          setStatus(targetMode === "ban" ? "✓ Los 6 bans están completos" : "✓ Los 6 picks están completos");
           break;
         }
 
-        setStatus(`Añadiendo ${targetMode === "ban" ? "ban" : "pick"} ${current + 1}/${max}: ${item.name}…`);
+        setStatus(`Validando ${current + 1}/${MAX_SLOTS}: ${item.name} · ${queueRef.current.length} en cola`);
         const added = await commitVoiceEntry(item.name, targetMode);
+        activeNameRef.current = null;
 
         if (generation !== generationRef.current) break;
 
         if (added) {
           const after = selectedEntries(targetMode).length;
-          setStatus(`✓ ${item.name} · ${after}/${max}${queueRef.current.length ? ` · ${queueRef.current.length} pendientes` : ""}`);
-          // Pequeña pausa deliberada: deja que la UI recalcule unavailable/siguiente turno.
-          await sleep(120);
+          const nextName = queueRef.current[0]?.name;
+          setStatus(
+            after >= MAX_SLOTS
+              ? `✓ ${MAX_SLOTS}/${MAX_SLOTS} completos`
+              : `✓ ${item.name} validado · ${after}/${MAX_SLOTS}${nextName ? ` · ahora ${nextName}` : ""}`
+          );
+          await sleep(180);
         } else {
-          setStatus(`Omitido ${item.name}: ya usado, baneado o no disponible · ${queueRef.current.length} pendientes`);
-          await sleep(90);
+          setStatus(`No pude validar ${item.name} tras ${MAX_COMMIT_ATTEMPTS} intentos; continúo con el siguiente`);
+          await sleep(150);
         }
       }
     } finally {
+      activeNameRef.current = null;
       processingRef.current = false;
       setBusy(false);
-      if (generation === generationRef.current && keepListeningRef.current && !queueRef.current.length) {
+      if (generation === generationRef.current && queueRef.current.length) {
+        // Si llegaron nuevos nombres justo al terminar el bucle, no dependemos de otro onresult.
+        window.setTimeout(() => void drainQueue(generation), 30);
+      } else if (generation === generationRef.current && keepListeningRef.current) {
+        const current = selectedEntries(targetMode).length;
         window.setTimeout(() => {
-          if (keepListeningRef.current && !processingRef.current) setStatus(listeningStatus);
-        }, 700);
+          if (!keepListeningRef.current || processingRef.current) return;
+          setStatus(current >= MAX_SLOTS ? `✓ ${MAX_SLOTS}/${MAX_SLOTS} completos` : listeningStatus);
+        }, 650);
       }
     }
   };
 
   const enqueueNames = (names: string[]) => {
+    if (!names.length) return;
+
     const selected = new Set(selectedEntries(targetMode).map(normalizeVoice));
     const queued = new Set(queueRef.current.map((item) => normalizeVoice(item.name)));
-    const additions = names.filter((name, index) =>
-      names.findIndex((other) => normalizeVoice(other) === normalizeVoice(name)) === index &&
-      !selected.has(normalizeVoice(name)) &&
-      !queued.has(normalizeVoice(name))
-    );
+    const active = activeNameRef.current ? normalizeVoice(activeNameRef.current) : "";
+    const additions: string[] = [];
 
-    if (!additions.length) {
-      setStatus("Los nombres reconocidos ya estaban introducidos");
-      return;
+    for (const name of names) {
+      const key = normalizeVoice(name);
+      if (!key || selected.has(key) || queued.has(key) || active === key || sessionSeenRef.current.has(key)) continue;
+      sessionSeenRef.current.add(key);
+      recognizedOrderRef.current.push(name);
+      additions.push(name);
     }
 
-    queueRef.current.push(...additions.map((name) => ({ name })));
-    setStatus(`Oídos ${additions.length}: ${additions.join(" → ")}`);
+    if (!additions.length) return;
+
+    const freeSlots = Math.max(0, MAX_SLOTS - selectedEntries(targetMode).length - queueRef.current.length - (activeNameRef.current ? 1 : 0));
+    if (!freeSlots) return;
+    const accepted = additions.slice(0, freeSlots);
+    queueRef.current.push(...accepted.map((name) => ({ name })));
+
+    setStatus(`Reconocidos: ${recognizedOrderRef.current.slice(0, MAX_SLOTS).join(" → ")} · procesando ${selectedEntries(targetMode).length + 1}/${MAX_SLOTS}`);
     void drainQueue(generationRef.current);
   };
 
   const stopListening = () => {
-    // Detiene nuevas transcripciones, pero deja terminar la cola ya pronunciada.
+    // No borra la cola: dejar de escuchar no debe truncar los nombres ya reconocidos.
     keepListeningRef.current = false;
     setListening(false);
-    if (!processingRef.current) setStatus("Voz detenida");
+    if (!processingRef.current && !queueRef.current.length) setStatus("Voz detenida");
     recognitionRef.current?.stop();
   };
 
@@ -282,7 +347,9 @@ export default function VoiceDraftControl({
 
     generationRef.current += 1;
     queueRef.current = [];
-    lastTranscriptRef.current = { value: "", at: 0 };
+    activeNameRef.current = null;
+    sessionSeenRef.current.clear();
+    recognizedOrderRef.current = [];
     window.dispatchEvent(new CustomEvent<VoiceDraftTarget>(VOICE_START_EVENT, { detail: targetMode }));
 
     let recognition = recognitionRef.current;
@@ -290,7 +357,8 @@ export default function VoiceDraftControl({
       recognition = new Recognition();
       recognition.lang = "es-ES";
       recognition.continuous = true;
-      recognition.interimResults = false;
+      // Clave para listas largas en WebKit/iPhone: capturamos nombres antes de que la frase se cierre.
+      recognition.interimResults = true;
       recognition.maxAlternatives = 8;
 
       recognition.onstart = () => {
@@ -299,25 +367,12 @@ export default function VoiceDraftControl({
       };
 
       recognition.onresult = (event) => {
-        for (let resultIndex = event.resultIndex; resultIndex < event.results.length; resultIndex += 1) {
+        // Recorremos toda la hipótesis disponible, no solo los resultados finales nuevos.
+        // sessionSeenRef evita duplicados cuando WebKit reescribe la misma frase provisional.
+        for (let resultIndex = 0; resultIndex < event.results.length; resultIndex += 1) {
           const result = event.results[resultIndex];
-          if (!result.isFinal) continue;
           const alternative = bestAlternative(result, roster);
-          if (!alternative) continue;
-
-          const now = Date.now();
-          const normalizedTranscript = normalizeVoice(alternative.transcript);
-          if (
-            normalizedTranscript === lastTranscriptRef.current.value &&
-            now - lastTranscriptRef.current.at < 1800
-          ) continue;
-          lastTranscriptRef.current = { value: normalizedTranscript, at: now };
-
-          if (!alternative.names.length) {
-            setStatus(`No reconocí un brawler en “${alternative.transcript}”`);
-            continue;
-          }
-
+          if (!alternative?.names.length) continue;
           enqueueNames(alternative.names);
         }
       };
@@ -325,7 +380,7 @@ export default function VoiceDraftControl({
       recognition.onerror = (event) => {
         const error = event.error || "unknown";
         if (error === "no-speech") {
-          if (!processingRef.current) setStatus(targetMode === "ban" ? "No oí ningún ban. Sigo escuchando…" : "No oí ningún pick. Sigo escuchando…");
+          if (!processingRef.current) setStatus(targetMode === "ban" ? "No oí más bans. Sigo escuchando…" : "No oí más picks. Sigo escuchando…");
           return;
         }
         if (error === "not-allowed" || error === "service-not-allowed") {
@@ -340,11 +395,13 @@ export default function VoiceDraftControl({
           setStatus("No se puede acceder al micrófono");
           return;
         }
-        setStatus(`Voz: ${error}`);
+        if (!processingRef.current) setStatus(`Voz: ${error}`);
       };
 
       recognition.onend = () => {
         setListening(false);
+        // Un cierre de WebKit nunca cancela la cola ya reconocida.
+        if (queueRef.current.length && !processingRef.current) void drainQueue(generationRef.current);
         if (!keepListeningRef.current) return;
         window.setTimeout(() => {
           if (!keepListeningRef.current) return;
@@ -353,7 +410,7 @@ export default function VoiceDraftControl({
           } catch {
             if (!processingRef.current) setStatus("Toca el micrófono para continuar");
           }
-        }, 180);
+        }, 240);
       };
 
       recognitionRef.current = recognition;
