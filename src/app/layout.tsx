@@ -3,6 +3,7 @@ import "./globals.css";
 import "./draft-overrides.css";
 import "./live-v18.css";
 import "./pwa.css";
+import "./visual-density-v195.css";
 import AppShell from "@/components/AppShell";
 import PwaInstallPrompt from "@/components/PwaInstallPrompt";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
