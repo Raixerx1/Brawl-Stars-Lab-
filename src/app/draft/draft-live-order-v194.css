@@ -1,0 +1,74 @@
+/* v0.19.4 — Orden canónico del Draft Assist en todas las pantallas.
+   Secuencia principal: picks -> buscador/voz -> recomendación -> detalles. */
+
+.ordered-draft-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.ordered-draft-panel > .section-title { order: 1; }
+.ordered-draft-panel > .draft-toast { order: 2; }
+.ordered-draft-panel > .ordered-draft-context-v5 { order: 3; }
+.ordered-draft-panel > .first-pick-audit-v12 { order: 4; }
+.ordered-draft-panel > .draft-ban-panel-v51 { order: 5; }
+.ordered-draft-panel > .ordered-phase-labels { order: 6; }
+.ordered-draft-panel > .ordered-pick-bar { order: 7; }
+.ordered-draft-panel > .common-pick-entry { order: 8; }
+.ordered-draft-panel > .draft-pick-decision-v16.draft-pick-decision-v17 { order: 9; }
+.ordered-draft-panel > .double-pick-panel-v13 { order: 10; }
+.ordered-draft-panel > .draft-stress-panel-v14 { order: 11; }
+.ordered-draft-panel > .ordered-edit-hint { order: 12; }
+
+/* El buscador forma visualmente una sola consola con la fila de seis picks. */
+.ordered-draft-panel > .ordered-pick-bar {
+  margin-bottom: 0;
+}
+
+.ordered-draft-panel > .common-pick-entry {
+  margin: 0 0 10px;
+  border-top-color: rgba(255,255,255,.045);
+  border-radius: 0 0 15px 15px;
+  z-index: 32;
+}
+
+/* La recomendación queda inmediatamente después de la entrada manual/voz. */
+.ordered-draft-panel > .draft-pick-decision-v16.draft-pick-decision-v17 {
+  margin-top: 0;
+}
+
+@media (min-width: 901px) {
+  .ordered-draft-panel > .common-pick-entry {
+    grid-template-columns: minmax(170px,.7fr) minmax(360px,2fr) auto;
+    gap: 12px;
+    padding: 12px 14px;
+    background: linear-gradient(180deg, rgba(8,12,24,.72), rgba(8,12,24,.42));
+    box-shadow: 0 9px 22px rgba(0,0,0,.16);
+  }
+
+  .common-pick-entry .common-pick-search input {
+    min-height: 46px;
+    font-size: 14px;
+  }
+
+  .common-pick-entry .common-pick-suggestions {
+    z-index: 140;
+  }
+
+  /* En escritorio la recomendación no necesita flotar sobre la consola. */
+  .ordered-draft-panel > .draft-pick-decision-v16.draft-pick-decision-v17 {
+    position: relative;
+    top: auto;
+    z-index: 20;
+  }
+}
+
+@media (max-width: 900px) {
+  /* Conserva la geometría móvil de v0.19.3, pero el orden ya es global. */
+  .ordered-draft-panel > .common-pick-entry {
+    order: 8 !important;
+  }
+
+  .ordered-draft-panel > .draft-pick-decision-v16.draft-pick-decision-v17 {
+    order: 9 !important;
+  }
+}
