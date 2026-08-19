@@ -1,0 +1,527 @@
+/* v0.19.5 — Densidad visual global.
+   Objetivo: menos espacio vacío, tipografía legible y jerarquía clara en toda la web. */
+
+/* Base global: paneles y tarjetas más compactos sin convertir la interfaz en una tabla densa. */
+.panel {
+  padding: 18px;
+  border-radius: 17px;
+}
+
+.panel h2 {
+  margin-bottom: 12px;
+  font-size: 24px;
+  line-height: 1.12;
+}
+
+.panel h3 {
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.card-grid,
+.detail-grid,
+.draft-layout,
+.tracker-grid,
+.source-list,
+.stats-grid {
+  gap: 10px;
+}
+
+.card {
+  border-radius: 16px;
+}
+
+.card > a {
+  padding: 16px;
+}
+
+.card h3 {
+  margin: 6px 0 5px;
+  font-size: 19px;
+  line-height: 1.15;
+}
+
+.card p {
+  font-size: 13.5px;
+  line-height: 1.48;
+}
+
+.eyebrow,
+.card-kicker {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.stat-card {
+  padding: 14px 15px;
+  border-radius: 14px;
+}
+
+.stat-card b {
+  font-size: 29px;
+  line-height: 1;
+}
+
+.stat-card span {
+  margin-top: 5px;
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.mini-row {
+  margin-top: 12px;
+  padding-top: 10px;
+  font-size: 12px;
+}
+
+.helper,
+.notice {
+  font-size: 12.5px;
+  line-height: 1.48;
+}
+
+/* Recomendaciones y resultados: dato principal grande, explicación secundaria aún legible. */
+.recommendation {
+  grid-template-columns: 30px 48px minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: 13px;
+}
+
+.rec-copy h3 {
+  margin: 2px 0 3px;
+  font-size: 17px;
+}
+
+.rec-copy > div > span,
+.rec-copy small {
+  font-size: 11.5px;
+}
+
+.rec-copy ul {
+  margin: 7px 0;
+}
+
+.rec-copy li {
+  padding: 4px 6px;
+  font-size: 11px;
+}
+
+.score b {
+  font-size: 27px;
+  line-height: 1;
+}
+
+.score span {
+  font-size: 11px;
+}
+
+.match-list article {
+  gap: 10px;
+  padding: 10px 11px;
+}
+
+.match-list b {
+  font-size: 14px;
+}
+
+.match-list small {
+  font-size: 11.5px;
+}
+
+.timeline {
+  gap: 9px;
+}
+
+.timeline article {
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.timeline h3 {
+  margin: 9px 0 4px;
+  font-size: 15px;
+}
+
+.timeline p {
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.draft-columns {
+  gap: 9px;
+}
+
+.draft-columns > div {
+  padding: 11px;
+  border-radius: 12px;
+}
+
+.draft-columns p {
+  font-size: 13px;
+}
+
+/* Coach / análisis final: prioridad máxima a lectura rápida. */
+.coach-debrief-hero-v19 {
+  gap: 10px;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 14px;
+}
+
+.coach-debrief-hero-v19 > div:first-child > span {
+  font-size: 11px;
+}
+
+.coach-debrief-hero-v19 h3 {
+  margin: 4px 0;
+  font-size: 23px;
+}
+
+.coach-debrief-hero-v19 p {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.coach-confidence-v19 {
+  min-width: 96px;
+  padding: 9px;
+  border-radius: 12px;
+}
+
+.coach-confidence-v19 b {
+  font-size: 30px;
+}
+
+.coach-confidence-v19 span,
+.coach-confidence-v19 small {
+  font-size: 10px;
+}
+
+.coach-priority-grid-v19,
+.coach-turning-grid-v20,
+.coach-phase-grid-v19 {
+  gap: 8px;
+  margin-top: 9px;
+}
+
+.coach-priorities-v19,
+.coach-next-games-v19,
+.coach-strengths-v19,
+.coach-turning-grid-v20 > article {
+  padding: 9px 10px;
+  border-radius: 12px;
+}
+
+.coach-column-title-v19 {
+  margin-bottom: 5px;
+}
+
+.coach-column-title-v19 > span {
+  font-size: 14px;
+}
+
+.coach-column-title-v19 small {
+  font-size: 11px;
+}
+
+.coach-priority-v19 {
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.coach-priority-rank-v19 {
+  width: 29px;
+  height: 29px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.coach-priority-copy-v19 > div b {
+  font-size: 15px;
+}
+
+.coach-priority-copy-v19 > div span {
+  font-size: 10.5px;
+}
+
+.coach-priority-copy-v19 p {
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.coach-priority-copy-v19 small {
+  margin-top: 4px;
+  font-size: 10.5px;
+  line-height: 1.35;
+}
+
+.coach-impact-v19 {
+  min-width: 52px;
+  padding: 6px;
+  border-radius: 9px;
+}
+
+.coach-impact-v19 b {
+  font-size: 22px;
+}
+
+.coach-impact-v19 span {
+  font-size: 8px;
+}
+
+.coach-next-games-v19 > div:not(.coach-column-title-v19) {
+  padding: 7px 8px;
+  border-radius: 9px;
+}
+
+.coach-next-games-v19 > div > span {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.coach-next-games-v19 > p {
+  font-size: 10.5px;
+}
+
+.coach-phase-grid-v19 article {
+  gap: 3px;
+  padding: 9px;
+  border-radius: 11px;
+}
+
+.coach-phase-grid-v19 article > span,
+.coach-phase-grid-v19 article > small {
+  font-size: 10.5px;
+}
+
+.coach-phase-grid-v19 article > b {
+  font-size: 15px;
+}
+
+.coach-phase-grid-v20 article {
+  min-height: 76px;
+  padding-right: 64px !important;
+}
+
+.coach-phase-score-v20 {
+  right: 9px;
+  width: 47px;
+  height: 47px;
+  border-radius: 12px;
+}
+
+.coach-phase-score-v20 strong {
+  font-size: 22px;
+}
+
+.coach-phase-score-v20 small {
+  font-size: 8px !important;
+}
+
+.coach-turning-point-v20 {
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  gap: 8px;
+  padding: 8px 9px;
+  border-radius: 11px;
+}
+
+.coach-turning-point-v20 time {
+  font-size: 13px;
+}
+
+.coach-turning-point-v20 > div > span {
+  font-size: 10px;
+}
+
+.coach-turning-point-v20 > div > b {
+  font-size: 15px;
+}
+
+.coach-turning-point-v20 p {
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.coach-turning-point-v20 > strong {
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+}
+
+.coach-chain-v20 {
+  padding: 8px 9px;
+  border-radius: 0 10px 10px 0;
+}
+
+.coach-chain-v20 > div {
+  font-size: 10px;
+}
+
+.coach-chain-v20 b {
+  font-size: 13px;
+}
+
+.coach-chain-v20 p {
+  font-size: 11.5px;
+}
+
+.coach-chain-v20 > small {
+  font-size: 9px;
+}
+
+.coach-strengths-v19 article {
+  padding: 7px 8px;
+  border-radius: 9px;
+}
+
+.coach-strengths-v19 article > b {
+  font-size: 12px;
+}
+
+.coach-strengths-v19 article > span {
+  font-size: 11.5px;
+}
+
+.coach-strengths-v19 article > small,
+.coach-muted-v19 {
+  font-size: 9.5px;
+}
+
+/* Analizador de vídeo: resúmenes pequeños y números visibles. */
+.video-analysis-summary-v22,
+.video-analysis-phases-v22 {
+  gap: 8px;
+}
+
+.video-analysis-summary-v22 article,
+.video-analysis-phases-v22 article {
+  padding: 10px 11px !important;
+  border-radius: 11px !important;
+  min-height: 0 !important;
+}
+
+.video-analysis-summary-v22 article > span,
+.video-analysis-phases-v22 article span,
+.video-analysis-phases-v22 article small {
+  font-size: 11px !important;
+}
+
+.video-analysis-summary-v22 article > strong,
+.video-analysis-phases-v22 article > strong {
+  font-size: 23px !important;
+  line-height: 1 !important;
+}
+
+.video-analysis-summary-v22 article b,
+.video-analysis-phases-v22 article b {
+  font-size: 14px !important;
+}
+
+.video-key-moments-v22 button,
+.video-event-timeline-v22 button {
+  padding: 9px 10px !important;
+  border-radius: 10px !important;
+}
+
+.video-key-moments-v22 time,
+.video-event-timeline-v22 time {
+  font-size: 12px !important;
+}
+
+.video-key-moments-v22 b,
+.video-event-timeline-v22 b {
+  font-size: 13px !important;
+}
+
+.video-key-moments-v22 small,
+.video-event-timeline-v22 small {
+  font-size: 10.5px !important;
+  line-height: 1.35 !important;
+}
+
+/* Biblioteca, tracker y pequeños paneles auxiliares. */
+.recording-library-list-v18 article,
+.note-list p {
+  padding: 9px 10px;
+}
+
+.recording-library-list-v18 article b {
+  font-size: 13px;
+}
+
+.recording-library-list-v18 article small {
+  font-size: 11px;
+}
+
+/* Desktop grande: evitar tarjetas artificialmente altas por contenido escaso. */
+@media (min-width: 901px) {
+  .card,
+  .stat-card,
+  .timeline article,
+  .draft-columns > div,
+  .coach-phase-grid-v19 article,
+  .coach-turning-point-v20,
+  .video-analysis-summary-v22 article,
+  .video-analysis-phases-v22 article {
+    align-self: start;
+  }
+}
+
+/* Móvil: compactar sin volver a reducir la tipografía. */
+@media (max-width: 720px) {
+  .panel {
+    padding: 13px;
+    border-radius: 14px;
+  }
+
+  .panel h2 {
+    font-size: 21px;
+  }
+
+  .card > a {
+    padding: 13px;
+  }
+
+  .card h3 {
+    font-size: 17px;
+  }
+
+  .card p {
+    font-size: 13px;
+  }
+
+  .stat-card {
+    padding: 11px 12px;
+  }
+
+  .stat-card b {
+    font-size: 25px;
+  }
+
+  .recommendation {
+    grid-template-columns: 26px 42px minmax(0, 1fr);
+  }
+
+  .recommendation .score {
+    grid-column: 3;
+    justify-self: start;
+    padding-top: 0;
+  }
+
+  .coach-debrief-hero-v19,
+  .coach-priorities-v19,
+  .coach-next-games-v19,
+  .coach-strengths-v19,
+  .coach-turning-grid-v20 > article {
+    padding: 9px;
+  }
+
+  .coach-priority-copy-v19 p,
+  .coach-turning-point-v20 p,
+  .coach-chain-v20 p {
+    font-size: 12px;
+  }
+}
