@@ -30,14 +30,14 @@ type SpeechWindow = Window & {
 };
 
 export type VoiceDraftTarget = "ban" | "pick";
-
-type QueueItem = {
-  name: string;
-};
+type QueueItem = { name: string };
+type CommitOutcome = "added" | "already" | "wrong" | "failed";
+type QueueSource = "final" | "stable-interim";
 
 const VOICE_START_EVENT = "brawl-draft-lab:voice-start";
 const MAX_SLOTS = 6;
 const MAX_COMMIT_ATTEMPTS = 3;
+const FAILED_RETRY_COOLDOWN = 2800;
 const sleep = (milliseconds: number) => new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 
 function nativeSetInputValue(input: HTMLInputElement, value: string) {
@@ -57,13 +57,13 @@ function selectedEntries(targetMode: VoiceDraftTarget) {
 }
 
 function hasSelected(name: string, targetMode: VoiceDraftTarget) {
-  const target = normalizeVoice(name);
-  return selectedEntries(targetMode).some((value) => normalizeVoice(value) === target);
+  const key = normalizeVoice(name);
+  return selectedEntries(targetMode).some((value) => normalizeVoice(value) === key);
 }
 
 function inputFor(targetMode: VoiceDraftTarget) {
-  const rootSelector = targetMode === "ban" ? ".draft-picker-ban" : ".common-pick-search";
-  return document.querySelector<HTMLInputElement>(`${rootSelector} input:not(:disabled)`);
+  const root = targetMode === "ban" ? ".draft-picker-ban" : ".common-pick-search";
+  return document.querySelector<HTMLInputElement>(`${root} input:not(:disabled)`);
 }
 
 function suggestionSelector(targetMode: VoiceDraftTarget) {
@@ -72,91 +72,136 @@ function suggestionSelector(targetMode: VoiceDraftTarget) {
     : ".common-pick-suggestions button";
 }
 
-async function reopenSearch(input: HTMLInputElement) {
-  // React cierra el desplegable tras cada alta. En iPhone el input puede seguir siendo
-  // document.activeElement, así que focus() por sí solo no vuelve a disparar onFocus.
+async function prepareInput(input: HTMLInputElement, name: string) {
+  nativeSetInputValue(input, "");
   if (document.activeElement === input) {
     input.blur();
-    await sleep(45);
+    await sleep(85);
   }
   input.focus();
+  input.click();
   input.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
   input.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
-  await sleep(55);
+  await sleep(70);
+  nativeSetInputValue(input, name);
+  await sleep(125);
 }
 
-async function waitForSuggestion(name: string, targetMode: VoiceDraftTarget, timeout = 1100) {
+async function exactSuggestion(name: string, targetMode: VoiceDraftTarget, timeout = 520) {
   const started = Date.now();
   while (Date.now() - started < timeout) {
     const exact = [...document.querySelectorAll<HTMLButtonElement>(suggestionSelector(targetMode))].find((button) =>
       normalizeVoice(button.querySelector("b")?.textContent || "") === normalizeVoice(name)
     );
     if (exact) return exact;
-    await sleep(40);
+    await sleep(35);
   }
   return undefined;
 }
 
-async function waitForCommit(
-  name: string,
-  targetMode: VoiceDraftTarget,
-  beforeCount: number,
-  timeout = 1600,
-) {
-  const started = Date.now();
-  while (Date.now() - started < timeout) {
-    const entries = selectedEntries(targetMode);
-    if (
-      entries.length > beforeCount &&
-      entries.some((value) => normalizeVoice(value) === normalizeVoice(name))
-    ) return true;
-    await sleep(50);
-  }
-  return false;
+function dispatchEnter(input: HTMLInputElement) {
+  input.dispatchEvent(new KeyboardEvent("keydown", {
+    key: "Enter",
+    code: "Enter",
+    bubbles: true,
+    cancelable: true,
+  }));
 }
 
-async function commitVoiceEntry(name: string, targetMode: VoiceDraftTarget) {
-  if (hasSelected(name, targetMode)) return true;
+async function waitForCommitOutcome(
+  name: string,
+  targetMode: VoiceDraftTarget,
+  before: string[],
+  timeout = 1450,
+): Promise<CommitOutcome> {
+  const target = normalizeVoice(name);
+  const beforeSet = new Set(before.map(normalizeVoice));
+  const started = Date.now();
+
+  while (Date.now() - started < timeout) {
+    const entries = selectedEntries(targetMode);
+    if (entries.some((value) => normalizeVoice(value) === target)) return "added";
+
+    if (entries.length > before.length) {
+      const unexpected = entries.find((value) => !beforeSet.has(normalizeVoice(value)));
+      if (unexpected) return "wrong";
+    }
+    await sleep(45);
+  }
+  return "failed";
+}
+
+async function rollbackUnexpected(targetMode: VoiceDraftTarget, before: string[]) {
+  const beforeSet = new Set(before.map(normalizeVoice));
+  const entries = selectedEntries(targetMode);
+  const unexpected = entries.find((value) => !beforeSet.has(normalizeVoice(value)));
+  if (!unexpected) return;
+
+  if (targetMode === "ban") {
+    const button = [...document.querySelectorAll<HTMLButtonElement>(".draft-picker-ban .draft-slot.filled")]
+      .find((item) => normalizeVoice(item.querySelector("span")?.textContent || "") === normalizeVoice(unexpected));
+    button?.click();
+  } else {
+    const buttons = [...document.querySelectorAll<HTMLButtonElement>(".ordered-pick-slot.filled")];
+    const button = buttons.find((item) => normalizeVoice(item.querySelector("b")?.textContent || "") === normalizeVoice(unexpected));
+    button?.click();
+  }
+  await sleep(180);
+}
+
+async function commitVoiceEntry(name: string, targetMode: VoiceDraftTarget): Promise<CommitOutcome> {
+  if (hasSelected(name, targetMode)) return "already";
 
   for (let attempt = 1; attempt <= MAX_COMMIT_ATTEMPTS; attempt += 1) {
-    if (hasSelected(name, targetMode)) return true;
-    const beforeCount = selectedEntries(targetMode).length;
-    if (beforeCount >= MAX_SLOTS) return false;
+    if (hasSelected(name, targetMode)) return "already";
+    if (selectedEntries(targetMode).length >= MAX_SLOTS) return "failed";
 
     const input = inputFor(targetMode);
     if (!input) {
-      await sleep(140);
+      await sleep(160 + attempt * 80);
       continue;
     }
 
-    nativeSetInputValue(input, "");
-    await reopenSearch(input);
-    nativeSetInputValue(input, name);
+    const before = selectedEntries(targetMode);
+    await prepareInput(input, name);
 
-    const exact = await waitForSuggestion(name, targetMode, 850 + attempt * 180);
-    if (!exact) {
-      nativeSetInputValue(input, "");
-      await sleep(120 + attempt * 70);
-      continue;
+    // Ruta más segura: coincidencia exacta visible. Si WebKit/React no mantiene abierto
+    // el desplegable, Enter usa el mismo handler del buscador y evita que la cola se atasque.
+    const exact = await exactSuggestion(name, targetMode, 420 + attempt * 90);
+    if (exact) {
+      exact.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true, view: window }));
+      exact.dispatchEvent(new MouseEvent("mouseup", { bubbles: true, cancelable: true, view: window }));
+    } else {
+      dispatchEnter(input);
     }
 
-    // Los pickers existentes confirman con onMouseDown. Usamos la misma ruta que el toque manual.
-    exact.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true, view: window }));
-    exact.dispatchEvent(new MouseEvent("mouseup", { bubbles: true, cancelable: true, view: window }));
-    exact.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+    let outcome = await waitForCommitOutcome(name, targetMode, before, 1150 + attempt * 180);
+    if (outcome === "added") return "added";
 
-    const committed = await waitForCommit(name, targetMode, beforeCount);
-    if (committed) {
-      await sleep(150);
-      return true;
+    if (outcome === "wrong") {
+      await rollbackUnexpected(targetMode, before);
+    } else {
+      // Segundo intento dentro de la misma vuelta: Enter no depende del desplegable.
+      const currentInput = inputFor(targetMode);
+      if (currentInput) {
+        nativeSetInputValue(currentInput, name);
+        await sleep(110);
+        dispatchEnter(currentInput);
+        outcome = await waitForCommitOutcome(name, targetMode, before, 850);
+        if (outcome === "added") return "added";
+        if (outcome === "wrong") await rollbackUnexpected(targetMode, before);
+      }
     }
 
     const currentInput = inputFor(targetMode);
-    if (currentInput) nativeSetInputValue(currentInput, "");
-    await sleep(150 + attempt * 80);
+    if (currentInput) {
+      nativeSetInputValue(currentInput, "");
+      currentInput.blur();
+    }
+    await sleep(170 + attempt * 95);
   }
 
-  return hasSelected(name, targetMode);
+  return hasSelected(name, targetMode) ? "already" : "failed";
 }
 
 function bestAlternative(result: SpeechResultLike, roster: Brawler[]) {
@@ -165,24 +210,24 @@ function bestAlternative(result: SpeechResultLike, roster: Brawler[]) {
     const alternative = result[index];
     const names = matchBrawlersInSpeech(alternative.transcript, roster);
     const confidence = alternative.confidence || 0;
-    if (
-      !best ||
-      names.length > best.names.length ||
-      (names.length === best.names.length && confidence > best.confidence)
-    ) {
+    if (!best || names.length > best.names.length || (names.length === best.names.length && confidence > best.confidence)) {
       best = { transcript: alternative.transcript, names, confidence };
     }
   }
   return best;
 }
 
-export default function VoiceDraftControl({
-  roster,
-  targetMode,
-}: {
-  roster: Brawler[];
-  targetMode: VoiceDraftTarget;
-}) {
+function orderedUnique(names: string[]) {
+  const seen = new Set<string>();
+  return names.filter((name) => {
+    const key = normalizeVoice(name);
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+export default function VoiceDraftControl({ roster, targetMode }: { roster: Brawler[]; targetMode: VoiceDraftTarget }) {
   const [target, setTarget] = useState<Element | null>(null);
   const [supported, setSupported] = useState(true);
   const [listening, setListening] = useState(false);
@@ -194,11 +239,14 @@ export default function VoiceDraftControl({
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const keepListeningRef = useRef(false);
   const queueRef = useRef<QueueItem[]>([]);
+  const queuedKeysRef = useRef(new Set<string>());
+  const activeNameRef = useRef<string | null>(null);
   const processingRef = useRef(false);
   const generationRef = useRef(0);
-  const sessionSeenRef = useRef(new Set<string>());
-  const activeNameRef = useRef<string | null>(null);
-  const recognizedOrderRef = useRef<string[]>([]);
+  const failedUntilRef = useRef(new Map<string, number>());
+  const finalSignaturesRef = useRef(new Set<string>());
+  const stableSignaturesRef = useRef(new Set<string>());
+  const interimRef = useRef({ signature: "", repeats: 0 });
 
   useEffect(() => {
     const selector = targetMode === "ban" ? ".draft-picker-ban .draft-search-wrap" : ".common-pick-search";
@@ -209,6 +257,16 @@ export default function VoiceDraftControl({
     return () => observer.disconnect();
   }, [targetMode]);
 
+  const resetSessionRefs = () => {
+    queueRef.current = [];
+    queuedKeysRef.current.clear();
+    activeNameRef.current = null;
+    failedUntilRef.current.clear();
+    finalSignaturesRef.current.clear();
+    stableSignaturesRef.current.clear();
+    interimRef.current = { signature: "", repeats: 0 };
+  };
+
   useEffect(() => {
     const speechWindow = window as SpeechWindow;
     setSupported(Boolean(speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition));
@@ -217,10 +275,7 @@ export default function VoiceDraftControl({
       const detail = (event as CustomEvent<VoiceDraftTarget>).detail;
       if (detail === targetMode) return;
       generationRef.current += 1;
-      queueRef.current = [];
-      activeNameRef.current = null;
-      sessionSeenRef.current.clear();
-      recognizedOrderRef.current = [];
+      resetSessionRefs();
       keepListeningRef.current = false;
       recognitionRef.current?.abort();
       setListening(false);
@@ -232,8 +287,7 @@ export default function VoiceDraftControl({
     return () => {
       window.removeEventListener(VOICE_START_EVENT, stopWhenOtherStarts);
       generationRef.current += 1;
-      queueRef.current = [];
-      activeNameRef.current = null;
+      resetSessionRefs();
       keepListeningRef.current = false;
       recognitionRef.current?.abort();
     };
@@ -245,10 +299,11 @@ export default function VoiceDraftControl({
     setBusy(true);
 
     try {
-      while (generation === generationRef.current) {
+      while (generation === generationRef.current && queueRef.current.length) {
         const item = queueRef.current.shift();
         if (!item) break;
-
+        const key = normalizeVoice(item.name);
+        queuedKeysRef.current.delete(key);
         activeNameRef.current = item.name;
 
         if (hasSelected(item.name, targetMode)) {
@@ -259,76 +314,77 @@ export default function VoiceDraftControl({
         const current = selectedEntries(targetMode).length;
         if (current >= MAX_SLOTS) {
           queueRef.current = [];
-          setStatus(targetMode === "ban" ? "✓ Los 6 bans están completos" : "✓ Los 6 picks están completos");
+          queuedKeysRef.current.clear();
+          setStatus(`✓ ${MAX_SLOTS}/${MAX_SLOTS} completos`);
           break;
         }
 
-        setStatus(`Validando ${current + 1}/${MAX_SLOTS}: ${item.name} · ${queueRef.current.length} en cola`);
-        const added = await commitVoiceEntry(item.name, targetMode);
+        setStatus(`Validando ${current + 1}/${MAX_SLOTS}: ${item.name} · ${queueRef.current.length} pendientes`);
+        const outcome = await commitVoiceEntry(item.name, targetMode);
         activeNameRef.current = null;
 
         if (generation !== generationRef.current) break;
 
-        if (added) {
+        if (outcome === "added" || outcome === "already") {
           const after = selectedEntries(targetMode).length;
-          const nextName = queueRef.current[0]?.name;
-          setStatus(
-            after >= MAX_SLOTS
-              ? `✓ ${MAX_SLOTS}/${MAX_SLOTS} completos`
-              : `✓ ${item.name} validado · ${after}/${MAX_SLOTS}${nextName ? ` · ahora ${nextName}` : ""}`
-          );
-          await sleep(180);
-        } else {
-          setStatus(`No pude validar ${item.name} tras ${MAX_COMMIT_ATTEMPTS} intentos; continúo con el siguiente`);
+          setStatus(after >= MAX_SLOTS
+            ? `✓ ${MAX_SLOTS}/${MAX_SLOTS} completos`
+            : `✓ ${item.name} · ${after}/${MAX_SLOTS}${queueRef.current[0] ? ` · ahora ${queueRef.current[0].name}` : ""}`);
           await sleep(150);
+        } else {
+          failedUntilRef.current.set(key, Date.now() + FAILED_RETRY_COOLDOWN);
+          setStatus(`No pude validar ${item.name}; sigo con ${queueRef.current[0]?.name || "el siguiente"}`);
+          await sleep(130);
         }
       }
     } finally {
       activeNameRef.current = null;
       processingRef.current = false;
       setBusy(false);
+
       if (generation === generationRef.current && queueRef.current.length) {
-        // Si llegaron nuevos nombres justo al terminar el bucle, no dependemos de otro onresult.
-        window.setTimeout(() => void drainQueue(generation), 30);
+        window.setTimeout(() => void drainQueue(generation), 40);
       } else if (generation === generationRef.current && keepListeningRef.current) {
-        const current = selectedEntries(targetMode).length;
+        const count = selectedEntries(targetMode).length;
         window.setTimeout(() => {
           if (!keepListeningRef.current || processingRef.current) return;
-          setStatus(current >= MAX_SLOTS ? `✓ ${MAX_SLOTS}/${MAX_SLOTS} completos` : listeningStatus);
-        }, 650);
+          setStatus(count >= MAX_SLOTS ? `✓ ${MAX_SLOTS}/${MAX_SLOTS} completos` : listeningStatus);
+        }, 600);
       }
     }
   };
 
-  const enqueueNames = (names: string[]) => {
+  const enqueueNames = (rawNames: string[], source: QueueSource) => {
+    const names = orderedUnique(rawNames);
     if (!names.length) return;
 
-    const selected = new Set(selectedEntries(targetMode).map(normalizeVoice));
-    const queued = new Set(queueRef.current.map((item) => normalizeVoice(item.name)));
-    const active = activeNameRef.current ? normalizeVoice(activeNameRef.current) : "";
-    const additions: string[] = [];
+    const selectedKeys = new Set(selectedEntries(targetMode).map(normalizeVoice));
+    const activeKey = activeNameRef.current ? normalizeVoice(activeNameRef.current) : "";
+    const remaining = Math.max(
+      0,
+      MAX_SLOTS - selectedKeys.size - queueRef.current.length - (activeNameRef.current ? 1 : 0),
+    );
+    if (!remaining) return;
 
+    const accepted: string[] = [];
     for (const name of names) {
+      if (accepted.length >= remaining) break;
       const key = normalizeVoice(name);
-      if (!key || selected.has(key) || queued.has(key) || active === key || sessionSeenRef.current.has(key)) continue;
-      sessionSeenRef.current.add(key);
-      recognizedOrderRef.current.push(name);
-      additions.push(name);
+      const failedUntil = failedUntilRef.current.get(key) || 0;
+      if (!key || selectedKeys.has(key) || queuedKeysRef.current.has(key) || activeKey === key) continue;
+      if (source === "stable-interim" && failedUntil > Date.now()) continue;
+      queuedKeysRef.current.add(key);
+      accepted.push(name);
     }
 
-    if (!additions.length) return;
-
-    const freeSlots = Math.max(0, MAX_SLOTS - selectedEntries(targetMode).length - queueRef.current.length - (activeNameRef.current ? 1 : 0));
-    if (!freeSlots) return;
-    const accepted = additions.slice(0, freeSlots);
+    if (!accepted.length) return;
     queueRef.current.push(...accepted.map((name) => ({ name })));
-
-    setStatus(`Reconocidos: ${recognizedOrderRef.current.slice(0, MAX_SLOTS).join(" → ")} · procesando ${selectedEntries(targetMode).length + 1}/${MAX_SLOTS}`);
+    setStatus(`${source === "final" ? "Confirmados" : "Estables"}: ${accepted.join(" → ")} · ${queueRef.current.length} en cola`);
     void drainQueue(generationRef.current);
   };
 
   const stopListening = () => {
-    // No borra la cola: dejar de escuchar no debe truncar los nombres ya reconocidos.
+    // Parar el micrófono no descarta lo ya reconocido: la cola termina por sí sola.
     keepListeningRef.current = false;
     setListening(false);
     if (!processingRef.current && !queueRef.current.length) setStatus("Voz detenida");
@@ -346,10 +402,7 @@ export default function VoiceDraftControl({
     if (!Recognition) return;
 
     generationRef.current += 1;
-    queueRef.current = [];
-    activeNameRef.current = null;
-    sessionSeenRef.current.clear();
-    recognizedOrderRef.current = [];
+    resetSessionRefs();
     window.dispatchEvent(new CustomEvent<VoiceDraftTarget>(VOICE_START_EVENT, { detail: targetMode }));
 
     let recognition = recognitionRef.current;
@@ -357,7 +410,6 @@ export default function VoiceDraftControl({
       recognition = new Recognition();
       recognition.lang = "es-ES";
       recognition.continuous = true;
-      // Clave para listas largas en WebKit/iPhone: capturamos nombres antes de que la frase se cierre.
       recognition.interimResults = true;
       recognition.maxAlternatives = 8;
 
@@ -367,13 +419,44 @@ export default function VoiceDraftControl({
       };
 
       recognition.onresult = (event) => {
-        // Recorremos toda la hipótesis disponible, no solo los resultados finales nuevos.
-        // sessionSeenRef evita duplicados cuando WebKit reescribe la misma frase provisional.
+        const allNames: string[] = [];
+        const finalNames: string[] = [];
+        const finalTranscripts: string[] = [];
+
         for (let resultIndex = 0; resultIndex < event.results.length; resultIndex += 1) {
           const result = event.results[resultIndex];
           const alternative = bestAlternative(result, roster);
           if (!alternative?.names.length) continue;
-          enqueueNames(alternative.names);
+          allNames.push(...alternative.names);
+          if (result.isFinal) {
+            finalNames.push(...alternative.names);
+            finalTranscripts.push(normalizeVoice(alternative.transcript));
+          }
+        }
+
+        if (finalNames.length) {
+          const signature = finalTranscripts.filter(Boolean).join("|");
+          if (!signature || !finalSignaturesRef.current.has(signature)) {
+            if (signature) finalSignaturesRef.current.add(signature);
+            enqueueNames(finalNames, "final");
+          }
+        }
+
+        const stableNames = orderedUnique(allNames);
+        const signature = stableNames.map(normalizeVoice).join("|");
+        if (!signature) return;
+
+        if (interimRef.current.signature === signature) {
+          interimRef.current.repeats += 1;
+        } else {
+          interimRef.current = { signature, repeats: 1 };
+        }
+
+        // Una hipótesis provisional solo puede actuar si WebKit la repite sin cambios.
+        // Evita meter nombres fantasma cuando la transcripción se corrige sobre la marcha.
+        if (interimRef.current.repeats >= 2 && !stableSignaturesRef.current.has(signature)) {
+          stableSignaturesRef.current.add(signature);
+          enqueueNames(stableNames, "stable-interim");
         }
       };
 
@@ -400,7 +483,6 @@ export default function VoiceDraftControl({
 
       recognition.onend = () => {
         setListening(false);
-        // Un cierre de WebKit nunca cancela la cola ya reconocida.
         if (queueRef.current.length && !processingRef.current) void drainQueue(generationRef.current);
         if (!keepListeningRef.current) return;
         window.setTimeout(() => {
@@ -410,7 +492,7 @@ export default function VoiceDraftControl({
           } catch {
             if (!processingRef.current) setStatus("Toca el micrófono para continuar");
           }
-        }, 240);
+        }, 260);
       };
 
       recognitionRef.current = recognition;
@@ -432,12 +514,12 @@ export default function VoiceDraftControl({
       <button
         type="button"
         className="voice-draft-button-v185"
-        aria-label={listening
+        aria-label={listening || busy
           ? `Detener ${targetMode === "ban" ? "bans" : "picks"} por voz`
           : `Introducir ${targetMode === "ban" ? "bans" : "picks"} por voz`}
         aria-pressed={listening}
         disabled={!supported}
-        onClick={listening ? stopListening : startListening}
+        onClick={listening || busy ? stopListening : startListening}
       >
         <span aria-hidden="true">{listening ? "■" : busy ? "…" : "🎙"}</span>
       </button>
