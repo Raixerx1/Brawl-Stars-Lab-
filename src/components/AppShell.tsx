@@ -26,7 +26,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
     <aside className={`sidebar ${open ? "open" : ""}`}>
       <div className="brand"><div className="brand-mark">★</div><div><strong>Brawl Draft Lab</strong><small>Ranked Intelligence</small></div></div>
       <nav>{nav.map(([href, label, icon]) => <Link key={href} className={path === href || (href !== "/" && path.startsWith(href)) ? "active" : ""} href={href} onClick={() => setOpen(false)}><span>{icon}</span>{label}</Link>)}</nav>
-      <div className="sidebar-note"><b>Base v0.19.4</b><span>Meta: 11/08/2026</span><span>Consola de draft unificada · vídeo completo v0.22</span></div>
+      <div className="sidebar-note"><b>Base v0.19.5</b><span>Meta: 11/08/2026</span><span>UI compacta global · vídeo completo v0.22</span></div>
     </aside>
     <main>
       <header className="topbar">
