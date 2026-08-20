@@ -1,4 +1,4 @@
-const CACHE = "brawl-draft-lab-v0195";
+const CACHE = "brawl-draft-lab-v0196";
 const CORE = [
   "/",
   "/draft",
