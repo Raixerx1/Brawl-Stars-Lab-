@@ -16,6 +16,12 @@ export type FrameMetrics = {
   leftTopMotion: number;
   bottomRightEnergy: number;
   bottomRightMotion: number;
+  killLeftMotion: number;
+  killRightMotion: number;
+  killLeftBlue: number;
+  killLeftRed: number;
+  killRightBlue: number;
+  killRightRed: number;
 };
 
 export type AutoDetection = {
@@ -34,10 +40,13 @@ export type AutoDetectorState = {
   previousGray?: Uint8Array;
   deathCandidate: number;
   deathActive: boolean;
+  allyDeathCandidate: number;
+  enemyDeathCandidate: number;
   objectiveCandidate: number;
   sceneCandidate: number;
   combatCandidate: number;
   transitionGuardUntil: number;
+  teamSignalGuardUntil: number;
   cooldowns: Record<string, number>;
 };
 
@@ -53,6 +62,8 @@ type RegionStats = {
   saturation: number;
   darkRatio: number;
   motion: number;
+  blueEnergy: number;
+  redEnergy: number;
 };
 
 const REGIONS = {
@@ -61,6 +72,8 @@ const REGIONS = {
   top: { x0: .12, y0: 0, x1: .88, y1: .26 },
   leftTop: { x0: 0, y0: 0, x1: .42, y1: .30 },
   bottomRight: { x0: .68, y0: .56, x1: 1, y1: 1 },
+  killLeft: { x0: 0, y0: .02, x1: .52, y1: .30 },
+  killRight: { x0: .48, y0: .02, x1: 1, y1: .30 },
 } satisfies Record<string, Region>;
 
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
@@ -70,6 +83,28 @@ function pixelSaturation(r: number, g: number, b: number) {
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
   return max === 0 ? 0 : (max - min) / max;
+}
+
+function teamColorEnergy(r: number, g: number, b: number) {
+  const saturation = pixelSaturation(r, g, b);
+  const value = Math.max(r, g, b) / 255;
+  if (saturation < .20 || value < .20) return { blue: 0, red: 0 };
+
+  // El azul de equipo suele ser azul/cian: B y G dominan claramente sobre R.
+  const blueDominance =
+    Math.max(0, (b - r) / 255) * .62 +
+    Math.max(0, (g - r) / 255) * .38;
+
+  // El rojo de equipo puede tender a magenta: R debe dominar sobre G,
+  // pero no exigimos que domine también sobre B.
+  const redDominance =
+    Math.max(0, (r - g) / 255) * .82 +
+    Math.max(0, (r - b) / 255) * .18;
+
+  return {
+    blue: clamp01(blueDominance * 2.1) * saturation * value,
+    red: clamp01(redDominance * 2.1) * saturation * value,
+  };
 }
 
 function regionStats(
@@ -88,6 +123,8 @@ function regionStats(
   let saturationTotal = 0;
   let dark = 0;
   let motionTotal = 0;
+  let blueTotal = 0;
+  let redTotal = 0;
   let count = 0;
 
   for (let y = startY; y < endY; y += 2) {
@@ -98,22 +135,36 @@ function regionStats(
       const g = data[dataIndex + 1];
       const b = data[dataIndex + 2];
       const luma = gray[pixelIndex];
+      const teamEnergy = teamColorEnergy(r, g, b);
 
       lumaTotal += luma / 255;
       saturationTotal += pixelSaturation(r, g, b);
+      blueTotal += teamEnergy.blue;
+      redTotal += teamEnergy.red;
       if (luma < 52) dark += 1;
       if (previousGray) motionTotal += Math.abs(luma - previousGray[pixelIndex]) / 255;
       count += 1;
     }
   }
 
-  if (!count) return { luma: 0, saturation: 0, darkRatio: 0, motion: 0 };
+  if (!count) {
+    return {
+      luma: 0,
+      saturation: 0,
+      darkRatio: 0,
+      motion: 0,
+      blueEnergy: 0,
+      redEnergy: 0,
+    };
+  }
 
   return {
     luma: lumaTotal / count,
     saturation: saturationTotal / count,
     darkRatio: dark / count,
     motion: previousGray ? motionTotal / count : 0,
+    blueEnergy: blueTotal / count,
+    redEnergy: redTotal / count,
   };
 }
 
@@ -122,10 +173,13 @@ export function createAutoDetectorState(): AutoDetectorState {
     samples: 0,
     deathCandidate: 0,
     deathActive: false,
+    allyDeathCandidate: 0,
+    enemyDeathCandidate: 0,
     objectiveCandidate: 0,
     sceneCandidate: 0,
     combatCandidate: 0,
     transitionGuardUntil: 0,
+    teamSignalGuardUntil: 0,
     cooldowns: {},
   };
 }
@@ -151,6 +205,8 @@ export function analyzeFrame(
   const top = regionStats(image, gray, previousGray, REGIONS.top);
   const leftTop = regionStats(image, gray, previousGray, REGIONS.leftTop);
   const bottomRight = regionStats(image, gray, previousGray, REGIONS.bottomRight);
+  const killLeft = regionStats(image, gray, previousGray, REGIONS.killLeft);
+  const killRight = regionStats(image, gray, previousGray, REGIONS.killRight);
 
   const bottomRightEnergy = clamp01(
     bottomRight.saturation * .62 +
@@ -173,6 +229,12 @@ export function analyzeFrame(
       leftTopMotion: leftTop.motion,
       bottomRightEnergy,
       bottomRightMotion: bottomRight.motion,
+      killLeftMotion: killLeft.motion,
+      killRightMotion: killRight.motion,
+      killLeftBlue: killLeft.blueEnergy,
+      killLeftRed: killLeft.redEnergy,
+      killRightBlue: killRight.blueEnergy,
+      killRightRed: killRight.redEnergy,
     },
   };
 }
@@ -184,6 +246,10 @@ function thresholdFor(sensitivity: AutoReviewSensitivity) {
       deathLumaRatio: .73,
       deathSaturationRatio: .78,
       deathDarkIncrease: .12,
+      teamFrames: 2,
+      teamMotion: .052,
+      teamColorDelta: .018,
+      teamDominance: 1.08,
       objectiveMotion: .075,
       sceneMotion: .20,
       combatMotion: .115,
@@ -197,6 +263,10 @@ function thresholdFor(sensitivity: AutoReviewSensitivity) {
       deathLumaRatio: .60,
       deathSaturationRatio: .66,
       deathDarkIncrease: .22,
+      teamFrames: 3,
+      teamMotion: .082,
+      teamColorDelta: .032,
+      teamDominance: 1.20,
       objectiveMotion: .13,
       sceneMotion: .30,
       combatMotion: .18,
@@ -209,6 +279,10 @@ function thresholdFor(sensitivity: AutoReviewSensitivity) {
     deathLumaRatio: .66,
     deathSaturationRatio: .72,
     deathDarkIncrease: .17,
+    teamFrames: 2,
+    teamMotion: .065,
+    teamColorDelta: .024,
+    teamDominance: 1.13,
     objectiveMotion: .10,
     sceneMotion: .25,
     combatMotion: .145,
@@ -233,6 +307,12 @@ function updateBaseline(current: FrameMetrics, previous: FrameMetrics | undefine
     leftTopMotion: blend(previous.leftTopMotion, current.leftTopMotion),
     bottomRightEnergy: blend(previous.bottomRightEnergy, current.bottomRightEnergy),
     bottomRightMotion: blend(previous.bottomRightMotion, current.bottomRightMotion),
+    killLeftMotion: blend(previous.killLeftMotion, current.killLeftMotion),
+    killRightMotion: blend(previous.killRightMotion, current.killRightMotion),
+    killLeftBlue: blend(previous.killLeftBlue, current.killLeftBlue),
+    killLeftRed: blend(previous.killLeftRed, current.killLeftRed),
+    killRightBlue: blend(previous.killRightBlue, current.killRightBlue),
+    killRightRed: blend(previous.killRightRed, current.killRightRed),
   };
 }
 
@@ -306,6 +386,7 @@ export function detectFrameEvents(
   const previous = state.previous;
   const captureShock = shouldTreatAsCaptureShock(metrics, previous);
   const inTransitionGuard = second < state.transitionGuardUntil;
+  const inTeamGuard = second < state.teamSignalGuardUntil;
   const dynamicCombatThreshold = thresholds.combatMotion + Math.min(.035, baseline.motion * .35);
   const dynamicObjectiveThreshold = thresholds.objectiveMotion * objectiveMultiplier(mode) + Math.min(.025, baseline.topMotion * .20);
 
@@ -323,8 +404,10 @@ export function detectFrameEvents(
   if (!state.deathActive && state.deathCandidate >= thresholds.deathFrames) {
     state.deathActive = true;
     deathTriggered = true;
+    state.allyDeathCandidate = 0;
+    state.teamSignalGuardUntil = second + 3;
     const confidence =
-      .58 +
+      .60 +
       Math.min(.18, (baseline.centerLuma - metrics.centerLuma) * .66) +
       Math.min(.14, (metrics.centerDarkRatio - baseline.centerDarkRatio) * .46);
     emit(state, second, {
@@ -333,8 +416,8 @@ export function detectFrameEvents(
       category: "Auto · Combate",
       tone: "bad",
       confidence,
-      comment: "Posible muerte detectada tras varios fotogramas coherentes. Revisa si la entrada quedó sin munición, apoyo o ruta de retirada.",
-    }, 10, detections);
+      comment: "Tu muerte es probable: la cámara central entró en una transición compatible con derrota y respawn. Revisa posición, munición, apoyo y ruta de retirada.",
+    }, 8, detections);
   }
 
   const recovered =
@@ -354,7 +437,88 @@ export function detectFrameEvents(
       tone: "neutral",
       confidence: .72,
       comment: "Reaparición probable. Recupera primero una posición segura y sincroniza la reentrada con el equipo.",
-    }, 9, detections);
+    }, 8, detections);
+  }
+
+  // Kill feed / HUD de equipo. Se mide el cambio respecto al baseline para no confundir
+  // barras rojas o azules permanentes del mapa con una baja real.
+  const leftBlueDelta = Math.max(0, metrics.killLeftBlue - baseline.killLeftBlue);
+  const leftRedDelta = Math.max(0, metrics.killLeftRed - baseline.killLeftRed);
+  const rightBlueDelta = Math.max(0, metrics.killRightBlue - baseline.killRightBlue);
+  const rightRedDelta = Math.max(0, metrics.killRightRed - baseline.killRightRed);
+
+  // La disposición histórica del kill feed favorece azul a la izquierda y rojo a la derecha.
+  // Aun así se permite una señal secundaria en el lado opuesto por recortes, replays o HUD escalado.
+  const enemyColorSignal = Math.max(leftBlueDelta * 1.18, rightBlueDelta * .78);
+  const allyColorSignal = Math.max(rightRedDelta * 1.18, leftRedDelta * .78);
+  const enemyMotionSignal = leftBlueDelta * 1.18 >= rightBlueDelta * .78
+    ? metrics.killLeftMotion
+    : metrics.killRightMotion;
+  const allyMotionSignal = rightRedDelta * 1.18 >= leftRedDelta * .78
+    ? metrics.killRightMotion
+    : metrics.killLeftMotion;
+
+  const enemyDeathPulse =
+    !captureShock &&
+    !inTransitionGuard &&
+    !inTeamGuard &&
+    enemyColorSignal > thresholds.teamColorDelta &&
+    enemyMotionSignal > thresholds.teamMotion &&
+    enemyColorSignal > allyColorSignal * thresholds.teamDominance;
+
+  const allyDeathPulse =
+    !captureShock &&
+    !inTransitionGuard &&
+    !inTeamGuard &&
+    !state.deathActive &&
+    state.deathCandidate === 0 &&
+    allyColorSignal > thresholds.teamColorDelta &&
+    allyMotionSignal > thresholds.teamMotion &&
+    allyColorSignal > enemyColorSignal * thresholds.teamDominance;
+
+  state.enemyDeathCandidate = enemyDeathPulse
+    ? Math.min(4, state.enemyDeathCandidate + 1)
+    : Math.max(0, state.enemyDeathCandidate - 1);
+  state.allyDeathCandidate = allyDeathPulse
+    ? Math.min(4, state.allyDeathCandidate + 1)
+    : Math.max(0, state.allyDeathCandidate - 1);
+
+  if (!deathTriggered && state.enemyDeathCandidate >= thresholds.teamFrames) {
+    const expectedSideBonus = leftBlueDelta > rightBlueDelta ? .05 : 0;
+    const confidence =
+      .61 +
+      expectedSideBonus +
+      Math.min(.18, enemyColorSignal * 2.8) +
+      Math.min(.08, enemyMotionSignal * .34);
+    emit(state, second, {
+      key: "enemy-death",
+      eventLabel: "Eliminación rival",
+      category: "Auto · Combate",
+      tone: "good",
+      confidence,
+      comment: "Baja rival probable: el HUD superior mostró un pulso azul compatible con una eliminación de vuestro equipo. Aprovecha la ventaja numérica antes del respawn.",
+    }, 3, detections);
+    state.enemyDeathCandidate = 0;
+    state.teamSignalGuardUntil = second + 1;
+  }
+
+  if (!deathTriggered && !state.deathActive && state.allyDeathCandidate >= thresholds.teamFrames) {
+    const expectedSideBonus = rightRedDelta > leftRedDelta ? .05 : 0;
+    const confidence =
+      .61 +
+      expectedSideBonus +
+      Math.min(.18, allyColorSignal * 2.8) +
+      Math.min(.08, allyMotionSignal * .34);
+    emit(state, second, {
+      key: "ally-death",
+      eventLabel: "Muerte aliada",
+      category: "Auto · Combate",
+      tone: "bad",
+      confidence,
+      comment: "Baja aliada probable: el HUD superior mostró un pulso rojo compatible con una eliminación del rival. Reduce la exposición y juega la desventaja numérica hasta reagrupar.",
+    }, 3, detections);
+    state.allyDeathCandidate = 0;
+    state.teamSignalGuardUntil = second + 1;
   }
 
   const superDrop = previous ? previous.bottomRightEnergy - metrics.bottomRightEnergy : 0;
@@ -468,6 +632,8 @@ export function detectFrameEvents(
     state.objectiveCandidate === 0 &&
     state.sceneCandidate === 0 &&
     state.combatCandidate <= 1 &&
+    state.allyDeathCandidate === 0 &&
+    state.enemyDeathCandidate === 0 &&
     metrics.motion < .14 &&
     metrics.centerDarkRatio < baseline.centerDarkRatio + .09;
 
