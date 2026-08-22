@@ -30,14 +30,22 @@ type SpeechWindow = Window & {
 };
 
 export type VoiceDraftTarget = "ban" | "pick";
-type QueueItem = { name: string };
+type QueueSource = "final" | "stable-interim" | "recovery";
+type QueueItem = { name: string; retries: number };
 type CommitOutcome = "added" | "already" | "wrong" | "failed";
-type QueueSource = "final" | "stable-interim";
+type HeardEvidence = {
+  name: string;
+  order: number;
+  finalWeight: number;
+  interimWeight: number;
+};
+type TranscriptLedgerItem = { transcript: string; isFinal: boolean };
 
 const VOICE_START_EVENT = "brawl-draft-lab:voice-start";
 const MAX_SLOTS = 6;
 const MAX_COMMIT_ATTEMPTS = 3;
-const FAILED_RETRY_COOLDOWN = 2800;
+const MAX_QUEUE_RETRIES = 1;
+const FAILED_RETRY_COOLDOWN = 2200;
 const sleep = (milliseconds: number) => new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 
 function nativeSetInputValue(input: HTMLInputElement, value: string) {
@@ -76,25 +84,25 @@ async function prepareInput(input: HTMLInputElement, name: string) {
   nativeSetInputValue(input, "");
   if (document.activeElement === input) {
     input.blur();
-    await sleep(85);
+    await sleep(70);
   }
   input.focus();
   input.click();
   input.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
   input.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
-  await sleep(70);
+  await sleep(85);
   nativeSetInputValue(input, name);
-  await sleep(125);
+  await sleep(145);
 }
 
-async function exactSuggestion(name: string, targetMode: VoiceDraftTarget, timeout = 520) {
+async function exactSuggestion(name: string, targetMode: VoiceDraftTarget, timeout = 650) {
   const started = Date.now();
   while (Date.now() - started < timeout) {
     const exact = [...document.querySelectorAll<HTMLButtonElement>(suggestionSelector(targetMode))].find((button) =>
       normalizeVoice(button.querySelector("b")?.textContent || "") === normalizeVoice(name)
     );
     if (exact) return exact;
-    await sleep(35);
+    await sleep(40);
   }
   return undefined;
 }
@@ -112,7 +120,7 @@ async function waitForCommitOutcome(
   name: string,
   targetMode: VoiceDraftTarget,
   before: string[],
-  timeout = 1450,
+  timeout = 1500,
 ): Promise<CommitOutcome> {
   const target = normalizeVoice(name);
   const beforeSet = new Set(before.map(normalizeVoice));
@@ -121,12 +129,11 @@ async function waitForCommitOutcome(
   while (Date.now() - started < timeout) {
     const entries = selectedEntries(targetMode);
     if (entries.some((value) => normalizeVoice(value) === target)) return "added";
-
     if (entries.length > before.length) {
       const unexpected = entries.find((value) => !beforeSet.has(normalizeVoice(value)));
       if (unexpected) return "wrong";
     }
-    await sleep(45);
+    await sleep(50);
   }
   return "failed";
 }
@@ -142,11 +149,11 @@ async function rollbackUnexpected(targetMode: VoiceDraftTarget, before: string[]
       .find((item) => normalizeVoice(item.querySelector("span")?.textContent || "") === normalizeVoice(unexpected));
     button?.click();
   } else {
-    const buttons = [...document.querySelectorAll<HTMLButtonElement>(".ordered-pick-slot.filled")];
-    const button = buttons.find((item) => normalizeVoice(item.querySelector("b")?.textContent || "") === normalizeVoice(unexpected));
+    const button = [...document.querySelectorAll<HTMLButtonElement>(".ordered-pick-slot.filled")]
+      .find((item) => normalizeVoice(item.querySelector("b")?.textContent || "") === normalizeVoice(unexpected));
     button?.click();
   }
-  await sleep(180);
+  await sleep(220);
 }
 
 async function commitVoiceEntry(name: string, targetMode: VoiceDraftTarget): Promise<CommitOutcome> {
@@ -158,36 +165,34 @@ async function commitVoiceEntry(name: string, targetMode: VoiceDraftTarget): Pro
 
     const input = inputFor(targetMode);
     if (!input) {
-      await sleep(160 + attempt * 80);
+      await sleep(190 + attempt * 95);
       continue;
     }
 
     const before = selectedEntries(targetMode);
     await prepareInput(input, name);
+    const exact = await exactSuggestion(name, targetMode, 480 + attempt * 110);
 
-    // Ruta más segura: coincidencia exacta visible. Si WebKit/React no mantiene abierto
-    // el desplegable, Enter usa el mismo handler del buscador y evita que la cola se atasque.
-    const exact = await exactSuggestion(name, targetMode, 420 + attempt * 90);
     if (exact) {
       exact.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true, view: window }));
       exact.dispatchEvent(new MouseEvent("mouseup", { bubbles: true, cancelable: true, view: window }));
+      exact.click();
     } else {
       dispatchEnter(input);
     }
 
-    let outcome = await waitForCommitOutcome(name, targetMode, before, 1150 + attempt * 180);
+    let outcome = await waitForCommitOutcome(name, targetMode, before, 1250 + attempt * 220);
     if (outcome === "added") return "added";
 
     if (outcome === "wrong") {
       await rollbackUnexpected(targetMode, before);
     } else {
-      // Segundo intento dentro de la misma vuelta: Enter no depende del desplegable.
       const currentInput = inputFor(targetMode);
       if (currentInput) {
         nativeSetInputValue(currentInput, name);
-        await sleep(110);
+        await sleep(145);
         dispatchEnter(currentInput);
-        outcome = await waitForCommitOutcome(name, targetMode, before, 850);
+        outcome = await waitForCommitOutcome(name, targetMode, before, 950);
         if (outcome === "added") return "added";
         if (outcome === "wrong") await rollbackUnexpected(targetMode, before);
       }
@@ -198,7 +203,7 @@ async function commitVoiceEntry(name: string, targetMode: VoiceDraftTarget): Pro
       nativeSetInputValue(currentInput, "");
       currentInput.blur();
     }
-    await sleep(170 + attempt * 95);
+    await sleep(220 + attempt * 110);
   }
 
   return hasSelected(name, targetMode) ? "already" : "failed";
@@ -247,6 +252,9 @@ export default function VoiceDraftControl({ roster, targetMode }: { roster: Braw
   const finalSignaturesRef = useRef(new Set<string>());
   const stableSignaturesRef = useRef(new Set<string>());
   const interimRef = useRef({ signature: "", repeats: 0 });
+  const transcriptLedgerRef = useRef(new Map<number, TranscriptLedgerItem>());
+  const heardEvidenceRef = useRef(new Map<string, HeardEvidence>());
+  const heardOrderRef = useRef(0);
 
   useEffect(() => {
     const selector = targetMode === "ban" ? ".draft-picker-ban .draft-search-wrap" : ".common-pick-search";
@@ -265,6 +273,9 @@ export default function VoiceDraftControl({ roster, targetMode }: { roster: Braw
     finalSignaturesRef.current.clear();
     stableSignaturesRef.current.clear();
     interimRef.current = { signature: "", repeats: 0 };
+    transcriptLedgerRef.current.clear();
+    heardEvidenceRef.current.clear();
+    heardOrderRef.current = 0;
   };
 
   useEffect(() => {
@@ -315,6 +326,8 @@ export default function VoiceDraftControl({ roster, targetMode }: { roster: Braw
         if (current >= MAX_SLOTS) {
           queueRef.current = [];
           queuedKeysRef.current.clear();
+          keepListeningRef.current = false;
+          recognitionRef.current?.stop();
           setStatus(`✓ ${MAX_SLOTS}/${MAX_SLOTS} completos`);
           break;
         }
@@ -330,11 +343,21 @@ export default function VoiceDraftControl({ roster, targetMode }: { roster: Braw
           setStatus(after >= MAX_SLOTS
             ? `✓ ${MAX_SLOTS}/${MAX_SLOTS} completos`
             : `✓ ${item.name} · ${after}/${MAX_SLOTS}${queueRef.current[0] ? ` · ahora ${queueRef.current[0].name}` : ""}`);
-          await sleep(150);
+          if (after >= MAX_SLOTS) {
+            keepListeningRef.current = false;
+            recognitionRef.current?.stop();
+          }
+          await sleep(260);
+        } else if (item.retries < MAX_QUEUE_RETRIES && selectedEntries(targetMode).length < MAX_SLOTS) {
+          failedUntilRef.current.set(key, Date.now() + 450);
+          queueRef.current.push({ ...item, retries: item.retries + 1 });
+          queuedKeysRef.current.add(key);
+          setStatus(`Reintento reservado para ${item.name} · sigo con la cola`);
+          await sleep(280);
         } else {
           failedUntilRef.current.set(key, Date.now() + FAILED_RETRY_COOLDOWN);
           setStatus(`No pude validar ${item.name}; sigo con ${queueRef.current[0]?.name || "el siguiente"}`);
-          await sleep(130);
+          await sleep(180);
         }
       }
     } finally {
@@ -343,13 +366,13 @@ export default function VoiceDraftControl({ roster, targetMode }: { roster: Braw
       setBusy(false);
 
       if (generation === generationRef.current && queueRef.current.length) {
-        window.setTimeout(() => void drainQueue(generation), 40);
+        window.setTimeout(() => void drainQueue(generation), 60);
       } else if (generation === generationRef.current && keepListeningRef.current) {
         const count = selectedEntries(targetMode).length;
         window.setTimeout(() => {
           if (!keepListeningRef.current || processingRef.current) return;
           setStatus(count >= MAX_SLOTS ? `✓ ${MAX_SLOTS}/${MAX_SLOTS} completos` : listeningStatus);
-        }, 600);
+        }, 650);
       }
     }
   };
@@ -358,12 +381,11 @@ export default function VoiceDraftControl({ roster, targetMode }: { roster: Braw
     const names = orderedUnique(rawNames);
     if (!names.length) return;
 
-    const selectedKeys = new Set(selectedEntries(targetMode).map(normalizeVoice));
-    const activeKey = activeNameRef.current ? normalizeVoice(activeNameRef.current) : "";
-    const remaining = Math.max(
-      0,
-      MAX_SLOTS - selectedKeys.size - queueRef.current.length - (activeNameRef.current ? 1 : 0),
-    );
+    const occupiedKeys = new Set(selectedEntries(targetMode).map(normalizeVoice));
+    for (const item of queueRef.current) occupiedKeys.add(normalizeVoice(item.name));
+    if (activeNameRef.current) occupiedKeys.add(normalizeVoice(activeNameRef.current));
+
+    const remaining = Math.max(0, MAX_SLOTS - occupiedKeys.size);
     if (!remaining) return;
 
     const accepted: string[] = [];
@@ -371,22 +393,68 @@ export default function VoiceDraftControl({ roster, targetMode }: { roster: Braw
       if (accepted.length >= remaining) break;
       const key = normalizeVoice(name);
       const failedUntil = failedUntilRef.current.get(key) || 0;
-      if (!key || selectedKeys.has(key) || queuedKeysRef.current.has(key) || activeKey === key) continue;
-      if (source === "stable-interim" && failedUntil > Date.now()) continue;
+      if (!key || occupiedKeys.has(key) || queuedKeysRef.current.has(key)) continue;
+      if (source !== "final" && failedUntil > Date.now()) continue;
+      occupiedKeys.add(key);
       queuedKeysRef.current.add(key);
       accepted.push(name);
     }
 
     if (!accepted.length) return;
-    queueRef.current.push(...accepted.map((name) => ({ name })));
-    setStatus(`${source === "final" ? "Confirmados" : "Estables"}: ${accepted.join(" → ")} · ${queueRef.current.length} en cola`);
+    queueRef.current.push(...accepted.map((name) => ({ name, retries: 0 })));
+    const prefix = source === "final" ? "Confirmados" : source === "recovery" ? "Recuperados" : "Estables";
+    setStatus(`${prefix}: ${accepted.join(" → ")} · ${queueRef.current.length} en cola`);
     void drainQueue(generationRef.current);
   };
 
+  const recordEvidence = (result: SpeechResultLike) => {
+    const counts = new Map<string, { name: string; hits: number }>();
+    const best = bestAlternative(result, roster);
+
+    for (let alternativeIndex = 0; alternativeIndex < result.length; alternativeIndex += 1) {
+      const names = matchBrawlersInSpeech(result[alternativeIndex].transcript, roster);
+      for (const name of names) {
+        const key = normalizeVoice(name);
+        const current = counts.get(key) || { name, hits: 0 };
+        current.hits += 1;
+        counts.set(key, current);
+      }
+    }
+
+    const ordered = orderedUnique([
+      ...(best?.names || []),
+      ...[...counts.values()].filter((item) => item.hits >= 2).map((item) => item.name),
+    ]);
+
+    for (const name of ordered) {
+      const key = normalizeVoice(name);
+      const consensus = counts.get(key)?.hits || 0;
+      const isBest = best?.names.some((candidate) => normalizeVoice(candidate) === key) || false;
+      const current = heardEvidenceRef.current.get(key) || {
+        name,
+        order: heardOrderRef.current++,
+        finalWeight: 0,
+        interimWeight: 0,
+      };
+      const weight = (isBest ? 2 : 0) + (consensus >= 2 ? 1 : 0);
+      if (result.isFinal) current.finalWeight += Math.max(1, weight);
+      else current.interimWeight += Math.max(1, weight);
+      heardEvidenceRef.current.set(key, current);
+    }
+  };
+
+  const recoverHeardNames = () => {
+    const names = [...heardEvidenceRef.current.values()]
+      .filter((item) => item.finalWeight >= 1 || item.interimWeight >= 2)
+      .sort((a, b) => a.order - b.order)
+      .map((item) => item.name);
+    enqueueNames(names, "recovery");
+  };
+
   const stopListening = () => {
-    // Parar el micrófono no descarta lo ya reconocido: la cola termina por sí sola.
     keepListeningRef.current = false;
     setListening(false);
+    recoverHeardNames();
     if (!processingRef.current && !queueRef.current.length) setStatus("Voz detenida");
     recognitionRef.current?.stop();
   };
@@ -411,7 +479,7 @@ export default function VoiceDraftControl({ roster, targetMode }: { roster: Braw
       recognition.lang = "es-ES";
       recognition.continuous = true;
       recognition.interimResults = true;
-      recognition.maxAlternatives = 8;
+      recognition.maxAlternatives = 10;
 
       recognition.onstart = () => {
         setListening(true);
@@ -419,30 +487,38 @@ export default function VoiceDraftControl({ roster, targetMode }: { roster: Braw
       };
 
       recognition.onresult = (event) => {
-        const allNames: string[] = [];
-        const finalNames: string[] = [];
-        const finalTranscripts: string[] = [];
+        let finalChanged = false;
 
-        for (let resultIndex = 0; resultIndex < event.results.length; resultIndex += 1) {
+        for (let resultIndex = event.resultIndex; resultIndex < event.results.length; resultIndex += 1) {
           const result = event.results[resultIndex];
-          const alternative = bestAlternative(result, roster);
-          if (!alternative?.names.length) continue;
-          allNames.push(...alternative.names);
-          if (result.isFinal) {
-            finalNames.push(...alternative.names);
-            finalTranscripts.push(normalizeVoice(alternative.transcript));
+          const best = bestAlternative(result, roster);
+          if (best?.transcript) {
+            transcriptLedgerRef.current.set(resultIndex, {
+              transcript: best.transcript,
+              isFinal: result.isFinal,
+            });
           }
+          recordEvidence(result);
+          if (result.isFinal) finalChanged = true;
         }
 
-        if (finalNames.length) {
-          const signature = finalTranscripts.filter(Boolean).join("|");
-          if (!signature || !finalSignaturesRef.current.has(signature)) {
-            if (signature) finalSignaturesRef.current.add(signature);
+        const ledger = [...transcriptLedgerRef.current.entries()].sort((a, b) => a[0] - b[0]);
+        const finalTranscript = ledger
+          .filter(([, item]) => item.isFinal)
+          .map(([, item]) => item.transcript)
+          .join(" ");
+        const allTranscript = ledger.map(([, item]) => item.transcript).join(" ");
+
+        if (finalChanged) {
+          const finalNames = matchBrawlersInSpeech(finalTranscript, roster);
+          const signature = finalNames.map(normalizeVoice).join("|");
+          if (signature && !finalSignaturesRef.current.has(signature)) {
+            finalSignaturesRef.current.add(signature);
             enqueueNames(finalNames, "final");
           }
         }
 
-        const stableNames = orderedUnique(allNames);
+        const stableNames = matchBrawlersInSpeech(allTranscript, roster);
         const signature = stableNames.map(normalizeVoice).join("|");
         if (!signature) return;
 
@@ -452,8 +528,6 @@ export default function VoiceDraftControl({ roster, targetMode }: { roster: Braw
           interimRef.current = { signature, repeats: 1 };
         }
 
-        // Una hipótesis provisional solo puede actuar si WebKit la repite sin cambios.
-        // Evita meter nombres fantasma cuando la transcripción se corrige sobre la marcha.
         if (interimRef.current.repeats >= 2 && !stableSignaturesRef.current.has(signature)) {
           stableSignaturesRef.current.add(signature);
           enqueueNames(stableNames, "stable-interim");
@@ -463,6 +537,7 @@ export default function VoiceDraftControl({ roster, targetMode }: { roster: Braw
       recognition.onerror = (event) => {
         const error = event.error || "unknown";
         if (error === "no-speech") {
+          recoverHeardNames();
           if (!processingRef.current) setStatus(targetMode === "ban" ? "No oí más bans. Sigo escuchando…" : "No oí más picks. Sigo escuchando…");
           return;
         }
@@ -483,16 +558,17 @@ export default function VoiceDraftControl({ roster, targetMode }: { roster: Braw
 
       recognition.onend = () => {
         setListening(false);
+        recoverHeardNames();
         if (queueRef.current.length && !processingRef.current) void drainQueue(generationRef.current);
-        if (!keepListeningRef.current) return;
+        if (!keepListeningRef.current || selectedEntries(targetMode).length >= MAX_SLOTS) return;
         window.setTimeout(() => {
-          if (!keepListeningRef.current) return;
+          if (!keepListeningRef.current || selectedEntries(targetMode).length >= MAX_SLOTS) return;
           try {
             recognitionRef.current?.start();
           } catch {
             if (!processingRef.current) setStatus("Toca el micrófono para continuar");
           }
-        }, 260);
+        }, 320);
       };
 
       recognitionRef.current = recognition;
