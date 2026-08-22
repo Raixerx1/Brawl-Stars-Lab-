@@ -14,7 +14,7 @@ type TierListData = {
   snapshots: Record<string, TierSnapshot>;
 };
 
-const tierOrder = ["S", "A", "B", "C", "D", "F", "Sin datos"];
+const tierOrder = ["S+", "S", "A", "B", "C", "D", "F", "Sin datos"];
 
 export default function MetaTierList({
   data,
@@ -35,8 +35,8 @@ export default function MetaTierList({
     <div className="section-title">
       <div>
         <span className="eyebrow">Tier list actual</span>
-        <h2>Meta de alto nivel</h2>
-        <p>Orden global orientativo. Para el draft real prevalecen el mapa, el modo, los bans y los counters.</p>
+        <h2>Meta competitivo Windstock</h2>
+        <p>Orden global orientativo. Para el draft real prevalecen el mapa, el modo, los bans y el matchup uno a uno.</p>
       </div>
       <div className="meta-tier-tabs" role="tablist" aria-label="Periodo de la tier list">
         {snapshotNames.map((name) => <button
@@ -60,7 +60,7 @@ export default function MetaTierList({
       {tierOrder.map((tier) => {
         const names = selected[tier] || [];
         if (!names.length) return null;
-        return <article className={`meta-tier-row tier-${tier.toLowerCase().replace(/\s+/g, "-")}`} key={tier}>
+        return <article className={`meta-tier-row tier-${tier.toLowerCase().replace(/\+/g, "plus").replace(/\s+/g, "-")}`} key={tier}>
           <div className="meta-tier-label">
             <strong>{tier}</strong>
             <span>{names.length}</span>
