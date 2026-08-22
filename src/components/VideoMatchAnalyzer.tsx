@@ -112,18 +112,18 @@ export default function VideoMatchAnalyzer({
         ? metadataDuration
         : Math.max(1, durationHint || 1);
 
-      // v0.23: ~35-55% más densidad temporal que v0.22 en una partida normal,
-      // pero con límite para que siga siendo viable en iPhone.
-      const step = Math.max(.30, duration / 560);
+      // v0.24: más resolución espacial para el HUD/kill feed y un barrido algo más denso.
+      // El límite mantiene el procesamiento íntegramente local y razonable en móvil.
+      const step = Math.max(.24, duration / 600);
       const lastTime = Math.max(.1, duration - .08);
       const sampleTimes: number[] = [];
-      for (let second = .08; second <= lastTime && sampleTimes.length < 620; second += step) {
+      for (let second = .08; second <= lastTime && sampleTimes.length < 680; second += step) {
         sampleTimes.push(Math.min(lastTime, second));
       }
 
-      const width = 360;
+      const width = 420;
       const aspect = video.videoWidth > 0 && video.videoHeight > 0 ? video.videoHeight / video.videoWidth : 9 / 16;
-      const height = Math.max(160, Math.min(270, Math.round(width * aspect)));
+      const height = Math.max(180, Math.min(315, Math.round(width * aspect)));
       canvas.width = width;
       canvas.height = height;
       const context = canvas.getContext("2d", { willReadFrequently: true });
@@ -134,7 +134,7 @@ export default function VideoMatchAnalyzer({
       const events: Array<ReturnType<typeof detectionToVideoEvent>> = [];
       let detectionIndex = 0;
 
-      setMessage(`Barrido fino · ${sampleTimes.length} fotogramas`);
+      setMessage(`Barrido HUD + combate · ${sampleTimes.length} fotogramas`);
 
       for (let index = 0; index < sampleTimes.length; index += 1) {
         if (cancelRef.current) return;
@@ -168,7 +168,7 @@ export default function VideoMatchAnalyzer({
       setReport(finalReport);
       setProgress(100);
       setStatus("done");
-      setMessage(`${finalReport.events.length} señales limpias · ${finalReport.sequences.length} secuencias · ${finalReport.moments.length} ventanas · evidencia ${finalReport.signalQuality.toLowerCase()}`);
+      setMessage(`${finalReport.events.length} señales limpias · ${finalReport.teamBalance.classifiedDeaths} bajas clasificadas · ${finalReport.sequences.length} secuencias · evidencia ${finalReport.signalQuality.toLowerCase()}`);
     } catch {
       setStatus("error");
       setMessage("No se pudo decodificar el vídeo para el análisis local. Prueba con el MP4 original o vuelve a importarlo.");
@@ -179,15 +179,15 @@ export default function VideoMatchAnalyzer({
 
   const chronological = report ? [...report.events].sort((a, b) => a.second - b.second) : [];
 
-  return <section className="video-analyzer-v22 video-analyzer-v23">
+  return <section className="video-analyzer-v22 video-analyzer-v23 video-analyzer-v24">
     <video ref={videoRef} src={src} muted playsInline preload="auto" className="video-analyzer-source-v22" aria-hidden="true" />
     <canvas ref={canvasRef} className="video-analyzer-canvas-v22" aria-hidden="true" />
 
     <div className="video-analyzer-head-v22">
       <div>
-        <span className="eyebrow">Analizador de vídeo v0.23</span>
-        <h3>Barrido fino + secuencias tácticas</h3>
-        <p>Extrae más fotogramas, elimina señales duplicadas y conecta combate, muerte, super y objetivo en ventanas que se pueden revisar desde antes de la decisión.</p>
+        <span className="eyebrow">Analizador de vídeo v0.24</span>
+        <h3>Bajas por equipo + secuencias tácticas</h3>
+        <p>Escanea el HUD y el combate con más resolución. Distingue tu muerte, una muerte aliada y una eliminación rival cuando la señal azul/roja es suficientemente consistente.</p>
       </div>
       <div className="video-analyzer-controls-v22">
         <label>Sensibilidad<select value={sensitivity} disabled={status === "analyzing"} onChange={(event) => setSensitivity(event.target.value as AutoReviewSensitivity)}><option>Baja</option><option>Media</option><option>Alta</option></select></label>
@@ -206,7 +206,9 @@ export default function VideoMatchAnalyzer({
     {report && <>
       <div className="video-analysis-summary-v22">
         <article><span>Evidencia</span><strong>{report.signalQuality}</strong><small>Confianza media {report.averageConfidence}%</small></article>
-        <article><span>Señales</span><strong>{report.events.length}</strong><small>Tras deduplicación temporal</small></article>
+        <article><span>Tu muerte</span><strong>{report.teamBalance.ownDeaths}</strong><small>Transición central + respawn</small></article>
+        <article><span>Aliados caídos</span><strong>{report.teamBalance.allyDeaths}</strong><small>Señal roja del HUD</small></article>
+        <article><span>Rivales eliminados</span><strong>{report.teamBalance.enemyDeaths}</strong><small>Señal azul del HUD</small></article>
         <article><span>Secuencias</span><strong>{report.sequences.length}</strong><small>Cadenas tácticas detectadas</small></article>
         <article><span>Momentos</span><strong>{report.moments.length}</strong><small>Ventanas para revisar</small></article>
         <article className="wide"><span>Lectura principal</span><b>{report.headline}</b></article>
@@ -222,7 +224,7 @@ export default function VideoMatchAnalyzer({
       </div>
 
       {report.sequences.length > 0 && <div className="video-sequences-v23">
-        <div className="video-column-title-v22"><span>Secuencias tácticas</span><small>Empiezan unos segundos antes de la primera señal para revisar la decisión que abrió la cadena.</small></div>
+        <div className="video-column-title-v22"><span>Secuencias tácticas</span><small>Ya distinguen si la baja es tuya, de un aliado o de un rival antes de valorar la conversión.</small></div>
         <div className="video-sequence-grid-v23">
           {report.sequences.slice(0, 6).map((sequence, index) => <button type="button" key={sequence.id} className={`priority-${sequence.priority.toLowerCase().replace("í", "i")}`} onClick={() => onSeek?.(sequence.startSecond)}>
             <time>{formatLiveTime(Math.round(sequence.startSecond))}</time>
@@ -254,6 +256,6 @@ export default function VideoMatchAnalyzer({
       </div>
     </>}
 
-    <p className="video-analysis-disclaimer-v22">El análisis sigue siendo heurístico: detecta patrones visuales y relaciones temporales, pero no identifica de forma fiable qué equipo ejecutó cada super, muerte u objetivo. Las secuencias son ventanas de revisión, no afirmaciones causales definitivas.</p>
+    <p className="video-analysis-disclaimer-v22">Clasificación heurística y local: la muerte propia usa la transición central/respawn; las bajas de aliados y rivales usan cambios temporales del HUD y predominio rojo/azul. Si la señal no domina con margen suficiente, el motor evita forzar esa clasificación. Supers y cambios de objetivo todavía requieren revisar el contexto.</p>
   </section>;
 }
