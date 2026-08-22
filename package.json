@@ -1,6 +1,6 @@
 {
   "name": "brawl-stars-lab",
-  "version": "0.20.0",
+  "version": "0.21.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -20,8 +20,8 @@
     "sync:meta": "node scripts/sync-meta-tiers.mjs",
     "audit:auto-review": "node scripts/audit-auto-review-v16.mjs && node scripts/audit-auto-review-v21.mjs",
     "audit:coach-debrief": "node scripts/audit-coach-debrief-v21.mjs",
-    "audit:voice": "node scripts/audit-voice-sequence-v22.mjs",
-    "audit:video-review": "node scripts/audit-video-review-v23.mjs"
+    "audit:voice": "node scripts/audit-voice-sequence-v24.mjs",
+    "audit:video-review": "node scripts/audit-video-review-v24.mjs"
   },
   "dependencies": {
     "next": "16.2.12",
