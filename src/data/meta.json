@@ -23,70 +23,42 @@
   "generalNerfs": [
     {
       "brawler": "Crow",
-      "changes": [
-        "Daño del ataque principal: 380 → 320",
-        "Daño de Slowing Toxin: 800 → 600"
-      ],
+      "changes": ["Daño del ataque principal: 380 → 320", "Daño de Slowing Toxin: 800 → 600"],
       "impact": "Pierde presión de poke y capacidad de rematar; baja su prioridad como pick generalista."
     },
     {
       "brawler": "Griff",
-      "changes": [
-        "Radio de Piggy Bank: 800 → 600",
-        "Keep the Change aumenta un 55 % la dispersión"
-      ],
+      "changes": ["Radio de Piggy Bank: 800 → 600", "Keep the Change aumenta un 55 % la dispersión"],
       "impact": "Menos fiable para abrir mapa y castigar a media distancia, aunque el rendimiento Ranked observado sigue siendo muy alto."
     },
     {
       "brawler": "Starr Nova",
-      "changes": [
-        "Salud: 4000 → 3700",
-        "Recarga: 1400 → 1600",
-        "Floaty Time: duración máxima 10 s → 7 s",
-        "Power Level Maximum: máximo 30 % → 20 %"
-      ],
+      "changes": ["Salud: 4000 → 3700", "Recarga: 1400 → 1600", "Floaty Time: duración máxima 10 s → 7 s", "Power Level Maximum: máximo 30 % → 20 %"],
       "impact": "Nerf amplio a supervivencia, tempo y escalado; sigue siendo fuerte, pero es menos segura a ciegas que antes del parche."
     },
     {
       "brawler": "Damian",
-      "changes": [
-        "Puño y explosión: 1000 → 800",
-        "Rebote del súper: 800 → 400",
-        "Salud del altavoz: 2000 → 1500"
-      ],
+      "changes": ["Puño y explosión: 1000 → 800", "Rebote del súper: 800 → 400", "Salud del altavoz: 2000 → 1500"],
       "impact": "Menor burst y control persistente, aunque mantiene resultados competitivos altos en el snapshot Ranked."
     },
     {
       "brawler": "Max",
-      "changes": [
-        "Segunda carga de Phase Shift Buffie: 3 s → 2 s",
-        "Carga del súper: 92 → 80"
-      ],
+      "changes": ["Segunda carga de Phase Shift Buffie: 3 s → 2 s", "Carga del súper: 92 → 80"],
       "impact": "Pierde parte del ciclo de tempo; baja respecto al núcleo S pero conserva valor por movilidad y composición."
     },
     {
       "brawler": "Bolt",
-      "changes": [
-        "Escudo del súper: 40 % → 30 %",
-        "Carga del súper al moverse reducida un 23 %"
-      ],
+      "changes": ["Escudo del súper: 40 % → 30 %", "Carga del súper al moverse reducida un 23 %"],
       "impact": "El nerf reduce su pico, pero los datos Ranked posteriores lo mantienen entre las prioridades más altas del parche."
     },
     {
       "brawler": "8-Bit",
-      "changes": [
-        "Carga del súper: 99 → 80",
-        "Extra Credits: 15 s → 18 s",
-        "Plugged In Buffie para aliados: 15 % → 10 %"
-      ],
+      "changes": ["Carga del súper: 99 → 80", "Extra Credits: 15 s → 18 s", "Plugged In Buffie para aliados: 15 % → 10 %"],
       "impact": "Menor frecuencia de torreta y apoyo, pero sigue rindiendo muy bien en el meta Ranked observado."
     },
     {
       "brawler": "Surge",
-      "changes": [
-        "Velocidad de descarga: 400 → 470",
-        "Power Shield devuelve 1 munición en vez de 2"
-      ],
+      "changes": ["Velocidad de descarga: 400 → 470", "Power Shield devuelve 1 munición en vez de 2"],
       "impact": "Peor respuesta inmediata frente a dive, aunque su autonomía y capacidad de castigar errores lo mantienen en tier alto."
     }
   ],
@@ -132,7 +104,7 @@
     {
       "name": "BrawlMetrics — Ranked Tier List August 2026",
       "url": "https://brawlmetrics.gg/tier-list/ranked",
-      "kind": "4,195,734 apariciones Ranked; snapshot 10/08/2026"
+      "kind": "4,195,734 apariciones Ranked; snapshot 13/08/2026"
     },
     {
       "name": "Brawl Planet — Meta August 2026",
