@@ -37,7 +37,7 @@ async function waitForMetadata(video: HTMLVideoElement, timeout = 5000) {
   });
 }
 
-async function seekVideo(video: HTMLVideoElement, second: number, timeout = 1800) {
+async function seekVideo(video: HTMLVideoElement, second: number, timeout = 1600) {
   if (Math.abs(video.currentTime - second) < .025 && video.readyState >= 2) return;
   await new Promise<void>((resolve) => {
     let settled = false;
@@ -111,16 +111,19 @@ export default function VideoMatchAnalyzer({
       const duration = Number.isFinite(metadataDuration) && metadataDuration > 0
         ? metadataDuration
         : Math.max(1, durationHint || 1);
-      const step = Math.max(.45, duration / 360);
+
+      // v0.23: ~35-55% más densidad temporal que v0.22 en una partida normal,
+      // pero con límite para que siga siendo viable en iPhone.
+      const step = Math.max(.30, duration / 560);
       const lastTime = Math.max(.1, duration - .08);
       const sampleTimes: number[] = [];
-      for (let second = .08; second <= lastTime && sampleTimes.length < 420; second += step) {
+      for (let second = .08; second <= lastTime && sampleTimes.length < 620; second += step) {
         sampleTimes.push(Math.min(lastTime, second));
       }
 
-      const width = 320;
+      const width = 360;
       const aspect = video.videoWidth > 0 && video.videoHeight > 0 ? video.videoHeight / video.videoWidth : 9 / 16;
-      const height = Math.max(144, Math.min(240, Math.round(width * aspect)));
+      const height = Math.max(160, Math.min(270, Math.round(width * aspect)));
       canvas.width = width;
       canvas.height = height;
       const context = canvas.getContext("2d", { willReadFrequently: true });
@@ -131,7 +134,7 @@ export default function VideoMatchAnalyzer({
       const events: Array<ReturnType<typeof detectionToVideoEvent>> = [];
       let detectionIndex = 0;
 
-      setMessage(`Barrido temporal · ${sampleTimes.length} fotogramas`);
+      setMessage(`Barrido fino · ${sampleTimes.length} fotogramas`);
 
       for (let index = 0; index < sampleTimes.length; index += 1) {
         if (cancelRef.current) return;
@@ -151,10 +154,10 @@ export default function VideoMatchAnalyzer({
             detectionIndex += 1;
           }
         } catch {
-          // Un fotograma corrupto o no decodificado no debe abortar el vídeo completo.
+          // Un fotograma corrupto/no decodificado no debe abortar el vídeo completo.
         }
 
-        if (index % 5 === 0 || index === sampleTimes.length - 1) {
+        if (index % 6 === 0 || index === sampleTimes.length - 1) {
           setSampledFrames(index + 1);
           setProgress(Math.round(((index + 1) / sampleTimes.length) * 100));
           await sleep(0);
@@ -165,7 +168,7 @@ export default function VideoMatchAnalyzer({
       setReport(finalReport);
       setProgress(100);
       setStatus("done");
-      setMessage(`${events.length} señales · ${finalReport.moments.length} ventanas relevantes · evidencia ${finalReport.signalQuality.toLowerCase()}`);
+      setMessage(`${finalReport.events.length} señales limpias · ${finalReport.sequences.length} secuencias · ${finalReport.moments.length} ventanas · evidencia ${finalReport.signalQuality.toLowerCase()}`);
     } catch {
       setStatus("error");
       setMessage("No se pudo decodificar el vídeo para el análisis local. Prueba con el MP4 original o vuelve a importarlo.");
@@ -176,15 +179,15 @@ export default function VideoMatchAnalyzer({
 
   const chronological = report ? [...report.events].sort((a, b) => a.second - b.second) : [];
 
-  return <section className="video-analyzer-v22">
+  return <section className="video-analyzer-v22 video-analyzer-v23">
     <video ref={videoRef} src={src} muted playsInline preload="auto" className="video-analyzer-source-v22" aria-hidden="true" />
     <canvas ref={canvasRef} className="video-analyzer-canvas-v22" aria-hidden="true" />
 
     <div className="video-analyzer-head-v22">
       <div>
-        <span className="eyebrow">Analizador de vídeo v0.22</span>
-        <h3>Barrido completo de la partida</h3>
-        <p>Extrae fotogramas localmente, aplica el detector temporal y agrupa señales cercanas para localizar momentos que merece la pena revisar.</p>
+        <span className="eyebrow">Analizador de vídeo v0.23</span>
+        <h3>Barrido fino + secuencias tácticas</h3>
+        <p>Extrae más fotogramas, elimina señales duplicadas y conecta combate, muerte, super y objetivo en ventanas que se pueden revisar desde antes de la decisión.</p>
       </div>
       <div className="video-analyzer-controls-v22">
         <label>Sensibilidad<select value={sensitivity} disabled={status === "analyzing"} onChange={(event) => setSensitivity(event.target.value as AutoReviewSensitivity)}><option>Baja</option><option>Media</option><option>Alta</option></select></label>
@@ -197,14 +200,15 @@ export default function VideoMatchAnalyzer({
     {(status === "analyzing" || message) && <div className={`video-analysis-progress-v22 state-${status}`}>
       <div><span>{message || "Analizando…"}</span><b>{status === "analyzing" ? `${progress}%` : status === "done" ? "Completado" : ""}</b></div>
       <i><em style={{ width: `${progress}%` }} /></i>
-      {status === "analyzing" && <small>{sampledFrames} fotogramas procesados · el vídeo no se sube a ningún servidor</small>}
+      {status === "analyzing" && <small>{sampledFrames} fotogramas procesados · análisis local, sin subir el vídeo</small>}
     </div>}
 
     {report && <>
       <div className="video-analysis-summary-v22">
         <article><span>Evidencia</span><strong>{report.signalQuality}</strong><small>Confianza media {report.averageConfidence}%</small></article>
-        <article><span>Señales</span><strong>{report.events.length}</strong><small>Tras filtros y cooldowns</small></article>
-        <article><span>Momentos</span><strong>{report.moments.length}</strong><small>Ventanas temporales agrupadas</small></article>
+        <article><span>Señales</span><strong>{report.events.length}</strong><small>Tras deduplicación temporal</small></article>
+        <article><span>Secuencias</span><strong>{report.sequences.length}</strong><small>Cadenas tácticas detectadas</small></article>
+        <article><span>Momentos</span><strong>{report.moments.length}</strong><small>Ventanas para revisar</small></article>
         <article className="wide"><span>Lectura principal</span><b>{report.headline}</b></article>
       </div>
 
@@ -217,9 +221,20 @@ export default function VideoMatchAnalyzer({
         </article>)}
       </div>
 
+      {report.sequences.length > 0 && <div className="video-sequences-v23">
+        <div className="video-column-title-v22"><span>Secuencias tácticas</span><small>Empiezan unos segundos antes de la primera señal para revisar la decisión que abrió la cadena.</small></div>
+        <div className="video-sequence-grid-v23">
+          {report.sequences.slice(0, 6).map((sequence, index) => <button type="button" key={sequence.id} className={`priority-${sequence.priority.toLowerCase().replace("í", "i")}`} onClick={() => onSeek?.(sequence.startSecond)}>
+            <time>{formatLiveTime(Math.round(sequence.startSecond))}</time>
+            <div><span>#{index + 1} · {sequence.priority} · score {sequence.score} · {sequence.confidence}%</span><b>{sequence.label}</b><small>{sequence.explanation}</small></div>
+            <strong>Revisar</strong>
+          </button>)}
+        </div>
+      </div>}
+
       <div className="video-analysis-grid-v22">
         <div className="video-key-moments-v22">
-          <div className="video-column-title-v22"><span>Momentos prioritarios</span><small>Ordenados por impacto y coherencia, no solo por número de cambios visuales.</small></div>
+          <div className="video-column-title-v22"><span>Momentos prioritarios</span><small>Ordenados por impacto y coherencia. El salto comienza antes del evento.</small></div>
           {report.moments.slice(0, 6).map((moment, index) => <button type="button" key={`${moment.startSecond}-${moment.label}`} className={`tone-${moment.tone}`} onClick={() => onSeek?.(moment.startSecond)}>
             <time>{formatLiveTime(Math.round(moment.startSecond))}</time>
             <div><span>#{index + 1} · score {moment.score} · confianza {moment.confidence}%</span><b>{moment.label}</b><small>{moment.reason}</small></div>
@@ -229,8 +244,8 @@ export default function VideoMatchAnalyzer({
         </div>
 
         <div className="video-event-timeline-v22">
-          <div className="video-column-title-v22"><span>Cronología detectada</span><small>Pulsa cualquier señal para revisar el segundo exacto.</small></div>
-          {chronological.slice(0, 30).map((event) => <button type="button" key={event.id} onClick={() => onSeek?.(event.second)}>
+          <div className="video-column-title-v22"><span>Cronología detectada</span><small>Pulsa una señal para empezar 2 s antes y revisar el contexto.</small></div>
+          {chronological.slice(0, 30).map((event) => <button type="button" key={event.id} onClick={() => onSeek?.(Math.max(0, event.second - 2))}>
             <time>{formatLiveTime(Math.round(event.second))}</time>
             <div><b>{event.label}</b><small>{event.category} · {event.confidence}%</small></div>
           </button>)}
@@ -239,6 +254,6 @@ export default function VideoMatchAnalyzer({
       </div>
     </>}
 
-    <p className="video-analysis-disclaimer-v22">El análisis es heurístico y local: detecta patrones visuales y temporales compatibles con muertes, objetivo, super, combate y cambios de fase. No sustituye una revisión semántica del gameplay y las detecciones deben interpretarse como señales para revisar.</p>
+    <p className="video-analysis-disclaimer-v22">El análisis sigue siendo heurístico: detecta patrones visuales y relaciones temporales, pero no identifica de forma fiable qué equipo ejecutó cada super, muerte u objetivo. Las secuencias son ventanas de revisión, no afirmaciones causales definitivas.</p>
   </section>;
 }
