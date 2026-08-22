@@ -10,30 +10,37 @@ type AliasEntry = {
 
 const MANUAL_ALIASES: AliasMap = {
   "8 bit": ["ocho bit", "ocho bits", "eight bit", "eibit", "ait bit", "abit", "a bit", "abid", "eightbit", "8bit"],
-  "r t": ["erre te", "rt", "arte", "rte"],
+  "r t": ["erre te", "rt", "r te", "rte"],
   "mr p": ["mister p", "mr p", "señor p", "senor p"],
   "larry y lawrie": ["larry y lawrie", "larry lawrie", "lari y lori", "lari lori", "larry and lawrie"],
   "stu": ["estu", "stew"],
-  "crow": ["crou", "crowe"],
-  "surge": ["serge", "surg", "surch", "serch"],
-  "gale": ["gail", "geil"],
+  "crow": ["crou", "crowe", "cro"],
+  "surge": ["serge", "surg", "surch", "serch", "sérch"],
+  "gale": ["gail", "geil", "gueil"],
   "bo": ["bow"],
-  "maisie": ["maisy", "meisi", "macy"],
-  "meeple": ["mipel", "meeple"],
-  "jae yong": ["jae yong", "jayong", "jaeyong", "ye yong"],
+  "maisie": ["maisy", "meisi", "macy", "meisy"],
+  "meeple": ["mipel", "mipple", "meeple"],
+  "jae yong": ["jae yong", "jayong", "jaeyong", "ye yong", "jei yong"],
   "ollie": ["oli", "olly"],
   "berry": ["beri", "barry"],
-  "shade": ["sheid", "shaid"],
-  "moe": ["mou", "mo"],
-  "clancy": ["clansi", "clancy"],
-  "lily": ["lili"],
-  "kaze": ["kase", "case"],
-  "pierce": ["pirs", "piers"],
-  "starr nova": ["star nova", "starnova"],
-  "glowy": ["gloui", "glowi"],
-  "ziggy": ["zigi", "zigui"],
-  "najia": ["naya", "najia"],
+  "shade": ["sheid", "shaid", "sheyd"],
+  "moe": ["mou", "moh"],
+  "clancy": ["clansi", "clancy", "clansy"],
+  "lily": ["lili", "lilly"],
+  "kaze": ["kase", "kaze", "kaseh"],
+  "pierce": ["pirs", "piers", "pierse"],
+  "starr nova": ["star nova", "starnova", "estar nova"],
+  "glowy": ["gloui", "glowi", "glowie"],
+  "ziggy": ["zigi", "zigui", "ziggie"],
+  "najia": ["naya", "nahia", "najia"],
   "damian": ["damián", "damien"],
+  "wendy": ["wendi", "guendi", "wendie"],
+  "nori": ["nory", "nori"],
+  "bolt": ["volt", "bolte"],
+  "griff": ["grif", "grief"],
+  "finx": ["finks", "fincks", "phinx"],
+  "sirius": ["sirius", "siríus"],
+  "gigi": ["gigi", "yiyi", "gui gui"],
 };
 
 const COMMAND_WORDS = new Set([
@@ -107,10 +114,10 @@ function fuzzySimilarity(left: string, right: string) {
 function fuzzyThreshold(value: string) {
   const length = value.replace(/\s/g, "").length;
   if (length <= 2) return .96;
-  if (length <= 4) return .78;
-  if (length <= 6) return .73;
-  if (length <= 9) return .69;
-  return .67;
+  if (length <= 4) return .80;
+  if (length <= 6) return .74;
+  if (length <= 9) return .70;
+  return .68;
 }
 
 function bestWindowMatch(phrase: string, tokenCount: number, entries: AliasEntry[]) {
@@ -134,7 +141,7 @@ function bestWindowMatch(phrase: string, tokenCount: number, entries: AliasEntry
 /**
  * Reconoce una secuencia completa de brawlers en el orden en que se dicen.
  * Está pensado para frases rápidas como:
- * "Surge, Abit, Amber, Gale, Edgar y Damián".
+ * "Surge, 8-Bit, Amber, Gale, Edgar y Damián".
  */
 export function matchBrawlersInSpeech(transcript: string, roster: Brawler[]) {
   const normalized = normalizeVoice(transcript);
@@ -157,7 +164,6 @@ export function matchBrawlersInSpeech(transcript: string, roster: Brawler[]) {
     let selected: { name: string; length: number; score: number; exact: boolean } | undefined;
     const maxWindow = Math.min(longestAlias + 1, 4, tokens.length - index);
 
-    // Primero intenta ventanas largas: protege nombres como "Larry y Lawrie" o "R T".
     for (let length = maxWindow; length >= 1; length -= 1) {
       const phrase = tokens.slice(index, index + length).join(" ");
       const match = bestWindowMatch(phrase, length, entries);
@@ -179,7 +185,6 @@ export function matchBrawlersInSpeech(transcript: string, roster: Brawler[]) {
       continue;
     }
 
-    // "y", "luego", etc. solo se saltan después de haber intentado formar un nombre compuesto.
     if (CONNECTOR_WORDS.has(token)) {
       index += 1;
       continue;
