@@ -14,9 +14,9 @@ export const metadata: Metadata = { title: "Draft Coach en vivo" };
 export default function DraftPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Motor de Draft 2.0 · v0.20.0 · Windstock</span>
+      <span className="eyebrow">Motor de Draft 2.0 · v0.21.0 · Windstock</span>
       <h1>Draft Coach</h1>
-      <p>Meta revisado el 22/08/2026, Wendy integrada y relaciones fuertes de counter derivadas del nuevo motor recíproco. En móvil se mantienen bans compactos, seis picks, buscador con micrófono y recomendación principal con scroll mínimo.</p>
+      <p>El micrófono conserva fragmentos, recupera nombres oídos en hipótesis alternativas y procesa hasta seis bans o picks mediante una cola validada, sin perder huecos mientras se introducen los anteriores.</p>
     </div>
     <DraftAssistant maps={maps} brawlers={draftBrawlers} />
     <VoiceDraftControl roster={brawlers} targetMode="ban" />
