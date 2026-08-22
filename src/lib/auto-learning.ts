@@ -92,7 +92,6 @@ export function adjustConfidence(
   const total = stat.accepted + stat.rejected;
   if (!total) return confidence;
 
-  // Priors 2/2 prevent the first review from overcorrecting future detections.
   const acceptanceRate = (stat.accepted + 2) / (total + 4);
   const bias = (acceptanceRate - .5) * Math.min(.14, total * .018);
   return clamp(confidence + bias, .35, .96);
@@ -113,15 +112,20 @@ export function isDetectionSuppressed(
 
 const recentBefore = (
   events: LiveMatchEvent[],
-  label: string,
+  labels: string | string[],
   second: number,
   maxSeconds: number,
-) => [...events]
-  .reverse()
-  .find((event) => event.label === label && second - event.second >= 0 && second - event.second <= maxSeconds);
+) => {
+  const wanted = Array.isArray(labels) ? labels : [labels];
+  return [...events]
+    .reverse()
+    .find((event) => wanted.includes(event.label) && second - event.second >= 0 && second - event.second <= maxSeconds);
+};
 
-const lastTwo = (events: LiveMatchEvent[], label: string) =>
-  events.filter((event) => event.label === label).slice(-2);
+const lastTwo = (events: LiveMatchEvent[], labels: string | string[]) => {
+  const wanted = Array.isArray(labels) ? labels : [labels];
+  return events.filter((event) => wanted.includes(event.label)).slice(-2);
+};
 
 export function deriveSequenceInsights(
   events: LiveMatchEvent[],
@@ -140,6 +144,7 @@ export function deriveSequenceInsights(
   };
 
   for (const event of ordered) {
+    // "Muerte" se reserva para la muerte del jugador detectada por la transición central.
     if (event.label === "Muerte") {
       const combat = recentBefore(ordered, "Interacción intensa", event.second, 9);
       if (combat) {
@@ -150,7 +155,7 @@ export function deriveSequenceInsights(
           category: "Auto · Secuencia",
           tone: "bad",
           confidence: Math.min(88, Math.max(67, Math.round(((event.confidence || 70) + (combat.confidence || 65)) / 2 + 5))),
-          comment: "La muerte llegó pocos segundos después de una interacción intensa. Probable entrada demasiado profunda o retirada tardía.",
+          comment: "Tu muerte llegó pocos segundos después de una interacción intensa. Probable entrada demasiado profunda o retirada tardía.",
         });
       }
 
@@ -163,7 +168,7 @@ export function deriveSequenceInsights(
           category: "Auto · Secuencia",
           tone: "bad",
           confidence: Math.min(86, Math.max(65, Math.round(((event.confidence || 70) + (superUse.confidence || 65)) / 2))),
-          comment: "Posible super seguida de muerte sin conversión clara. Revisa si la activaste sin salida segura o sin apoyo.",
+          comment: "Posible super seguida de tu muerte sin conversión clara. Revisa si la activaste sin salida segura o sin apoyo.",
         });
       }
 
@@ -181,8 +186,41 @@ export function deriveSequenceInsights(
       }
     }
 
+    if (event.label === "Eliminación rival") {
+      const recentSuper = recentBefore(ordered, "Super utilizada", event.second, 7);
+      if (recentSuper) {
+        add({
+          key: `super-enemy-death:${recentSuper.id}:${event.id}`,
+          second: event.second,
+          label: "Super convertida en baja",
+          category: "Auto · Secuencia",
+          tone: "good",
+          confidence: Math.min(90, Math.max(69, Math.round(((event.confidence || 72) + (recentSuper.confidence || 66)) / 2 + 6))),
+          comment: "La super fue seguida de una baja rival. Ventana favorable: convierte la ventaja numérica en posición u objetivo antes del respawn.",
+        });
+      }
+    }
+
+    if (event.label === "Muerte aliada") {
+      const recentCombat = recentBefore(ordered, "Interacción intensa", event.second, 8);
+      if (recentCombat) {
+        add({
+          key: `combat-ally-death:${recentCombat.id}:${event.id}`,
+          second: event.second,
+          label: "Aliado caído en el intercambio",
+          category: "Auto · Secuencia",
+          tone: "bad",
+          confidence: Math.min(86, Math.max(66, Math.round(((event.confidence || 70) + (recentCombat.confidence || 65)) / 2 + 3))),
+          comment: "Un aliado cayó durante una interacción intensa. No fuerces el 2v3: estabiliza líneas y espera la reagrupación salvo que haya una conversión inmediata.",
+        });
+      }
+    }
+
     if (event.label === "Cambio de objetivo") {
       const recentDeath = recentBefore(ordered, "Muerte", event.second, 8);
+      const recentAllyDeath = recentBefore(ordered, "Muerte aliada", event.second, 8);
+      const recentEnemyDeath = recentBefore(ordered, "Eliminación rival", event.second, 8);
+
       if (recentDeath) {
         add({
           key: `death-objective:${recentDeath.id}:${event.id}`,
@@ -193,10 +231,30 @@ export function deriveSequenceInsights(
           confidence: Math.min(89, Math.max(68, Math.round(((event.confidence || 70) + (recentDeath.confidence || 70)) / 2 + 4))),
           comment: "El objetivo cambió poco después de tu muerte. Esa baja probablemente abrió una ventana directa para el rival.",
         });
+      } else if (recentAllyDeath) {
+        add({
+          key: `ally-death-objective:${recentAllyDeath.id}:${event.id}`,
+          second: event.second,
+          label: "Desventaja numérica con coste",
+          category: "Auto · Secuencia",
+          tone: "bad",
+          confidence: Math.min(87, Math.max(66, Math.round(((event.confidence || 70) + (recentAllyDeath.confidence || 69)) / 2 + 3))),
+          comment: "El objetivo cambió tras una muerte aliada. La desventaja numérica parece haber dado al rival una ventana de conversión.",
+        });
+      } else if (recentEnemyDeath) {
+        add({
+          key: `enemy-death-objective:${recentEnemyDeath.id}:${event.id}`,
+          second: event.second,
+          label: "Eliminación convertida",
+          category: "Auto · Secuencia",
+          tone: "good",
+          confidence: Math.min(90, Math.max(68, Math.round(((event.confidence || 70) + (recentEnemyDeath.confidence || 72)) / 2 + 5))),
+          comment: "Una baja rival precedió al cambio de objetivo. Buena conversión de ventaja numérica; revisa si el equipo cerró la jugada sin sobreextenderse.",
+        });
       }
 
       const recentSuper = recentBefore(ordered, "Super utilizada", event.second, 8);
-      if (recentSuper && !recentDeath) {
+      if (recentSuper && !recentDeath && !recentAllyDeath && !recentEnemyDeath) {
         add({
           key: `super-objective:${recentSuper.id}:${event.id}`,
           second: event.second,
@@ -209,7 +267,7 @@ export function deriveSequenceInsights(
       }
 
       const recentCombat = recentBefore(ordered, "Interacción intensa", event.second, 7);
-      if (recentCombat && !recentDeath) {
+      if (recentCombat && !recentDeath && !recentAllyDeath && !recentEnemyDeath) {
         add({
           key: `combat-objective:${recentCombat.id}:${event.id}`,
           second: event.second,
@@ -217,7 +275,7 @@ export function deriveSequenceInsights(
           category: "Auto · Secuencia",
           tone: "good",
           confidence: Math.min(88, Math.max(66, Math.round(((event.confidence || 70) + (recentCombat.confidence || 65)) / 2 + 4))),
-          comment: "La interacción intensa terminó en un cambio de objetivo sin una muerte propia cercana. Probable presión bien convertida.",
+          comment: "La interacción intensa terminó en un cambio de objetivo sin una baja aliada cercana. Probable presión bien convertida.",
         });
       }
     }
@@ -238,19 +296,42 @@ export function deriveSequenceInsights(
     }
   }
 
-  const deaths = lastTwo(ordered, "Muerte");
-  if (
-    deaths.length === 2 &&
-    deaths[1].second - deaths[0].second <= 35
-  ) {
+  const ownDeaths = lastTwo(ordered, "Muerte");
+  if (ownDeaths.length === 2 && ownDeaths[1].second - ownDeaths[0].second <= 35) {
     add({
-      key: `double-death:${deaths[0].id}:${deaths[1].id}`,
-      second: deaths[1].second,
+      key: `double-death:${ownDeaths[0].id}:${ownDeaths[1].id}`,
+      second: ownDeaths[1].second,
       label: "Cadena de muertes",
       category: "Auto · Secuencia",
       tone: "bad",
       confidence: 79,
-      comment: "Dos muertes en una ventana corta. Reduce el ritmo de reentrada y espera una salida conjunta.",
+      comment: "Dos muertes propias en una ventana corta. Reduce el ritmo de reentrada y espera una salida conjunta.",
+    });
+  }
+
+  const alliedDeaths = lastTwo(ordered, "Muerte aliada");
+  if (alliedDeaths.length === 2 && alliedDeaths[1].second - alliedDeaths[0].second <= 12) {
+    add({
+      key: `double-ally-death:${alliedDeaths[0].id}:${alliedDeaths[1].id}`,
+      second: alliedDeaths[1].second,
+      label: "Doble baja aliada",
+      category: "Auto · Secuencia",
+      tone: "bad",
+      confidence: 80,
+      comment: "Dos aliados han caído en pocos segundos. Evita regalar la tercera baja y juega por supervivencia, tiempo o salida.",
+    });
+  }
+
+  const enemyDeaths = lastTwo(ordered, "Eliminación rival");
+  if (enemyDeaths.length === 2 && enemyDeaths[1].second - enemyDeaths[0].second <= 12) {
+    add({
+      key: `double-enemy-death:${enemyDeaths[0].id}:${enemyDeaths[1].id}`,
+      second: enemyDeaths[1].second,
+      label: "Doble ventaja numérica",
+      category: "Auto · Secuencia",
+      tone: "good",
+      confidence: 81,
+      comment: "Dos rivales han caído en una ventana corta. Es momento de convertir: objetivo, control de mapa o posición avanzada segura.",
     });
   }
 
