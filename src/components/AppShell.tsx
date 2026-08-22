@@ -26,12 +26,12 @@ export default function AppShell({ children }: { children: ReactNode }) {
     <aside className={`sidebar ${open ? "open" : ""}`}>
       <div className="brand"><div className="brand-mark">★</div><div><strong>Brawl Draft Lab</strong><small>Ranked Intelligence</small></div></div>
       <nav>{nav.map(([href, label, icon]) => <Link key={href} className={path === href || (href !== "/" && path.startsWith(href)) ? "active" : ""} href={href} onClick={() => setOpen(false)}><span>{icon}</span>{label}</Link>)}</nav>
-      <div className="sidebar-note"><b>Base v0.20.0</b><span>Meta: 22/08/2026 · Windstock</span><span>Matchups recíprocos · Coach v0.23</span></div>
+      <div className="sidebar-note"><b>Base v0.21.0</b><span>Voz: cola robusta de 6 nombres</span><span>Vídeo v0.24 · bajas por equipo</span></div>
     </aside>
     <main>
       <header className="topbar">
         <button className="menu-button" onClick={() => setOpen(!open)}>☰</button>
-        <div><b>De Mítico a Legendario</b><span>Windstock · draft por voz · counters uno a uno · análisis táctico de vídeo</span></div>
+        <div><b>De Mítico a Legendario</b><span>Windstock · voz robusta · counters uno a uno · vídeo consciente del equipo</span></div>
         <Link className="status-pill" href="/meta">● Parche 04/08 · Meta 22/08</Link>
       </header>
       {children}
