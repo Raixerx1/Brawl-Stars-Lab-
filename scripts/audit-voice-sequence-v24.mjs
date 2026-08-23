@@ -7,7 +7,7 @@ import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const output = await mkdtemp(join(tmpdir(), "brawl-voice-v24-"));
+const output = await mkdtemp(join(tmpdir(), "brawl-voice-v25-"));
 const localTsc = join(root, "node_modules", "typescript", "bin", "tsc");
 const command = existsSync(localTsc) ? process.execPath : "tsc";
 const prefix = existsSync(localTsc) ? [localTsc] : [];
@@ -16,6 +16,7 @@ const compilation = spawnSync(command, [
   ...prefix,
   "src/lib/types.ts",
   "src/lib/voice-brawler.ts",
+  "src/lib/voice-order.ts",
   "--outDir", output,
   "--target", "ES2022",
   "--module", "CommonJS",
@@ -33,6 +34,7 @@ if (compilation.status !== 0) {
 
 const require = createRequire(import.meta.url);
 const { matchBrawlersInSpeech } = require(join(output, "voice-brawler.js"));
+const { buildOrderedPendingVoicePlan } = require(join(output, "voice-order.js"));
 
 const roster = [
   ["surge", "Surge"],
@@ -86,10 +88,42 @@ for (const test of cases) {
   console.log(`${test.speech} => ${actual.join(" → ") || "sin brawlers"}`);
 }
 
+const spokenSix = ["Surge", "8-Bit", "Amber", "Gale", "Edgar", "Damian"];
+const planCases = [
+  {
+    label: "seis nombres conservan el orden",
+    input: { spoken: spokenSix, selected: [], active: null, maxSlots: 6 },
+    expected: spokenSix,
+  },
+  {
+    label: "el pick activo no se cuenta dos veces",
+    input: { spoken: spokenSix, selected: ["Surge"], active: "8-Bit", maxSlots: 6 },
+    expected: ["Amber", "Gale", "Edgar", "Damian"],
+  },
+  {
+    label: "tras cuatro validados quedan quinto y sexto en orden",
+    input: { spoken: spokenSix, selected: ["Surge", "8-Bit", "Amber", "Gale"], active: null, maxSlots: 6 },
+    expected: ["Edgar", "Damian"],
+  },
+  {
+    label: "una revisión del transcript puede insertar un nombre intermedio",
+    input: { spoken: ["Surge", "8-Bit", "Amber"], selected: [], active: null, maxSlots: 6 },
+    expected: ["Surge", "8-Bit", "Amber"],
+  },
+];
+
+for (const test of planCases) {
+  const actual = buildOrderedPendingVoicePlan(test.input);
+  if (JSON.stringify(actual) !== JSON.stringify(test.expected)) {
+    errors.push(`${test.label}: ${JSON.stringify(actual)}; esperado ${JSON.stringify(test.expected)}`);
+  }
+  console.log(`${test.label}: ${actual.join(" → ") || "sin pendientes"}`);
+}
+
 console.log(`Errores: ${errors.length}`);
 await rm(output, { recursive: true, force: true });
 if (errors.length) {
   errors.forEach((error) => console.error(`ERROR: ${error}`));
   process.exit(1);
 }
-console.log("Auditoría de voz secuencial v0.24 correcta.");
+console.log("Auditoría de voz secuencial v0.25 correcta.");
