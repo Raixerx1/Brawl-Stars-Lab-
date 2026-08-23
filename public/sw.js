@@ -1,4 +1,4 @@
-const CACHE = "brawl-draft-lab-v0211";
+const CACHE = "brawl-draft-lab-v0212";
 const CORE = [
   "/",
   "/draft",
@@ -62,7 +62,7 @@ self.addEventListener("fetch", (event) => {
       event.waitUntil(fetch(event.request).then(async (response) => {
         if (response.ok) {
           const cache = await caches.open(CACHE);
-          await cache.put(event.request, response.clone());
+          await cache.put(event.request, response);
         }
       }).catch(() => undefined));
       return cached;
