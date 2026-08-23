@@ -8,15 +8,16 @@ import "./draft-voice-v185.css";
 import "./draft-live-order-v193.css";
 import "./draft-live-order-v194.css";
 import "./draft-mobile-viewport-v196.css";
+import "./draft-desktop-density-v211.css";
 
 export const metadata: Metadata = { title: "Draft Coach en vivo" };
 
 export default function DraftPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Motor de Draft 2.0 · v0.21.0 · Windstock</span>
+      <span className="eyebrow">Motor de Draft 2.0 · v0.21.1 · Windstock</span>
       <h1>Draft Coach</h1>
-      <p>El micrófono conserva fragmentos, recupera nombres oídos en hipótesis alternativas y procesa hasta seis bans o picks mediante una cola validada, sin perder huecos mientras se introducen los anteriores.</p>
+      <p>Interfaz de alta densidad en móvil y escritorio: seis bans, seis picks, búsqueda con voz y recomendación principal permanecen concentrados en la consola del draft.</p>
     </div>
     <DraftAssistant maps={maps} brawlers={draftBrawlers} />
     <VoiceDraftControl roster={brawlers} targetMode="ban" />
