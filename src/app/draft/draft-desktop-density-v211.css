@@ -1,0 +1,502 @@
+/* v0.21.1 — Densidad de escritorio para Draft Assist.
+   Aprovecha el ancho: 6 bans + 6 picks visibles, buscador/voz pegado y recomendación compacta. */
+
+@media (min-width: 901px) {
+  .ordered-draft-assistant,
+  .ordered-draft-panel,
+  .ordered-draft-panel > *,
+  .draft-ban-panel-v51,
+  .draft-picker-ban,
+  .ordered-pick-bar,
+  .common-pick-entry,
+  .draft-pick-decision-v16 {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .ordered-draft-panel.panel {
+    padding: 16px 18px;
+    border-radius: 18px;
+  }
+
+  .ordered-draft-panel > .section-title {
+    margin-bottom: 8px;
+    align-items: center;
+  }
+
+  .ordered-draft-panel > .section-title h2 {
+    margin: 3px 0 0;
+    font-size: 22px;
+    line-height: 1.05;
+  }
+
+  .ordered-draft-panel .draft-action-row {
+    gap: 6px;
+  }
+
+  .ordered-draft-panel .draft-action-row .compact-button {
+    min-height: 34px;
+    padding: 0 11px;
+    font-size: 11px;
+  }
+
+  /* Contexto: compacto y sin controles sobredimensionados. */
+  .ordered-draft-panel > .ordered-draft-context-v5 {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 7px;
+    margin: 7px 0 8px;
+  }
+
+  .ordered-draft-context-v5 > label {
+    min-width: 0;
+    font-size: 8px;
+    line-height: 1.1;
+  }
+
+  .ordered-draft-context-v5 > label select {
+    width: 100%;
+    min-width: 0;
+    min-height: 36px;
+    margin-top: 4px;
+    padding: 0 9px;
+    border-radius: 9px;
+    font-size: 12px;
+  }
+
+  .ordered-draft-context-v5 .auto-position-toggle {
+    min-height: 36px;
+    padding: 5px 8px;
+    border-radius: 9px;
+  }
+
+  .ordered-draft-context-v5 .auto-position-toggle span b {
+    font-size: 10px;
+  }
+
+  .ordered-draft-context-v5 .auto-position-toggle span small {
+    font-size: 7px;
+  }
+
+  /* Auditoría first-pick: conserva la información, pero en una banda. */
+  .ordered-draft-panel > .first-pick-audit-v12 {
+    gap: 6px !important;
+    margin: 0 0 8px !important;
+    padding: 8px 10px !important;
+    border-radius: 11px !important;
+  }
+
+  .first-pick-audit-v12 .first-pick-audit-heading {
+    gap: 8px;
+    align-items: center;
+  }
+
+  .first-pick-audit-v12 .first-pick-audit-heading small,
+  .first-pick-audit-v12 > p,
+  .first-pick-audit-v12 .opening-model-note-v15 {
+    font-size: 8px !important;
+    line-height: 1.25 !important;
+  }
+
+  .first-pick-audit-v12 .map-geometry-chips-v12 {
+    gap: 4px;
+  }
+
+  .first-pick-audit-v12 .map-geometry-chips-v12 span {
+    padding: 4px 6px;
+    font-size: 7px;
+  }
+
+  .first-pick-audit-v12 .first-pick-audit-brawlers {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .first-pick-audit-v12 .first-pick-audit-brawlers > span {
+    min-width: 0;
+    padding: 5px 6px;
+    border-radius: 8px;
+  }
+
+  .first-pick-audit-v12 .first-pick-audit-avatar {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 7px !important;
+  }
+
+  .first-pick-audit-v12 .first-pick-audit-brawlers b {
+    font-size: 9px;
+  }
+
+  .first-pick-audit-v12 .first-pick-audit-brawlers small {
+    font-size: 7px;
+  }
+
+  /* Bans: siempre seis visibles en una sola fila. */
+  .ordered-draft-panel > .draft-ban-panel-v51 {
+    margin: 0 0 7px;
+  }
+
+  .draft-ban-panel-v51 .draft-picker-ban {
+    padding: 9px 10px;
+    border-radius: 12px;
+  }
+
+  .draft-picker-ban .draft-picker-head {
+    margin-bottom: 6px;
+  }
+
+  .draft-picker-ban .draft-picker-head b {
+    font-size: 13px;
+  }
+
+  .draft-picker-ban .draft-picker-head span,
+  .draft-picker-ban .draft-picker-head small {
+    font-size: 8px;
+  }
+
+  .draft-picker-ban .draft-slots {
+    display: grid !important;
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+  }
+
+  .draft-picker-ban .draft-slot {
+    min-width: 0 !important;
+    min-height: 50px !important;
+    height: 50px !important;
+    padding: 5px 7px !important;
+    border-radius: 9px !important;
+  }
+
+  .draft-picker-ban .draft-slot-avatar {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 7px !important;
+  }
+
+  .draft-picker-ban .draft-slot > span {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 9px !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .draft-picker-ban .draft-search-wrap {
+    margin-top: 6px !important;
+  }
+
+  .draft-picker-ban .draft-search-wrap input {
+    min-height: 38px !important;
+    height: 38px !important;
+    padding-left: 10px !important;
+    padding-right: 50px !important;
+    border-radius: 9px !important;
+    font-size: 13px !important;
+  }
+
+  .draft-picker-ban .voice-draft-button-v185,
+  .common-pick-search .voice-draft-button-v185 {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  /* Bans sugeridos en una única banda compacta. */
+  .suggested-ban-row {
+    display: grid;
+    grid-template-columns: auto repeat(3, minmax(0, 1fr));
+    gap: 5px;
+    margin-top: 5px;
+    align-items: stretch;
+  }
+
+  .suggested-ban-row > div:first-child {
+    align-self: center;
+    min-width: 120px;
+  }
+
+  .suggested-ban-row > div:first-child small {
+    display: none;
+  }
+
+  .suggested-ban-row > button {
+    min-width: 0;
+    min-height: 38px;
+    padding: 4px 6px;
+    border-radius: 8px;
+  }
+
+  .suggested-ban-avatar {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  .suggested-ban-row > button span b {
+    font-size: 9px;
+  }
+
+  .suggested-ban-row > button span small {
+    display: none;
+  }
+
+  /* Picks: seis en una única fila, más bajos que antes. */
+  .ordered-draft-panel > .ordered-phase-labels {
+    margin: 4px 0 3px;
+  }
+
+  .ordered-draft-panel > .ordered-pick-bar {
+    display: grid !important;
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  .ordered-draft-panel .ordered-pick-slot {
+    min-width: 0 !important;
+    min-height: 72px !important;
+    height: 72px !important;
+    padding: 6px 5px !important;
+    border-radius: 10px 10px 0 0 !important;
+  }
+
+  .ordered-draft-panel .ordered-pick-slot > small {
+    top: 5px !important;
+    left: 5px !important;
+    width: 17px !important;
+    height: 17px !important;
+    font-size: 7px !important;
+  }
+
+  .ordered-draft-panel .ordered-pick-avatar {
+    width: 38px !important;
+    height: 38px !important;
+    margin: 0 auto 2px !important;
+    border-radius: 8px !important;
+  }
+
+  .ordered-draft-panel .ordered-pick-slot > b {
+    margin: 2px 0 0 !important;
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 10px !important;
+    line-height: 1.05 !important;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ordered-draft-panel .ordered-pick-slot:not(.filled):not(.simulated) > span {
+    width: 30px !important;
+    height: 30px !important;
+    margin: 15px auto 2px !important;
+    font-size: 17px !important;
+  }
+
+  /* Buscador/voz inmediatamente debajo de picks. */
+  .ordered-draft-panel > .common-pick-entry {
+    grid-template-columns: minmax(130px, .55fr) minmax(360px, 2.4fr) minmax(105px, .55fr) !important;
+    gap: 8px !important;
+    min-height: 50px !important;
+    margin: 0 0 6px !important;
+    padding: 6px 8px !important;
+    border-radius: 0 0 11px 11px !important;
+  }
+
+  .common-pick-entry > div:first-child .eyebrow {
+    font-size: 8px;
+  }
+
+  .common-pick-entry > div:first-child h3 {
+    margin: 2px 0 0;
+    overflow: hidden;
+    font-size: 11px;
+    line-height: 1.1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .common-pick-entry .common-pick-search input {
+    min-height: 38px !important;
+    height: 38px !important;
+    padding: 0 50px 0 11px !important;
+    border-radius: 9px !important;
+    font-size: 13px !important;
+  }
+
+  .common-pick-entry .turn-status {
+    min-width: 0;
+    min-height: 38px;
+    padding: 5px 8px;
+    border-radius: 8px;
+    font-size: 9px;
+    line-height: 1.15;
+    text-align: center;
+  }
+
+  /* Recomendación #1: menos altura, más uso del ancho. */
+  .ordered-draft-panel > .draft-pick-decision-v16.draft-pick-decision-v17 {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.65fr) minmax(270px, .8fr) !important;
+    gap: 7px !important;
+    margin: 0 0 7px !important;
+    padding: 0 !important;
+    align-items: stretch;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-pick-v16,
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 {
+    min-width: 0;
+    border-radius: 11px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-banner-v16 {
+    min-height: 27px;
+    padding: 5px 9px !important;
+    font-size: 8px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-body-v16 {
+    grid-template-columns: 52px minmax(0, 1fr) 48px !important;
+    gap: 8px !important;
+    padding: 8px 10px 5px !important;
+    align-items: center;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-avatar-v16 {
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 10px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-copy-v16 > small {
+    font-size: 7px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-copy-v16 h2 {
+    margin: 1px 0 2px !important;
+    font-size: 24px !important;
+    line-height: 1 !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-copy-v16 p {
+    margin: 0 0 4px !important;
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-copy-v16 > div {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+    overflow: hidden;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-copy-v16 > div span {
+    padding: 3px 5px;
+    font-size: 7px;
+    white-space: nowrap;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-score-v16 {
+    width: 48px !important;
+    min-width: 48px !important;
+    height: 48px !important;
+    padding: 0 !important;
+    border-radius: 10px !important;
+    font-size: 18px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-action-v16 {
+    min-height: 38px;
+    padding: 5px 9px 8px !important;
+    gap: 8px;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-action-v16 p {
+    margin: 0;
+    overflow: hidden;
+    font-size: 8px !important;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-action-v16 button {
+    min-height: 32px;
+    padding: 0 11px;
+    font-size: 9px;
+    white-space: nowrap;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 {
+    padding: 7px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > div:first-child {
+    margin-bottom: 4px;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > div:first-child small {
+    display: none;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > button {
+    grid-template-columns: 24px 30px minmax(0, 1fr) 30px !important;
+    gap: 5px !important;
+    min-height: 38px !important;
+    padding: 4px 5px !important;
+    border-radius: 8px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-avatar-v16 {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 7px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 b {
+    font-size: 10px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 small {
+    font-size: 7px !important;
+  }
+
+  /* Secundarios del draft: compactos, sin dominar la pantalla. */
+  .ordered-draft-panel > .double-pick-panel-v13,
+  .ordered-draft-panel > .draft-stress-panel-v14 {
+    margin: 5px 0 !important;
+    padding: 10px !important;
+    border-radius: 11px !important;
+  }
+
+  .ordered-draft-panel > .ordered-edit-hint {
+    margin-top: 2px;
+    font-size: 8px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .ordered-draft-panel > .ordered-draft-context-v5 {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1150px) {
+  .ordered-draft-panel > .ordered-draft-context-v5 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .ordered-draft-panel > .draft-pick-decision-v16.draft-pick-decision-v17 {
+    grid-template-columns: minmax(0, 1.35fr) minmax(245px, .8fr) !important;
+  }
+
+  .ordered-draft-panel > .common-pick-entry {
+    grid-template-columns: minmax(120px, .5fr) minmax(300px, 2fr) minmax(95px, .5fr) !important;
+  }
+}
