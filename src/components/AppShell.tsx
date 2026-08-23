@@ -26,7 +26,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
     <aside className={`sidebar ${open ? "open" : ""}`}>
       <div className="brand"><div className="brand-mark">★</div><div><strong>Brawl Draft Lab</strong><small>Ranked Intelligence</small></div></div>
       <nav>{nav.map(([href, label, icon]) => <Link key={href} className={path === href || (href !== "/" && path.startsWith(href)) ? "active" : ""} href={href} onClick={() => setOpen(false)}><span>{icon}</span>{label}</Link>)}</nav>
-      <div className="sidebar-note"><b>Base v0.21.0</b><span>Voz: cola robusta de 6 nombres</span><span>Vídeo v0.24 · bajas por equipo</span></div>
+      <div className="sidebar-note"><b>Base v0.21.1</b><span>Draft compacto móvil + escritorio</span><span>Vídeo v0.24 · bajas por equipo</span></div>
     </aside>
     <main>
       <header className="topbar">
