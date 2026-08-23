@@ -15,9 +15,9 @@ export const metadata: Metadata = { title: "Draft Coach en vivo" };
 export default function DraftPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Motor de Draft 2.0 · v0.21.1 · Windstock</span>
+      <span className="eyebrow">Motor de Draft 2.0 · v0.21.2 · Windstock</span>
       <h1>Draft Coach</h1>
-      <p>Interfaz de alta densidad en móvil y escritorio: seis bans, seis picks, búsqueda con voz y recomendación principal permanecen concentrados en la consola del draft.</p>
+      <p>Los picks por voz mantienen una secuencia estricta: la frase se estabiliza, cada nombre se valida en su slot exacto y ningún pick posterior puede adelantarse si falla el anterior.</p>
     </div>
     <DraftAssistant maps={maps} brawlers={draftBrawlers} />
     <VoiceDraftControl roster={brawlers} targetMode="ban" />
