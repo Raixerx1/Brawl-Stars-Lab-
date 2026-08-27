@@ -1,4 +1,34 @@
-/* v0.21.6 — Corrige solapamiento avatar/texto en alternativas y amplía análisis. */
+/* v0.21.6 — Corrige solapamiento avatar/texto en alternativas, amplía análisis y blinda el micro de picks. */
+
+/* El micro persistente de picks debe recibir siempre el gesto del usuario. */
+.common-pick-search {
+  position: relative !important;
+  overflow: visible !important;
+  isolation: isolate;
+}
+
+.persistent-pick-voice-v216 {
+  z-index: 220 !important;
+  pointer-events: auto !important;
+}
+
+.persistent-pick-voice-v216 .voice-draft-button-v185 {
+  position: relative !important;
+  z-index: 221 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.persistent-pick-voice-v216 .voice-draft-status-v185 {
+  pointer-events: none !important;
+}
+
+.common-pick-search input {
+  position: relative;
+  z-index: 1;
+}
 
 @media (min-width: 901px) {
   /* Alternativas: columnas explícitas para que imagen, texto y score nunca se monten. */
