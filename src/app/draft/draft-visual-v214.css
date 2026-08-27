@@ -1,0 +1,204 @@
+/* v0.21.4 — First-pick coin + lectura visual de escritorio. */
+
+/* El valor interno sigue siendo Aliado/Rival, pero el control visible es una moneda. */
+.draft-first-pick-coin-host-v214 {
+  font-size: 0 !important;
+  min-width: 0;
+}
+
+.draft-first-pick-coin-host-v214 > select {
+  display: none !important;
+}
+
+.draft-first-pick-coin-control-v214 {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  column-gap: 9px;
+  align-items: center;
+  min-height: 58px;
+  width: 100%;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(69,183,255,.055), rgba(255,104,123,.045));
+  font-size: 12px;
+}
+
+.draft-coin-label-v214 {
+  grid-column: 1 / -1;
+  margin-bottom: 2px;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .09em;
+}
+
+.draft-team-coin-v214 {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.28);
+  color: white;
+  cursor: pointer;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,.16), 0 6px 16px rgba(0,0,0,.25);
+  transition: transform .22s ease, background .22s ease, border-color .22s ease;
+}
+
+.draft-team-coin-v214:hover { transform: rotateY(18deg) scale(1.04); }
+.draft-team-coin-v214:active { transform: rotateY(90deg) scale(.96); }
+.draft-team-coin-v214.ally {
+  border-color: rgba(69,183,255,.72);
+  background: radial-gradient(circle at 35% 28%, #77d2ff, #168bcf 58%, #0b4f86);
+}
+.draft-team-coin-v214.enemy {
+  border-color: rgba(255,104,123,.76);
+  background: radial-gradient(circle at 35% 28%, #ff9aa9, #d83f57 58%, #7c1d31);
+}
+
+.draft-team-coin-face-v214 {
+  display: grid;
+  place-items: center;
+  width: 31px;
+  height: 31px;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: -.02em;
+  text-shadow: 0 1px 3px rgba(0,0,0,.35);
+}
+
+.draft-coin-copy-v214 { min-width: 0; }
+.draft-coin-copy-v214 b,
+.draft-coin-copy-v214 small { display: block; }
+.draft-coin-copy-v214 b { color: white; font-size: 12px; line-height: 1.05; }
+.draft-coin-copy-v214 small { margin-top: 3px; color: var(--muted); font-size: 9px; line-height: 1.15; }
+
+/* En Draft Assist los nombres de modos se muestran en inglés; el value interno no se cambia. */
+.draft-mode-english-v214 select { font-weight: 800; }
+
+@media (min-width: 901px) {
+  /* Más tamaño de lectura, sin volver a inflar las tarjetas. */
+  .ordered-draft-assistant .eyebrow { font-size: 12px !important; letter-spacing: .095em !important; }
+  .ordered-draft-assistant .panel { line-height: 1.42; }
+  .ordered-draft-assistant .panel h2 { font-size: 27px !important; line-height: 1.08 !important; }
+  .ordered-draft-assistant .panel h3 { font-size: 19px !important; line-height: 1.15 !important; }
+  .ordered-draft-assistant .panel p { font-size: 14px !important; line-height: 1.42 !important; }
+  .ordered-draft-assistant .panel small { font-size: 11px; line-height: 1.35; }
+
+  /* Banda de configuración: deja de usar microtexto de 8px. */
+  .ordered-draft-context-v5 > label {
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    color: #b8c2d9 !important;
+  }
+  .ordered-draft-context-v5 > label select {
+    min-height: 42px !important;
+    font-size: 14px !important;
+    font-weight: 760 !important;
+  }
+  .ordered-draft-context-v5 .auto-position-toggle span b { font-size: 12px !important; }
+  .ordered-draft-context-v5 .auto-position-toggle span small { font-size: 10px !important; }
+  .draft-first-pick-coin-control-v214 { min-height: 64px; padding: 6px 9px; }
+  .draft-team-coin-v214 { width: 44px; height: 44px; }
+  .draft-coin-copy-v214 b { font-size: 14px; }
+  .draft-coin-copy-v214 small { font-size: 10px; }
+
+  /* First-pick audit. */
+  .first-pick-audit-v12 .first-pick-audit-heading small,
+  .first-pick-audit-v12 > p,
+  .first-pick-audit-v12 .opening-model-note-v15 { font-size: 11px !important; line-height: 1.4 !important; }
+  .first-pick-audit-v12 .map-geometry-chips-v12 span { font-size: 10px !important; padding: 5px 7px !important; }
+  .first-pick-audit-v12 .first-pick-audit-brawlers b { font-size: 13px !important; }
+  .first-pick-audit-v12 .first-pick-audit-brawlers small { font-size: 10px !important; line-height: 1.25 !important; }
+  .first-pick-audit-v12 .first-pick-audit-avatar { width: 34px !important; height: 34px !important; }
+
+  /* Bans y picks: nombres claramente legibles. */
+  .draft-picker-ban .draft-picker-head b { font-size: 16px !important; }
+  .draft-picker-ban .draft-picker-head span,
+  .draft-picker-ban .draft-picker-head small { font-size: 11px !important; }
+  .draft-picker-ban .draft-slot { min-height: 58px !important; height: 58px !important; }
+  .draft-picker-ban .draft-slot-avatar { width: 36px !important; height: 36px !important; }
+  .draft-picker-ban .draft-slot > span { font-size: 12px !important; font-weight: 800 !important; }
+  .draft-picker-ban .draft-search-wrap input { min-height: 44px !important; height: 44px !important; font-size: 15px !important; }
+  .suggested-ban-row > button span b { font-size: 12px !important; }
+  .suggested-ban-row > button span small { display: block !important; font-size: 10px !important; line-height: 1.15 !important; }
+
+  .ordered-draft-panel .ordered-pick-slot { min-height: 82px !important; height: 82px !important; }
+  .ordered-draft-panel .ordered-pick-avatar { width: 44px !important; height: 44px !important; }
+  .ordered-draft-panel .ordered-pick-slot > b { font-size: 13px !important; font-weight: 850 !important; }
+  .ordered-phase-labels span { font-size: 10px !important; }
+
+  /* Consola de entrada. */
+  .common-pick-entry > div:first-child .eyebrow { font-size: 10px !important; }
+  .common-pick-entry > div:first-child h3 { font-size: 14px !important; }
+  .common-pick-entry .common-pick-search input { min-height: 44px !important; height: 44px !important; font-size: 16px !important; }
+  .common-pick-entry .turn-status { min-height: 44px !important; font-size: 11px !important; font-weight: 850 !important; }
+
+  /* Recomendación principal: el contenido importante domina visualmente. */
+  .draft-pick-decision-v17 .draft-primary-banner-v16 { min-height: 32px !important; font-size: 10px !important; }
+  .draft-pick-decision-v17 .draft-primary-body-v16 { grid-template-columns: 64px minmax(0,1fr) 58px !important; gap: 11px !important; padding: 10px 12px 7px !important; }
+  .draft-pick-decision-v17 .draft-primary-avatar-v16 { width: 64px !important; height: 64px !important; }
+  .draft-pick-decision-v17 .draft-primary-copy-v16 > small { font-size: 10px !important; }
+  .draft-pick-decision-v17 .draft-primary-copy-v16 h2 { font-size: 31px !important; margin: 2px 0 4px !important; }
+  .draft-pick-decision-v17 .draft-primary-copy-v16 p { font-size: 14px !important; line-height: 1.35 !important; }
+  .draft-pick-decision-v17 .draft-primary-copy-v16 > div { flex-wrap: wrap !important; overflow: visible !important; }
+  .draft-pick-decision-v17 .draft-primary-copy-v16 > div span { padding: 5px 7px !important; font-size: 10px !important; }
+  .draft-pick-decision-v17 .draft-primary-score-v16 { width: 58px !important; min-width: 58px !important; height: 58px !important; font-size: 23px !important; }
+  .draft-pick-decision-v17 .draft-primary-score-v16 small { font-size: 8px !important; }
+  .draft-pick-decision-v17 .draft-primary-action-v16 p { font-size: 11px !important; white-space: normal !important; }
+  .draft-pick-decision-v17 .draft-primary-action-v16 button { min-height: 38px !important; font-size: 11px !important; }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > button { min-height: 48px !important; }
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > button b { font-size: 14px !important; }
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > button small { font-size: 10px !important; line-height: 1.2 !important; }
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > button strong { font-size: 15px !important; }
+
+  /* Paneles secundarios: métricas grandes, etiquetas legibles. */
+  .draft-stress-heading-v14 h3,
+  .double-pick-heading-v13 h3 { font-size: 21px !important; }
+  .draft-stress-heading-v14 p,
+  .double-pick-heading-v13 p { font-size: 13px !important; }
+  .draft-stress-metrics-v14 span b,
+  .double-pick-metrics-v13 span b,
+  .ordered-win-scores span b { font-size: 20px !important; }
+  .draft-stress-metrics-v14 span,
+  .double-pick-metrics-v13 span,
+  .ordered-win-scores span { font-size: 11px !important; }
+  .draft-stress-scenarios-v14 article b,
+  .double-pick-brawlers-v13 article b { font-size: 14px !important; }
+  .draft-stress-scenarios-v14 article small,
+  .double-pick-brawlers-v13 article small { font-size: 11px !important; }
+
+  /* Tarjetas de recomendaciones y coaching posteriores. */
+  .simple-rec-card h3 { font-size: 22px !important; }
+  .simple-rec-card p,
+  .simple-rec-brief { font-size: 13px !important; }
+  .simple-rec-card strong { font-size: 18px; }
+  .simple-rec-label,
+  .simple-rec-tags span,
+  .rec-pool-status span { font-size: 10px !important; }
+  .quick-advice-list span { font-size: 13px !important; line-height: 1.35 !important; }
+  .line-matchup-list b { font-size: 15px !important; }
+  .line-matchup-list span,
+  .line-matchup-list strong { font-size: 12px !important; }
+  .line-matchup-list small { font-size: 11px !important; }
+}
+
+@media (max-width: 900px) {
+  .draft-first-pick-coin-control-v214 {
+    min-height: 52px;
+    padding: 5px 7px;
+    column-gap: 6px;
+  }
+  .draft-team-coin-v214 { width: 36px; height: 36px; }
+  .draft-team-coin-face-v214 { width: 27px; height: 27px; font-size: 9px; }
+  .draft-coin-label-v214 { font-size: 7px; }
+  .draft-coin-copy-v214 b { font-size: 11px; }
+  .draft-coin-copy-v214 small { font-size: 8px; }
+}
