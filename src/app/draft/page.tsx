@@ -14,15 +14,16 @@ import "./draft-desktop-density-v211.css";
 import "./draft-visual-v214.css";
 import "./draft-readable-v215.css";
 import "./draft-overlap-fix-v216.css";
+import "./draft-alternatives-fulltext-v217.css";
 
 export const metadata: Metadata = { title: "Draft Coach en vivo" };
 
 export default function DraftPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Motor de Draft 2.0 · v0.21.6 · Windstock</span>
+      <span className="eyebrow">Motor de Draft 2.0 · v0.21.7 · Windstock</span>
       <h1>Draft Coach</h1>
-      <p>Alternativas sin solapamientos, análisis con tipografía grande y nuevo micrófono persistente para picks: una pulsación, un nombre por turno y rearme automático hasta completar los seis.</p>
+      <p>Las recomendaciones #2–#5 muestran ahora nombre y explicación completos, sin puntos suspensivos ni cortes, manteniendo la cuadrícula 2×2 y la separación correcta entre avatar, texto y score.</p>
     </div>
     <DraftAssistant maps={maps} brawlers={draftBrawlers} />
     <DraftUiEnhancer />
