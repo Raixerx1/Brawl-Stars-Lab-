@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { DraftFirstPickOwner } from "@/lib/types";
 
@@ -31,12 +31,18 @@ const MODE_LABELS: Record<string, string> = {
   "trophy escape": "Trophy Escape",
 };
 
+type ModeOption = { value: string; label: string };
+
 function normalizeLabel(value: string) {
   return value
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .trim();
+}
+
+function englishModeLabel(value: string, fallback: string) {
+  return MODE_LABELS[normalizeLabel(value)] || MODE_LABELS[normalizeLabel(fallback)] || fallback;
 }
 
 function labelPrefix(label: HTMLLabelElement) {
@@ -51,10 +57,23 @@ function setNativeSelectValue(select: HTMLSelectElement, value: string) {
   select.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
+function readModeOptions(select: HTMLSelectElement): ModeOption[] {
+  return [...select.options].map((option) => ({
+    value: option.value,
+    label: englishModeLabel(option.value, option.textContent || option.value),
+  }));
+}
+
 export default function DraftUiEnhancer() {
+  const [modeHost, setModeHost] = useState<HTMLLabelElement | null>(null);
+  const [modeSelect, setModeSelect] = useState<HTMLSelectElement | null>(null);
+  const [modeValue, setModeValue] = useState("");
+  const [modeOptions, setModeOptions] = useState<ModeOption[]>([]);
   const [coinHost, setCoinHost] = useState<HTMLLabelElement | null>(null);
   const [firstPickSelect, setFirstPickSelect] = useState<HTMLSelectElement | null>(null);
   const [owner, setOwner] = useState<DraftFirstPickOwner>("Aliado");
+  const modeSelectRef = useRef<HTMLSelectElement | null>(null);
+  const firstPickSelectRef = useRef<HTMLSelectElement | null>(null);
 
   useEffect(() => {
     let disposed = false;
@@ -69,26 +88,32 @@ export default function DraftUiEnhancer() {
       const firstLabel = labels.find((label) => normalizeLabel(labelPrefix(label)) === "first pick");
 
       if (modeLabel) {
-        modeLabel.classList.add("draft-mode-english-v214");
-        const select = modeLabel.querySelector<HTMLSelectElement>("select");
+        const select = modeLabel.querySelector<HTMLSelectElement>(":scope > select");
         if (select) {
-          select.setAttribute("aria-label", "Game mode");
-          [...select.options].forEach((option) => {
-            const translated = MODE_LABELS[normalizeLabel(option.value)] || MODE_LABELS[normalizeLabel(option.textContent || "")];
-            if (translated && option.textContent !== translated) option.textContent = translated;
-          });
+          modeLabel.classList.add("draft-mode-english-host-v215");
+          select.setAttribute("aria-hidden", "true");
+          if (modeSelectRef.current !== select) {
+            modeSelectRef.current = select;
+            setModeHost(modeLabel);
+            setModeSelect(select);
+            setModeValue(select.value);
+            setModeOptions(readModeOptions(select));
+          }
         }
       }
 
       if (firstLabel) {
-        firstLabel.classList.add("draft-first-pick-coin-host-v214");
-        const select = firstLabel.querySelector<HTMLSelectElement>("select");
+        const select = firstLabel.querySelector<HTMLSelectElement>(":scope > select");
         if (select) {
+          firstLabel.classList.add("draft-first-pick-coin-host-v214");
           select.setAttribute("aria-hidden", "true");
-          const nextOwner: DraftFirstPickOwner = select.value === "Rival" ? "Rival" : "Aliado";
-          setOwner(nextOwner);
-          setFirstPickSelect(select);
-          setCoinHost(firstLabel);
+          if (firstPickSelectRef.current !== select) {
+            firstPickSelectRef.current = select;
+            const nextOwner: DraftFirstPickOwner = select.value === "Rival" ? "Rival" : "Aliado";
+            setOwner(nextOwner);
+            setFirstPickSelect(select);
+            setCoinHost(firstLabel);
+          }
         }
       }
     };
@@ -104,11 +129,27 @@ export default function DraftUiEnhancer() {
   }, []);
 
   useEffect(() => {
+    if (!modeSelect) return;
+    const sync = () => {
+      setModeValue(modeSelect.value);
+      setModeOptions(readModeOptions(modeSelect));
+    };
+    modeSelect.addEventListener("change", sync);
+    return () => modeSelect.removeEventListener("change", sync);
+  }, [modeSelect]);
+
+  useEffect(() => {
     if (!firstPickSelect) return;
     const sync = () => setOwner(firstPickSelect.value === "Rival" ? "Rival" : "Aliado");
     firstPickSelect.addEventListener("change", sync);
     return () => firstPickSelect.removeEventListener("change", sync);
   }, [firstPickSelect]);
+
+  const changeMode = (value: string) => {
+    if (!modeSelect) return;
+    setModeValue(value);
+    setNativeSelectValue(modeSelect, value);
+  };
 
   const flipCoin = () => {
     if (!firstPickSelect) return;
@@ -117,26 +158,42 @@ export default function DraftUiEnhancer() {
     setNativeSelectValue(firstPickSelect, next);
   };
 
-  if (!coinHost) return null;
-
   const allied = owner === "Aliado";
-  return createPortal(
-    <div className="draft-first-pick-coin-control-v214">
-      <span className="draft-coin-label-v214">FIRST PICK</span>
-      <button
-        type="button"
-        className={`draft-team-coin-v214 ${allied ? "ally" : "enemy"}`}
-        onClick={flipCoin}
-        aria-label={allied ? "Mi equipo tiene first pick. Cambiar a equipo rival" : "El equipo rival tiene first pick. Cambiar a mi equipo"}
-        title="Clic para cambiar quién tiene el first pick"
-      >
-        <span className="draft-team-coin-face-v214">{allied ? "MI" : "RIV"}</span>
-      </button>
-      <span className="draft-coin-copy-v214">
-        <b>{allied ? "Mi equipo" : "Equipo rival"}</b>
-        <small>{allied ? "Azul · nosotros primero" : "Rojo · rival primero"}</small>
-      </span>
-    </div>,
-    coinHost,
-  );
+
+  return <>
+    {modeHost && createPortal(
+      <div className="draft-mode-english-control-v215">
+        <span>MODE</span>
+        <select
+          className="draft-mode-display-v215"
+          value={modeValue}
+          onChange={(event) => changeMode(event.target.value)}
+          aria-label="Game mode"
+        >
+          {modeOptions.map((option) => <option value={option.value} key={option.value}>{option.label}</option>)}
+        </select>
+      </div>,
+      modeHost,
+    )}
+
+    {coinHost && createPortal(
+      <div className="draft-first-pick-coin-control-v214">
+        <span className="draft-coin-label-v214">FIRST PICK</span>
+        <button
+          type="button"
+          className={`draft-team-coin-v214 ${allied ? "ally" : "enemy"}`}
+          onClick={flipCoin}
+          aria-label={allied ? "Mi equipo tiene first pick. Cambiar a equipo rival" : "El equipo rival tiene first pick. Cambiar a mi equipo"}
+          title="Clic para cambiar quién tiene el first pick"
+        >
+          <span className="draft-team-coin-face-v214">{allied ? "MI" : "RIV"}</span>
+        </button>
+        <span className="draft-coin-copy-v214">
+          <b>{allied ? "Mi equipo" : "Equipo rival"}</b>
+          <small>{allied ? "Azul · nosotros primero" : "Rojo · rival primero"}</small>
+        </span>
+      </div>,
+      coinHost,
+    )}
+  </>;
 }
