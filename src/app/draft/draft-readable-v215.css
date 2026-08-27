@@ -1,0 +1,464 @@
+/* v0.21.5 — Selector estable + lectura de escritorio reforzada.
+   Objetivos: sin selects vacíos, recomendación 50/50 y texto legible en todas las tarjetas. */
+
+/* MODE visible en inglés sin modificar las options controladas por React. */
+.draft-mode-english-host-v215 {
+  position: relative;
+  font-size: 0 !important;
+}
+
+.draft-mode-english-host-v215 > select {
+  display: none !important;
+}
+
+.draft-mode-english-control-v215 {
+  display: grid;
+  gap: 5px;
+  width: 100%;
+  min-width: 0;
+  font-size: 12px;
+}
+
+.draft-mode-english-control-v215 > span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .08em;
+}
+
+.draft-mode-display-v215 {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #0b1020;
+  color: white;
+  font-size: 14px;
+  font-weight: 800;
+  outline: none;
+}
+
+.draft-mode-display-v215:focus {
+  border-color: rgba(69,183,255,.55);
+}
+
+@media (min-width: 901px) {
+  /* Base legible para TODOS los recuadros del Draft Assist. */
+  .ordered-draft-assistant :is(
+    .first-pick-audit-v12,
+    .draft-picker-ban,
+    .suggested-ban-row > button,
+    .ordered-pick-slot,
+    .common-pick-entry,
+    .draft-pick-decision-v17,
+    .draft-stress-panel-v14,
+    .double-pick-panel-v13,
+    .simple-rec-card,
+    .quick-coach,
+    .contextual-build-card,
+    .line-matchup-list,
+    .ordered-win-estimate,
+    .ordered-win-estimate-panel,
+    .draft-result-panel-v7,
+    .draft-result-form-v7,
+    .draft-history-list article,
+    .map-tactic-notes > *,
+    article
+  ) {
+    line-height: 1.42;
+  }
+
+  .ordered-draft-assistant :is(
+    .first-pick-audit-v12,
+    .draft-picker-ban,
+    .common-pick-entry,
+    .draft-pick-decision-v17,
+    .draft-stress-panel-v14,
+    .double-pick-panel-v13,
+    .simple-rec-card,
+    .quick-coach,
+    .contextual-build-card,
+    .line-matchup-list,
+    .draft-result-panel-v7,
+    .draft-result-form-v7,
+    article
+  ) p {
+    font-size: 15px !important;
+    line-height: 1.45 !important;
+  }
+
+  .ordered-draft-assistant :is(
+    .first-pick-audit-v12,
+    .draft-picker-ban,
+    .common-pick-entry,
+    .draft-pick-decision-v17,
+    .draft-stress-panel-v14,
+    .double-pick-panel-v13,
+    .simple-rec-card,
+    .quick-coach,
+    .contextual-build-card,
+    .line-matchup-list,
+    .draft-result-panel-v7,
+    .draft-result-form-v7,
+    article
+  ) small {
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+  }
+
+  .ordered-draft-assistant :is(
+    .first-pick-audit-v12,
+    .draft-picker-ban,
+    .common-pick-entry,
+    .draft-pick-decision-v17,
+    .draft-stress-panel-v14,
+    .double-pick-panel-v13,
+    .simple-rec-card,
+    .quick-coach,
+    .contextual-build-card,
+    .line-matchup-list,
+    .draft-result-panel-v7,
+    article
+  ) button {
+    font-size: 13px !important;
+  }
+
+  .ordered-draft-assistant :is(
+    .draft-stress-panel-v14,
+    .double-pick-panel-v13,
+    .simple-rec-card,
+    .quick-coach,
+    .contextual-build-card,
+    .draft-result-panel-v7,
+    article
+  ) h3 {
+    font-size: 21px !important;
+    line-height: 1.15 !important;
+  }
+
+  /* Contexto superior: nada de etiquetas diminutas. */
+  .ordered-draft-context-v5 > label {
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+  }
+
+  .ordered-draft-context-v5 > label select,
+  .draft-mode-display-v215 {
+    min-height: 44px !important;
+    font-size: 15px !important;
+  }
+
+  .draft-mode-english-control-v215 > span,
+  .draft-coin-label-v214 {
+    font-size: 11px !important;
+  }
+
+  .draft-coin-copy-v214 b {
+    font-size: 15px !important;
+  }
+
+  .draft-coin-copy-v214 small {
+    font-size: 11px !important;
+  }
+
+  /* First picks estructurales. */
+  .first-pick-audit-v12 .first-pick-audit-brawlers {
+    gap: 8px !important;
+  }
+
+  .first-pick-audit-v12 .first-pick-audit-brawlers > span {
+    padding: 8px !important;
+  }
+
+  .first-pick-audit-v12 .first-pick-audit-avatar {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .first-pick-audit-v12 .first-pick-audit-brawlers b {
+    font-size: 14px !important;
+  }
+
+  .first-pick-audit-v12 .first-pick-audit-brawlers small {
+    font-size: 11px !important;
+  }
+
+  /* Bans y picks: nombres claramente visibles. */
+  .draft-picker-ban .draft-slot {
+    min-height: 64px !important;
+    height: 64px !important;
+  }
+
+  .draft-picker-ban .draft-slot-avatar {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .draft-picker-ban .draft-slot > span {
+    font-size: 13px !important;
+    font-weight: 850 !important;
+  }
+
+  .draft-picker-ban .draft-picker-head b {
+    font-size: 18px !important;
+  }
+
+  .draft-picker-ban .draft-picker-head span,
+  .draft-picker-ban .draft-picker-head small {
+    font-size: 12px !important;
+  }
+
+  .suggested-ban-row > button {
+    min-height: 52px !important;
+  }
+
+  .suggested-ban-row > button span b {
+    font-size: 13px !important;
+  }
+
+  .suggested-ban-row > button span small {
+    display: block !important;
+    font-size: 11px !important;
+  }
+
+  .ordered-draft-panel .ordered-pick-slot {
+    min-height: 90px !important;
+    height: 90px !important;
+  }
+
+  .ordered-draft-panel .ordered-pick-avatar {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .ordered-draft-panel .ordered-pick-slot > b {
+    font-size: 14px !important;
+    font-weight: 900 !important;
+  }
+
+  .ordered-draft-panel .ordered-pick-slot > small,
+  .ordered-phase-labels span {
+    font-size: 11px !important;
+  }
+
+  /* Entrada del pick. */
+  .common-pick-entry > div:first-child h3 {
+    font-size: 16px !important;
+  }
+
+  .common-pick-entry .common-pick-search input {
+    min-height: 48px !important;
+    height: 48px !important;
+    font-size: 17px !important;
+  }
+
+  .common-pick-entry .turn-status {
+    min-height: 48px !important;
+    font-size: 12px !important;
+  }
+
+  /* RECOMENDACIONES: exactamente media pantalla / media pantalla. */
+  .ordered-draft-panel > .draft-pick-decision-v16.draft-pick-decision-v17 {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 12px !important;
+    align-items: stretch !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-pick-v16,
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 {
+    min-width: 0 !important;
+    height: 100% !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-banner-v16 {
+    min-height: 38px !important;
+    padding: 7px 11px !important;
+    font-size: 11px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-body-v16 {
+    grid-template-columns: 78px minmax(0,1fr) 66px !important;
+    gap: 13px !important;
+    padding: 13px 14px 9px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-avatar-v16 {
+    width: 78px !important;
+    height: 78px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-copy-v16 > small {
+    font-size: 11px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-copy-v16 h2 {
+    margin: 3px 0 5px !important;
+    font-size: 36px !important;
+    line-height: 1 !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-copy-v16 p {
+    font-size: 15px !important;
+    line-height: 1.4 !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-copy-v16 > div span {
+    padding: 6px 8px !important;
+    font-size: 11px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-score-v16 {
+    width: 66px !important;
+    min-width: 66px !important;
+    height: 66px !important;
+    font-size: 26px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-score-v16 small {
+    font-size: 9px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-action-v16 {
+    padding: 8px 12px 11px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-action-v16 p {
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+    white-space: normal !important;
+  }
+
+  .draft-pick-decision-v17 .draft-primary-action-v16 button {
+    min-height: 42px !important;
+    font-size: 12px !important;
+  }
+
+  /* Las otras cuatro recomendaciones aprovechan su media pantalla en 2 × 2. */
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-rows: auto repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    padding: 10px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > div:first-child {
+    grid-column: 1 / -1 !important;
+    margin: 0 0 2px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > div:first-child .eyebrow {
+    font-size: 12px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > div:first-child small {
+    display: block !important;
+    font-size: 11px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > button {
+    display: grid !important;
+    grid-template-columns: 28px 52px minmax(0,1fr) 42px !important;
+    grid-template-rows: 1fr !important;
+    gap: 8px !important;
+    align-items: center !important;
+    min-width: 0 !important;
+    min-height: 88px !important;
+    padding: 9px !important;
+    border-radius: 11px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > button em {
+    font-size: 12px !important;
+    font-weight: 900 !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-avatar-v16 {
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 10px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > button b {
+    font-size: 16px !important;
+    line-height: 1.1 !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > button small {
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > button strong {
+    font-size: 18px !important;
+  }
+
+  /* Paneles posteriores: métrica y explicación con jerarquía clara. */
+  .draft-stress-metrics-v14 span,
+  .double-pick-metrics-v13 span,
+  .ordered-win-scores span {
+    font-size: 12px !important;
+  }
+
+  .draft-stress-metrics-v14 span b,
+  .double-pick-metrics-v13 span b,
+  .ordered-win-scores span b {
+    font-size: 23px !important;
+  }
+
+  .draft-stress-scenarios-v14 article b,
+  .double-pick-brawlers-v13 article b,
+  .line-matchup-list b {
+    font-size: 16px !important;
+  }
+
+  .draft-stress-scenarios-v14 article small,
+  .double-pick-brawlers-v13 article small,
+  .line-matchup-list small {
+    font-size: 12px !important;
+  }
+
+  .quick-advice-list span,
+  .line-matchup-list span,
+  .line-matchup-list strong {
+    font-size: 14px !important;
+  }
+
+  .simple-rec-card h3 {
+    font-size: 24px !important;
+  }
+
+  .simple-rec-card p,
+  .simple-rec-brief {
+    font-size: 14px !important;
+  }
+
+  .simple-rec-label,
+  .simple-rec-tags span,
+  .rec-pool-status span {
+    font-size: 11px !important;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1120px) {
+  .ordered-draft-panel > .draft-pick-decision-v16.draft-pick-decision-v17 {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > button {
+    grid-template-columns: 24px 42px minmax(0,1fr) 34px !important;
+    min-height: 82px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-avatar-v16 {
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  .draft-pick-decision-v17 .draft-compact-alternatives-v16 > button b {
+    font-size: 14px !important;
+  }
+}
