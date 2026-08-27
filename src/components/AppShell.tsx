@@ -26,12 +26,12 @@ export default function AppShell({ children }: { children: ReactNode }) {
     <aside className={`sidebar ${open ? "open" : ""}`}>
       <div className="brand"><div className="brand-mark">★</div><div><strong>Brawl Draft Lab</strong><small>Ranked Intelligence</small></div></div>
       <nav>{nav.map(([href, label, icon]) => <Link key={href} className={path === href || (href !== "/" && path.startsWith(href)) ? "active" : ""} href={href} onClick={() => setOpen(false)}><span>{icon}</span>{label}</Link>)}</nav>
-      <div className="sidebar-note"><b>Base v0.21.2</b><span>Voz: picks con orden estricto</span><span>Vídeo v0.24 · bajas por equipo</span></div>
+      <div className="sidebar-note"><b>Base v0.21.3</b><span>Picks: micro persistente uno a uno</span><span>Vídeo v0.24 · bajas por equipo</span></div>
     </aside>
     <main>
       <header className="topbar">
         <button className="menu-button" onClick={() => setOpen(!open)}>☰</button>
-        <div><b>De Mítico a Legendario</b><span>Windstock · voz secuencial · counters uno a uno · vídeo consciente del equipo</span></div>
+        <div><b>De Mítico a Legendario</b><span>Windstock · voz persistente en picks · counters uno a uno · vídeo consciente del equipo</span></div>
         <Link className="status-pill" href="/meta">● Parche 04/08 · Meta 22/08</Link>
       </header>
       {children}
