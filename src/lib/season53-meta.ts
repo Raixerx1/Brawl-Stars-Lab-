@@ -1,15 +1,15 @@
 import type { Brawler } from "./types";
 
 /**
- * Windstock / Season 53 competitive overlay — reviewed 22/08/2026.
+ * Live competitive overlay — August 4 balance state, reviewed 30/08/2026.
  *
- * Existing Ranked placements use the BrawlMetrics Ranked snapshot (13/08/2026,
- * 4.19M appearances). Nori and Wendy are kept as explicit current-season
- * additions because that Ranked snapshot does not rank them; their placement
- * is conservative and uses current cross-mode evidence plus their official kit.
+ * Supercell has not published a newer live balance patch as of this review.
+ * Update 69 was announced on 29/08, but exact balance changes are intentionally
+ * NOT applied until official release notes exist.
  *
- * This is a viability layer, not a matchup oracle: map geometry and one-to-one
- * mechanics still decide counters and draft fit.
+ * Current tier overrides use post-patch Ranked evidence sampled through
+ * 26/08/2026. Map geometry, pick order and direct matchup evidence still have
+ * priority over this global viability layer in the Draft Engine.
  */
 export const season53TierByName: Record<string, string> = {
   "Bolt": "S+", "Griff": "S+",
@@ -18,6 +18,32 @@ export const season53TierByName: Record<string, string> = {
   "Tara": "B", "Kaze": "B", "Meeple": "B", "Gray": "B", "Colt": "B", "Angelo": "B", "Bull": "B", "Penny": "B", "Shade": "B", "Sprout": "B", "Kenji": "B", "R-T": "B", "Pierce": "B", "Byron": "B", "Emz": "B", "Juju": "B", "Mandy": "B", "Mina": "B", "Otis": "B", "Nita": "B", "Chester": "B", "Melodie": "B", "Leon": "B", "Lily": "B", "Najia": "B", "Trunk": "B", "Pearl": "B", "Nani": "B",
   "Sirius": "C", "Lumi": "C", "Fang": "C", "Kit": "C", "Ruffs": "C", "Eve": "C", "Clancy": "C", "Belle": "C", "Finx": "C", "Gus": "C", "Janet": "C", "Dynamike": "C", "Berry": "C", "Hank": "C", "Cordelius": "C", "Gigi": "C", "Spike": "C", "Gene": "C", "Willow": "C", "Alli": "C", "Darryl": "C", "Moe": "C", "Ash": "C", "Lou": "C", "Lola": "C", "Colette": "C", "Draco": "C", "Grom": "C", "Bea": "C", "Mr. P": "C", "Amber": "C", "Gale": "C",
   "Poco": "D", "Glowy": "D", "Charlie": "D", "Jacky": "D", "Squeak": "D", "Buster": "D", "Ziggy": "D", "Frank": "D", "Barley": "D", "Sam": "D", "Buzz": "D", "Jae-Yong": "D", "Maisie": "D", "Sandy": "D", "Shelly": "D", "El Primo": "D", "Larry & Lawrie": "D", "Bonnie": "D", "Rosa": "D", "Pam": "D", "Ollie": "D",
+};
+
+/**
+ * Overrides respaldados por la muestra Ranked posterior al parche del 04/08.
+ * Se mantienen separados de la fotografía histórica de Season 53 para que el
+ * cambio sea auditable y fácil de sustituir cuando lleguen las notas de U69.
+ */
+export const currentAug30TierOverrides: Record<string, string> = {
+  Kaze: "S",
+  Wendy: "S",
+  Max: "S",
+  Surge: "S",
+  Bolt: "S",
+  Gigi: "S",
+  Griff: "S",
+  Ruffs: "S",
+  Jessie: "S",
+  Colt: "S",
+  Stu: "S",
+  Carl: "A",
+  "8-Bit": "A",
+  Nori: "A",
+  Brock: "A",
+  Edgar: "B",
+  Crow: "B",
+  Kit: "B",
 };
 
 export const wendySeason53: Brawler = {
@@ -39,7 +65,7 @@ export const wendySeason53: Brawler = {
   counteredBy: [],
   build: "Prioriza el uptime del generador, el escudo sobre aliados y el control de espacio; conserva el salto como reposicionamiento cuando el rival pueda entrar sobre ti.",
   profileComplete: true,
-  matchupReviewedAt: "22/08/2026",
+  matchupReviewedAt: "30/08/2026",
   matchupNotes: { favorable: {}, threats: {} },
   firstPickProfile: {
     blindSafety: 84,
@@ -68,14 +94,14 @@ export function applySeason53Meta(roster: Brawler[]): Brawler[] {
     : [...roster, wendySeason53];
 
   return withWendy.map((brawler) => {
-    const tier = season53TierByName[brawler.name] || brawler.tier;
+    const tier = currentAug30TierOverrides[brawler.name]
+      || season53TierByName[brawler.name]
+      || brawler.tier;
+
     if (brawler.name !== "Wendy") {
-      return { ...brawler, tier, matchupReviewedAt: "22/08/2026" };
+      return { ...brawler, tier, matchupReviewedAt: "30/08/2026" };
     }
 
-    // Wendy existed in an earlier internal roster draft as Control. Supercell now
-    // classifies her as Mythic Support; replace stale matchup relations rather than
-    // letting them leak into the reciprocal counter engine.
     return {
       ...brawler,
       ...wendySeason53,
@@ -83,7 +109,7 @@ export function applySeason53Meta(roster: Brawler[]): Brawler[] {
       tier,
       counters: [],
       counteredBy: [],
-      matchupReviewedAt: "22/08/2026",
+      matchupReviewedAt: "30/08/2026",
       firstPickProfileReviewedAt: "22/08/2026",
       firstPickProfileVersion: "v0.20",
     };
