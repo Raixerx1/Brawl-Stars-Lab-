@@ -8,16 +8,25 @@ export const metadata: Metadata = { title: "Meta" };
 
 type NerfEntry = { brawler: string; changes: string[]; impact: string };
 type RankedFeatured = { mode: string; maps: string[]; freeRotation: string[] };
+type Update69MapChange = {
+  mode: string;
+  removed: string;
+  added: string;
+  new: boolean;
+  creator?: string;
+};
 
 export default function MetaPage() {
   const profiled = brawlers.filter((brawler) => brawler.profileComplete);
   const generalNerfs = meta.generalNerfs as NerfEntry[];
   const rankedFeatured = meta.rankedFeatured as RankedFeatured;
+  const update69Maps = meta.update69CompetitiveMaps as Update69MapChange[];
+
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Meta y actualización oficial · {meta.season}</span>
-      <h1>Tier list y parche actual</h1>
-      <p>Revisión competitiva del 22/08/2026. El balance base más reciente es el mantenimiento oficial del 04/08; la tier list usa datos Ranked posteriores y separa los poderes estacionales del rendimiento estándar.</p>
+      <span className="eyebrow">Meta y actualización · revisión 30/08/2026</span>
+      <h1>Tier list, parche vivo y Update 69</h1>
+      <p>El último balance oficial publicado sigue siendo el mantenimiento del 04/08. El meta usa evidencia Ranked posterior hasta el 26/08 y la rotación competitiva anunciada para Update 69 ya está incorporada al Draft Assist.</p>
     </div>
 
     <section className="panel meta-season-v20">
@@ -26,11 +35,33 @@ export default function MetaPage() {
         <strong>{meta.newestBrawler}</strong>
       </div>
       <div className="stats-grid">
-        <div className="stat-card"><b>{rankedFeatured.mode}</b><span>modo destacado Ranked</span></div>
-        <div className="stat-card"><b>{rankedFeatured.maps.join(" · ")}</b><span>mapas destacados oficiales</span></div>
-        <div className="stat-card"><b>{rankedFeatured.freeRotation.join(" · ")}</b><span>rotación gratuita</span></div>
-        <div className="stat-card"><b>{meta.officialPatchDate}</b><span>último balance oficial</span></div>
+        <div className="stat-card"><b>{rankedFeatured.mode}</b><span>modo destacado Ranked actual</span></div>
+        <div className="stat-card"><b>{rankedFeatured.maps.join(" · ")}</b><span>mapas destacados oficiales actuales</span></div>
+        <div className="stat-card"><b>{meta.rankedDataThrough}</b><span>datos Ranked revisados hasta</span></div>
+        <div className="stat-card"><b>{meta.officialPatchDate}</b><span>último balance oficial vivo</span></div>
       </div>
+    </section>
+
+    <section className="panel spaced">
+      <div className="section-title">
+        <div>
+          <span className="eyebrow">Update 69 · anunciado 29/08</span>
+          <h2>Nueva rotación competitiva</h2>
+          <p>Los mapas nuevos ya están disponibles en Draft Assist con perfil provisional; los que regresan conservan su perfil histórico y se recalibrarán con datos post-lanzamiento.</p>
+        </div>
+        <strong>{update69Maps.filter((item) => item.new).length} nuevos</strong>
+      </div>
+      <div className="patch-grid">
+        {update69Maps.map((change) => <article className="patch-card" key={`${change.mode}-${change.added}`}>
+          <div>
+            <span className={`patch-badge ${change.new ? "patch-up" : ""}`}>{change.new ? "NUEVO" : "REGRESA"}</span>
+            <h3>{change.added}</h3>
+            <p><b>{change.mode}</b></p>
+            <p>Entra por <s>{change.removed}</s>{change.creator ? ` · creador: ${change.creator}` : ""}.</p>
+          </div>
+        </article>)}
+      </div>
+      <p className="muted">Balance de Update 69: {meta.update69BalanceStatus}</p>
     </section>
 
     <MetaTierList data={tierListRaw} brawlers={brawlers} />
@@ -38,7 +69,7 @@ export default function MetaPage() {
     <div className="stats-grid meta-stats-v11">
       <div className="stat-card"><b>{meta.rosterCount}</b><span>brawlers operativos</span></div>
       <div className="stat-card"><b>{profiled.length}</b><span>perfiles tácticos</span></div>
-      <div className="stat-card"><b>{maps.length}</b><span>mapas revisados</span></div>
+      <div className="stat-card"><b>{maps.length}</b><span>mapas en base + rotación U69</span></div>
       <div className="stat-card"><b>{generalNerfs.length}</b><span>nerfs generales del 04/08</span></div>
     </div>
 
