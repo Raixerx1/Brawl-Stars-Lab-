@@ -41,6 +41,8 @@ export const currentAug30TierOverrides: Record<string, string> = {
   "8-Bit": "A",
   Nori: "A",
   Brock: "A",
+  Damian: "A",
+  "Starr Nova": "A",
   Edgar: "B",
   Crow: "B",
   Kit: "B",
