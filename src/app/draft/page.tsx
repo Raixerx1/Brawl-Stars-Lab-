@@ -20,9 +20,9 @@ export const metadata: Metadata = { title: "Draft Coach en vivo" };
 export default function DraftPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Motor de Draft 2.0 · v0.21.10 · Windstock</span>
+      <span className="eyebrow">Motor de Draft 2.0 · v0.22.0 · Update 69 maps</span>
       <h1>Draft Coach</h1>
-      <p>Bans y Picks usan ahora exactamente el mismo controlador de voz. En Picks el micrófono permanece abierto y cada nombre dicho se valida en el siguiente slot antes de continuar.</p>
+      <p>Meta Ranked revisado al 30/08 con evidencia post-parche y nueva rotación competitiva de Update 69. Los mapas completamente nuevos se muestran con perfil provisional hasta acumular datos Ranked suficientes.</p>
     </div>
     <DraftAssistant maps={maps} brawlers={draftBrawlers} />
     <DraftUiEnhancer />
