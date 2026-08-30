@@ -1,9 +1,13 @@
 {
-  "updated": "2026-08-22",
+  "updated": "2026-08-30",
   "season": "Season 53 · Windstock",
-  "seasonStatus": "Temporada activa desde el 06/08/2026",
+  "seasonStatus": "Temporada activa; Update 69 anunciado el 29/08/2026",
   "officialPatch": "Mantenimiento y balance del 4 de agosto de 2026",
   "officialPatchDate": "04/08/2026",
+  "latestAnnouncement": "Update 69 · Brawl Talk: A New Way to Collect Brawlers",
+  "latestAnnouncementDate": "29/08/2026",
+  "update69BalanceStatus": "Pendiente de notas oficiales: el Brawl Talk no confirmó cifras de balance.",
+  "rankedDataThrough": "26/08/2026",
   "rosterCount": 106,
   "newestBrawler": "Wendy",
   "rankedFeatured": {
@@ -11,13 +15,26 @@
     "maps": ["Spiraling Out", "Beach Ball"],
     "freeRotation": ["Trunk", "Willow", "Kaze"]
   },
+  "update69CompetitiveMaps": [
+    { "mode": "Atrapagemas", "removed": "Snake Pit", "added": "Lilygear Lake", "new": false },
+    { "mode": "Atrapagemas", "removed": "Ancestral Roots", "added": "Dungeon Train", "new": true, "creator": "LynxRoh" },
+    { "mode": "Atraco", "removed": "Eating Good!", "added": "Kaboom Canyon", "new": false },
+    { "mode": "Caza Estelar", "removed": "Watermelons", "added": "Alchemy", "new": true, "creator": "Tevolozza" },
+    { "mode": "Balón Brawl", "removed": "Deadlock", "added": "In Demand", "new": true, "creator": "AppleSaucing" },
+    { "mode": "Balón Brawl", "removed": "Nutmeg", "added": "Pump It Up", "new": true, "creator": "unverable" },
+    { "mode": "Zona Restringida", "removed": "Abracadabra", "added": "Tread Carefully", "new": true, "creator": "IAmNumberFour" },
+    { "mode": "Noqueo", "removed": "Crab Claws", "added": "Call of the Water", "new": false },
+    { "mode": "Noqueo", "removed": "Leaping Dogs", "added": "Stroke of Luck", "new": true, "creator": "PhotonWinz" }
+  ],
   "notes": [
-    "Windstock es la segunda temporada del arco Ramen Rebellion; Wendy ya forma parte del roster operativo de Draft, Counters y voz.",
-    "La tier list Ranked se ha sustituido por el snapshot estadístico de agosto de 2026 y se contrasta con evidencia posterior para Wendy y Nori.",
+    "El último balance oficial realmente publicado y vivo sigue siendo el mantenimiento del 4 de agosto de 2026. No se aplican cifras de Update 69 hasta que Supercell publique sus notas oficiales.",
+    "La capa de meta global se ha actualizado con evidencia Ranked posterior al parche, muestreada hasta el 26/08/2026. Kaze, Wendy, Max, Surge, Bolt, Gigi, Griff, Ruffs, Jessie, Colt y Stu forman el núcleo S observado en la última muestra.",
+    "Update 69 cambia nueve mapas dentro de los seis modos principales de draft. Los seis mapas completamente nuevos usan perfiles provisionales de baja confianza hasta disponer de suficientes partidas Ranked.",
+    "Lilygear Lake, Kaboom Canyon y Call of the Water regresan a la rotación; sus perfiles aprovechan estructura y datos históricos recientes, pero se recalibrarán tras su vuelta competitiva.",
+    "Los mapas que salen con Update 69 se conservan en el histórico y dejan de tener prioridad en Draft Assist.",
     "Los tiers globales son una capa de viabilidad: mapa, geometría, orden del draft y matchup uno a uno siguen teniendo prioridad.",
-    "Todos los matchups se recalculan con evidencia explícita, perfiles mecánicos y capacidad de respuesta recíproca; ya no se considera A→B sin comprobar B→A.",
+    "Todos los matchups se recalculan con evidencia explícita, perfiles mecánicos y capacidad de respuesta recíproca; no se considera A→B sin comprobar B→A.",
     "Los nerfs generales del 4 de agosto afectan al kit base; los cambios de NanoPowers/Fusions se mantienen separados para no contaminar Ranked estándar.",
-    "Los 39 mapas conservan su perfil estructural y el motor aplica encima el tier competitivo Windstock actualizado.",
     "Las imágenes se cargan desde BrawlAPI/Brawlify con fallback local si la red no está disponible."
   ],
   "generalNerfs": [
@@ -39,27 +56,27 @@
     {
       "brawler": "Damian",
       "changes": ["Puño y explosión: 1000 → 800", "Rebote del súper: 800 → 400", "Salud del altavoz: 2000 → 1500"],
-      "impact": "Menor burst y control persistente, aunque mantiene resultados competitivos altos en el snapshot Ranked."
+      "impact": "Menor burst y control persistente tras el balance del 04/08."
     },
     {
       "brawler": "Max",
       "changes": ["Segunda carga de Phase Shift Buffie: 3 s → 2 s", "Carga del súper: 92 → 80"],
-      "impact": "Pierde parte del ciclo de tempo; baja respecto al núcleo S pero conserva valor por movilidad y composición."
+      "impact": "Pierde parte del ciclo de tempo, aunque la muestra Ranked posterior la mantiene entre los picks globales más fuertes."
     },
     {
       "brawler": "Bolt",
       "changes": ["Escudo del súper: 40 % → 30 %", "Carga del súper al moverse reducida un 23 %"],
-      "impact": "El nerf reduce su pico, pero los datos Ranked posteriores lo mantienen entre las prioridades más altas del parche."
+      "impact": "El nerf reduce su pico, pero los datos Ranked posteriores lo mantienen en el núcleo alto del meta."
     },
     {
       "brawler": "8-Bit",
       "changes": ["Carga del súper: 99 → 80", "Extra Credits: 15 s → 18 s", "Plugged In Buffie para aliados: 15 % → 10 %"],
-      "impact": "Menor frecuencia de torreta y apoyo, pero sigue rindiendo muy bien en el meta Ranked observado."
+      "impact": "Menor frecuencia de torreta y apoyo; la muestra posterior lo sitúa como opción A y más dependiente del mapa."
     },
     {
       "brawler": "Surge",
       "changes": ["Velocidad de descarga: 400 → 470", "Power Shield devuelve 1 munición en vez de 2"],
-      "impact": "Peor respuesta inmediata frente a dive, aunque su autonomía y capacidad de castigar errores lo mantienen en tier alto."
+      "impact": "Peor respuesta inmediata frente a dive, pero continúa dentro del núcleo S observado tras el parche."
     }
   ],
   "nanoNerfs": [
@@ -99,32 +116,32 @@
     {
       "name": "Supercell — Release Notes June 2026, mantenimiento del 4 de agosto",
       "url": "https://supercell.com/en/games/brawlstars/blog/release-notes/release-notes-june-2026/",
-      "kind": "Oficial: balance, Wendy, Windstock y Ranked destacado"
+      "kind": "Oficial: último balance vivo confirmado"
     },
     {
-      "name": "BrawlMetrics — Ranked Tier List August 2026",
-      "url": "https://brawlmetrics.gg/tier-list/ranked",
-      "kind": "4,195,734 apariciones Ranked; snapshot 13/08/2026"
+      "name": "BrawlBetter — Current Meta / Tier List",
+      "url": "https://www.brawlbetter.com/meta",
+      "kind": "Evidencia Ranked post-parche; datos actualizados al 26/08/2026"
     },
     {
-      "name": "Brawl Planet — Meta August 2026",
-      "url": "https://www.brawlplanet.com/meta",
-      "kind": "Contraste de rendimiento actual para Wendy, Nori y top meta"
+      "name": "BrawlBetter — Brawl Talk August 2026",
+      "url": "https://www.brawlbetter.com/updates/brawl-talk",
+      "kind": "Seguimiento del anuncio de Update 69; sin cifras oficiales de balance"
     },
     {
-      "name": "Brawls Wiki — Current Patch Tier Board",
-      "url": "https://brawls.wiki/",
-      "kind": "Contraste editorial competitivo revisado el 20/08/2026"
+      "name": "r/BrawlStarsCompetitive — Update 69 Map Pool changes",
+      "url": "https://www.reddit.com/r/BrawlStarsCompetitive/comments/1w1sv5b/update_69_map_pool_changes/",
+      "kind": "Fuente comunitaria de la rotación anunciada; mapas nuevos y regresos"
+    },
+    {
+      "name": "Brawlify — datos recientes por mapa",
+      "url": "https://brawlify.com/maps/",
+      "kind": "Contraste histórico para Lilygear Lake, Kaboom Canyon y otros mapas que regresan"
     },
     {
       "name": "BrawlAPI — assets y datos visuales",
       "url": "https://brawlapi.com/",
       "kind": "API de terceros"
-    },
-    {
-      "name": "Brawlify — roster y assets",
-      "url": "https://brawlify.com/brawlers",
-      "kind": "Roster y recursos visuales"
     }
   ]
 }
