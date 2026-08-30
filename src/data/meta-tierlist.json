@@ -1,9 +1,16 @@
 {
-  "updated": "2026-08-22",
-  "source": "BrawlMetrics Ranked — 4,195,734 apariciones; contraste Windstock para Wendy/Nori",
-  "sourceUrl": "https://brawlmetrics.gg/tier-list/ranked",
-  "method": "La vista Ranked reproduce el snapshot estadístico del 13/08/2026 (70% Wilson-adjusted win rate + 30% use rate). La vista Windstock añade Wendy y Nori de forma conservadora usando evidencia posterior y su kit actual. Los tiers no sustituyen el análisis por mapa, draft ni matchup individual.",
+  "updated": "2026-08-30",
+  "source": "BrawlBetter Ranked · balance 04/08 · muestra viva hasta 26/08/2026",
+  "sourceUrl": "https://www.brawlbetter.com/meta",
+  "method": "La vista Live 26/08 prioriza el núcleo S y los cambios de tier confirmados por la muestra Ranked post-parche de BrawlBetter. Para brawlers sin señal nueva suficiente se conserva el bucket completo del snapshot 13/08 hasta una revisión individual posterior. Mapa, geometría, draft y matchup prevalecen sobre el tier global.",
   "snapshots": {
+    "Live Ranked · 26/08": {
+      "S": ["Kaze", "Wendy", "Max", "Surge", "Bolt", "Gigi", "Griff", "Ruffs", "Jessie", "Colt", "Stu"],
+      "A": ["Meg", "Chuck", "Mico", "Bo", "Bibi", "Mortis", "Doug", "Carl", "Piper", "Rico", "Tick", "Nori", "8-Bit", "Brock", "Damian", "Starr Nova"],
+      "B": ["Tara", "Meeple", "Gray", "Angelo", "Bull", "Penny", "Shade", "Sprout", "Kenji", "R-T", "Pierce", "Byron", "Emz", "Juju", "Mandy", "Mina", "Otis", "Nita", "Chester", "Melodie", "Leon", "Lily", "Najia", "Trunk", "Pearl", "Nani", "Crow", "Edgar", "Kit"],
+      "C": ["Sirius", "Lumi", "Fang", "Eve", "Clancy", "Belle", "Finx", "Gus", "Janet", "Dynamike", "Berry", "Hank", "Cordelius", "Spike", "Gene", "Willow", "Alli", "Darryl", "Moe", "Ash", "Lou", "Lola", "Colette", "Draco", "Grom", "Bea", "Mr. P", "Amber", "Gale"],
+      "D": ["Poco", "Glowy", "Charlie", "Jacky", "Squeak", "Buster", "Ziggy", "Frank", "Barley", "Sam", "Buzz", "Jae-Yong", "Maisie", "Sandy", "Shelly", "El Primo", "Larry & Lawrie", "Bonnie", "Rosa", "Pam", "Ollie"]
+    },
     "Windstock · 22/08": {
       "S+": ["Bolt", "Griff"],
       "S": ["Wendy", "Nori", "Surge", "Damian", "8-Bit", "Edgar", "Starr Nova", "Brock"],
