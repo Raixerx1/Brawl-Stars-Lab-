@@ -3,6 +3,7 @@ import mapsRaw from "@/data/maps.json";
 import metaRaw from "@/data/meta.json";
 import type { Brawler, MapProfile } from "./types";
 import { applySeason53Meta } from "./season53-meta";
+import { applyUpdate69Maps } from "./update69-maps";
 import { rankCountersAgainst, rankTargetsFor } from "./counter-engine";
 
 export const brawlers = applySeason53Meta(brawlersRaw as Brawler[]);
@@ -23,7 +24,13 @@ export const draftBrawlers: Brawler[] = brawlers.map((brawler) => ({
     .map((matchup) => matchup.candidate.name),
 }));
 
-export const maps = mapsRaw as MapProfile[];
+/**
+ * Update 69 añade la nueva rotación competitiva sin destruir el histórico.
+ * Los mapas que salen se conservan como Históricos; los que entran aparecen
+ * como Actuales. Los mapas completamente nuevos usan perfil provisional hasta
+ * disponer de una muestra Ranked post-lanzamiento suficiente.
+ */
+export const maps = applyUpdate69Maps(mapsRaw as MapProfile[]);
 export const meta = metaRaw;
 export const brawlerByName = (name: string) => brawlers.find((brawler) => brawler.name.toLowerCase() === name.toLowerCase());
 export const brawlerBySlug = (slug: string) => brawlers.find((brawler) => brawler.slug === slug);
