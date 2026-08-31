@@ -4,6 +4,7 @@ import "./draft-overrides.css";
 import "./live-v18.css";
 import "./pwa.css";
 import "./visual-density-v195.css";
+import "./visual-refresh-v230.css";
 import AppShell from "@/components/AppShell";
 import PwaInstallPrompt from "@/components/PwaInstallPrompt";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#090c18",
+  themeColor: "#060914",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
