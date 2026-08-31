@@ -1,0 +1,48 @@
+@media (min-width: 901px) {
+  .common-pick-search {
+    position: relative !important;
+    overflow: visible !important;
+    isolation: isolate !important;
+  }
+
+  .common-pick-search .voice-target-pick,
+  .common-pick-search .persistent-pick-voice-v216,
+  .common-pick-search .desktop-pick-voice-v221 {
+    position: absolute !important;
+    right: 5px !important;
+    top: 50% !important;
+    z-index: 500 !important;
+    display: flex !important;
+    align-items: center !important;
+    transform: translateY(-50%) !important;
+    pointer-events: auto !important;
+  }
+
+  .common-pick-search .voice-target-pick .voice-draft-button-v185,
+  .common-pick-search .desktop-pick-voice-v221 .voice-draft-button-v185 {
+    position: relative !important;
+    z-index: 501 !important;
+    width: 34px !important;
+    height: 34px !important;
+    pointer-events: auto !important;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .common-pick-search input {
+    position: relative !important;
+    z-index: 1 !important;
+    padding-right: 52px !important;
+  }
+
+  .common-pick-search .voice-draft-status-v185 {
+    z-index: 502 !important;
+    pointer-events: none !important;
+  }
+
+  .common-pick-search .desktop-mic-requesting-v221 .voice-draft-status-v185,
+  .common-pick-search .desktop-mic-denied-v221 .voice-draft-status-v185 {
+    display: block !important;
+  }
+}
