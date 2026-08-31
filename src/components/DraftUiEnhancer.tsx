@@ -153,9 +153,20 @@ export default function DraftUiEnhancer() {
 
   const flipCoin = () => {
     if (!firstPickSelect) return;
-    const next: DraftFirstPickOwner = owner === "Aliado" ? "Rival" : "Aliado";
+
+    // Leemos el valor real del select, no el state visual. Esto evita desincronizaciones
+    // tras re-renderizados y funciona de forma estable en Safari/iOS.
+    const current: DraftFirstPickOwner = firstPickSelect.value === "Rival" ? "Rival" : "Aliado";
+    const next: DraftFirstPickOwner = current === "Aliado" ? "Rival" : "Aliado";
+
     setOwner(next);
     setNativeSelectValue(firstPickSelect, next);
+
+    // React controla el select original. Reconciliamos una vez terminado el evento para
+    // que la moneda refleje exactamente el valor que quedó registrado en DraftAssistant.
+    window.requestAnimationFrame(() => {
+      setOwner(firstPickSelect.value === "Rival" ? "Rival" : "Aliado");
+    });
   };
 
   const allied = owner === "Aliado";
@@ -182,9 +193,16 @@ export default function DraftUiEnhancer() {
         <button
           type="button"
           className={`draft-team-coin-v214 ${allied ? "ally" : "enemy"}`}
-          onClick={flipCoin}
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={(event) => {
+            // El botón vive dentro de un <label>. En iOS Safari el comportamiento por
+            // defecto del label puede absorber/revertir el tap si no lo cancelamos.
+            event.preventDefault();
+            event.stopPropagation();
+            flipCoin();
+          }}
           aria-label={allied ? "Mi equipo tiene first pick. Cambiar a equipo rival" : "El equipo rival tiene first pick. Cambiar a mi equipo"}
-          title="Clic para cambiar quién tiene el first pick"
+          title="Pulsa para cambiar quién tiene el first pick"
         >
           <span className="draft-team-coin-face-v214">{allied ? "MI" : "RIV"}</span>
         </button>
