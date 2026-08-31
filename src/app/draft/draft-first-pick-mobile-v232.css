@@ -1,19 +1,26 @@
-/* v0.23.2 — First-pick toggle robusto en móvil/iOS.
-   Refuerza la zona táctil y evita que el <label> host intercepte el gesto. */
+/* v0.23.4 — First-pick toggle robusto en móvil/iOS incluso tras pinch-zoom.
+   El breakpoint visual puede cambiar al alejar la vista; la interacción táctil no debe
+   depender del ancho CSS sino del tipo de puntero disponible. */
 
 .ordered-draft-context-v5 .draft-first-pick-coin-host-v214,
 .ordered-draft-context-v5 .draft-first-pick-coin-control-v214 {
+  position: relative;
   pointer-events: auto !important;
 }
 
+.ordered-draft-context-v5 .draft-first-pick-coin-host-v214 {
+  z-index: 6;
+}
+
 .ordered-draft-context-v5 .draft-first-pick-coin-control-v214 {
-  position: relative;
+  z-index: 7;
   isolation: isolate;
+  overflow: visible !important;
 }
 
 .ordered-draft-context-v5 .draft-team-coin-v214 {
   position: relative;
-  z-index: 4;
+  z-index: 12;
   pointer-events: auto !important;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -21,18 +28,47 @@
   -webkit-user-select: none;
 }
 
-@media (max-width: 900px) {
+/* Mantiene una zona táctil real aunque el pinch-zoom haga que el viewport CSS pase
+   a un breakpoint de escritorio. El dispositivo sigue teniendo puntero táctil. */
+@media (pointer: coarse), (hover: none) {
+  .ordered-draft-context-v5 .draft-first-pick-coin-host-v214,
+  .ordered-draft-context-v5 .draft-first-pick-coin-control-v214,
+  .ordered-draft-context-v5 .draft-team-coin-v214,
+  .ordered-draft-context-v5 .draft-team-coin-face-v214 {
+    pointer-events: auto !important;
+  }
+
   .ordered-draft-context-v5 .draft-team-coin-v214 {
-    width: 38px !important;
-    height: 38px !important;
-    min-width: 38px !important;
-    min-height: 38px !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
     cursor: pointer;
   }
 
   .ordered-draft-context-v5 .draft-team-coin-face-v214 {
-    width: 29px !important;
-    height: 29px !important;
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .ordered-draft-context-v5 .draft-first-pick-coin-control-v214 {
+    min-width: 0;
+    overflow: visible !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .ordered-draft-context-v5 .draft-team-coin-v214 {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    cursor: pointer;
+  }
+
+  .ordered-draft-context-v5 .draft-team-coin-face-v214 {
+    width: 30px !important;
+    height: 30px !important;
   }
 
   .ordered-draft-context-v5 .draft-first-pick-coin-control-v214 {
