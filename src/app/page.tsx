@@ -6,54 +6,71 @@ import { BrawlerPortrait } from "@/components/GameArtwork";
 
 export default function Home() {
   const profiled = brawlers.filter((brawler) => brawler.profileComplete);
-  return <div className="page">
+  const currentMaps = maps.filter((map) => map.rotationStatus === "Actual").slice(0, 6);
+  const sCore = ["Wendy", "Griff", "Max", "Mortis", "Edgar", "Nori"]
+    .map((name) => brawlers.find((brawler) => brawler.name === name))
+    .filter((brawler): brawler is NonNullable<typeof brawler> => Boolean(brawler));
+
+  return <div className="page home-dashboard-v230">
     <section className="hero hero-v2">
-      <div>
-        <span className="hero-badge">PARCHE 04/08/2026 · RANKED LAB</span>
+      <div className="hero-copy-v230">
+        <span className="hero-badge">META LIVE · {meta.updated.split("-").reverse().join("/")} · RANKED LAB</span>
         <h1>Gana el draft<br /><em>antes de empezar.</em></h1>
-        <p>Draft vivo adaptado a SoloQ, Dúo o Trío, con recomendaciones de doble pick y perfiles estructurales por mapa.</p>
+        <p>Un centro competitivo para decidir mapa, bans, first pick, counters y respuesta al draft rival con una lectura rápida y visual.</p>
         <div className="hero-actions">
           <Link href="/draft" className="primary-button">Abrir Draft Assistant</Link>
-          <Link href="/live" className="secondary-button">Abrir Auto Review</Link>
+          <Link href="/counters" className="secondary-button">Explorar counters</Link>
+        </div>
+        <div className="hero-live-strip-v230" aria-label="Estado de la base competitiva">
+          <div><strong>{brawlers.length}</strong><span>Brawlers</span></div>
+          <div><strong>{maps.filter((map) => map.rotationStatus === "Actual").length}</strong><span>Mapas activos</span></div>
+          <div><strong>24 h</strong><span>Meta live</span></div>
         </div>
       </div>
       <div className="hero-roster" aria-hidden="true">
-        <BrawlerPortrait name="Nori" className="hero-portrait hero-portrait-one" priority />
-        <BrawlerPortrait name="Gene" className="hero-portrait hero-portrait-two" priority />
-        <BrawlerPortrait name="Angelo" className="hero-portrait hero-portrait-three" priority />
-        <div className="hero-radar"><span>04/08</span><b>META</b></div>
+        <BrawlerPortrait name="Wendy" className="hero-portrait hero-portrait-one" priority />
+        <BrawlerPortrait name="Griff" className="hero-portrait hero-portrait-two" priority />
+        <BrawlerPortrait name="Max" className="hero-portrait hero-portrait-three" priority />
+        <div className="hero-radar"><span>LIVE</span><b>META</b></div>
       </div>
     </section>
 
-    <section className="patch-alert">
-      <div><span className="eyebrow">Última revisión oficial</span><h2>{meta.officialPatch}</h2></div>
-      <Link href="/meta" className="secondary-button">Ver impacto completo</Link>
+    <section className="patch-alert patch-alert-v230">
+      <div>
+        <span className="eyebrow">Estado competitivo</span>
+        <h2>{meta.officialPatch}</h2>
+        <p>{meta.rankedDataThrough}</p>
+      </div>
+      <div className="patch-alert-actions-v230">
+        <span className="live-dot-v230">● LIVE</span>
+        <Link href="/meta" className="secondary-button">Abrir Meta Center</Link>
+      </div>
     </section>
 
-    <section className="stats-grid">
-      <div className="stat-card"><b>{maps.length}</b><span>mapas preparados</span></div>
+    <section className="stats-grid home-stats-v230">
+      <div className="stat-card"><b>{maps.filter((map) => map.rotationStatus === "Actual").length}</b><span>mapas en rotación competitiva</span></div>
       <div className="stat-card"><b>{brawlers.length}</b><span>brawlers registrados</span></div>
-      <div className="stat-card"><b>{profiled.length}</b><span>perfiles tácticos</span></div>
-      <div className="stat-card"><b>{brawlers.reduce((sum, brawler) => sum + brawler.counters.length + brawler.counteredBy.length, 0)}</b><span>relaciones de matchup</span></div>
+      <div className="stat-card"><b>{profiled.length}</b><span>perfiles tácticos completos</span></div>
+      <div className="stat-card"><b>{brawlers.reduce((sum, brawler) => sum + brawler.counters.length + brawler.counteredBy.length, 0)}</b><span>relaciones explícitas de matchup</span></div>
     </section>
 
-    <div className="section-title spaced"><div><span className="eyebrow">Rotación prioritaria</span><h2>Mapas destacados</h2></div><Link href="/maps">Ver todos →</Link></div>
-    <div className="card-grid">{maps.filter((map) => map.featuredOfficialJune2026).map((map) => <MapCard map={map} key={map.slug} />)}</div>
+    <div className="section-title spaced"><div><span className="eyebrow">Rotación competitiva</span><h2>Mapas que debes preparar</h2></div><Link href="/maps">Todos los mapas →</Link></div>
+    <div className="card-grid home-map-grid-v230">{currentMaps.map((map) => <MapCard map={map} key={map.slug} />)}</div>
 
-    <div className="section-title spaced"><div><span className="eyebrow">Impacto del parche</span><h2>Brawlers que debes reevaluar</h2></div><Link href="/meta">Cambios del 4 de agosto →</Link></div>
-    <div className="card-grid brawler-grid">{["Starr Nova", "Damian", "Max", "Bolt", "Surge", "Crow"].map((name) => <BrawlerCard key={name} brawler={brawlers.find((brawler) => brawler.name === name)!} />)}</div>
+    <div className="section-title spaced"><div><span className="eyebrow">Meta 24 h</span><h2>Núcleo fuerte del meta actual</h2></div><Link href="/meta">Tier list completa →</Link></div>
+    <div className="card-grid brawler-grid">{sCore.map((brawler) => <BrawlerCard key={brawler.name} brawler={brawler} />)}</div>
 
     <section className="cta-panel">
-      <div><span className="eyebrow">Matchup Lab</span><h2>Selecciona un brawler y consulta sus cinco mejores objetivos y sus cinco amenazas.</h2><p>Los resultados son editoriales y se ajustan al arquetipo, el parche y las interacciones principales.</p></div>
+      <div><span className="eyebrow">Matchup Lab</span><h2>Lee el pick rival y encuentra la respuesta que mejor encaja en ese draft.</h2><p>El motor combina matchup mecánico, respuesta inversa, meta global y contexto competitivo; el score es heurístico, no un porcentaje de victoria observado.</p></div>
       <Link href="/counters" className="primary-button">Abrir counters</Link>
     </section>
 
-    <div className="section-title spaced"><div><span className="eyebrow">Nuevas herramientas</span><h2>Decide mejor antes y durante el draft</h2></div></div>
+    <div className="section-title spaced"><div><span className="eyebrow">Competitive toolkit</span><h2>Todo el flujo de Ranked, en una sola interfaz</h2></div></div>
     <div className="feature-grid feature-grid-v8">
-      <Link href="/draft" className="panel feature-card"><b>◎</b><h3>Draft Coach</h3><p>SoloQ, Dúo o Trío, parejas para doble pick, líneas, bans y modo ultrarrápido.</p></Link>
-      <Link href="/live" className="panel feature-card"><b>▶</b><h3>Auto Review</h3><p>Analiza fotogramas, combina secuencias y ajusta la confianza con tus confirmaciones y falsos positivos.</p></Link>
-      <Link href="/pool" className="panel feature-card"><b>◉</b><h3>Mi pool</h3><p>Prioriza fuerza 11, hipercargas y los brawlers que realmente dominas.</p></Link>
-      <Link href="/tracker" className="panel feature-card"><b>▥</b><h3>Aprendizaje</h3><p>Convierte resultados y Live Reviews en ajustes personales moderados del Draft Coach.</p></Link>
+      <Link href="/draft" className="panel feature-card"><b>◎</b><h3>Draft Coach</h3><p>Mapa, bans, orden de picks, alternativas y lectura del draft rival en tiempo real.</p></Link>
+      <Link href="/live" className="panel feature-card"><b>▶</b><h3>Auto Review</h3><p>Analiza secuencias y eventos del vídeo con confirmación manual para ajustar la confianza.</p></Link>
+      <Link href="/pool" className="panel feature-card"><b>◉</b><h3>Mi pool</h3><p>Prioriza los brawlers que realmente tienes disponibles y dominas para Ranked.</p></Link>
+      <Link href="/tracker" className="panel feature-card"><b>▥</b><h3>Aprendizaje</h3><p>Convierte resultados y revisiones en ajustes personales moderados del Draft Coach.</p></Link>
     </div>
   </div>;
 }
