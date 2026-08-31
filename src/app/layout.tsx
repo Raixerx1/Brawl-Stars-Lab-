@@ -5,6 +5,7 @@ import "./live-v18.css";
 import "./pwa.css";
 import "./visual-density-v195.css";
 import "./visual-refresh-v230.css";
+import "./visual-home-v230.css";
 import AppShell from "@/components/AppShell";
 import PwaInstallPrompt from "@/components/PwaInstallPrompt";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
