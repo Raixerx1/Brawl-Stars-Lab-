@@ -24,9 +24,9 @@ export default function MetaPage() {
 
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Meta y actualización · revisión 30/08/2026</span>
+      <span className="eyebrow">Meta y actualización · revisión 31/08/2026</span>
       <h1>Tier list, parche vivo y Update 69</h1>
-      <p>El último balance oficial publicado sigue siendo el mantenimiento del 04/08. El meta usa evidencia Ranked posterior hasta el 26/08 y la rotación competitiva anunciada para Update 69 ya está incorporada al Draft Assist.</p>
+      <p>Hoy 31/08 no consta un nuevo balance live: el último oficial sigue siendo el 04/08. La tier list ya usa la fotografía Meta 24 h actualizada el 30/08 y el balance de septiembre permanece bloqueado hasta las release notes definitivas de Supercell.</p>
     </div>
 
     <section className="panel meta-season-v20">
@@ -37,7 +37,7 @@ export default function MetaPage() {
       <div className="stats-grid">
         <div className="stat-card"><b>{rankedFeatured.mode}</b><span>modo destacado Ranked actual</span></div>
         <div className="stat-card"><b>{rankedFeatured.maps.join(" · ")}</b><span>mapas destacados oficiales actuales</span></div>
-        <div className="stat-card"><b>{meta.rankedDataThrough}</b><span>datos Ranked revisados hasta</span></div>
+        <div className="stat-card"><b>{meta.rankedDataThrough}</b><span>fotografía competitiva revisada</span></div>
         <div className="stat-card"><b>{meta.officialPatchDate}</b><span>último balance oficial vivo</span></div>
       </div>
     </section>
@@ -62,6 +62,7 @@ export default function MetaPage() {
         </article>)}
       </div>
       <p className="muted">Balance de Update 69: {meta.update69BalanceStatus}</p>
+      <p className="muted">Ventana prevista: {meta.nextBalanceWindow}</p>
     </section>
 
     <MetaTierList data={tierListRaw} brawlers={brawlers} />
