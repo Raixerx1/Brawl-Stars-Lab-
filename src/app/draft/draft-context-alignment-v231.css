@@ -1,0 +1,227 @@
+/* v0.23.1 — Alineación de la banda de contexto del Draft Assist.
+   Corrige etiquetas duplicadas de MODE / FIRST PICK y hace que todos los controles
+   compartan altura y eje visual. En móvil recupera la cinta horizontal prevista. */
+
+/* DraftUiEnhancer inserta su propia etiqueta visible. El texto del <label> host
+   debe quedar realmente oculto incluso frente a los !important de v0.21.5. */
+.ordered-draft-context-v5 > label.draft-mode-english-host-v215,
+.ordered-draft-context-v5 > label.draft-first-pick-coin-host-v214 {
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+
+.ordered-draft-panel > .ordered-draft-context-v5 {
+  align-items: stretch !important;
+}
+
+.ordered-draft-context-v5 > label {
+  min-width: 0 !important;
+}
+
+/* Selectores normales: misma altura total que los controles enriquecidos. */
+.ordered-draft-context-v5 > label:not(.auto-position-toggle):not(.draft-mode-english-host-v215):not(.draft-first-pick-coin-host-v214) {
+  display: grid !important;
+  grid-template-rows: 14px 44px;
+  gap: 4px;
+  align-content: start;
+}
+
+.ordered-draft-context-v5 > label:not(.auto-position-toggle) > select {
+  height: 44px !important;
+  min-height: 44px !important;
+  margin-top: 0 !important;
+}
+
+/* MODE: una sola etiqueta, alineada con el resto de captions. */
+.ordered-draft-context-v5 .draft-mode-english-control-v215 {
+  display: grid !important;
+  grid-template-rows: 14px 44px !important;
+  gap: 4px !important;
+  align-content: start !important;
+  height: 62px;
+}
+
+.ordered-draft-context-v5 .draft-mode-english-control-v215 > span {
+  display: flex;
+  align-items: center;
+  min-height: 14px;
+  line-height: 14px !important;
+}
+
+.ordered-draft-context-v5 .draft-mode-display-v215 {
+  height: 44px !important;
+  min-height: 44px !important;
+}
+
+/* FIRST PICK: mismo alto de 62 px que selectores y toggles. */
+.ordered-draft-context-v5 .draft-first-pick-coin-control-v214 {
+  box-sizing: border-box;
+  min-height: 62px !important;
+  height: 62px !important;
+  grid-template-rows: 12px minmax(0, 1fr) !important;
+  padding: 5px 8px !important;
+  column-gap: 7px !important;
+  align-items: center !important;
+}
+
+.ordered-draft-context-v5 .draft-coin-label-v214 {
+  display: flex;
+  align-items: center;
+  min-height: 12px;
+  margin: 0 !important;
+  line-height: 12px !important;
+}
+
+.ordered-draft-context-v5 .draft-team-coin-v214 {
+  width: 34px !important;
+  height: 34px !important;
+}
+
+.ordered-draft-context-v5 .draft-team-coin-face-v214 {
+  width: 26px !important;
+  height: 26px !important;
+}
+
+.ordered-draft-context-v5 .draft-coin-copy-v214 b,
+.ordered-draft-context-v5 .draft-coin-copy-v214 small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Los dos toggles ya son tarjetas: igualamos su caja con el resto. */
+.ordered-draft-context-v5 .auto-position-toggle {
+  box-sizing: border-box;
+  min-height: 62px !important;
+  height: 62px !important;
+  margin: 0 !important;
+  padding: 6px 8px !important;
+  align-self: start !important;
+  align-items: center !important;
+}
+
+.ordered-draft-context-v5 .auto-position-toggle > input[type="checkbox"] {
+  flex: 0 0 auto;
+  width: 16px !important;
+  height: 16px !important;
+  min-height: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.ordered-draft-context-v5 .auto-position-toggle > span {
+  min-width: 0;
+}
+
+/* Escritorio ancho: los siete ajustes forman una única línea estable. */
+@media (min-width: 1180px) {
+  .ordered-draft-panel > .ordered-draft-context-v5 {
+    display: grid !important;
+    grid-template-columns:
+      minmax(0, .9fr)
+      minmax(0, 1.2fr)
+      minmax(0, 1.05fr)
+      minmax(0, 1.05fr)
+      minmax(0, .9fr)
+      minmax(0, .95fr)
+      minmax(0, 1.08fr) !important;
+    gap: 8px !important;
+  }
+}
+
+/* Escritorio estrecho/tablet: 4 + 3, sin comprimir texto ni controles. */
+@media (min-width: 901px) and (max-width: 1179px) {
+  .ordered-draft-panel > .ordered-draft-context-v5 {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+}
+
+/* Móvil: cinta horizontal legible. Las reglas antiguas ya definían flex-basis,
+   pero el contenedor seguía siendo grid; aquí se completa ese comportamiento. */
+@media (max-width: 900px) {
+  .ordered-draft-panel > .ordered-draft-context-v5 {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding: 1px 0 5px !important;
+    scroll-snap-type: x proximity;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ordered-draft-panel > .ordered-draft-context-v5::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ordered-draft-context-v5 > label {
+    flex: 0 0 128px !important;
+    width: 128px !important;
+    min-width: 128px !important;
+    scroll-snap-align: start;
+  }
+
+  .ordered-draft-context-v5 > label:nth-child(2) {
+    flex-basis: 154px !important;
+    width: 154px !important;
+    min-width: 154px !important;
+  }
+
+  .ordered-draft-context-v5 > label.draft-first-pick-coin-host-v214 {
+    flex-basis: 150px !important;
+    width: 150px !important;
+    min-width: 150px !important;
+  }
+
+  .ordered-draft-context-v5 > label.learning-toggle-v7 {
+    flex-basis: 154px !important;
+    width: 154px !important;
+    min-width: 154px !important;
+  }
+
+  .ordered-draft-context-v5 > label:not(.auto-position-toggle):not(.draft-mode-english-host-v215):not(.draft-first-pick-coin-host-v214) {
+    grid-template-rows: 12px 38px;
+    gap: 3px;
+  }
+
+  .ordered-draft-context-v5 > label:not(.auto-position-toggle) > select,
+  .ordered-draft-context-v5 .draft-mode-display-v215 {
+    height: 38px !important;
+    min-height: 38px !important;
+  }
+
+  .ordered-draft-context-v5 .draft-mode-english-control-v215 {
+    grid-template-rows: 12px 38px !important;
+    gap: 3px !important;
+    height: 53px;
+  }
+
+  .ordered-draft-context-v5 .draft-mode-english-control-v215 > span {
+    min-height: 12px;
+    line-height: 12px !important;
+  }
+
+  .ordered-draft-context-v5 .draft-first-pick-coin-control-v214,
+  .ordered-draft-context-v5 .auto-position-toggle {
+    min-height: 53px !important;
+    height: 53px !important;
+  }
+
+  .ordered-draft-context-v5 .draft-first-pick-coin-control-v214 {
+    padding: 4px 7px !important;
+    grid-template-rows: 10px minmax(0, 1fr) !important;
+  }
+
+  .ordered-draft-context-v5 .draft-team-coin-v214 {
+    width: 31px !important;
+    height: 31px !important;
+  }
+
+  .ordered-draft-context-v5 .draft-team-coin-face-v214 {
+    width: 24px !important;
+    height: 24px !important;
+  }
+}
