@@ -16,6 +16,7 @@ import "./draft-readable-v215.css";
 import "./draft-overlap-fix-v216.css";
 import "./draft-alternatives-fulltext-v217.css";
 import "./draft-desktop-voice-v221.css";
+import "./draft-context-alignment-v231.css";
 
 export const metadata: Metadata = { title: "Draft Coach en vivo" };
 
