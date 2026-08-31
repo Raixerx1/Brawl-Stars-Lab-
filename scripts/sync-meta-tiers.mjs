@@ -4,23 +4,21 @@ const metaPath = new URL("../src/data/meta-tierlist.json", import.meta.url);
 const rosterPath = new URL("../src/data/brawlers.json", import.meta.url);
 
 const snapshots = {
-  "Meta 24 h": {
-    S: ["Surge", "Edgar", "Nori", "Griff", "Brock", "Meg", "Max", "8-Bit"],
-    A: ["Colt", "Mortis", "Starr Nova", "Rico", "Lumi", "Stu"],
-    B: ["Shelly", "Bibi", "Gale", "Crow", "Ash", "Rosa", "Piper", "Bo", "Colette", "Gray", "Emz", "Mina", "Kenji", "Melodie", "Nani", "Mandy", "Pierce", "Cordelius", "Lou", "Jae-Yong", "Spike", "Ruffs", "Shade", "Meeple", "Kit", "Eve"],
-    C: ["Byron", "Gene", "Bull", "Bea", "Sandy", "Otis", "Doug", "Bolt", "Willow", "Chester", "Pearl", "Moe", "Damian", "Buster", "Kaze", "Lily", "Hank"],
-    D: ["Angelo", "Carl", "Mico", "Leon", "Fang", "Berry", "Bonnie", "Buzz", "Sirius", "Draco", "Trunk", "Alli", "El Primo", "Gus", "Sprout", "Poco", "Tara", "Clancy", "Belle"],
-    F: ["Grom", "Frank", "Janet", "Amber", "Pam", "Charlie", "Dynamike", "Nita", "Chuck", "Larry & Lawrie", "Barley", "Penny", "Finx", "Maisie", "Glowy", "Darryl", "Tick", "R-T", "Gigi", "Lola", "Squeak", "Mr. P", "Ziggy", "Juju", "Najia", "Jessie", "Sam", "Ollie", "Jacky"],
-    "Sin datos": ["Wendy"],
+  "Meta 24 h · 30/08": {
+    S: ["Wendy", "Griff", "Max", "Mortis", "Edgar", "Nori", "Brock", "8-Bit"],
+    A: ["Surge", "Mandy", "Emz", "Fang", "Rico", "Meg", "Bibi", "Stu", "Lumi"],
+    B: ["Colt", "Pierce", "Piper", "Carl", "Starr Nova", "Otis", "Gray", "Melodie", "Ash", "Juju", "Angelo", "Belle", "Gene", "Mina"],
+    C: ["Lou", "Bo", "Bea", "Tick", "Moe", "Bonnie", "Frank", "Pearl", "Gale", "Bolt", "Bull", "Sandy", "Chester", "Meeple", "Glowy", "Rosa", "Jessie", "Leon", "Eve", "Sirius", "El Primo"],
+    D: ["Shelly", "Shade", "Sprout", "Doug", "Chuck", "Nani", "Damian", "Spike", "Ruffs", "Kaze", "Crow", "Buzz", "Amber", "Kenji", "Kit", "Berry", "Nita", "Squeak", "Gigi", "Charlie", "Byron"],
+    F: ["Alli", "Buster", "Hank", "Colette", "Mico", "Lily", "Dynamike", "Willow", "Barley", "Penny", "Ollie", "Lola", "R-T", "Trunk", "Cordelius", "Maisie", "Darryl", "Tara", "Jae-Yong", "Gus", "Mr. P", "Finx", "Draco", "Ziggy", "Poco", "Jacky", "Grom", "Pam", "Najia", "Janet", "Clancy", "Larry & Lawrie", "Sam"],
   },
-  "General 30 d": {
-    S: ["Surge", "Edgar", "Nori", "Brock", "Sirius", "Starr Nova", "8-Bit", "Griff", "Max"],
-    A: ["Mortis", "Meg", "Damian", "Colt", "Crow", "Bolt", "Emz"],
-    B: ["Bibi", "Mandy", "Rosa", "Shelly", "Lumi", "Kit", "Piper", "Pierce", "Bo", "Melodie", "Rico", "Chester", "Stu", "Bull", "Nani", "Otis"],
-    C: ["Gray", "Byron", "Bea", "Kenji", "Meeple", "Colette", "Belle", "Lou", "Alli", "Buzz", "Mina", "Angelo", "Sandy", "Carl", "Shade", "Fang", "Doug"],
-    D: ["Charlie", "Buster", "Cordelius", "Spike", "Gale", "Leon", "Ruffs", "Jae-Yong", "Ash", "Gene", "Eve", "Amber", "Frank", "Janet", "Pearl", "Draco", "Mico", "Kaze", "Sprout", "Lily", "El Primo", "Juju", "Lola", "Bonnie", "Hank", "Penny", "Glowy", "Berry", "Tara", "Squeak", "Maisie", "Tick"],
-    F: ["Dynamike", "Grom", "Chuck", "Sam", "Jessie", "Moe", "Ollie", "Mr. P", "Gigi", "Darryl", "Trunk", "Ziggy", "Gus", "Willow", "Finx", "Poco", "Nita", "R-T", "Pam", "Jacky", "Larry & Lawrie", "Najia", "Barley", "Clancy"],
-    "Sin datos": ["Wendy"],
+  "General 30 d · 30/08": {
+    S: ["Wendy", "Edgar", "Surge", "Griff", "Nori", "Brock", "8-Bit", "Mortis"],
+    A: ["Max", "Starr Nova", "Meg", "Bibi", "Colt", "Emz", "Rico"],
+    B: ["Mandy", "Stu", "Piper", "Lumi", "Shelly", "Pierce", "Rosa", "Bo", "Bolt", "Crow", "Melodie", "Bull", "Kit", "Nani", "Ash", "Damian", "Gray"],
+    C: ["Mina", "Lou", "Kenji", "Otis", "Meeple", "Byron", "Shade", "Sirius", "Buzz", "Pearl", "Chester", "Carl", "Doug", "Gale", "Belle", "Bea", "Ruffs", "Fang", "Buster"],
+    D: ["Charlie", "Spike", "Angelo", "Kaze", "Tick", "Sandy", "Jae-Yong", "Eve", "Colette", "Cordelius", "Sprout", "Leon", "Frank", "Gene", "Amber", "Janet", "Hank", "Penny", "Juju", "Grom", "Glowy", "Alli", "El Primo", "Lola", "Nita", "Dynamike", "Lily", "Trunk", "Squeak", "Moe", "Berry", "Willow"],
+    F: ["R-T", "Jessie", "Mico", "Tara", "Bonnie", "Larry & Lawrie", "Chuck", "Draco", "Darryl", "Mr. P", "Maisie", "Gigi", "Finx", "Ollie", "Gus", "Najia", "Barley", "Poco", "Ziggy", "Sam", "Pam", "Jacky", "Clancy"],
   },
 };
 
@@ -39,14 +37,17 @@ for (const [period, tiers] of Object.entries(snapshots)) {
 }
 
 const liveTier = new Map();
-for (const [tier, names] of Object.entries(snapshots["Meta 24 h"])) {
-  for (const name of names) liveTier.set(name, tier === "Sin datos" ? "Sin evaluar" : tier);
+for (const [tier, names] of Object.entries(snapshots["Meta 24 h · 30/08"])) {
+  for (const name of names) liveTier.set(name, tier);
 }
 
 for (const brawler of roster) brawler.tier = liveTier.get(brawler.name);
-meta.updated = "2026-08-11";
+meta.updated = "2026-08-31";
+meta.source = "NOFF Meta 24 h · top 200 global · datos actualizados 30/08/2026";
+meta.sourceUrl = "https://www.noff.gg/brawl-stars/tier-list";
+meta.method = "Meta 24 h para actualidad y General 30 d como control de estabilidad. El Draft Engine sigue priorizando mapa, modo, geometría, orden y matchup recíproco.";
 meta.snapshots = snapshots;
 
 await writeFile(metaPath, `${JSON.stringify(meta, null, 2)}\n`, "utf8");
 await writeFile(rosterPath, `${JSON.stringify(roster, null, 2)}\n`, "utf8");
-console.log(`Meta sincronizado: ${roster.length} brawlers, snapshot 2026-08-11.`);
+console.log(`Meta sincronizado: ${roster.length} brawlers, snapshot vivo 30/08/2026.`);
