@@ -22,9 +22,9 @@ export const metadata: Metadata = { title: "Draft Coach en vivo" };
 export default function DraftPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Motor de Draft 2.0 · v0.22.1 · voz PC corregida</span>
+      <span className="eyebrow">Motor de Draft 2.0 · v0.22.2 · meta 31/08</span>
       <h1>Draft Coach</h1>
-      <p>El micrófono de Picks en escritorio fuerza ahora prioridad de interacción y valida el permiso del micrófono del PC antes de iniciar el reconocimiento. La ruta móvil permanece sin cambios.</p>
+      <p>Tier global actualizado con la fotografía Meta 24 h del 30/08. Matchups, Counter Explorer y coach por voz recalculan sobre esa viabilidad sin activar todavía los cambios de balance de septiembre.</p>
     </div>
     <DraftAssistant maps={maps} brawlers={draftBrawlers} />
     <DraftUiEnhancer />
