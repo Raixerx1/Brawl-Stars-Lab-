@@ -1,0 +1,46 @@
+/* v0.23.3 — Contraste estable para selects del Draft Assistant en escritorio.
+   Chrome/Windows puede renderizar las opciones nativas con fondo claro aunque el
+   control tenga tema oscuro; si el texto hereda blanco, parece vacío hasta hover. */
+
+.ordered-draft-assistant select,
+.ordered-draft-context-v5 select,
+.draft-mode-display-v215 {
+  color: #f7f9ff !important;
+  -webkit-text-fill-color: #f7f9ff !important;
+  opacity: 1 !important;
+  color-scheme: dark;
+}
+
+.ordered-draft-assistant select option,
+.ordered-draft-context-v5 select option,
+.draft-mode-display-v215 option {
+  background: #0e1628 !important;
+  color: #f7f9ff !important;
+  -webkit-text-fill-color: #f7f9ff !important;
+}
+
+.ordered-draft-assistant select option:checked,
+.ordered-draft-context-v5 select option:checked,
+.draft-mode-display-v215 option:checked {
+  background: #172b49 !important;
+  color: #ffffff !important;
+}
+
+/* Mantener el valor seleccionado visible sin depender de hover/focus. */
+@media (min-width: 901px) {
+  .ordered-draft-context-v5 > label > select,
+  .ordered-draft-context-v5 .draft-mode-display-v215 {
+    background-color: #0e1628 !important;
+    color: #f7f9ff !important;
+    -webkit-text-fill-color: #f7f9ff !important;
+    text-shadow: none !important;
+  }
+
+  .ordered-draft-context-v5 > label > select:hover,
+  .ordered-draft-context-v5 > label > select:focus,
+  .ordered-draft-context-v5 .draft-mode-display-v215:hover,
+  .ordered-draft-context-v5 .draft-mode-display-v215:focus {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+}
