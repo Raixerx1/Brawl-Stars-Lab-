@@ -1,52 +1,136 @@
 import type { Brawler } from "./types";
 
 /**
- * Live competitive overlay — August 4 balance state, reviewed 30/08/2026.
+ * Live competitive overlay — August 4 balance state, reviewed 31/08/2026.
  *
- * Supercell has not published a newer live balance patch as of this review.
- * Update 69 was announced on 29/08, but exact balance changes are intentionally
- * NOT applied until official release notes exist.
+ * Supercell has not published a newer LIVE balance patch as of this review.
+ * The August 29 Brawl Talk announced Update 69, while the September balance
+ * changes are still treated as upcoming until the official release notes land.
  *
- * Current tier overrides use post-patch Ranked evidence sampled through
- * 26/08/2026. Map geometry, pick order and direct matchup evidence still have
- * priority over this global viability layer in the Draft Engine.
+ * The active tier layer below is the complete NOFF Meta 24h snapshot refreshed
+ * on 30/08/2026 from top-player battle data. The Draft Engine still gives map,
+ * mode, pick order and direct matchup mechanics priority over this global tier.
  */
 export const season53TierByName: Record<string, string> = {
-  "Bolt": "S+", "Griff": "S+",
-  "Surge": "S", "Damian": "S", "8-Bit": "S", "Edgar": "S", "Starr Nova": "S", "Brock": "S", "Nori": "S", "Wendy": "S",
-  "Meg": "A", "Chuck": "A", "Mico": "A", "Bo": "A", "Crow": "A", "Bibi": "A", "Max": "A", "Mortis": "A", "Doug": "A", "Carl": "A", "Piper": "A", "Rico": "A", "Jessie": "A", "Tick": "A", "Stu": "A",
-  "Tara": "B", "Kaze": "B", "Meeple": "B", "Gray": "B", "Colt": "B", "Angelo": "B", "Bull": "B", "Penny": "B", "Shade": "B", "Sprout": "B", "Kenji": "B", "R-T": "B", "Pierce": "B", "Byron": "B", "Emz": "B", "Juju": "B", "Mandy": "B", "Mina": "B", "Otis": "B", "Nita": "B", "Chester": "B", "Melodie": "B", "Leon": "B", "Lily": "B", "Najia": "B", "Trunk": "B", "Pearl": "B", "Nani": "B",
-  "Sirius": "C", "Lumi": "C", "Fang": "C", "Kit": "C", "Ruffs": "C", "Eve": "C", "Clancy": "C", "Belle": "C", "Finx": "C", "Gus": "C", "Janet": "C", "Dynamike": "C", "Berry": "C", "Hank": "C", "Cordelius": "C", "Gigi": "C", "Spike": "C", "Gene": "C", "Willow": "C", "Alli": "C", "Darryl": "C", "Moe": "C", "Ash": "C", "Lou": "C", "Lola": "C", "Colette": "C", "Draco": "C", "Grom": "C", "Bea": "C", "Mr. P": "C", "Amber": "C", "Gale": "C",
-  "Poco": "D", "Glowy": "D", "Charlie": "D", "Jacky": "D", "Squeak": "D", "Buster": "D", "Ziggy": "D", "Frank": "D", "Barley": "D", "Sam": "D", "Buzz": "D", "Jae-Yong": "D", "Maisie": "D", "Sandy": "D", "Shelly": "D", "El Primo": "D", "Larry & Lawrie": "D", "Bonnie": "D", "Rosa": "D", "Pam": "D", "Ollie": "D",
+  Wendy: "S",
+  Griff: "S",
+  Max: "S",
+  Mortis: "S",
+  Edgar: "S",
+  Nori: "S",
+  Brock: "S",
+  "8-Bit": "S",
+
+  Surge: "A",
+  Mandy: "A",
+  Emz: "A",
+  Fang: "A",
+  Rico: "A",
+  Meg: "A",
+  Bibi: "A",
+  Stu: "A",
+  Lumi: "A",
+
+  Colt: "B",
+  Pierce: "B",
+  Piper: "B",
+  Carl: "B",
+  "Starr Nova": "B",
+  Otis: "B",
+  Gray: "B",
+  Melodie: "B",
+  Ash: "B",
+  Juju: "B",
+  Angelo: "B",
+  Belle: "B",
+  Gene: "B",
+  Mina: "B",
+
+  Lou: "C",
+  Bo: "C",
+  Bea: "C",
+  Tick: "C",
+  Moe: "C",
+  Bonnie: "C",
+  Frank: "C",
+  Pearl: "C",
+  Gale: "C",
+  Bolt: "C",
+  Bull: "C",
+  Sandy: "C",
+  Chester: "C",
+  Meeple: "C",
+  Glowy: "C",
+  Rosa: "C",
+  Jessie: "C",
+  Leon: "C",
+  Eve: "C",
+  Sirius: "C",
+  "El Primo": "C",
+
+  Shelly: "D",
+  Shade: "D",
+  Sprout: "D",
+  Doug: "D",
+  Chuck: "D",
+  Nani: "D",
+  Damian: "D",
+  Spike: "D",
+  Ruffs: "D",
+  Kaze: "D",
+  Crow: "D",
+  Buzz: "D",
+  Amber: "D",
+  Kenji: "D",
+  Kit: "D",
+  Berry: "D",
+  Nita: "D",
+  Squeak: "D",
+  Gigi: "D",
+  Charlie: "D",
+  Byron: "D",
+
+  Alli: "F",
+  Buster: "F",
+  Hank: "F",
+  Colette: "F",
+  Mico: "F",
+  Lily: "F",
+  Dynamike: "F",
+  Willow: "F",
+  Barley: "F",
+  Penny: "F",
+  Ollie: "F",
+  Lola: "F",
+  "R-T": "F",
+  Trunk: "F",
+  Cordelius: "F",
+  Maisie: "F",
+  Darryl: "F",
+  Tara: "F",
+  "Jae-Yong": "F",
+  Gus: "F",
+  "Mr. P": "F",
+  Finx: "F",
+  Draco: "F",
+  Ziggy: "F",
+  Poco: "F",
+  Jacky: "F",
+  Grom: "F",
+  Pam: "F",
+  Najia: "F",
+  Janet: "F",
+  Clancy: "F",
+  "Larry & Lawrie": "F",
+  Sam: "F",
 };
 
 /**
- * Overrides respaldados por la muestra Ranked posterior al parche del 04/08.
- * Se mantienen separados de la fotografía histórica de Season 53 para que el
- * cambio sea auditable y fácil de sustituir cuando lleguen las notas de U69.
+ * Export mantenido por compatibilidad con revisiones previas. Ya no usamos un
+ * override parcial: el snapshot activo contiene los 106 brawlers y evita que
+ * una lista antigua sobreviva accidentalmente en counters o recomendaciones.
  */
-export const currentAug30TierOverrides: Record<string, string> = {
-  Kaze: "S",
-  Wendy: "S",
-  Max: "S",
-  Surge: "S",
-  Bolt: "S",
-  Gigi: "S",
-  Griff: "S",
-  Ruffs: "S",
-  Jessie: "S",
-  Colt: "S",
-  Stu: "S",
-  Carl: "A",
-  "8-Bit": "A",
-  Nori: "A",
-  Brock: "A",
-  Damian: "A",
-  "Starr Nova": "A",
-  Edgar: "B",
-  Crow: "B",
-  Kit: "B",
-};
+export const currentAug30TierOverrides: Record<string, string> = {};
 
 export const wendySeason53: Brawler = {
   slug: "wendy",
@@ -67,7 +151,7 @@ export const wendySeason53: Brawler = {
   counteredBy: [],
   build: "Prioriza el uptime del generador, el escudo sobre aliados y el control de espacio; conserva el salto como reposicionamiento cuando el rival pueda entrar sobre ti.",
   profileComplete: true,
-  matchupReviewedAt: "30/08/2026",
+  matchupReviewedAt: "31/08/2026",
   matchupNotes: { favorable: {}, threats: {} },
   firstPickProfile: {
     blindSafety: 84,
@@ -86,8 +170,8 @@ export const wendySeason53: Brawler = {
     teamDependence: 46,
     counterRisk: 32,
   },
-  firstPickProfileReviewedAt: "22/08/2026",
-  firstPickProfileVersion: "v0.20",
+  firstPickProfileReviewedAt: "31/08/2026",
+  firstPickProfileVersion: "v0.22.2",
 };
 
 export function applySeason53Meta(roster: Brawler[]): Brawler[] {
@@ -101,7 +185,7 @@ export function applySeason53Meta(roster: Brawler[]): Brawler[] {
       || brawler.tier;
 
     if (brawler.name !== "Wendy") {
-      return { ...brawler, tier, matchupReviewedAt: "30/08/2026" };
+      return { ...brawler, tier, matchupReviewedAt: "31/08/2026" };
     }
 
     return {
@@ -111,9 +195,9 @@ export function applySeason53Meta(roster: Brawler[]): Brawler[] {
       tier,
       counters: [],
       counteredBy: [],
-      matchupReviewedAt: "30/08/2026",
-      firstPickProfileReviewedAt: "22/08/2026",
-      firstPickProfileVersion: "v0.20",
+      matchupReviewedAt: "31/08/2026",
+      firstPickProfileReviewedAt: "31/08/2026",
+      firstPickProfileVersion: "v0.22.2",
     };
   });
 }
