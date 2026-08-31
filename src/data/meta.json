@@ -1,13 +1,14 @@
 {
-  "updated": "2026-08-30",
+  "updated": "2026-08-31",
   "season": "Season 53 · Windstock",
-  "seasonStatus": "Temporada activa; Update 69 anunciado el 29/08/2026",
+  "seasonStatus": "Temporada activa; Update 69 anunciado el 29/08/2026. El balance de septiembre todavía no está live.",
   "officialPatch": "Mantenimiento y balance del 4 de agosto de 2026",
   "officialPatchDate": "04/08/2026",
   "latestAnnouncement": "Update 69 · Brawl Talk: A New Way to Collect Brawlers",
   "latestAnnouncementDate": "29/08/2026",
-  "update69BalanceStatus": "Pendiente de notas oficiales: el Brawl Talk no confirmó cifras de balance.",
-  "rankedDataThrough": "26/08/2026",
+  "update69BalanceStatus": "No aplicado todavía. La ventana publicada por fuentes de seguimiento es 01–02/09/2026; se espera confirmación en las release notes oficiales de Supercell antes de activar cambios de balance.",
+  "nextBalanceWindow": "01–02/09/2026 (previsto; pendiente de confirmación oficial)",
+  "rankedDataThrough": "30/08/2026 · NOFF Meta 24 h",
   "rosterCount": 106,
   "newestBrawler": "Wendy",
   "rankedFeatured": {
@@ -27,13 +28,15 @@
     { "mode": "Noqueo", "removed": "Leaping Dogs", "added": "Stroke of Luck", "new": true, "creator": "PhotonWinz" }
   ],
   "notes": [
-    "El último balance oficial realmente publicado y vivo sigue siendo el mantenimiento del 4 de agosto de 2026. No se aplican cifras de Update 69 hasta que Supercell publique sus notas oficiales.",
-    "La capa de meta global se ha actualizado con evidencia Ranked posterior al parche, muestreada hasta el 26/08/2026. Kaze, Wendy, Max, Surge, Bolt, Gigi, Griff, Ruffs, Jessie, Colt y Stu forman el núcleo S observado en la última muestra.",
+    "A 31/08/2026 no hay un nuevo balance oficial live posterior al mantenimiento del 04/08. El Brawl Talk del 29/08 anuncia Update 69, pero no sustituye unas release notes de balance.",
+    "La tier list activa se ha reemplazado por la fotografía completa Meta 24 h de NOFF actualizada el 30/08 para los 106 brawlers. La capa General 30 d se conserva como control de estabilidad y no sustituye al snapshot vivo.",
+    "La fotografía 24 h coloca en S a Wendy, Griff, Max, Mortis, Edgar, Nori, Brock y 8-Bit. Este tier global es una señal de viabilidad, no una predicción de victoria para un draft concreto.",
+    "El motor de counters recalcula de forma recíproca cada matchup usando relaciones explícitas, perfiles mecánicos y ahora la nueva viabilidad global. Por ello, actualizar tiers modifica automáticamente Counter Explorer, Draft Engine y el índice de 5 counters del coach por voz.",
+    "Los cambios de balance de septiembre que circulan antes del parche se mantienen fuera del motor live. Solo se incorporarán cuando Supercell publique la versión definitiva para evitar contaminar counters y recomendaciones con cifras provisionales.",
     "Update 69 cambia nueve mapas dentro de los seis modos principales de draft. Los seis mapas completamente nuevos usan perfiles provisionales de baja confianza hasta disponer de suficientes partidas Ranked.",
     "Lilygear Lake, Kaboom Canyon y Call of the Water regresan a la rotación; sus perfiles aprovechan estructura y datos históricos recientes, pero se recalibrarán tras su vuelta competitiva.",
     "Los mapas que salen con Update 69 se conservan en el histórico y dejan de tener prioridad en Draft Assist.",
-    "Los tiers globales son una capa de viabilidad: mapa, geometría, orden del draft y matchup uno a uno siguen teniendo prioridad.",
-    "Todos los matchups se recalculan con evidencia explícita, perfiles mecánicos y capacidad de respuesta recíproca; no se considera A→B sin comprobar B→A.",
+    "Mapa, geometría, orden del draft y matchup uno a uno siguen teniendo prioridad sobre el tier global.",
     "Los nerfs generales del 4 de agosto afectan al kit base; los cambios de NanoPowers/Fusions se mantienen separados para no contaminar Ranked estándar.",
     "Las imágenes se cargan desde BrawlAPI/Brawlify con fallback local si la red no está disponible."
   ],
@@ -46,37 +49,37 @@
     {
       "brawler": "Griff",
       "changes": ["Radio de Piggy Bank: 800 → 600", "Keep the Change aumenta un 55 % la dispersión"],
-      "impact": "Menos fiable para abrir mapa y castigar a media distancia, aunque el rendimiento Ranked observado sigue siendo muy alto."
+      "impact": "Menos fiable para abrir mapa y castigar a media distancia; aun así, el snapshot 24 h del 30/08 lo mantiene en S por rendimiento reciente."
     },
     {
       "brawler": "Starr Nova",
       "changes": ["Salud: 4000 → 3700", "Recarga: 1400 → 1600", "Floaty Time: duración máxima 10 s → 7 s", "Power Level Maximum: máximo 30 % → 20 %"],
-      "impact": "Nerf amplio a supervivencia, tempo y escalado; sigue siendo fuerte, pero es menos segura a ciegas que antes del parche."
+      "impact": "Nerf amplio a supervivencia, tempo y escalado; actualmente aparece como opción B global y más dependiente del contexto."
     },
     {
       "brawler": "Damian",
       "changes": ["Puño y explosión: 1000 → 800", "Rebote del súper: 800 → 400", "Salud del altavoz: 2000 → 1500"],
-      "impact": "Menor burst y control persistente tras el balance del 04/08."
+      "impact": "Menor burst y control persistente tras el balance del 04/08; la fotografía 24 h lo sitúa en D."
     },
     {
       "brawler": "Max",
       "changes": ["Segunda carga de Phase Shift Buffie: 3 s → 2 s", "Carga del súper: 92 → 80"],
-      "impact": "Pierde parte del ciclo de tempo, aunque la muestra Ranked posterior la mantiene entre los picks globales más fuertes."
+      "impact": "Pierde parte del ciclo de tempo, pero el meta 24 h la mantiene en S."
     },
     {
       "brawler": "Bolt",
       "changes": ["Escudo del súper: 40 % → 30 %", "Carga del súper al moverse reducida un 23 %"],
-      "impact": "El nerf reduce su pico, pero los datos Ranked posteriores lo mantienen en el núcleo alto del meta."
+      "impact": "La prioridad global ha caído frente a comienzos de agosto; el snapshot 24 h lo sitúa en C."
     },
     {
       "brawler": "8-Bit",
       "changes": ["Carga del súper: 99 → 80", "Extra Credits: 15 s → 18 s", "Plugged In Buffie para aliados: 15 % → 10 %"],
-      "impact": "Menor frecuencia de torreta y apoyo; la muestra posterior lo sitúa como opción A y más dependiente del mapa."
+      "impact": "Aunque perdió frecuencia de torreta y apoyo, el meta 24 h del 30/08 lo sitúa de nuevo en S; sigue siendo muy sensible al mapa."
     },
     {
       "brawler": "Surge",
       "changes": ["Velocidad de descarga: 400 → 470", "Power Shield devuelve 1 munición en vez de 2"],
-      "impact": "Peor respuesta inmediata frente a dive, pero continúa dentro del núcleo S observado tras el parche."
+      "impact": "Sigue siendo competitivo, pero la fotografía 24 h actual lo coloca en A en lugar del núcleo S."
     }
   ],
   "nanoNerfs": [
@@ -116,17 +119,27 @@
     {
       "name": "Supercell — Release Notes June 2026, mantenimiento del 4 de agosto",
       "url": "https://supercell.com/en/games/brawlstars/blog/release-notes/release-notes-june-2026/",
-      "kind": "Oficial: último balance vivo confirmado"
+      "kind": "Oficial: último balance live confirmado"
+    },
+    {
+      "name": "NOFF — Tier List Meta 24 h / General 30 d",
+      "url": "https://www.noff.gg/brawl-stars/tier-list",
+      "kind": "Fotografía diaria de top 200; datos actualizados 30/08/2026"
     },
     {
       "name": "BrawlBetter — Current Meta / Tier List",
       "url": "https://www.brawlbetter.com/meta",
-      "kind": "Evidencia Ranked post-parche; datos actualizados al 26/08/2026"
+      "kind": "Contraste Ranked post-parche; muestra publicada hasta 26/08/2026"
     },
     {
       "name": "BrawlBetter — Brawl Talk August 2026",
       "url": "https://www.brawlbetter.com/updates/brawl-talk",
-      "kind": "Seguimiento del anuncio de Update 69; sin cifras oficiales de balance"
+      "kind": "Confirma que el Brawl Talk no equivale a cifras oficiales de balance"
+    },
+    {
+      "name": "SportsDunia — September 2026 balance window",
+      "url": "https://www.sportsdunia.com/gaming/brawl-stars-balance-changes-september-2026-leaked",
+      "kind": "Fuente secundaria: sitúa la ventana prevista en 01–02/09; no se usa para activar balance"
     },
     {
       "name": "r/BrawlStarsCompetitive — Update 69 Map Pool changes",
