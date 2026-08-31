@@ -32,6 +32,7 @@ const MODE_LABELS: Record<string, string> = {
 };
 
 type ModeOption = { value: string; label: string };
+type PointerStart = { id: number; x: number; y: number };
 
 function normalizeLabel(value: string) {
   return value
@@ -74,6 +75,8 @@ export default function DraftUiEnhancer() {
   const [owner, setOwner] = useState<DraftFirstPickOwner>("Aliado");
   const modeSelectRef = useRef<HTMLSelectElement | null>(null);
   const firstPickSelectRef = useRef<HTMLSelectElement | null>(null);
+  const firstPickPointerRef = useRef<PointerStart | null>(null);
+  const lastPointerToggleRef = useRef(0);
 
   useEffect(() => {
     let disposed = false;
@@ -154,16 +157,12 @@ export default function DraftUiEnhancer() {
   const flipCoin = () => {
     if (!firstPickSelect) return;
 
-    // Leemos el valor real del select, no el state visual. Esto evita desincronizaciones
-    // tras re-renderizados y funciona de forma estable en Safari/iOS.
     const current: DraftFirstPickOwner = firstPickSelect.value === "Rival" ? "Rival" : "Aliado";
     const next: DraftFirstPickOwner = current === "Aliado" ? "Rival" : "Aliado";
 
     setOwner(next);
     setNativeSelectValue(firstPickSelect, next);
 
-    // React controla el select original. Reconciliamos una vez terminado el evento para
-    // que la moneda refleje exactamente el valor que quedó registrado en DraftAssistant.
     window.requestAnimationFrame(() => {
       setOwner(firstPickSelect.value === "Rival" ? "Rival" : "Aliado");
     });
@@ -193,12 +192,42 @@ export default function DraftUiEnhancer() {
         <button
           type="button"
           className={`draft-team-coin-v214 ${allied ? "ally" : "enemy"}`}
-          onPointerDown={(event) => event.stopPropagation()}
-          onClick={(event) => {
-            // El botón vive dentro de un <label>. En iOS Safari el comportamiento por
-            // defecto del label puede absorber/revertir el tap si no lo cancelamos.
+          onPointerDown={(event) => {
+            if (!event.isPrimary) return;
+            event.stopPropagation();
+            firstPickPointerRef.current = {
+              id: event.pointerId,
+              x: event.clientX,
+              y: event.clientY,
+            };
+          }}
+          onPointerUp={(event) => {
+            if (!event.isPrimary) return;
             event.preventDefault();
             event.stopPropagation();
+
+            const start = firstPickPointerRef.current;
+            firstPickPointerRef.current = null;
+            if (!start || start.id !== event.pointerId) return;
+
+            const distance = Math.hypot(event.clientX - start.x, event.clientY - start.y);
+            if (distance > 12) return;
+
+            // PointerUp es más fiable que click en Safari/iOS después de hacer pinch-zoom.
+            // Guardamos el instante para ignorar el click sintético que llega después.
+            lastPointerToggleRef.current = window.performance.now();
+            flipCoin();
+          }}
+          onPointerCancel={() => {
+            firstPickPointerRef.current = null;
+          }}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            // Evita un segundo cambio tras el pointerUp. Un click sin pointer previo
+            // (teclado/accesibilidad) sigue funcionando normalmente.
+            if (window.performance.now() - lastPointerToggleRef.current < 700) return;
             flipCoin();
           }}
           aria-label={allied ? "Mi equipo tiene first pick. Cambiar a equipo rival" : "El equipo rival tiene first pick. Cambiar a mi equipo"}
