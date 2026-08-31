@@ -24,14 +24,14 @@ export default function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   return <div className="app-shell">
     <aside className={`sidebar ${open ? "open" : ""}`}>
-      <div className="brand"><div className="brand-mark">★</div><div><strong>Brawl Draft Lab</strong><small>Ranked Intelligence</small></div></div>
+      <div className="brand"><div className="brand-mark">★</div><div><strong>Brawl Draft Lab</strong><small>Competitive Intelligence</small></div></div>
       <nav>{nav.map(([href, label, icon]) => <Link key={href} className={path === href || (href !== "/" && path.startsWith(href)) ? "active" : ""} href={href} onClick={() => setOpen(false)}><span>{icon}</span>{label}</Link>)}</nav>
-      <div className="sidebar-note"><b>Base v0.22.2</b><span>Meta 24 h recalibrado · 106 brawlers</span><span>Parche septiembre bloqueado hasta release oficial</span></div>
+      <div className="sidebar-note"><b>Base v0.23.0</b><span>Interfaz competitiva renovada</span><span>Meta 24 h · Draft Engine 2.0</span></div>
     </aside>
     <main>
       <header className="topbar">
         <button className="menu-button" onClick={() => setOpen(!open)}>☰</button>
-        <div><b>De Mítico a Legendario</b><span>Meta 31/08 · counters recalculados · Update 69 pendiente · Draft Engine 2.0</span></div>
+        <div><b>Competitive Draft Center</b><span>Meta 31/08 · counters recalculados · Update 69 · Draft Engine 2.0</span></div>
         <Link className="status-pill" href="/meta">● Parche 04/08 · Meta 31/08</Link>
       </header>
       {children}
