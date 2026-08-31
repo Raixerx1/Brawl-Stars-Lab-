@@ -1,0 +1,41 @@
+/* v0.23.2 — First-pick toggle robusto en móvil/iOS.
+   Refuerza la zona táctil y evita que el <label> host intercepte el gesto. */
+
+.ordered-draft-context-v5 .draft-first-pick-coin-host-v214,
+.ordered-draft-context-v5 .draft-first-pick-coin-control-v214 {
+  pointer-events: auto !important;
+}
+
+.ordered-draft-context-v5 .draft-first-pick-coin-control-v214 {
+  position: relative;
+  isolation: isolate;
+}
+
+.ordered-draft-context-v5 .draft-team-coin-v214 {
+  position: relative;
+  z-index: 4;
+  pointer-events: auto !important;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+@media (max-width: 900px) {
+  .ordered-draft-context-v5 .draft-team-coin-v214 {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    cursor: pointer;
+  }
+
+  .ordered-draft-context-v5 .draft-team-coin-face-v214 {
+    width: 29px !important;
+    height: 29px !important;
+  }
+
+  .ordered-draft-context-v5 .draft-first-pick-coin-control-v214 {
+    overflow: visible !important;
+  }
+}
