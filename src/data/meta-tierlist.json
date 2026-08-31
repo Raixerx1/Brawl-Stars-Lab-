@@ -1,32 +1,31 @@
 {
-  "updated": "2026-08-30",
-  "source": "BrawlBetter Ranked · balance 04/08 · muestra viva hasta 26/08/2026",
-  "sourceUrl": "https://www.brawlbetter.com/meta",
-  "method": "La vista Live 26/08 prioriza el núcleo S y los cambios de tier confirmados por la muestra Ranked post-parche de BrawlBetter. Para brawlers sin señal nueva suficiente se conserva el bucket completo del snapshot 13/08 hasta una revisión individual posterior. Mapa, geometría, draft y matchup prevalecen sobre el tier global.",
+  "updated": "2026-08-31",
+  "source": "NOFF Meta 24 h · top 200 global · datos actualizados 30/08/2026; contraste BrawlBetter Ranked 26/08",
+  "sourceUrl": "https://www.noff.gg/brawl-stars/tier-list",
+  "method": "La vista principal usa la fotografía Meta 24 h más reciente de NOFF para los 106 brawlers. La vista 30 d sirve como capa de estabilidad para detectar picos de muestra. El Draft Engine no trata el tier como verdad absoluta: mapa, modo, geometría, orden de picks y matchup recíproco prevalecen. El balance de septiembre no se activa hasta que Supercell lo publique oficialmente.",
   "snapshots": {
-    "Live Ranked · 26/08": {
+    "Meta 24 h · 30/08": {
+      "S": ["Wendy", "Griff", "Max", "Mortis", "Edgar", "Nori", "Brock", "8-Bit"],
+      "A": ["Surge", "Mandy", "Emz", "Fang", "Rico", "Meg", "Bibi", "Stu", "Lumi"],
+      "B": ["Colt", "Pierce", "Piper", "Carl", "Starr Nova", "Otis", "Gray", "Melodie", "Ash", "Juju", "Angelo", "Belle", "Gene", "Mina"],
+      "C": ["Lou", "Bo", "Bea", "Tick", "Moe", "Bonnie", "Frank", "Pearl", "Gale", "Bolt", "Bull", "Sandy", "Chester", "Meeple", "Glowy", "Rosa", "Jessie", "Leon", "Eve", "Sirius", "El Primo"],
+      "D": ["Shelly", "Shade", "Sprout", "Doug", "Chuck", "Nani", "Damian", "Spike", "Ruffs", "Kaze", "Crow", "Buzz", "Amber", "Kenji", "Kit", "Berry", "Nita", "Squeak", "Gigi", "Charlie", "Byron"],
+      "F": ["Alli", "Buster", "Hank", "Colette", "Mico", "Lily", "Dynamike", "Willow", "Barley", "Penny", "Ollie", "Lola", "R-T", "Trunk", "Cordelius", "Maisie", "Darryl", "Tara", "Jae-Yong", "Gus", "Mr. P", "Finx", "Draco", "Ziggy", "Poco", "Jacky", "Grom", "Pam", "Najia", "Janet", "Clancy", "Larry & Lawrie", "Sam"]
+    },
+    "General 30 d · 30/08": {
+      "S": ["Wendy", "Edgar", "Surge", "Griff", "Nori", "Brock", "8-Bit", "Mortis"],
+      "A": ["Max", "Starr Nova", "Meg", "Bibi", "Colt", "Emz", "Rico"],
+      "B": ["Mandy", "Stu", "Piper", "Lumi", "Shelly", "Pierce", "Rosa", "Bo", "Bolt", "Crow", "Melodie", "Bull", "Kit", "Nani", "Ash", "Damian", "Gray"],
+      "C": ["Mina", "Lou", "Kenji", "Otis", "Meeple", "Byron", "Shade", "Sirius", "Buzz", "Pearl", "Chester", "Carl", "Doug", "Gale", "Belle", "Bea", "Ruffs", "Fang", "Buster"],
+      "D": ["Charlie", "Spike", "Angelo", "Kaze", "Tick", "Sandy", "Jae-Yong", "Eve", "Colette", "Cordelius", "Sprout", "Leon", "Frank", "Gene", "Amber", "Janet", "Hank", "Penny", "Juju", "Grom", "Glowy", "Alli", "El Primo", "Lola", "Nita", "Dynamike", "Lily", "Trunk", "Squeak", "Moe", "Berry", "Willow"],
+      "F": ["R-T", "Jessie", "Mico", "Tara", "Bonnie", "Larry & Lawrie", "Chuck", "Draco", "Darryl", "Mr. P", "Maisie", "Gigi", "Finx", "Ollie", "Gus", "Najia", "Barley", "Poco", "Ziggy", "Sam", "Pam", "Jacky", "Clancy"]
+    },
+    "BrawlBetter Ranked · 26/08": {
       "S": ["Kaze", "Wendy", "Max", "Surge", "Bolt", "Gigi", "Griff", "Ruffs", "Jessie", "Colt", "Stu"],
       "A": ["Meg", "Chuck", "Mico", "Bo", "Bibi", "Mortis", "Doug", "Carl", "Piper", "Rico", "Tick", "Nori", "8-Bit", "Brock", "Damian", "Starr Nova"],
       "B": ["Tara", "Meeple", "Gray", "Angelo", "Bull", "Penny", "Shade", "Sprout", "Kenji", "R-T", "Pierce", "Byron", "Emz", "Juju", "Mandy", "Mina", "Otis", "Nita", "Chester", "Melodie", "Leon", "Lily", "Najia", "Trunk", "Pearl", "Nani", "Crow", "Edgar", "Kit"],
       "C": ["Sirius", "Lumi", "Fang", "Eve", "Clancy", "Belle", "Finx", "Gus", "Janet", "Dynamike", "Berry", "Hank", "Cordelius", "Spike", "Gene", "Willow", "Alli", "Darryl", "Moe", "Ash", "Lou", "Lola", "Colette", "Draco", "Grom", "Bea", "Mr. P", "Amber", "Gale"],
       "D": ["Poco", "Glowy", "Charlie", "Jacky", "Squeak", "Buster", "Ziggy", "Frank", "Barley", "Sam", "Buzz", "Jae-Yong", "Maisie", "Sandy", "Shelly", "El Primo", "Larry & Lawrie", "Bonnie", "Rosa", "Pam", "Ollie"]
-    },
-    "Windstock · 22/08": {
-      "S+": ["Bolt", "Griff"],
-      "S": ["Wendy", "Nori", "Surge", "Damian", "8-Bit", "Edgar", "Starr Nova", "Brock"],
-      "A": ["Meg", "Chuck", "Mico", "Bo", "Crow", "Bibi", "Max", "Mortis", "Doug", "Carl", "Piper", "Rico", "Jessie", "Tick", "Stu"],
-      "B": ["Tara", "Kaze", "Meeple", "Gray", "Colt", "Angelo", "Bull", "Penny", "Shade", "Sprout", "Kenji", "R-T", "Pierce", "Byron", "Emz", "Juju", "Mandy", "Mina", "Otis", "Nita", "Chester", "Melodie", "Leon", "Lily", "Najia", "Trunk", "Pearl", "Nani"],
-      "C": ["Sirius", "Lumi", "Fang", "Kit", "Ruffs", "Eve", "Clancy", "Belle", "Finx", "Gus", "Janet", "Dynamike", "Berry", "Hank", "Cordelius", "Gigi", "Spike", "Gene", "Willow", "Alli", "Darryl", "Moe", "Ash", "Lou", "Lola", "Colette", "Draco", "Grom", "Bea", "Mr. P", "Amber", "Gale"],
-      "D": ["Poco", "Glowy", "Charlie", "Jacky", "Squeak", "Buster", "Ziggy", "Frank", "Barley", "Sam", "Buzz", "Jae-Yong", "Maisie", "Sandy", "Shelly", "El Primo", "Larry & Lawrie", "Bonnie", "Rosa", "Pam", "Ollie"]
-    },
-    "Ranked · 13/08": {
-      "S+": ["Bolt", "Griff"],
-      "S": ["Surge", "Damian", "8-Bit", "Edgar", "Starr Nova", "Brock"],
-      "A": ["Meg", "Chuck", "Mico", "Bo", "Crow", "Bibi", "Max", "Mortis", "Doug", "Carl", "Piper", "Rico", "Jessie", "Tick", "Stu"],
-      "B": ["Tara", "Kaze", "Meeple", "Gray", "Colt", "Angelo", "Bull", "Penny", "Shade", "Sprout", "Kenji", "R-T", "Pierce", "Byron", "Emz", "Juju", "Mandy", "Mina", "Otis", "Nita", "Chester", "Melodie", "Leon", "Lily", "Najia", "Trunk", "Pearl", "Nani"],
-      "C": ["Sirius", "Lumi", "Fang", "Kit", "Ruffs", "Eve", "Clancy", "Belle", "Finx", "Gus", "Janet", "Dynamike", "Berry", "Hank", "Cordelius", "Gigi", "Spike", "Gene", "Willow", "Alli", "Darryl", "Moe", "Ash", "Lou", "Lola", "Colette", "Draco", "Grom", "Bea", "Mr. P", "Amber", "Gale"],
-      "D": ["Poco", "Glowy", "Charlie", "Jacky", "Squeak", "Buster", "Ziggy", "Frank", "Barley", "Sam", "Buzz", "Jae-Yong", "Maisie", "Sandy", "Shelly", "El Primo", "Larry & Lawrie", "Bonnie", "Rosa", "Pam", "Ollie"],
-      "Sin datos": ["Nori", "Wendy"]
     }
   }
 }
