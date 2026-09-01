@@ -1,12 +1,41 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { analyzeFrame, createAutoDetectorState, detectFrameEvents } from "@/lib/auto-vision";
-import { buildVideoReviewReport, detectionToVideoEvent, type VideoReviewReport } from "@/lib/video-review";
-import type { AutoReviewSensitivity } from "@/lib/types";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  analyzeFrame,
+  createAutoDetectorState,
+  detectFrameEvents,
+  type AutoDetection,
+} from "@/lib/auto-vision";
+import {
+  buildVideoReviewReport,
+  dedupeVideoEvents,
+  detectionToVideoEvent,
+  type VideoReviewEvent,
+} from "@/lib/video-review";
+import {
+  applyVideoEventOverrides,
+  buildVideoRefineWindows,
+  buildVideoTacticalReadout,
+  frameReviewAttention,
+  type VideoEventOverride,
+} from "@/lib/video-review-v25";
+import {
+  adjustConfidence,
+  isDetectionSuppressed,
+  readAutoFeedback,
+  registerAutoFeedback,
+  saveAutoFeedback,
+} from "@/lib/auto-learning";
+import type {
+  AutoFeedbackProfile,
+  AutoReviewSensitivity,
+  MatchResult,
+} from "@/lib/types";
 import { formatLiveTime } from "@/lib/live-review";
 
 type AnalysisStatus = "idle" | "analyzing" | "done" | "error";
+type ScanStats = { coarse: number; refined: number; windows: number };
 
 const sleep = (milliseconds: number) => new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 
@@ -38,7 +67,10 @@ async function waitForMetadata(video: HTMLVideoElement, timeout = 5000) {
 }
 
 async function seekVideo(video: HTMLVideoElement, second: number, timeout = 1600) {
-  if (Math.abs(video.currentTime - second) < .025 && video.readyState >= 2) return;
+  if (Math.abs(video.currentTime - second) < .018 && video.readyState >= 2) {
+    await sleep(8);
+    return;
+  }
   await new Promise<void>((resolve) => {
     let settled = false;
     const finish = () => {
@@ -56,37 +88,95 @@ async function seekVideo(video: HTMLVideoElement, second: number, timeout = 1600
       finish();
     }
   });
+  // Algunos WebKit entregan `seeked` antes de que drawImage vea el frame nuevo.
+  await sleep(8);
 }
+
+function adjustedDetection(
+  detection: AutoDetection,
+  feedback: AutoFeedbackProfile,
+): AutoDetection | null {
+  const confidence = adjustConfidence(detection.confidence, detection.key, feedback);
+  if (isDetectionSuppressed(confidence, detection.key, feedback)) return null;
+  return { ...detection, confidence };
+}
+
+const deathKeys = new Set(["death", "ally-death", "enemy-death"]);
 
 export default function VideoMatchAnalyzer({
   src,
   mode,
+  mapName,
+  brawlerName,
+  brawlerRole,
+  result,
   durationHint,
   onSeek,
 }: {
   src: string | null;
   mode: string;
+  mapName?: string;
+  brawlerName?: string;
+  brawlerRole?: string;
+  result?: MatchResult;
   durationHint?: number;
   onSeek?: (second: number) => void;
 }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const cancelRef = useRef(false);
+  const feedbackRecordedRef = useRef(new Set<string>());
   const [sensitivity, setSensitivity] = useState<AutoReviewSensitivity>("Media");
   const [status, setStatus] = useState<AnalysisStatus>("idle");
   const [progress, setProgress] = useState(0);
   const [sampledFrames, setSampledFrames] = useState(0);
-  const [report, setReport] = useState<VideoReviewReport | null>(null);
+  const [analysisDuration, setAnalysisDuration] = useState(0);
+  const [baseEvents, setBaseEvents] = useState<VideoReviewEvent[]>([]);
+  const [overrides, setOverrides] = useState<Record<string, VideoEventOverride | undefined>>({});
+  const [scanStats, setScanStats] = useState<ScanStats>({ coarse: 0, refined: 0, windows: 0 });
+  const [feedbackProfile, setFeedbackProfile] = useState<AutoFeedbackProfile>({});
   const [message, setMessage] = useState("");
 
   useEffect(() => {
+    const stored = readAutoFeedback();
+    setFeedbackProfile(stored);
+  }, []);
+
+  useEffect(() => {
     cancelRef.current = true;
+    feedbackRecordedRef.current.clear();
     setStatus("idle");
     setProgress(0);
     setSampledFrames(0);
-    setReport(null);
+    setAnalysisDuration(0);
+    setBaseEvents([]);
+    setOverrides({});
+    setScanStats({ coarse: 0, refined: 0, windows: 0 });
     setMessage("");
   }, [src]);
+
+  const effectiveEvents = useMemo(
+    () => applyVideoEventOverrides(baseEvents, overrides),
+    [baseEvents, overrides],
+  );
+
+  const report = useMemo(
+    () => status === "done" && analysisDuration > 0
+      ? buildVideoReviewReport(effectiveEvents, analysisDuration)
+      : null,
+    [status, analysisDuration, effectiveEvents],
+  );
+
+  const tactical = useMemo(
+    () => report ? buildVideoTacticalReadout(report, {
+      mode,
+      mapName,
+      brawlerName,
+      brawlerRole,
+      result,
+    }) : null,
+    [report, mode, mapName, brawlerName, brawlerRole, result],
+  );
 
   const cancelAnalysis = () => {
     cancelRef.current = true;
@@ -103,7 +193,9 @@ export default function VideoMatchAnalyzer({
     setStatus("analyzing");
     setProgress(0);
     setSampledFrames(0);
-    setReport(null);
+    setBaseEvents([]);
+    setOverrides({});
+    setScanStats({ coarse: 0, refined: 0, windows: 0 });
     setMessage("Preparando el vídeo…");
 
     try {
@@ -111,34 +203,39 @@ export default function VideoMatchAnalyzer({
       const duration = Number.isFinite(metadataDuration) && metadataDuration > 0
         ? metadataDuration
         : Math.max(1, durationHint || 1);
+      setAnalysisDuration(duration);
 
-      // v0.24: más resolución espacial para el HUD/kill feed y un barrido algo más denso.
-      // El límite mantiene el procesamiento íntegramente local y razonable en móvil.
-      const step = Math.max(.24, duration / 600);
-      const lastTime = Math.max(.1, duration - .08);
-      const sampleTimes: number[] = [];
-      for (let second = .08; second <= lastTime && sampleTimes.length < 680; second += step) {
-        sampleTimes.push(Math.min(lastTime, second));
+      // v0.25: primer barrido global más ligero + segundo barrido denso solo en
+      // ventanas informativas. Consume un número de frames similar a v0.24,
+      // pero concentra resolución temporal donde hay HUD/combate/recursos.
+      const coarseStep = Math.max(.36, duration / 360);
+      const lastTime = Math.max(.1, duration - .06);
+      const coarseTimes: number[] = [];
+      for (let second = .06; second <= lastTime && coarseTimes.length < 390; second += coarseStep) {
+        coarseTimes.push(Math.min(lastTime, second));
       }
 
-      const width = 420;
+      const width = 480;
       const aspect = video.videoWidth > 0 && video.videoHeight > 0 ? video.videoHeight / video.videoWidth : 9 / 16;
-      const height = Math.max(180, Math.min(315, Math.round(width * aspect)));
+      const height = Math.max(190, Math.min(340, Math.round(width * aspect)));
       canvas.width = width;
       canvas.height = height;
       const context = canvas.getContext("2d", { willReadFrequently: true });
       if (!context) throw new Error("canvas-unavailable");
 
+      const feedback = readAutoFeedback();
+      setFeedbackProfile(feedback);
       const detector = createAutoDetectorState();
       let previousGray: Uint8Array | undefined;
-      const events: Array<ReturnType<typeof detectionToVideoEvent>> = [];
+      const events: VideoReviewEvent[] = [];
+      const refineCandidates: Array<{ second: number; score: number }> = [];
       let detectionIndex = 0;
 
-      setMessage(`Barrido HUD + combate · ${sampleTimes.length} fotogramas`);
+      setMessage(`Barrido global · ${coarseTimes.length} fotogramas`);
 
-      for (let index = 0; index < sampleTimes.length; index += 1) {
+      for (let index = 0; index < coarseTimes.length; index += 1) {
         if (cancelRef.current) return;
-        const second = sampleTimes[index];
+        const second = coarseTimes[index];
         await seekVideo(video, second);
         if (cancelRef.current) return;
 
@@ -148,46 +245,138 @@ export default function VideoMatchAnalyzer({
           const frame = analyzeFrame(image, previousGray);
           previousGray = frame.gray;
           detector.previousGray = frame.gray;
-          const result = detectFrameEvents(detector, frame.metrics, second, mode, sensitivity);
-          for (const detection of result.detections) {
+          const attention = frameReviewAttention(frame.metrics);
+          if (attention >= .105) refineCandidates.push({ second, score: attention });
+
+          const detectionResult = detectFrameEvents(detector, frame.metrics, second, mode, sensitivity);
+          for (const rawDetection of detectionResult.detections) {
+            const detection = adjustedDetection(rawDetection, feedback);
+            if (!detection) continue;
             events.push(detectionToVideoEvent(detection, second, detectionIndex));
             detectionIndex += 1;
+            refineCandidates.push({ second, score: Math.min(1, Math.max(.72, attention + detection.confidence * .42)) });
           }
         } catch {
           // Un fotograma corrupto/no decodificado no debe abortar el vídeo completo.
         }
 
-        if (index % 6 === 0 || index === sampleTimes.length - 1) {
+        if (index % 5 === 0 || index === coarseTimes.length - 1) {
           setSampledFrames(index + 1);
-          setProgress(Math.round(((index + 1) / sampleTimes.length) * 100));
+          setProgress(Math.round(((index + 1) / Math.max(1, coarseTimes.length)) * 68));
           await sleep(0);
         }
       }
 
-      const finalReport = buildVideoReviewReport(events, duration);
-      setReport(finalReport);
+      const windows = buildVideoRefineWindows(refineCandidates, duration, 16);
+      const totalSpan = windows.reduce((sum, window) => sum + Math.max(.1, window.endSecond - window.startSecond), 0);
+      const refineStep = Math.max(.12, totalSpan / 420);
+      const refinePlans = windows.map((window) => {
+        const times: number[] = [];
+        for (let second = window.startSecond; second <= window.endSecond && times.length < 48; second += refineStep) {
+          times.push(Math.min(window.endSecond, second));
+        }
+        return { window, times };
+      });
+      const totalRefineFrames = refinePlans.reduce((sum, plan) => sum + plan.times.length, 0);
+      let refinedFrames = 0;
+
+      if (windows.length) setMessage(`Refinado adaptativo · ${windows.length} ventanas de alta información`);
+
+      for (const plan of refinePlans) {
+        if (cancelRef.current) return;
+        const windowDetector = createAutoDetectorState();
+        windowDetector.samples = 11;
+        if (detector.baseline) {
+          windowDetector.baseline = detector.baseline;
+          windowDetector.previous = detector.baseline;
+        }
+        let windowPreviousGray: Uint8Array | undefined;
+
+        for (const second of plan.times) {
+          if (cancelRef.current) return;
+          await seekVideo(video, second);
+          if (cancelRef.current) return;
+
+          try {
+            context.drawImage(video, 0, 0, width, height);
+            const image = context.getImageData(0, 0, width, height);
+            const frame = analyzeFrame(image, windowPreviousGray);
+            windowPreviousGray = frame.gray;
+            windowDetector.previousGray = frame.gray;
+            const detectionResult = detectFrameEvents(windowDetector, frame.metrics, second, mode, sensitivity);
+            for (const rawDetection of detectionResult.detections) {
+              const detection = adjustedDetection(rawDetection, feedback);
+              if (!detection) continue;
+              events.push(detectionToVideoEvent(detection, second, detectionIndex));
+              detectionIndex += 1;
+            }
+          } catch {
+            // Mantener el resto de la ventana aunque falle un seek puntual.
+          }
+
+          refinedFrames += 1;
+          if (refinedFrames % 5 === 0 || refinedFrames === totalRefineFrames) {
+            setSampledFrames(coarseTimes.length + refinedFrames);
+            const refineProgress = totalRefineFrames
+              ? refinedFrames / totalRefineFrames
+              : 1;
+            setProgress(Math.round(68 + refineProgress * 30));
+            await sleep(0);
+          }
+        }
+      }
+
+      const cleaned = dedupeVideoEvents(events);
+      const finalReport = buildVideoReviewReport(cleaned, duration);
+      setBaseEvents(cleaned);
+      setScanStats({ coarse: coarseTimes.length, refined: refinedFrames, windows: windows.length });
       setProgress(100);
       setStatus("done");
-      setMessage(`${finalReport.events.length} señales limpias · ${finalReport.teamBalance.classifiedDeaths} bajas clasificadas · ${finalReport.sequences.length} secuencias · evidencia ${finalReport.signalQuality.toLowerCase()}`);
+      setMessage(`${finalReport.events.length} señales limpias · ${finalReport.teamBalance.classifiedDeaths} bajas clasificadas · ${finalReport.sequences.length} secuencias · ${windows.length} ventanas refinadas · evidencia ${finalReport.signalQuality.toLowerCase()}`);
     } catch {
       setStatus("error");
       setMessage("No se pudo decodificar el vídeo para el análisis local. Prueba con el MP4 original o vuelve a importarlo.");
     }
   };
 
+  const updateOverride = (item: VideoReviewEvent, override?: VideoEventOverride) => {
+    setOverrides((current) => {
+      const next = { ...current };
+      if (!override || override === item.key) delete next[item.id];
+      else next[item.id] = override;
+      return next;
+    });
+
+    if (!override || override === item.key) return;
+    const feedbackKey = `${item.id}:${override}`;
+    if (feedbackRecordedRef.current.has(feedbackKey)) return;
+    feedbackRecordedRef.current.add(feedbackKey);
+
+    let nextProfile = feedbackProfile;
+    if (override === "drop") {
+      nextProfile = registerAutoFeedback(nextProfile, item.key, "rejected");
+    } else {
+      nextProfile = registerAutoFeedback(nextProfile, item.key, "rejected");
+      nextProfile = registerAutoFeedback(nextProfile, override, "accepted");
+    }
+    setFeedbackProfile(nextProfile);
+    saveAutoFeedback(nextProfile);
+  };
+
   if (!src) return null;
 
-  const chronological = report ? [...report.events].sort((a, b) => a.second - b.second) : [];
+  const chronological = [...baseEvents].sort((a, b) => a.second - b.second);
+  const corrections = Object.keys(overrides).length;
 
-  return <section className="video-analyzer-v22 video-analyzer-v23 video-analyzer-v24">
+  return <section className="video-analyzer-v22 video-analyzer-v23 video-analyzer-v24 video-analyzer-v25">
     <video ref={videoRef} src={src} muted playsInline preload="auto" className="video-analyzer-source-v22" aria-hidden="true" />
     <canvas ref={canvasRef} className="video-analyzer-canvas-v22" aria-hidden="true" />
 
     <div className="video-analyzer-head-v22">
       <div>
-        <span className="eyebrow">Analizador de vídeo v0.24</span>
-        <h3>Bajas por equipo + secuencias tácticas</h3>
-        <p>Escanea el HUD y el combate con más resolución. Distingue tu muerte, una muerte aliada y una eliminación rival cuando la señal azul/roja es suficientemente consistente.</p>
+        <span className="eyebrow">Analizador de partidas v0.25</span>
+        <h3>Dos pasadas + lectura táctica + corrección manual</h3>
+        <p>Primero recorre toda la partida y después vuelve a muestrear con más densidad solo las ventanas donde cambia el HUD, el combate o los recursos. El aprendizaje local del Auto Review también ajusta la confianza del vídeo.</p>
       </div>
       <div className="video-analyzer-controls-v22">
         <label>Sensibilidad<select value={sensitivity} disabled={status === "analyzing"} onChange={(event) => setSensitivity(event.target.value as AutoReviewSensitivity)}><option>Baja</option><option>Media</option><option>Alta</option></select></label>
@@ -200,19 +389,41 @@ export default function VideoMatchAnalyzer({
     {(status === "analyzing" || message) && <div className={`video-analysis-progress-v22 state-${status}`}>
       <div><span>{message || "Analizando…"}</span><b>{status === "analyzing" ? `${progress}%` : status === "done" ? "Completado" : ""}</b></div>
       <i><em style={{ width: `${progress}%` }} /></i>
-      {status === "analyzing" && <small>{sampledFrames} fotogramas procesados · análisis local, sin subir el vídeo</small>}
+      {status === "analyzing" && <small>{sampledFrames} fotogramas procesados · análisis íntegramente local</small>}
+      {status === "done" && <small>{scanStats.coarse} globales + {scanStats.refined} refinados · {scanStats.windows} ventanas · {corrections} correcciones manuales</small>}
     </div>}
 
-    {report && <>
+    {report && tactical && <>
       <div className="video-analysis-summary-v22">
         <article><span>Evidencia</span><strong>{report.signalQuality}</strong><small>Confianza media {report.averageConfidence}%</small></article>
         <article><span>Tu muerte</span><strong>{report.teamBalance.ownDeaths}</strong><small>Transición central + respawn</small></article>
-        <article><span>Aliados caídos</span><strong>{report.teamBalance.allyDeaths}</strong><small>Señal roja del HUD</small></article>
-        <article><span>Rivales eliminados</span><strong>{report.teamBalance.enemyDeaths}</strong><small>Señal azul del HUD</small></article>
-        <article><span>Secuencias</span><strong>{report.sequences.length}</strong><small>Cadenas tácticas detectadas</small></article>
-        <article><span>Momentos</span><strong>{report.moments.length}</strong><small>Ventanas para revisar</small></article>
+        <article><span>Aliados caídos</span><strong>{report.teamBalance.allyDeaths}</strong><small>HUD rojo · editable</small></article>
+        <article><span>Rivales eliminados</span><strong>{report.teamBalance.enemyDeaths}</strong><small>HUD azul · editable</small></article>
+        <article><span>Secuencias</span><strong>{report.sequences.length}</strong><small>Cadenas tácticas</small></article>
+        <article><span>Momentos</span><strong>{report.moments.length}</strong><small>Ventanas prioritarias</small></article>
+        <article><span>Alta confianza</span><strong>{tactical.highConfidenceShare}%</strong><small>Señales ≥70%</small></article>
+        <article><span>Refinado</span><strong>{scanStats.windows}</strong><small>Ventanas reanalizadas</small></article>
         <article className="wide"><span>Lectura principal</span><b>{report.headline}</b></article>
       </div>
+
+      <section className="video-tactical-v25">
+        <div className="video-tactical-head-v25">
+          <div><span className="eyebrow">Lectura táctica contextual</span><h4>{tactical.focus}</h4><small>{brawlerName || "Brawler"}{brawlerRole ? ` · ${brawlerRole}` : ""}{mapName ? ` · ${mapName}` : ""}{mode ? ` · ${mode}` : ""}</small></div>
+          <span className={`video-signal-v25 signal-${report.signalQuality.toLowerCase()}`}>{report.signalQuality}</span>
+        </div>
+        <div className="video-tactical-metrics-v25">
+          <article><span>Ventaja → objetivo</span><b>{tactical.pressureConverted}/{tactical.pressureWindows}</b><small>{tactical.pressureConversionRate}% en ≤7,5 s</small></article>
+          <article><span>Baja propia/aliada → objetivo</span><b>{tactical.deathsWithObjectiveCost}/{tactical.friendlyDeaths}</b><small>{tactical.deathCostRate}% con coste temporal</small></article>
+          <article><span>Trade recuperado</span><b>{tactical.tradesRecovered}/{tactical.friendlyDeaths}</b><small>{tactical.tradeRecoveryRate}% en ≤5,5 s</small></article>
+          <article><span>Super → follow-up</span><b>{tactical.superWithFollowup}/{tactical.superUses}</b><small>{tactical.superFollowupRate}% en ≤7 s</small></article>
+        </div>
+        <div className="video-tactical-columns-v25">
+          <div><b>Fortalezas detectadas</b>{tactical.strengths.length ? tactical.strengths.map((text) => <p key={text}>+ {text}</p>) : <p>Sin patrón positivo suficientemente repetido.</p>}</div>
+          <div><b>Riesgos prioritarios</b>{tactical.risks.length ? tactical.risks.map((text) => <p key={text}>− {text}</p>) : <p>No aparece un riesgo dominante con la señal actual.</p>}</div>
+          <div><b>Siguiente revisión</b>{tactical.actions.map((text) => <p key={text}>→ {text}</p>)}</div>
+        </div>
+        <small className="video-tactical-note-v25">Las tasas son asociaciones temporales del vídeo, no causalidad ni win rate. Una corrección manual de las bajas recalcula inmediatamente todo el informe.</small>
+      </section>
 
       <div className="video-analysis-phases-v22">
         {report.phases.map((phase) => <article key={phase.label}>
@@ -224,9 +435,9 @@ export default function VideoMatchAnalyzer({
       </div>
 
       {report.sequences.length > 0 && <div className="video-sequences-v23">
-        <div className="video-column-title-v22"><span>Secuencias tácticas</span><small>Ya distinguen si la baja es tuya, de un aliado o de un rival antes de valorar la conversión.</small></div>
+        <div className="video-column-title-v22"><span>Secuencias tácticas</span><small>Se recalculan al corregir una baja. Empiezan antes del evento para buscar la primera decisión que abrió la ventana.</small></div>
         <div className="video-sequence-grid-v23">
-          {report.sequences.slice(0, 6).map((sequence, index) => <button type="button" key={sequence.id} className={`priority-${sequence.priority.toLowerCase().replace("í", "i")}`} onClick={() => onSeek?.(sequence.startSecond)}>
+          {report.sequences.slice(0, 8).map((sequence, index) => <button type="button" key={sequence.id} className={`priority-${sequence.priority.toLowerCase().replace("í", "i")}`} onClick={() => onSeek?.(sequence.startSecond)}>
             <time>{formatLiveTime(Math.round(sequence.startSecond))}</time>
             <div><span>#{index + 1} · {sequence.priority} · score {sequence.score} · {sequence.confidence}%</span><b>{sequence.label}</b><small>{sequence.explanation}</small></div>
             <strong>Revisar</strong>
@@ -236,8 +447,8 @@ export default function VideoMatchAnalyzer({
 
       <div className="video-analysis-grid-v22">
         <div className="video-key-moments-v22">
-          <div className="video-column-title-v22"><span>Momentos prioritarios</span><small>Ordenados por impacto y coherencia. El salto comienza antes del evento.</small></div>
-          {report.moments.slice(0, 6).map((moment, index) => <button type="button" key={`${moment.startSecond}-${moment.label}`} className={`tone-${moment.tone}`} onClick={() => onSeek?.(moment.startSecond)}>
+          <div className="video-column-title-v22"><span>Momentos prioritarios</span><small>Ordenados por impacto, coherencia temporal y confianza.</small></div>
+          {report.moments.slice(0, 8).map((moment, index) => <button type="button" key={`${moment.startSecond}-${moment.label}`} className={`tone-${moment.tone}`} onClick={() => onSeek?.(moment.startSecond)}>
             <time>{formatLiveTime(Math.round(moment.startSecond))}</time>
             <div><span>#{index + 1} · score {moment.score} · confianza {moment.confidence}%</span><b>{moment.label}</b><small>{moment.reason}</small></div>
             <strong>Ver</strong>
@@ -245,17 +456,30 @@ export default function VideoMatchAnalyzer({
           {!report.moments.length && <div className="empty-state">No hay una ventana con señal suficiente para priorizar.</div>}
         </div>
 
-        <div className="video-event-timeline-v22">
-          <div className="video-column-title-v22"><span>Cronología detectada</span><small>Pulsa una señal para empezar 2 s antes y revisar el contexto.</small></div>
-          {chronological.slice(0, 30).map((event) => <button type="button" key={event.id} onClick={() => onSeek?.(Math.max(0, event.second - 2))}>
-            <time>{formatLiveTime(Math.round(event.second))}</time>
-            <div><b>{event.label}</b><small>{event.category} · {event.confidence}%</small></div>
-          </button>)}
-          {chronological.length > 30 && <small className="video-more-events-v22">Se muestran las primeras 30 de {chronological.length} señales para mantener la revisión manejable.</small>}
+        <div className="video-event-timeline-v22 video-event-timeline-v25">
+          <div className="video-column-title-v22"><span>Cronología + corrección</span><small>Clasifica YO / ALIADO / RIVAL o descarta falsos positivos. El aprendizaje queda guardado localmente.</small></div>
+          {chronological.slice(0, 40).map((item) => {
+            const override = overrides[item.id];
+            const dropped = override === "drop";
+            const deathLike = deathKeys.has(item.key);
+            return <div className={`video-event-row-v25 ${dropped ? "is-dropped" : ""}`} key={item.id}>
+              <button type="button" onClick={() => onSeek?.(Math.max(0, item.second - 2))}>
+                <time>{formatLiveTime(Math.round(item.second))}</time>
+                <div><b>{item.label}</b><small>{item.category} · {item.confidence}%</small></div>
+              </button>
+              {deathLike ? <select aria-label={`Corregir ${item.label}`} value={override || item.key} onChange={(event) => updateOverride(item, event.target.value as VideoEventOverride)}>
+                <option value="death">YO</option>
+                <option value="ally-death">ALIADO</option>
+                <option value="enemy-death">RIVAL</option>
+                <option value="drop">DESCARTAR</option>
+              </select> : <button type="button" className="video-event-drop-v25" onClick={() => updateOverride(item, dropped ? undefined : "drop")} aria-label={dropped ? `Restaurar ${item.label}` : `Descartar ${item.label}`}>{dropped ? "↺" : "×"}</button>}
+            </div>;
+          })}
+          {chronological.length > 40 && <small className="video-more-events-v22">Se muestran las primeras 40 de {chronological.length} señales.</small>}
         </div>
       </div>
     </>}
 
-    <p className="video-analysis-disclaimer-v22">Clasificación heurística y local: la muerte propia usa la transición central/respawn; las bajas de aliados y rivales usan cambios temporales del HUD y predominio rojo/azul. Si la señal no domina con margen suficiente, el motor evita forzar esa clasificación. Supers y cambios de objetivo todavía requieren revisar el contexto.</p>
+    <p className="video-analysis-disclaimer-v22">Análisis heurístico y local. v0.25 mejora la resolución temporal con un segundo barrido adaptativo, reutiliza el aprendizaje de detecciones aceptadas/rechazadas y permite corregir la clasificación de bajas. Supers y cambios de objetivo siguen necesitando contexto humano; el sistema evita presentarlos como causalidad demostrada.</p>
   </section>;
 }
