@@ -34,11 +34,19 @@ export const draftBrawlers: Brawler[] = brawlers.map((brawler) => ({
 
 /**
  * Update 69 añade la nueva rotación competitiva sin destruir el histórico.
- * Los mapas que salen se conservan como Históricos; los que entran aparecen
- * como Actuales. Los mapas completamente nuevos usan perfil provisional hasta
- * disponer de una muestra Ranked post-lanzamiento suficiente.
+ * Al hacerse live 69.230, actualizamos la etiqueta visible y la fecha de pool,
+ * manteniendo intacta la confianza estructural de los mapas nuevos.
  */
-export const maps = applyUpdate69Maps(mapsRaw as MapProfile[]);
+export const maps = applyUpdate69Maps(mapsRaw as MapProfile[]).map((map) => {
+  if (!map.status.includes("Update 69")) return map;
+  return {
+    ...map,
+    status: map.status
+      .replace("rotación anunciada 29/08/2026", "rotación live 01/09/2026")
+      .replace("Sale de la rotación con Update 69 · revisado 30/08/2026", "Sale de la rotación con Update 69 · live 01/09/2026"),
+    poolCheckedAt: "01/09/2026",
+  };
+});
 
 /**
  * meta.json conserva la fotografía auditable pre-parche. La capa live permite
