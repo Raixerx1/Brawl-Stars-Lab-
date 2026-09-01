@@ -71,7 +71,9 @@ export default function MetaTierList({
     <div className="meta-tier-source">
       <span><b>Actualización</b>{isPatchDay ? "01/09/2026 · Update 69" : data.updated.split("-").reverse().join("/")}</span>
       <span><b>{isPatchDay ? "Base del modelo" : "Fuente estadística"}</b>{isPatchDay ? "Meta 24 h 30/08 + balance final U69" : data.source}{!isPatchDay && <a href={data.sourceUrl} target="_blank" rel="noreferrer">Abrir fuente ↗</a>}</span>
-      <span><b>Criterio</b>{isPatchDay ? "Prior conservador; mapa, modo, geometría, orden y matchup prevalecen. Recalibrar con datos 24–72 h post-parche." : data.method}</span>
+      <span><b>Criterio</b>{isPatchDay
+        ? "Prior conservador; mapa, modo, geometría, orden y matchup prevalecen. Recalibrar con datos 24–72 h post-parche."
+        : "Snapshot observado pre-Update 69. Se conserva como control histórico para medir cuánto del cambio posterior procede del parche y cuánto del ruido de muestra."}</span>
     </div>
 
     <div className="meta-tier-rows">
