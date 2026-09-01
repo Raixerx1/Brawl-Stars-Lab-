@@ -25,9 +25,9 @@ export const metadata: Metadata = { title: "Draft Coach en vivo" };
 export default function DraftPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Motor de Draft 2.0 · v0.22.2 · meta 31/08</span>
+      <span className="eyebrow">Draft Engine 2.0 · v0.24.0 · Update 69 LIVE · 69.230</span>
       <h1>Draft Coach</h1>
-      <p>Tier global actualizado con la fotografía Meta 24 h del 30/08. Matchups, Counter Explorer y coach por voz recalculan sobre esa viabilidad sin activar todavía los cambios de balance de septiembre.</p>
+      <p>El snapshot Meta 24 h del 30/08 se conserva como baseline observado y desde el 01/09 el motor añade un prior competitivo provisional de Update 69. Counters, recomendaciones y coach por voz ya recalculan sobre esa capa sin confundirla con win rates post-parche todavía inmaduros.</p>
     </div>
     <DraftAssistant maps={maps} brawlers={draftBrawlers} />
     <DraftUiEnhancer />
