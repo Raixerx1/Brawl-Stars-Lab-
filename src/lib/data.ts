@@ -4,6 +4,7 @@ import metaRaw from "@/data/meta.json";
 import type { Brawler, MapProfile } from "./types";
 import { applySeason53Meta } from "./season53-meta";
 import { applyUpdate69Live } from "./update69-live";
+import { update69LiveSources, update69MetaLive } from "./update69-meta";
 import { applyUpdate69Maps } from "./update69-maps";
 import { rankCountersAgainst, rankTargetsFor } from "./counter-engine";
 
@@ -38,7 +39,17 @@ export const draftBrawlers: Brawler[] = brawlers.map((brawler) => ({
  * disponer de una muestra Ranked post-lanzamiento suficiente.
  */
 export const maps = applyUpdate69Maps(mapsRaw as MapProfile[]);
-export const meta = metaRaw;
+
+/**
+ * meta.json conserva la fotografía auditable pre-parche. La capa live permite
+ * actualizar el estado del producto sin borrar ese baseline histórico.
+ */
+export const meta = {
+  ...metaRaw,
+  ...update69MetaLive,
+  sources: [...metaRaw.sources, ...update69LiveSources],
+};
+
 export const brawlerByName = (name: string) => brawlers.find((brawler) => brawler.name.toLowerCase() === name.toLowerCase());
 export const brawlerBySlug = (slug: string) => brawlers.find((brawler) => brawler.slug === slug);
 export const mapBySlug = (slug: string) => maps.find((map) => map.slug === slug);
