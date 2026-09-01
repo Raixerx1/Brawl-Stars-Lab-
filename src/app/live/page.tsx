@@ -13,15 +13,15 @@ import { brawlers, maps } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Auto Review y Entrenador",
-  description: "Análisis local de vídeo con tracking estabilizado, calibración robusta de HUD, reconstrucción completa 3v3 hasta 3v0/0v3, detección de wipes y lectura de riesgo para Brawl Stars Ranked.",
+  description: "Análisis local de vídeo con tracking estabilizado, reconstrucción 3v3–3v0/0v3, wipes, conversión a objetivo, detección de stagger y filtrado de bajas por confianza para Brawl Stars Ranked.",
 };
 
 export default function LiveReviewPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Brawl Draft Lab · Coach v0.28</span>
+      <span className="eyebrow">Brawl Draft Lab · Coach v0.29</span>
       <h1>Auto Review + Entrenador</h1>
-      <p>El analizador v0.28 conserva el tracking y los recursos estabilizados de v0.27 y corrige la reconstrucción numérica completa: ahora puede representar 3v0 y 0v3, detectar wipes, medir cuánto duran y priorizar si se convierten en objetivo o generan una mala salida tras el reset.</p>
+      <p>El analizador v0.29 ya no se limita a detectar un wipe: comprueba si aparece una conversión rápida a objetivo o marcador, identifica wipes propios con coste, busca reentradas escalonadas tras recuperar jugadores y excluye bajas automáticas débiles de la reconstrucción 3v3–3v0/0v3. Las correcciones manuales siguen teniendo prioridad.</p>
     </div>
     <MatchRecorder maps={maps} brawlers={brawlers} />
     <LiveMatchAnalyzer maps={maps} brawlers={brawlers} />
