@@ -14,7 +14,8 @@ type TierListData = {
   snapshots: Record<string, TierSnapshot>;
 };
 
-const tierOrder = ["S+", "S", "A", "B", "C", "D", "F", "Sin datos"];
+const tierOrder = ["S+", "S", "A+", "A", "B+", "B", "C", "D", "F", "Sin datos"];
+const PATCH_DAY_LABEL = "Prior U69 · 01/09";
 
 export default function MetaTierList({
   data,
@@ -23,9 +24,24 @@ export default function MetaTierList({
   data: TierListData;
   brawlers: Brawler[];
 }) {
-  const snapshotNames = Object.keys(data.snapshots);
-  const [snapshot, setSnapshot] = useState(snapshotNames[0] || "");
-  const selected = data.snapshots[snapshot] || {};
+  const patchDaySnapshot = useMemo(() => {
+    const grouped: TierSnapshot = {};
+    for (const brawler of brawlers) {
+      const tier = brawler.tier || "Sin datos";
+      (grouped[tier] ||= []).push(brawler.name);
+    }
+    return grouped;
+  }, [brawlers]);
+
+  const snapshots = useMemo<Record<string, TierSnapshot>>(() => ({
+    [PATCH_DAY_LABEL]: patchDaySnapshot,
+    ...data.snapshots,
+  }), [data.snapshots, patchDaySnapshot]);
+
+  const snapshotNames = Object.keys(snapshots);
+  const [snapshot, setSnapshot] = useState(PATCH_DAY_LABEL);
+  const selected = snapshots[snapshot] || patchDaySnapshot;
+  const isPatchDay = snapshot === PATCH_DAY_LABEL;
   const lookup = useMemo(
     () => new Map(brawlers.map((brawler) => [brawler.name, brawler])),
     [brawlers],
@@ -34,9 +50,11 @@ export default function MetaTierList({
   return <section className="panel meta-tierlist-v11">
     <div className="section-title">
       <div>
-        <span className="eyebrow">Tier list actual</span>
-        <h2>Meta competitivo Windstock</h2>
-        <p>Orden global orientativo. Para el draft real prevalecen el mapa, el modo, los bans y el matchup uno a uno.</p>
+        <span className="eyebrow">Tier list competitiva</span>
+        <h2>Update 69: prior de día 1 + snapshots observados</h2>
+        <p>{isPatchDay
+          ? "Modelo provisional tras 69.230. Parte del snapshot observado del 30/08 y aplica de forma conservadora la dirección del balance final; todavía no es una tier basada en win rate post-parche."
+          : "Snapshot estadístico anterior al parche. Sirve como baseline de contraste mientras entra muestra suficiente de Update 69."}</p>
       </div>
       <div className="meta-tier-tabs" role="tablist" aria-label="Periodo de la tier list">
         {snapshotNames.map((name) => <button
@@ -51,9 +69,9 @@ export default function MetaTierList({
     </div>
 
     <div className="meta-tier-source">
-      <span><b>Actualización</b>{data.updated.split("-").reverse().join("/")}</span>
-      <span><b>Fuente estadística</b>{data.source}<a href={data.sourceUrl} target="_blank" rel="noreferrer">Abrir fuente ↗</a></span>
-      <span><b>Criterio</b>{data.method}</span>
+      <span><b>Actualización</b>{isPatchDay ? "01/09/2026 · Update 69" : data.updated.split("-").reverse().join("/")}</span>
+      <span><b>{isPatchDay ? "Base del modelo" : "Fuente estadística"}</b>{isPatchDay ? "Meta 24 h 30/08 + balance final U69" : data.source}{!isPatchDay && <a href={data.sourceUrl} target="_blank" rel="noreferrer">Abrir fuente ↗</a>}</span>
+      <span><b>Criterio</b>{isPatchDay ? "Prior conservador; mapa, modo, geometría, orden y matchup prevalecen. Recalibrar con datos 24–72 h post-parche." : data.method}</span>
     </div>
 
     <div className="meta-tier-rows">
