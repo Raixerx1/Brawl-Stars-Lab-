@@ -26,12 +26,12 @@ export default function AppShell({ children }: { children: ReactNode }) {
     <aside className={`sidebar ${open ? "open" : ""}`}>
       <div className="brand"><div className="brand-mark">★</div><div><strong>Brawl Draft Lab</strong><small>Competitive Intelligence</small></div></div>
       <nav>{nav.map(([href, label, icon]) => <Link key={href} className={path === href || (href !== "/" && path.startsWith(href)) ? "active" : ""} href={href} onClick={() => setOpen(false)}><span>{icon}</span>{label}</Link>)}</nav>
-      <div className="sidebar-note"><b>Base v0.26.0</b><span>Update 69 · 69.230 live</span><span>Analyzer v0.26 · HUD + 3v3</span></div>
+      <div className="sidebar-note"><b>Base v0.27.0</b><span>Update 69 · 69.230 live</span><span>Analyzer v0.27 · HUD estable + riesgo</span></div>
     </aside>
     <main>
       <header className="topbar">
         <button className="menu-button" onClick={() => setOpen(!open)}>☰</button>
-        <div><b>Competitive Draft Center</b><span>Update 69 live · analyzer v0.26 con estado HUD · counters recalculados</span></div>
+        <div><b>Competitive Draft Center</b><span>Update 69 live · analyzer v0.27 con tracking estabilizado · counters recalculados</span></div>
         <Link className="status-pill" href="/meta">● U69 LIVE · 69.230</Link>
       </header>
       {children}
