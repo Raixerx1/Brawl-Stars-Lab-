@@ -3,10 +3,17 @@ import mapsRaw from "@/data/maps.json";
 import metaRaw from "@/data/meta.json";
 import type { Brawler, MapProfile } from "./types";
 import { applySeason53Meta } from "./season53-meta";
+import { applyUpdate69Live } from "./update69-live";
 import { applyUpdate69Maps } from "./update69-maps";
 import { rankCountersAgainst, rankTargetsFor } from "./counter-engine";
 
-export const brawlers = applySeason53Meta(brawlersRaw as Brawler[]);
+/**
+ * La fotografía estadística del 30/08 sigue siendo la base observable, pero
+ * Update 69 ya está live. La segunda capa aplica un prior conservador de día 1
+ * para que Draft, Counter Explorer y voz no sigan tratando el balance anterior
+ * como si continuara vigente mientras acumulamos muestra Ranked post-parche.
+ */
+export const brawlers = applyUpdate69Live(applySeason53Meta(brawlersRaw as Brawler[]));
 
 /**
  * Draft Engine 2.0 todavía consume las listas counters/counteredBy del perfil.
