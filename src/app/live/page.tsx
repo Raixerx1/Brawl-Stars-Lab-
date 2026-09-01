@@ -4,6 +4,7 @@ import "../coach-debrief-v20.css";
 import "./video-review-v22.css";
 import "./video-review-v23.css";
 import "./video-review-v25.css";
+import "./video-review-v26.css";
 import CoachDebriefDashboard from "@/components/CoachDebriefDashboard";
 import LearningDashboard from "@/components/LearningDashboard";
 import LiveMatchAnalyzer from "@/components/LiveMatchAnalyzer";
@@ -12,15 +13,15 @@ import { brawlers, maps } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Auto Review y Entrenador",
-  description: "Análisis local de vídeo completo con doble barrido adaptativo, clasificación corregible de bajas, secuencias tácticas, revisión en directo, debrief y aprendizaje contextual para Brawl Stars Ranked.",
+  description: "Análisis local de vídeo completo con doble barrido adaptativo, estimación de HP/munición/super/hipercarga/objetivo, reconstrucción 3v3, clasificación corregible de bajas y lectura táctica para Brawl Stars Ranked.",
 };
 
 export default function LiveReviewPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Brawl Draft Lab · Coach v0.25</span>
+      <span className="eyebrow">Brawl Draft Lab · Coach v0.26</span>
       <h1>Auto Review + Entrenador</h1>
-      <p>El analizador v0.25 recorre primero toda la partida y después vuelve a las ventanas con más información para no perder bajas, cambios de HUD o usos de recursos breves. Ahora reutiliza el aprendizaje local del Auto Review, permite corregir YO/ALIADO/RIVAL y genera una lectura táctica contextual por modo, mapa y rol.</p>
+      <p>El analizador v0.26 mantiene el doble barrido de la partida y añade un modelo de estado local: posición relativa del jugador, HP, munición, super/hipercarga, posesión probable de balón o gemas y reconstrucción temporal 3v3 → 3v2 → 2v2/2v3. Las bajas siguen siendo corregibles y cualquier corrección recalcula la lectura táctica.</p>
     </div>
     <MatchRecorder maps={maps} brawlers={brawlers} />
     <LiveMatchAnalyzer maps={maps} brawlers={brawlers} />
