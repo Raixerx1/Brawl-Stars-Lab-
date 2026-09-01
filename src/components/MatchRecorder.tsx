@@ -259,7 +259,7 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
 
   return <section className="panel match-recorder-v18 match-recorder-v22">
     <div className="section-title">
-      <div><span className="eyebrow">Grabación + análisis local v0.22</span><h2>Grabar, importar y analizar partidas completas</h2></div>
+      <div><span className="eyebrow">Grabación + análisis local v0.25</span><h2>Grabar, importar y analizar partidas completas</h2></div>
       <span className={`recording-state-v18 state-${status}`}>{status === "recording" ? `● REC ${formatLiveTime(elapsed)}` : status === "ready" ? "Vídeo listo" : "Local"}</span>
     </div>
 
@@ -297,6 +297,10 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
     <VideoMatchAnalyzer
       src={previewUrl}
       mode={selectedMap?.mode || ""}
+      mapName={selectedMap?.name}
+      brawlerName={selectedBrawler?.name}
+      brawlerRole={selectedBrawler?.role}
+      result={result}
       durationHint={elapsed}
       onSeek={seekPreview}
     />
