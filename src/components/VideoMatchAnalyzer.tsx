@@ -222,9 +222,9 @@ export default function VideoMatchAnalyzer({
         : Math.max(1, durationHint || 1);
       setAnalysisDuration(duration);
 
-      // v0.26 mantiene las dos pasadas de v0.25 y añade una tercera capa lógica:
-      // cada frame útil alimenta un modelo relativo de HUD (posición, HP,
-      // munición, super/hipercarga y objetivo) calibrado contra el propio vídeo.
+      // v0.27 mantiene el doble barrido y endurece la capa HUD: tracking del
+      // jugador por centro de cámara, calibración por contraste, mediana temporal
+      // e histéresis para reducir falsos positivos de recursos.
       const coarseStep = Math.max(.36, duration / 360);
       const lastTime = Math.max(.1, duration - .06);
       const coarseTimes: number[] = [];
@@ -249,7 +249,7 @@ export default function VideoMatchAnalyzer({
       const refineCandidates: Array<{ second: number; score: number }> = [];
       let detectionIndex = 0;
 
-      setMessage(`Barrido global + HUD · ${coarseTimes.length} fotogramas`);
+      setMessage(`Barrido global + HUD estabilizado · ${coarseTimes.length} fotogramas`);
 
       for (let index = 0; index < coarseTimes.length; index += 1) {
         if (cancelRef.current) return;
@@ -299,7 +299,7 @@ export default function VideoMatchAnalyzer({
       const totalRefineFrames = refinePlans.reduce((sum, plan) => sum + plan.times.length, 0);
       let refinedFrames = 0;
 
-      if (windows.length) setMessage(`Refinado adaptativo + recursos · ${windows.length} ventanas`);
+      if (windows.length) setMessage(`Refinado adaptativo + recursos estabilizados · ${windows.length} ventanas`);
 
       for (const plan of refinePlans) {
         if (cancelRef.current) return;
@@ -354,7 +354,7 @@ export default function VideoMatchAnalyzer({
       setScanStats({ coarse: coarseTimes.length, refined: refinedFrames, windows: windows.length });
       setProgress(100);
       setStatus("done");
-      setMessage(`${finalReport.events.length} señales · ${finalReport.teamBalance.classifiedDeaths} bajas · ${finalizedHud.length} estados HUD · ${windows.length} ventanas refinadas · evidencia ${finalReport.signalQuality.toLowerCase()}`);
+      setMessage(`${finalReport.events.length} señales · ${finalReport.teamBalance.classifiedDeaths} bajas · ${finalizedHud.length} estados HUD estabilizados · ${windows.length} ventanas refinadas · evidencia ${finalReport.signalQuality.toLowerCase()}`);
     } catch {
       setStatus("error");
       setMessage("No se pudo decodificar el vídeo para el análisis local. Prueba con el MP4 original o vuelve a importarlo.");
@@ -390,15 +390,15 @@ export default function VideoMatchAnalyzer({
   const chronological = [...baseEvents].sort((a, b) => a.second - b.second);
   const corrections = Object.keys(overrides).length;
 
-  return <section className="video-analyzer-v22 video-analyzer-v23 video-analyzer-v24 video-analyzer-v25 video-analyzer-v26">
+  return <section className="video-analyzer-v22 video-analyzer-v23 video-analyzer-v24 video-analyzer-v25 video-analyzer-v26 video-analyzer-v27">
     <video ref={videoRef} src={src} muted playsInline preload="auto" className="video-analyzer-source-v22" aria-hidden="true" />
     <canvas ref={canvasRef} className="video-analyzer-canvas-v22" aria-hidden="true" />
 
     <div className="video-analyzer-head-v22">
       <div>
-        <span className="eyebrow">Analizador de partidas v0.26</span>
-        <h3>Estado del jugador + recursos + superioridad 3v3</h3>
-        <p>Además de las dos pasadas tácticas, estima de forma local posición relativa, HP, munición, super/hipercarga y posesión de balón/gemas; después reconstruye tramos 3v3, 3v2, 2v3 y 2v2 desde las bajas corregibles.</p>
+        <span className="eyebrow">Analizador de partidas v0.27</span>
+        <h3>Tracking estabilizado + recursos + riesgo de decisión</h3>
+        <p>El motor v0.27 deja de promediar todos los marcadores aliados: prioriza al jugador seguido por la cámara, exige contraste temporal real para recursos y aplica mediana + histéresis para reducir picos falsos. También combina HP, munición, super/hipercarga, objetivo e inferioridad para marcar muertes de alto riesgo.</p>
       </div>
       <div className="video-analyzer-controls-v22">
         <label>Sensibilidad<select value={sensitivity} disabled={status === "analyzing"} onChange={(event) => setSensitivity(event.target.value as AutoReviewSensitivity)}><option>Baja</option><option>Media</option><option>Alta</option></select></label>
@@ -421,34 +421,34 @@ export default function VideoMatchAnalyzer({
         <article><span>Tu muerte</span><strong>{report.teamBalance.ownDeaths}</strong><small>Transición central + respawn</small></article>
         <article><span>Aliados caídos</span><strong>{report.teamBalance.allyDeaths}</strong><small>HUD rojo · editable</small></article>
         <article><span>Rivales eliminados</span><strong>{report.teamBalance.enemyDeaths}</strong><small>HUD azul · editable</small></article>
-        <article><span>Jugador localizado</span><strong>{stateModel.playerLocatedShare}%</strong><small>Posición relativa en el encuadre</small></article>
+        <article><span>Tracking estable</span><strong>{stateModel.stableTrackingShare}%</strong><small>Jugador seguido por cámara</small></article>
         <article><span>HP legible</span><strong>{stateModel.hpReadableShare}%</strong><small>Proxy visual de barra</small></article>
         <article><span>Ventaja numérica</span><strong>{stateModel.advantageSeconds}s</strong><small>3v2/3v1 aproximado</small></article>
         <article><span>Inferioridad</span><strong>{stateModel.disadvantageSeconds}s</strong><small>2v3/1v3 aproximado</small></article>
         <article><span>Secuencias</span><strong>{report.sequences.length}</strong><small>Cadenas tácticas</small></article>
         <article><span>Momentos</span><strong>{report.moments.length}</strong><small>Ventanas prioritarias</small></article>
         <article><span>Alta confianza</span><strong>{tactical.highConfidenceShare}%</strong><small>Señales ≥70%</small></article>
-        <article><span>Refinado</span><strong>{scanStats.windows}</strong><small>Ventanas reanalizadas</small></article>
+        <article><span>Calidad HUD</span><strong>{stateModel.hudQualityScore}/100</strong><small>{stateModel.hudQuality} · estabilizada</small></article>
         <article className="wide"><span>Lectura principal</span><b>{report.headline}</b></article>
       </div>
 
       <section className="video-state-v26">
         <div className="video-state-head-v26">
           <div>
-            <span className="eyebrow">Modelo de estado v0.26</span>
+            <span className="eyebrow">Modelo de estado v0.27</span>
             <h4>{brawlerName || "Brawler seleccionado"} · identidad anclada al contexto</h4>
-            <small>La visión estima estado/HUD y posición relativa; no intenta reconocer skins como identidad absoluta.</small>
+            <small>Tracking por centro de cámara + suavizado temporal. Los recursos solo se consideran legibles cuando existe señal y contraste suficientes dentro del propio vídeo.</small>
           </div>
-          <span>{stateModel.snapshots} snapshots útiles</span>
+          <span>{stateModel.hudQuality} · {stateModel.hudQualityScore}/100</span>
         </div>
 
         <div className="video-state-metrics-v26">
           <article><span>Poca vida</span><b>{stateModel.lowHpShare}%</b><small>HP proxy ≤35%</small></article>
           <article><span>Poca munición</span><b>{stateModel.lowAmmoShare}%</b><small>0–1/3 estimada</small></article>
-          <article><span>Super lista</span><b>{stateModel.superReadyShare}%</b><small>de snapshots legibles</small></article>
-          <article><span>Hipercarga lista</span><b>{stateModel.hyperReadyShare}%</b><small>proxy visual púrpura</small></article>
-          {(mode === "Balón Brawl" || mode === "Atrapagemas") && <article><span>{mode === "Balón Brawl" ? "Balón probable" : "Portador probable"}</span><b>{stateModel.possessionShare}%</b><small>señal cercana al jugador</small></article>}
-          <article><span>Muerte + super</span><b>{stateModel.deathsWithSuperReady}</b><small>recurso listo antes de caer</small></article>
+          <article><span>Super lista</span><b>{stateModel.superReadyShare}%</b><small>{stateModel.superHoldSeconds}s sostenida</small></article>
+          <article><span>Hipercarga lista</span><b>{stateModel.hyperReadyShare}%</b><small>{stateModel.hyperHoldSeconds}s sostenida</small></article>
+          {(mode === "Balón Brawl" || mode === "Atrapagemas") && <article><span>{mode === "Balón Brawl" ? "Balón probable" : "Portador probable"}</span><b>{stateModel.possessionShare}%</b><small>señal estabilizada cercana</small></article>}
+          <article><span>Muertes críticas</span><b>{stateModel.criticalDeaths}</b><small>≥3 factores de riesgo</small></article>
         </div>
 
         <div className="video-teamstate-v26">
@@ -474,7 +474,7 @@ export default function VideoMatchAnalyzer({
         </div>
 
         {stateModel.moments.length > 0 && <div className="video-state-moments-v26">
-          <div className="video-column-title-v22"><span>Estado previo a muertes propias</span><small>Snapshot más cercano antes de la baja: HP, munición, recursos, objetivo y posición relativa.</small></div>
+          <div className="video-column-title-v22"><span>Momentos de estado prioritarios</span><small>Incluye estado previo a muertes de alto riesgo y tramos donde Super/Hipercarga permanecen listas el tiempo suficiente para revisar el timing.</small></div>
           {stateModel.moments.map((moment) => <button type="button" key={`${moment.second}-${moment.detail}`} className={`priority-${moment.priority.toLowerCase()}`} onClick={() => onSeek?.(moment.second)}>
             <time>{formatLiveTime(Math.round(moment.second))}</time>
             <div><b>{moment.label}</b><small>{moment.detail}</small></div>
@@ -557,6 +557,6 @@ export default function VideoMatchAnalyzer({
       </div>
     </>}
 
-    <p className="video-analysis-disclaimer-v22">Análisis heurístico y local. v0.26 añade estimación relativa de HUD/recursos y reconstrucción temporal de superioridad numérica sobre el detector v0.25. HP, munición, super, hipercarga, posesión y posición son proxies visuales calibrados contra el propio vídeo: sirven para priorizar el replay, no sustituyen un contador oficial ni deben interpretarse como lectura perfecta del HUD.</p>
+    <p className="video-analysis-disclaimer-v22">Análisis heurístico y local. v0.27 añade tracking por centro de cámara, calibración robusta por contraste, suavizado temporal e histéresis sobre el modelo de estado. HP, munición, super, hipercarga, posesión y posición siguen siendo proxies visuales: sirven para priorizar el replay y detectar decisiones candidatas, no sustituyen un contador oficial ni deben interpretarse como lectura perfecta del HUD.</p>
   </section>;
 }
