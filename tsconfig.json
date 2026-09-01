@@ -23,6 +23,9 @@
       }
     ],
     "paths": {
+      "@/lib/video-review-v26": [
+        "./src/lib/video-review-v27-adapter.ts"
+      ],
       "@/*": [
         "./src/*"
       ]
