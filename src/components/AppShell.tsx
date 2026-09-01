@@ -26,13 +26,13 @@ export default function AppShell({ children }: { children: ReactNode }) {
     <aside className={`sidebar ${open ? "open" : ""}`}>
       <div className="brand"><div className="brand-mark">★</div><div><strong>Brawl Draft Lab</strong><small>Competitive Intelligence</small></div></div>
       <nav>{nav.map(([href, label, icon]) => <Link key={href} className={path === href || (href !== "/" && path.startsWith(href)) ? "active" : ""} href={href} onClick={() => setOpen(false)}><span>{icon}</span>{label}</Link>)}</nav>
-      <div className="sidebar-note"><b>Base v0.23.4</b><span>Interfaz competitiva renovada</span><span>Meta 24 h · Draft Engine 2.0</span></div>
+      <div className="sidebar-note"><b>Base v0.24.0</b><span>Update 69 · 69.230 live</span><span>Prior día 1 · Draft Engine 2.0</span></div>
     </aside>
     <main>
       <header className="topbar">
         <button className="menu-button" onClick={() => setOpen(!open)}>☰</button>
-        <div><b>Competitive Draft Center</b><span>Meta 31/08 · counters recalculados · Update 69 · Draft Engine 2.0</span></div>
-        <Link className="status-pill" href="/meta">● Parche 04/08 · Meta 31/08</Link>
+        <div><b>Competitive Draft Center</b><span>Update 69 live · baseline 30/08 + prior 01/09 · counters recalculados</span></div>
+        <Link className="status-pill" href="/meta">● U69 LIVE · 69.230</Link>
       </header>
       {children}
       <footer>Proyecto independiente no afiliado a Supercell. Imágenes servidas por BrawlAPI/Brawlify. Los tiers estadísticos no equivalen por sí solos a porcentajes de victoria en tu draft.</footer>
