@@ -7,8 +7,8 @@ export type {
 } from "./video-review-v26";
 
 export {
-  buildTeamStateWindowsV29 as buildTeamStateWindows,
-  buildVideoStateReadoutV29 as buildVideoStateReadout,
-  finalizeVideoHudSamplesV29 as finalizeVideoHudSamples,
-  sampleVideoHudFrameV29 as sampleVideoHudFrame,
-} from "./video-review-v29";
+  buildTeamStateWindowsV30 as buildTeamStateWindows,
+  buildVideoStateReadoutV30 as buildVideoStateReadout,
+  finalizeVideoHudSamplesV30 as finalizeVideoHudSamples,
+  sampleVideoHudFrameV30 as sampleVideoHudFrame,
+} from "./video-review-v30";
