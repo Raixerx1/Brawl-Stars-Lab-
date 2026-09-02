@@ -40,9 +40,11 @@ import type {
   MatchResult,
 } from "@/lib/types";
 import { formatLiveTime } from "@/lib/live-review";
+import type { LiveVideoAnalysisSeed } from "@/lib/live-video-review-v33";
 
 type AnalysisStatus = "idle" | "analyzing" | "done" | "error";
 type ScanStats = { coarse: number; refined: number; windows: number };
+type AnalysisOrigin = "none" | "live" | "full";
 
 const sleep = (milliseconds: number) => new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 
@@ -118,6 +120,7 @@ export default function VideoMatchAnalyzer({
   brawlerRole,
   result,
   durationHint,
+  initialAnalysis,
   onSeek,
 }: {
   src: string | null;
@@ -127,6 +130,7 @@ export default function VideoMatchAnalyzer({
   brawlerRole?: string;
   result?: MatchResult;
   durationHint?: number;
+  initialAnalysis?: LiveVideoAnalysisSeed | null;
   onSeek?: (second: number) => void;
 }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -144,6 +148,7 @@ export default function VideoMatchAnalyzer({
   const [scanStats, setScanStats] = useState<ScanStats>({ coarse: 0, refined: 0, windows: 0 });
   const [feedbackProfile, setFeedbackProfile] = useState<AutoFeedbackProfile>({});
   const [message, setMessage] = useState("");
+  const [analysisOrigin, setAnalysisOrigin] = useState<AnalysisOrigin>("none");
 
   useEffect(() => {
     const stored = readAutoFeedback();
@@ -160,9 +165,23 @@ export default function VideoMatchAnalyzer({
     setBaseEvents([]);
     setHudSnapshots([]);
     setOverrides({});
-    setScanStats({ coarse: 0, refined: 0, windows: 0 });
-    setMessage("");
-  }, [src]);
+    if (src && initialAnalysis?.duration) {
+      setStatus("done");
+      setProgress(100);
+      setSampledFrames(initialAnalysis.sampledFrames);
+      setAnalysisDuration(initialAnalysis.duration);
+      setBaseEvents(initialAnalysis.events);
+      setHudSnapshots(initialAnalysis.hudSnapshots);
+      setScanStats({ coarse: initialAnalysis.sampledFrames, refined: 0, windows: 0 });
+      setMessage(`${initialAnalysis.events.length} señales ya registradas durante la captura · informe provisional listo`);
+      setAnalysisOrigin("live");
+    } else {
+      setStatus("idle");
+      setScanStats({ coarse: 0, refined: 0, windows: 0 });
+      setMessage("");
+      setAnalysisOrigin("none");
+    }
+  }, [src, initialAnalysis]);
 
   const effectiveEvents = useMemo(
     () => applyVideoEventOverrides(baseEvents, overrides),
@@ -214,6 +233,7 @@ export default function VideoMatchAnalyzer({
     setOverrides({});
     setScanStats({ coarse: 0, refined: 0, windows: 0 });
     setMessage("Preparando el vídeo…");
+    setAnalysisOrigin("full");
 
     try {
       const metadataDuration = await waitForMetadata(video);
@@ -222,7 +242,8 @@ export default function VideoMatchAnalyzer({
         : Math.max(1, durationHint || 1);
       setAnalysisDuration(duration);
 
-      // v0.31 mantiene el doble barrido y añade lectura de primeras bajas,
+      // v0.33 mantiene el doble barrido y añade una semilla procedente de la
+      // captura en vivo para que el primer informe no tenga que esperar.
       // trades, reagrupación y pérdidas de ventaja sobre el estado estabilizado.
       // jugador por centro de cámara, calibración por contraste, mediana temporal
       // e histéresis para reducir falsos positivos de recursos.
@@ -391,21 +412,21 @@ export default function VideoMatchAnalyzer({
   const chronological = [...baseEvents].sort((a, b) => a.second - b.second);
   const corrections = Object.keys(overrides).length;
 
-  return <section className="video-analyzer-v22 video-analyzer-v23 video-analyzer-v24 video-analyzer-v25 video-analyzer-v26 video-analyzer-v27 video-analyzer-v30 video-analyzer-v31">
+  return <section className="video-analyzer-v22 video-analyzer-v23 video-analyzer-v24 video-analyzer-v25 video-analyzer-v26 video-analyzer-v27 video-analyzer-v30 video-analyzer-v31 video-analyzer-v33">
     <video ref={videoRef} src={src} muted playsInline preload="auto" className="video-analyzer-source-v22" aria-hidden="true" />
     <canvas ref={canvasRef} className="video-analyzer-canvas-v22" aria-hidden="true" />
 
     <div className="video-analyzer-head-v22">
       <div>
-        <span className="eyebrow">Analizador de partidas v0.31</span>
-        <h3>Primeras bajas + trades + control de momentum</h3>
-        <p>Reconstruye cada pelea desde 3v3, comprueba si conservas la primera ventaja, mide la respuesta de trade y detecta reagrupaciones o persecuciones que devuelven el momentum.</p>
+        <span className="eyebrow">Analizador de partidas v0.33</span>
+        <h3>Lectura en vivo + refinado táctico completo</h3>
+        <p>Puede registrar señales mientras captura una pantalla compatible y genera un informe inmediato; el barrido completo vuelve después sobre cada pelea para afinar bajas, HUD, trades y momentum.</p>
       </div>
       <div className="video-analyzer-controls-v22">
         <label>Sensibilidad<select value={sensitivity} disabled={status === "analyzing"} onChange={(event) => setSensitivity(event.target.value as AutoReviewSensitivity)}><option>Baja</option><option>Media</option><option>Alta</option></select></label>
         {status === "analyzing"
           ? <button type="button" className="secondary-button" onClick={cancelAnalysis}>Detener</button>
-          : <button type="button" className="primary-button" onClick={() => void analyzeVideo()}>{report ? "Reanalizar vídeo" : "Analizar vídeo completo"}</button>}
+          : <button type="button" className="primary-button" onClick={() => void analyzeVideo()}>{analysisOrigin === "live" ? "Refinar vídeo completo" : report ? "Reanalizar vídeo" : "Analizar vídeo completo"}</button>}
       </div>
     </div>
 
@@ -413,7 +434,7 @@ export default function VideoMatchAnalyzer({
       <div><span>{message || "Analizando…"}</span><b>{status === "analyzing" ? `${progress}%` : status === "done" ? "Completado" : ""}</b></div>
       <i><em style={{ width: `${progress}%` }} /></i>
       {status === "analyzing" && <small>{sampledFrames} fotogramas procesados · visión y análisis íntegramente locales</small>}
-      {status === "done" && <small>{scanStats.coarse} globales + {scanStats.refined} refinados · {hudSnapshots.length} estados HUD · {scanStats.windows} ventanas · {corrections} correcciones manuales</small>}
+      {status === "done" && <small>{analysisOrigin === "live" ? "Informe provisional de captura" : `${scanStats.coarse} globales + ${scanStats.refined} refinados`} · {hudSnapshots.length} estados HUD · {scanStats.windows} ventanas · {corrections} correcciones manuales</small>}
     </div>}
 
     {report && tactical && stateModel && <>
@@ -436,7 +457,7 @@ export default function VideoMatchAnalyzer({
       <section className="video-state-v26">
         <div className="video-state-head-v26">
           <div>
-            <span className="eyebrow">Modelo de estado v0.31</span>
+            <span className="eyebrow">Modelo de estado v0.33</span>
             <h4>{brawlerName || "Brawler seleccionado"} · identidad anclada al contexto</h4>
             <small>Tracking por centro de cámara + suavizado temporal. Los recursos solo se consideran legibles cuando existe señal y contraste suficientes dentro del propio vídeo.</small>
           </div>
@@ -446,7 +467,7 @@ export default function VideoMatchAnalyzer({
         <section className="video-momentum-v31">
           <div className="video-momentum-head-v31">
             <div>
-              <span className="eyebrow">Control de momentum v0.31</span>
+              <span className="eyebrow">Control de momentum v0.33</span>
               <h4>Qué ocurre después de la primera baja</h4>
               <small>Solo cuenta peleas que parten de 3v3 y bajas con confianza suficiente. Los momentos son clicables y se recalculan con tus correcciones.</small>
             </div>
@@ -589,6 +610,6 @@ export default function VideoMatchAnalyzer({
       </div>
     </>}
 
-    <p className="video-analysis-disclaimer-v22">Análisis heurístico y local. v0.31 relaciona primeras bajas, trades y cambios numéricos por proximidad temporal; HP, munición, super, hipercarga, posesión, posición y objetivo siguen siendo proxies visuales. Sirve para priorizar el replay, no sustituye una lectura oficial del HUD.</p>
+    <p className="video-analysis-disclaimer-v22">Análisis heurístico y local. v0.33 añade muestreo durante la captura y conserva el refinado en dos pasadas; HP, munición, super, hipercarga, posesión, posición y objetivo siguen siendo proxies visuales. El informe en vivo es provisional hasta ejecutar el barrido completo.</p>
   </section>;
 }

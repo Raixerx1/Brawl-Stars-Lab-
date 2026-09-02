@@ -10,6 +10,16 @@ import {
   type MatchRecordingMeta,
 } from "@/lib/recording-store";
 import { formatLiveTime } from "@/lib/live-review";
+import { readAutoFeedback } from "@/lib/auto-learning";
+import {
+  createLiveVideoAnalysisRuntime,
+  finalizeLiveVideoAnalysis,
+  ingestLiveVideoFrame,
+  isAppleMobileDevice,
+  type LiveVideoAnalysisRuntime,
+  type LiveVideoAnalysisSeed,
+  type LiveVideoPulse,
+} from "@/lib/live-video-review-v33";
 import { BrawlerPortrait } from "./GameArtwork";
 import VideoMatchAnalyzer from "./VideoMatchAnalyzer";
 
@@ -48,6 +58,9 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
   const chunksRef = useRef<BlobPart[]>([]);
   const previewUrlRef = useRef<string | null>(null);
   const previewVideoRef = useRef<HTMLVideoElement | null>(null);
+  const liveCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const liveRuntimeRef = useRef<LiveVideoAnalysisRuntime | null>(null);
+  const liveStartedAtRef = useRef(0);
 
   const [status, setStatus] = useState<RecorderStatus>("idle");
   const [mapSlug, setMapSlug] = useState(maps[0]?.slug || "");
@@ -61,6 +74,9 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
   const [library, setLibrary] = useState<MatchRecordingMeta[]>([]);
   const [message, setMessage] = useState("");
   const [supported, setSupported] = useState(false);
+  const [isAppleMobile, setIsAppleMobile] = useState(false);
+  const [livePulse, setLivePulse] = useState<LiveVideoPulse | null>(null);
+  const [analysisSeed, setAnalysisSeed] = useState<LiveVideoAnalysisSeed | null>(null);
 
   const selectedMap = useMemo(() => maps.find((map) => map.slug === mapSlug) || maps[0], [maps, mapSlug]);
   const selectedBrawler = useMemo(() => brawlers.find((brawler) => brawler.name === brawlerName) || brawlers[0], [brawlers, brawlerName]);
@@ -83,6 +99,7 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
   useEffect(() => {
     const mediaDevices = displayMediaDevices();
     setSupported(typeof mediaDevices?.getDisplayMedia === "function" && typeof MediaRecorder !== "undefined");
+    setIsAppleMobile(isAppleMobileDevice(navigator.userAgent, navigator.maxTouchPoints || 0));
     void refreshLibrary();
     return () => {
       streamRef.current?.getTracks().forEach((track) => track.stop());
@@ -92,11 +109,53 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
 
   useEffect(() => {
     if (status !== "recording") return;
-    // El reloj se inicia al entrar realmente en estado de grabación. Mantener
-    // Date.now() dentro del efecto preserva la pureza del render en React 19.
-    const startedAt = Date.now();
+    const video = previewVideoRef.current;
+    const canvas = liveCanvasRef.current;
+    const stream = streamRef.current;
+    const runtime = liveRuntimeRef.current;
+    if (!video || !canvas || !stream || !runtime) return;
+
+    video.srcObject = stream;
+    void video.play().catch(() => undefined);
+    const feedback = readAutoFeedback();
+    let busy = false;
+
+    const sample = () => {
+      if (busy || !liveStartedAtRef.current || video.readyState < 2 || !video.videoWidth || !video.videoHeight) return;
+      busy = true;
+      try {
+        const width = 360;
+        const aspect = video.videoHeight / video.videoWidth;
+        const height = Math.max(160, Math.min(280, Math.round(width * aspect)));
+        if (canvas.width !== width) canvas.width = width;
+        if (canvas.height !== height) canvas.height = height;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        if (!context) return;
+        context.drawImage(video, 0, 0, width, height);
+        const image = context.getImageData(0, 0, width, height);
+        const second = Math.max(0, (performance.now() - liveStartedAtRef.current) / 1000);
+        const pulse = ingestLiveVideoFrame(runtime, image, second, selectedMap?.mode || "", "Media", feedback);
+        setLivePulse(pulse);
+      } catch {
+        // Un frame aún no decodificado no debe detener la grabación.
+      } finally {
+        busy = false;
+      }
+    };
+
+    sample();
+    const interval = window.setInterval(sample, 500);
+    return () => {
+      window.clearInterval(interval);
+      if (video.srcObject === stream) video.srcObject = null;
+    };
+  }, [status, selectedMap?.mode]);
+
+  useEffect(() => {
+    if (status !== "recording") return;
     const interval = window.setInterval(() => {
-      setElapsed(Math.max(0, Math.floor((Date.now() - startedAt) / 1000)));
+      if (!liveStartedAtRef.current) return;
+      setElapsed(Math.max(0, Math.floor((performance.now() - liveStartedAtRef.current) / 1000)));
     }, 250);
     return () => {
       window.clearInterval(interval);
@@ -114,6 +173,9 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
     setMessage("");
     setPreview(null);
     setElapsed(0);
+    setLivePulse(null);
+    setAnalysisSeed(null);
+    liveRuntimeRef.current = null;
     chunksRef.current = [];
 
     const mediaDevices = displayMediaDevices();
@@ -137,17 +199,32 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
       recorderRef.current = recorder;
       streamRef.current = stream;
       chunksRef.current = [];
+      liveRuntimeRef.current = createLiveVideoAnalysisRuntime();
+      liveStartedAtRef.current = 0;
 
       recorder.addEventListener("dataavailable", (event) => {
         if (event.data.size) chunksRef.current.push(event.data);
       });
-      recorder.addEventListener("stop", () => {
+      recorder.addEventListener("start", (event) => {
+        liveStartedAtRef.current = event.timeStamp;
+      });
+      recorder.addEventListener("stop", (event) => {
         const finalType = recorder.mimeType || mimeType || "video/webm";
         const blob = new Blob(chunksRef.current, { type: finalType });
+        const finalDuration = Math.max(1, (event.timeStamp - liveStartedAtRef.current) / 1000);
+        const runtime = liveRuntimeRef.current;
+        if (runtime?.sampledFrames) {
+          setAnalysisSeed(finalizeLiveVideoAnalysis(runtime, finalDuration, crypto.randomUUID()));
+        }
+        setElapsed(Math.round(finalDuration));
         setPreview(blob);
         recorderRef.current = null;
         setStatus("ready");
-        setMessage(blob.size ? "Grabación lista para revisar, guardar o analizar" : "La grabación terminó sin datos de vídeo");
+        setMessage(blob.size
+          ? runtime?.sampledFrames
+            ? `Grabación lista · ${runtime.sampledFrames} lecturas ya analizadas en directo`
+            : "Grabación lista para revisar, guardar o analizar"
+          : "La grabación terminó sin datos de vídeo");
       });
 
       const videoTrack = stream.getVideoTracks()[0];
@@ -159,8 +236,11 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
       setSource("screen");
       setStatus("recording");
       recorder.start(1000);
-      setMessage(recordAudio ? "Grabando pantalla; el audio depende del soporte del navegador" : "Grabando pantalla localmente");
+      setMessage(recordAudio
+        ? "Grabando y analizando en directo; el audio depende del soporte del navegador"
+        : "Grabando y analizando la pantalla localmente en directo");
     } catch (error) {
+      liveRuntimeRef.current = null;
       const name = error instanceof DOMException ? error.name : "";
       setMessage(name === "NotAllowedError" ? "No se concedió permiso para grabar la pantalla" : "No se pudo iniciar la grabación");
     }
@@ -169,6 +249,9 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
   const importVideo = (file?: File) => {
     if (!file) return;
     stopRecorder();
+    setLivePulse(null);
+    setAnalysisSeed(null);
+    liveRuntimeRef.current = null;
     setPreview(file);
     setSource("import");
     setElapsed(0);
@@ -206,7 +289,11 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
     if (!recordingBlob || !selectedMap || !selectedBrawler) return;
     const url = URL.createObjectURL(recordingBlob);
     const anchor = document.createElement("a");
-    const extension = recordingBlob.type.includes("mp4") ? "mp4" : "webm";
+    const extension = recordingBlob.type.includes("quicktime")
+      ? "mov"
+      : recordingBlob.type.includes("mp4")
+        ? "mp4"
+        : "webm";
     anchor.href = url;
     anchor.download = `${selectedMap.slug}-${selectedBrawler.slug}-${new Date().toISOString().slice(0, 10)}.${extension}`;
     anchor.click();
@@ -223,6 +310,9 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
       setResult(recording.result);
       setElapsed(recording.duration);
       setSource(recording.source);
+      setLivePulse(null);
+      setAnalysisSeed(null);
+      liveRuntimeRef.current = null;
       setPreview(recording.blob);
       setStatus("ready");
       setMessage("Grabación abierta desde la biblioteca local · puedes reanalizarla completa");
@@ -252,6 +342,9 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
 
   const reset = () => {
     stopRecorder();
+    liveRuntimeRef.current = null;
+    setLivePulse(null);
+    setAnalysisSeed(null);
     setPreview(null);
     setElapsed(0);
     setStatus("idle");
@@ -260,22 +353,40 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
 
   return <section className="panel match-recorder-v18 match-recorder-v22">
     <div className="section-title">
-      <div><span className="eyebrow">Grabación + análisis local v0.31</span><h2>Grabar, importar y analizar partidas completas</h2></div>
+      <div><span className="eyebrow">Grabación + análisis local v0.33</span><h2>Registrar la partida mientras ocurre</h2></div>
       <span className={`recording-state-v18 state-${status}`}>{status === "recording" ? `● REC ${formatLiveTime(elapsed)}` : status === "ready" ? "Vídeo listo" : "Local"}</span>
     </div>
 
-    {message && <div className="recording-message-v18">{message}</div>}
+    <section className={`capture-capability-v33 ${supported ? "is-live" : isAppleMobile ? "is-ios" : "is-import"}`}>
+      <div className="capture-capability-icon-v33" aria-hidden="true">{supported ? "●" : isAppleMobile ? "iOS" : "↥"}</div>
+      <div>
+        <span className="eyebrow">{supported ? "Captura web compatible" : isAppleMobile ? "iPhone / iPad" : "Modo importación"}</span>
+        <b>{supported ? "Grabación y lectura táctica simultáneas" : isAppleMobile ? "Safari no puede capturar Brawl Stars desde la PWA" : "Este navegador no expone captura de pantalla"}</b>
+        <small>{supported
+          ? "Al compartir una pantalla o ventana, el motor registra señales, bajas y HUD aproximadamente cada 0,5 s; al detenerse ya hay un informe provisional."
+          : isAppleMobile
+            ? "Graba la pantalla desde el Centro de control, vuelve aquí y elige el vídeo de Fotos. Para captura verdaderamente simultánea hace falta una app iOS con ReplayKit."
+            : "Puedes elegir un MP4, MOV o vídeo compatible y ejecutar el análisis completo de forma local."}</small>
+      </div>
+      {!supported && isAppleMobile && <ol>
+        <li><b>1</b><span>Centro de control<br /><small>Inicia Grabación de pantalla</small></span></li>
+        <li><b>2</b><span>Juega<br /><small>Detén la grabación al terminar</small></span></li>
+        <li><b>3</b><span>Importa<br /><small>Elige el vídeo guardado en Fotos</small></span></li>
+      </ol>}
+    </section>
+
+    {message && <div className="recording-message-v18" role="status" aria-live="polite">{message}</div>}
 
     <div className="recording-context-v18">
       <label>Mapa<select value={mapSlug} disabled={status === "recording"} onChange={(event) => setMapSlug(event.target.value)}>{maps.map((map) => <option value={map.slug} key={map.slug}>{map.mode} · {map.name}</option>)}</select></label>
       <label>Brawler<select value={brawlerName} disabled={status === "recording"} onChange={(event) => setBrawlerName(event.target.value)}>{brawlers.map((brawler) => <option value={brawler.name} key={brawler.slug}>{brawler.name}</option>)}</select></label>
       <label>Resultado<select value={result} onChange={(event) => setResult(event.target.value as MatchResult)}><option>Victoria</option><option>Derrota</option></select></label>
-      <label className="record-audio-toggle-v18"><input type="checkbox" checked={recordAudio} disabled={status === "recording"} onChange={(event) => setRecordAudio(event.target.checked)} /><span><b>Audio del juego</b><small>Solo si el navegador permite capturarlo</small></span></label>
+      <label className="record-audio-toggle-v18"><input type="checkbox" checked={recordAudio} disabled={!supported || status === "recording"} onChange={(event) => setRecordAudio(event.target.checked)} /><span><b>Audio del juego</b><small>{supported ? "Solo si el navegador permite capturarlo" : "Disponible únicamente con captura web"}</small></span></label>
     </div>
 
     <div className="recording-workspace-v18">
       <div className="recording-preview-v18">
-        {previewUrl ? <video ref={previewVideoRef} src={previewUrl} controls playsInline onLoadedMetadata={(event) => {
+        {status === "recording" ? <video ref={previewVideoRef} muted autoPlay playsInline aria-label="Vista previa de la pantalla compartida" /> : previewUrl ? <video ref={previewVideoRef} src={previewUrl} controls playsInline onLoadedMetadata={(event) => {
           const duration = event.currentTarget.duration;
           if (Number.isFinite(duration) && duration > 0 && source === "import") setElapsed(Math.round(duration));
         }} /> : <div className="recording-placeholder-v18">
@@ -286,14 +397,35 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
       </div>
 
       <div className="recording-actions-v18">
-        {status !== "recording" ? <button type="button" className="primary-button" onClick={startRecording} disabled={!supported}>Iniciar grabación</button> : <button type="button" className="live-stop-button" onClick={stopRecorder}>Detener grabación</button>}
-        <label className="recording-import-v18">Importar vídeo<input type="file" accept="video/*" onChange={(event) => importVideo(event.target.files?.[0])} /></label>
+        {status !== "recording" && supported && <button type="button" className="primary-button" onClick={startRecording}>Grabar + analizar en vivo</button>}
+        {status === "recording" && <button type="button" className="live-stop-button" onClick={stopRecorder}>Detener y generar informe</button>}
+        {status !== "recording" && <label className={`recording-import-v18 ${!supported ? "is-primary" : ""}`}>{isAppleMobile ? "Elegir grabación del iPhone" : "Importar vídeo"}<input type="file" accept="video/mp4,video/quicktime,video/*" onChange={(event) => importVideo(event.target.files?.[0])} /></label>}
         {recordingBlob && <button type="button" className="secondary-button" onClick={saveToLibrary}>Guardar en biblioteca local</button>}
         {recordingBlob && <button type="button" className="secondary-button" onClick={downloadVideo}>Descargar vídeo</button>}
-        {(status !== "idle" || recordingBlob) && <button type="button" className="secondary-button" onClick={reset}>Cerrar vídeo</button>}
+        {status !== "recording" && (status !== "idle" || recordingBlob) && <button type="button" className="secondary-button" onClick={reset}>Cerrar vídeo</button>}
         {recordingBlob && <small>{formatLiveTime(elapsed)} · {readableBytes(recordingBlob.size)} · {source === "screen" ? "captura de pantalla" : "vídeo importado"}</small>}
       </div>
     </div>
+
+    <canvas ref={liveCanvasRef} className="recording-live-canvas-v33" aria-hidden="true" />
+
+    {status === "recording" && livePulse && <section className="recording-live-readout-v33" aria-live="polite">
+      <div className="recording-live-head-v33">
+        <div><span className="eyebrow">Auto Review en vivo</span><b>{livePulse.currentState}</b></div>
+        <span>≈2 lecturas/s</span>
+      </div>
+      <div className="recording-live-metrics-v33">
+        <article><span>Frames</span><b>{livePulse.sampledFrames}</b><small>procesados localmente</small></article>
+        <article><span>Señales</span><b>{livePulse.signals}</b><small>{livePulse.averageConfidence ? `${livePulse.averageConfidence}% confianza` : "calibrando"}</small></article>
+        <article><span>HP</span><b>{livePulse.latestHud?.hpPercent !== undefined ? `≈${livePulse.latestHud.hpPercent}%` : "—"}</b><small>estimación visual</small></article>
+        <article><span>Munición</span><b>{livePulse.latestHud?.ammoEstimate !== undefined ? `≈${livePulse.latestHud.ammoEstimate}/3` : "—"}</b><small>{livePulse.latestHud?.superReady ? "super lista probable" : "HUD en seguimiento"}</small></article>
+      </div>
+      {livePulse.recentEvents.length > 0 && <div className="recording-live-events-v33">
+        {livePulse.recentEvents.map((event) => <span key={event.id}><time>{formatLiveTime(Math.round(event.second))}</time><b>{event.label}</b><small>{event.confidence}%</small></span>)}
+      </div>}
+    </section>}
+
+    {status === "ready" && analysisSeed && <div className="recording-seed-note-v33"><b>Informe instantáneo generado</b><span>{analysisSeed.sampledFrames} lecturas en vivo · {analysisSeed.events.length} señales · puedes refinarlo con el barrido completo.</span></div>}
 
     <VideoMatchAnalyzer
       src={previewUrl}
@@ -303,6 +435,7 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
       brawlerRole={selectedBrawler?.role}
       result={result}
       durationHint={elapsed}
+      initialAnalysis={analysisSeed}
       onSeek={seekPreview}
     />
 
@@ -319,6 +452,6 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
       </div>
     </div>
 
-    <p className="live-privacy-note">La grabación, el barrido de fotogramas y la biblioteca son locales. Brawl Draft Lab no sube el vídeo a un servidor. Para sesiones largas conviene descargar una copia porque el navegador puede liberar almacenamiento si el dispositivo se queda sin espacio.</p>
+    <p className="live-privacy-note">La grabación, el análisis en vivo, el barrido de fotogramas y la biblioteca son locales. Brawl Draft Lab no sube el vídeo a un servidor. La captura nunca se inicia sola: el navegador exige que elijas y autorices la pantalla en cada sesión.</p>
   </section>;
 }

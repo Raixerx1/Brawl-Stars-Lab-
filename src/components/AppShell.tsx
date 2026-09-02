@@ -35,12 +35,12 @@ export default function AppShell({ children }: { children: ReactNode }) {
         const active = isActivePath(path, href);
         return <Link key={href} className={active ? "active" : ""} aria-current={active ? "page" : undefined} href={href} onClick={() => setOpen(false)}><span aria-hidden="true">{icon}</span>{label}</Link>;
       })}</nav>
-      <div className="sidebar-note"><b>Base v0.32.1</b><span>Meta U69 · calibrado 02/09</span><span>Analyzer v0.31 · primeras bajas + momentum</span></div>
+      <div className="sidebar-note"><b>Base v0.33.0</b><span>Meta U69 · calibrado 02/09</span><span>Analyzer v0.33 · captura + lectura en vivo</span></div>
     </aside>
     <main>
       <header className="topbar">
         <button type="button" className="menu-button" onClick={() => setOpen(!open)} aria-controls="primary-navigation" aria-expanded={open} aria-label={open ? "Cerrar navegación" : "Abrir navegación"}>☰</button>
-        <div><b>Competitive Draft Center</b><span>Meta U69 del 02/09 · counters y recomendaciones recalibrados · analyzer v0.31</span></div>
+        <div><b>Competitive Draft Center</b><span>Meta U69 del 02/09 · counters recalibrados · analyzer v0.33 en vivo</span></div>
         <Link className="status-pill" href="/meta">● META 02/09</Link>
       </header>
       {children}

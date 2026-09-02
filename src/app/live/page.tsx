@@ -6,6 +6,7 @@ import "./video-review-v23.css";
 import "./video-review-v25.css";
 import "./video-review-v26.css";
 import "./video-review-v31.css";
+import "./video-review-v33.css";
 import CoachDebriefDashboard from "@/components/CoachDebriefDashboard";
 import LearningDashboard from "@/components/LearningDashboard";
 import LiveMatchAnalyzer from "@/components/LiveMatchAnalyzer";
@@ -14,15 +15,15 @@ import { brawlers, maps } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Auto Review y Entrenador",
-  description: "Análisis local de vídeo con tracking estabilizado, reconstrucción 3v3–3v0/0v3, primeras bajas, trades, reagrupación, resets validados y tempo de conversión para Brawl Stars Ranked.",
+  description: "Captura compatible y análisis local en vivo o desde vídeo, con tracking estabilizado, reconstrucción 3v3–3v0/0v3, primeras bajas, trades, reagrupación y control de momentum para Brawl Stars Ranked.",
 };
 
 export default function LiveReviewPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Brawl Draft Lab · Coach v0.31</span>
-      <h1>Auto Review + Entrenador</h1>
-      <p>El analizador v0.31 identifica quién logra la primera baja de cada pelea, si la ventaja se conserva, si respondes con trade, cómo vuelves a igualdad y si una persecución tras wipe cuesta una muerte. Mantiene los resets validados, el tempo de conversión y la reconstrucción 3v3–3v0/0v3.</p>
+      <span className="eyebrow">Brawl Draft Lab · Coach v0.33</span>
+      <h1>Auto Review en vivo + Entrenador</h1>
+      <p>El analizador v0.33 registra señales y HUD durante una captura compatible, entrega un informe provisional al terminar y mantiene el refinado completo de primeras bajas, trades, reagrupaciones, conversión y reconstrucción 3v3–3v0/0v3. En iPhone guía la importación directa del vídeo porque Safari no puede capturar otra app.</p>
     </div>
     <MatchRecorder maps={maps} brawlers={brawlers} />
     <LiveMatchAnalyzer maps={maps} brawlers={brawlers} />
