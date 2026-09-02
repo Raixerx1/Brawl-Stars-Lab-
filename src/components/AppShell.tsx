@@ -19,24 +19,39 @@ const nav = [
   ["/sources", "Fuentes", "i"],
 ];
 
+const mobileNav = ["/draft", "/counters", "/live", "/meta"]
+  .map((href) => nav.find(([candidate]) => candidate === href))
+  .filter((item): item is string[] => Boolean(item));
+
+const isActivePath = (path: string, href: string) => path === href || (href !== "/" && path.startsWith(`${href}/`));
+
 export default function AppShell({ children }: { children: ReactNode }) {
   const path = usePathname();
   const [open, setOpen] = useState(false);
   return <div className="app-shell">
-    <aside className={`sidebar ${open ? "open" : ""}`}>
+    <aside id="primary-navigation" className={`sidebar ${open ? "open" : ""}`}>
       <div className="brand"><div className="brand-mark">★</div><div><strong>Brawl Draft Lab</strong><small>Competitive Intelligence</small></div></div>
-      <nav>{nav.map(([href, label, icon]) => <Link key={href} className={path === href || (href !== "/" && path.startsWith(href)) ? "active" : ""} href={href} onClick={() => setOpen(false)}><span>{icon}</span>{label}</Link>)}</nav>
-      <div className="sidebar-note"><b>Base v0.29.0</b><span>Update 69 · 69.230 live</span><span>Analyzer v0.29 · conversión + stagger</span></div>
+      <nav aria-label="Navegación principal">{nav.map(([href, label, icon]) => {
+        const active = isActivePath(path, href);
+        return <Link key={href} className={active ? "active" : ""} aria-current={active ? "page" : undefined} href={href} onClick={() => setOpen(false)}><span aria-hidden="true">{icon}</span>{label}</Link>;
+      })}</nav>
+      <div className="sidebar-note"><b>Base v0.32.1</b><span>Meta U69 · calibrado 02/09</span><span>Analyzer v0.31 · primeras bajas + momentum</span></div>
     </aside>
     <main>
       <header className="topbar">
-        <button className="menu-button" onClick={() => setOpen(!open)}>☰</button>
-        <div><b>Competitive Draft Center</b><span>Update 69 live · analyzer v0.29 con wipes, conversión y stagger · counters recalculados</span></div>
-        <Link className="status-pill" href="/meta">● U69 LIVE · 69.230</Link>
+        <button type="button" className="menu-button" onClick={() => setOpen(!open)} aria-controls="primary-navigation" aria-expanded={open} aria-label={open ? "Cerrar navegación" : "Abrir navegación"}>☰</button>
+        <div><b>Competitive Draft Center</b><span>Meta U69 del 02/09 · counters y recomendaciones recalibrados · analyzer v0.31</span></div>
+        <Link className="status-pill" href="/meta">● META 02/09</Link>
       </header>
       {children}
       <footer>Proyecto independiente no afiliado a Supercell. Imágenes servidas por BrawlAPI/Brawlify. Los tiers estadísticos no equivalen por sí solos a porcentajes de victoria en tu draft.</footer>
     </main>
+    <nav className="mobile-dock" aria-label="Accesos principales">
+      {mobileNav.map(([href, label, icon]) => {
+        const active = isActivePath(path, href);
+        return <Link key={href} className={active ? "active" : ""} aria-current={active ? "page" : undefined} href={href}><span aria-hidden="true">{icon}</span><small>{label === "Draft Assistant" ? "Draft" : label === "Auto Review" ? "Review" : label}</small></Link>;
+      })}
+    </nav>
     {open && <button className="overlay" onClick={() => setOpen(false)} aria-label="Cerrar menú" />}
   </div>;
 }

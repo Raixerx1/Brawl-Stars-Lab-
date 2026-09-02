@@ -1,9 +1,17 @@
 {
-  "updated": "2026-08-31",
-  "source": "NOFF Meta 24 h · top 200 global · datos actualizados 30/08/2026; contraste BrawlBetter Ranked 26/08",
+  "updated": "2026-09-02",
+  "source": "NOFF Meta 24 h · top 200 global · datos post-Update 69 revisados 02/09/2026; control General 30 d y Brawl Time Ninja",
   "sourceUrl": "https://www.noff.gg/brawl-stars/tier-list",
-  "method": "La vista principal usa la fotografía Meta 24 h más reciente de NOFF para los 106 brawlers. La vista 30 d sirve como capa de estabilidad para detectar picos de muestra. El Draft Engine no trata el tier como verdad absoluta: mapa, modo, geometría, orden de picks y matchup recíproco prevalecen. El balance de septiembre no se activa hasta que Supercell lo publique oficialmente.",
+  "method": "La vista observada conserva la fotografía Meta 24 h post-U69 de NOFF para los 106 brawlers. El motor competitivo la calibra con el balance oficial, la vista General 30 d y una muestra amplia secundaria para limitar picos de uso. Mapa, modo, geometría, orden y matchup recíproco prevalecen sobre el tier global.",
   "snapshots": {
+    "NOFF Meta 24 h · 02/09": {
+      "S": ["Shade", "Wendy", "El Primo", "Edgar", "Melodie"],
+      "A": ["Bibi", "Nori", "Brock", "Amber", "Mortis", "Gus", "8-Bit", "Griff"],
+      "B": ["Shelly", "Gray", "Surge", "Rico", "Lumi", "Bo", "Max", "Rosa", "Bull", "Moe", "Starr Nova", "Belle"],
+      "C": ["Pierce", "Otis", "Emz", "Hank", "Stu", "Colt", "Lou", "Eve", "Doug", "Poco", "Piper", "Nani", "Kaze", "Meeple", "Ash", "Mina", "Mandy"],
+      "D": ["Colette", "Trunk", "Buster", "Ollie", "Byron", "Buzz", "Maisie", "Gene", "Carl", "Meg", "Berry", "Finx", "Crow"],
+      "F": ["Sirius", "Leon", "Chuck", "Dynamike", "Kit", "Gigi", "Angelo", "Damian", "Bea", "Lily", "Pearl", "Ruffs", "Charlie", "Grom", "Kenji", "Juju", "Nita", "Cordelius", "Bonnie", "Sprout", "Frank", "Sam", "Spike", "Bolt", "Mico", "Barley", "Najia", "Darryl", "Lola", "Fang", "Jessie", "Gale", "Tick", "Clancy", "Willow", "Janet", "Chester", "Alli", "Glowy", "Tara", "Penny", "R-T", "Pam", "Jae-Yong", "Ziggy", "Squeak", "Sandy", "Larry & Lawrie", "Jacky", "Draco", "Mr. P"]
+    },
     "Meta 24 h · 30/08": {
       "S": ["Wendy", "Griff", "Max", "Mortis", "Edgar", "Nori", "Brock", "8-Bit"],
       "A": ["Surge", "Mandy", "Emz", "Fang", "Rico", "Meg", "Bibi", "Stu", "Lumi"],

@@ -4,6 +4,14 @@ const metaPath = new URL("../src/data/meta-tierlist.json", import.meta.url);
 const rosterPath = new URL("../src/data/brawlers.json", import.meta.url);
 
 const snapshots = {
+  "NOFF Meta 24 h · 02/09": {
+    S: ["Shade", "Wendy", "El Primo", "Edgar", "Melodie"],
+    A: ["Bibi", "Nori", "Brock", "Amber", "Mortis", "Gus", "8-Bit", "Griff"],
+    B: ["Shelly", "Gray", "Surge", "Rico", "Lumi", "Bo", "Max", "Rosa", "Bull", "Moe", "Starr Nova", "Belle"],
+    C: ["Pierce", "Otis", "Emz", "Hank", "Stu", "Colt", "Lou", "Eve", "Doug", "Poco", "Piper", "Nani", "Kaze", "Meeple", "Ash", "Mina", "Mandy"],
+    D: ["Colette", "Trunk", "Buster", "Ollie", "Byron", "Buzz", "Maisie", "Gene", "Carl", "Meg", "Berry", "Finx", "Crow"],
+    F: ["Sirius", "Leon", "Chuck", "Dynamike", "Kit", "Gigi", "Angelo", "Damian", "Bea", "Lily", "Pearl", "Ruffs", "Charlie", "Grom", "Kenji", "Juju", "Nita", "Cordelius", "Bonnie", "Sprout", "Frank", "Sam", "Spike", "Bolt", "Mico", "Barley", "Najia", "Darryl", "Lola", "Fang", "Jessie", "Gale", "Tick", "Clancy", "Willow", "Janet", "Chester", "Alli", "Glowy", "Tara", "Penny", "R-T", "Pam", "Jae-Yong", "Ziggy", "Squeak", "Sandy", "Larry & Lawrie", "Jacky", "Draco", "Mr. P"],
+  },
   "Meta 24 h · 30/08": {
     S: ["Wendy", "Griff", "Max", "Mortis", "Edgar", "Nori", "Brock", "8-Bit"],
     A: ["Surge", "Mandy", "Emz", "Fang", "Rico", "Meg", "Bibi", "Stu", "Lumi"],
@@ -37,17 +45,17 @@ for (const [period, tiers] of Object.entries(snapshots)) {
 }
 
 const liveTier = new Map();
-for (const [tier, names] of Object.entries(snapshots["Meta 24 h · 30/08"])) {
+for (const [tier, names] of Object.entries(snapshots["NOFF Meta 24 h · 02/09"])) {
   for (const name of names) liveTier.set(name, tier);
 }
 
 for (const brawler of roster) brawler.tier = liveTier.get(brawler.name);
-meta.updated = "2026-08-31";
-meta.source = "NOFF Meta 24 h · top 200 global · datos actualizados 30/08/2026";
+meta.updated = "2026-09-02";
+meta.source = "NOFF Meta 24 h · top 200 global · datos post-Update 69 revisados 02/09/2026";
 meta.sourceUrl = "https://www.noff.gg/brawl-stars/tier-list";
-meta.method = "Meta 24 h para actualidad y General 30 d como control de estabilidad. El Draft Engine sigue priorizando mapa, modo, geometría, orden y matchup recíproco.";
+meta.method = "Meta 24 h post-U69 como señal de actualidad; General 30 d y balance oficial como control de estabilidad. El Draft Engine sigue priorizando mapa, modo, geometría, orden y matchup recíproco.";
 meta.snapshots = snapshots;
 
 await writeFile(metaPath, `${JSON.stringify(meta, null, 2)}\n`, "utf8");
 await writeFile(rosterPath, `${JSON.stringify(roster, null, 2)}\n`, "utf8");
-console.log(`Meta sincronizado: ${roster.length} brawlers, snapshot vivo 30/08/2026.`);
+console.log(`Meta sincronizado: ${roster.length} brawlers, snapshot post-U69 02/09/2026.`);

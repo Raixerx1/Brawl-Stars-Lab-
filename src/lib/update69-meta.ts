@@ -1,27 +1,30 @@
 export const update69MetaLive = {
-  updated: "2026-09-01",
+  updated: "2026-09-02",
   season: "Update 69 live · transición a Season 54 · Royal Academy",
-  seasonStatus: "Cliente 69.230 live desde 01/09/2026. La base competitiva conserva el snapshot observado del 30/08 y añade un prior de día 1 para el nuevo balance.",
+  seasonStatus: "Cliente 69.230 live desde 01/09/2026. El motor ya incorpora la primera muestra competitiva postparche del 02/09 y conserva el 30 d como control de estabilidad.",
   officialPatch: "Update 69 · Royal Academy & Brawl-O-Ween · cliente 69.230",
   officialPatchDate: "01/09/2026",
   latestAnnouncement: "Update 69 live · Royal Academy & Brawl-O-Ween",
   latestAnnouncementDate: "01/09/2026",
-  update69BalanceStatus: "ACTIVO como prior competitivo de día 1. Todavía no hay muestra Ranked post-parche suficiente para tratar la nueva tier como observada.",
-  nextBalanceWindow: "Update 69 live desde 01/09/2026 · vigilar hotfixes y primera muestra Ranked 24–72 h",
-  rankedDataThrough: "Baseline observado 30/08/2026 · prior Update 69 activo 01/09",
+  update69BalanceStatus: "CALIBRADO con muestra temprana post-U69 del 02/09. Sigue siendo una lectura volátil: mapa, orden y matchup tienen prioridad sobre el tier global.",
+  nextBalanceWindow: "Revisión post-U69 del 02/09/2026 · vigilar hotfixes y consolidación de la muestra 72 h",
+  rankedDataThrough: "Top 200 Meta 24 h · 02/09/2026 · control General 30 d",
   newestBrawler: "Wendy · Cosmo/Vince anunciados para el ciclo U69",
   update69Highlights: [
     "Cliente 69.230 live desde el 01/09/2026.",
     "Cosmo y Vince llegan durante el ciclo septiembre–octubre; no entran en Draft Engine hasta estar realmente disponibles y ser elegibles en Ranked.",
     "La rotación competitiva de Update 69 ya se trata como live; los mapas completamente nuevos mantienen perfil provisional hasta acumular datos.",
-    "Seis nuevos paquetes Buffie en watchlist competitiva: Poco, El Primo, Amber, Gus, Chuck y Shade.",
+    "Shade, El Primo, Melodie, Amber y Gus dejan una primera señal al alza; el motor la aplica solo donde su kit y el mapa la justifican.",
+    "Edgar y Mortis mantienen mucha presencia, pero continúan penalizados como first pick: popularidad no equivale a seguridad de draft.",
+    "Wendy y Nori siguen fuertes en la muestra, aunque sus nerfs aumentan el riesgo y reducen su prioridad como apertura.",
+    "Seis paquetes Buffie bajo seguimiento competitivo: Poco, El Primo, Amber, Gus, Chuck y Shade.",
     "Nori y Wendy reciben nuevas hipercargas durante el ciclo de la actualización; no se les concede un bonus automático hasta confirmar disponibilidad y rendimiento real.",
     "Chuck recibe una reestructuración profunda de su patrón de súper/postes; el motor lo mantiene en watchlist mixta en vez de inventar un tier post-rework sin muestra.",
     "Mega Boss Duo de 20 jugadores, colaboración con Duolingo y Brawl-O-Ween forman parte del contenido del ciclo, pero no alteran por sí mismos el modelo Ranked estándar."
   ],
   update69BalanceModel: {
-    status: "Prior competitivo provisional · no equivale a win rate post-parche",
-    baseline: "NOFF Meta 24 h del 30/08/2026",
+    status: "Calibración postparche temprana · muestra observada + estabilidad + cambios oficiales",
+    baseline: "NOFF Meta 24 h del 02/09/2026 · control General 30 d · balance oficial U69",
     buffs: [
       "Bea", "Buster", "Clancy", "Colette", "Eve", "Hank", "Jacky",
       "Jae-Yong", "Janet", "Jessie", "Leon", "Lola", "Maisie", "Melodie",
@@ -32,25 +35,27 @@ export const update69MetaLive = {
     ],
     mixed: ["Bo", "Chuck"],
     buffieWatchlist: ["Poco", "El Primo", "Amber", "Gus", "Chuck", "Shade"],
-    hyperchargeWatchlist: ["Nori", "Wendy"]
+    hyperchargeWatchlist: ["Nori", "Wendy"],
+    observedLeaders: ["Shade", "Wendy", "Melodie", "El Primo", "Amber", "Gus"],
+    volatilePicks: ["Edgar", "Mortis", "Nori", "Griff"]
   },
   engineRosterNote: "El motor mantiene 106 brawlers operativos. Cosmo y Vince se muestran como contenido anunciado, pero se excluyen de picks/counters hasta su release y elegibilidad competitiva real."
 } as const;
 
 export const update69LiveSources = [
   {
-    name: "Google Play — Brawl Stars · Update 69",
-    url: "https://play.google.com/store/apps/details?id=com.supercell.brawlstars",
-    kind: "Oficial de Supercell: confirma Update 69, Cosmo, Vince, Mega Boss Duo, Duolingo y Season 54"
+    name: "Supercell — Release Notes August 2026",
+    url: "https://supercell.com/en/games/brawlstars/blog/release-notes/release-notes-august-2026/",
+    kind: "Fuente oficial de todos los buffs, nerfs, reworks, Buffies e hipercargas de Update 69"
   },
   {
-    name: "APKMirror — Brawl Stars 69.230",
-    url: "https://www.apkmirror.com/apk/supercell/brawl-stars/brawl-stars-69-230-release/",
-    kind: "Verificación de cliente firmado por Supercell: versión 69.230 publicada 01/09/2026"
+    name: "NOFF — Meta 24 h post-Update 69",
+    url: "https://www.noff.gg/brawl-stars/tier-list",
+    kind: "Primera señal diaria postparche basada en battle logs del top 200; contrastada con su vista General 30 d"
   },
   {
-    name: "Chosen Network / comunidad competitiva — Final Balance Changes U69",
-    url: "https://www.reddit.com/r/BrawlStarsCompetitive/comments/1w1p7lp/final_balance_changes/",
-    kind: "Contraste competitivo de los ajustes finales; se usa solo como prior de día 1, no como dato de win rate"
+    name: "Brawl Time Ninja — control de muestra amplia",
+    url: "https://brawltime.ninja/tier-list/brawler",
+    kind: "Control secundario de gran volumen para evitar convertir un pico del top 200 en una recomendación universal"
   }
 ] as const;

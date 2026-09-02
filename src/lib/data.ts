@@ -8,11 +8,15 @@ import { update69LiveSources, update69MetaLive } from "./update69-meta";
 import { applyUpdate69Maps } from "./update69-maps";
 import { rankCountersAgainst, rankTargetsFor } from "./counter-engine";
 
+const currentMetaSources = [
+  ...metaRaw.sources.filter(({ url }) => !update69LiveSources.some((source) => source.url === url)),
+  ...update69LiveSources,
+];
+
 /**
- * La fotografía estadística del 30/08 sigue siendo la base observable, pero
- * Update 69 ya está live. La segunda capa aplica un prior conservador de día 1
- * para que Draft, Counter Explorer y voz no sigan tratando el balance anterior
- * como si continuara vigente mientras acumulamos muestra Ranked post-parche.
+ * Update 69 ya tiene una primera muestra observada del 02/09. La capa live la
+ * calibra con el balance oficial y la vista de 30 días para que Draft, Counter
+ * Explorer y voz reaccionen al parche sin copiar picos de uso o poco volumen.
  */
 export const brawlers = applyUpdate69Live(applySeason53Meta(brawlersRaw as Brawler[]));
 
@@ -55,7 +59,7 @@ export const maps = applyUpdate69Maps(mapsRaw as MapProfile[]).map((map) => {
 export const meta = {
   ...metaRaw,
   ...update69MetaLive,
-  sources: [...metaRaw.sources, ...update69LiveSources],
+  sources: currentMetaSources,
 };
 
 export const brawlerByName = (name: string) => brawlers.find((brawler) => brawler.name.toLowerCase() === name.toLowerCase());

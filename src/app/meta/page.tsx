@@ -23,6 +23,8 @@ type Update69BalanceModel = {
   mixed: readonly string[];
   buffieWatchlist: readonly string[];
   hyperchargeWatchlist: readonly string[];
+  observedLeaders: readonly string[];
+  volatilePicks: readonly string[];
 };
 
 export default function MetaPage() {
@@ -34,9 +36,9 @@ export default function MetaPage() {
 
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Update 69 LIVE · 01/09/2026 · cliente 69.230</span>
+      <span className="eyebrow">Meta post-U69 · revisado 02/09/2026 · cliente 69.230</span>
       <h1>Meta Center · Update 69</h1>
-      <p>Update 69 ya está distribuida. El motor conserva la fotografía competitiva observada del 30/08 como baseline y activa desde hoy una capa provisional de día 1 para reflejar el balance final sin fingir que ya existen win rates post-parche maduros.</p>
+      <p>La primera muestra postparche ya está integrada. El motor cruza el top 200 de las últimas 24 horas con el balance oficial y la vista de 30 días, para reaccionar al meta sin copiar sus picos de popularidad.</p>
     </div>
 
     <section className="panel meta-season-v20">
@@ -47,7 +49,7 @@ export default function MetaPage() {
       <div className="stats-grid">
         <div className="stat-card"><b>69.230</b><span>cliente Update 69 live</span></div>
         <div className="stat-card"><b>{rankedFeatured.mode}</b><span>último modo Ranked destacado registrado</span></div>
-        <div className="stat-card"><b>{meta.rankedDataThrough}</b><span>evidencia + prior activo</span></div>
+        <div className="stat-card"><b>{meta.rankedDataThrough}</b><span>evidencia observada activa</span></div>
         <div className="stat-card"><b>{meta.officialPatchDate}</b><span>activación de Update 69</span></div>
       </div>
       <p className="muted">{meta.engineRosterNote}</p>
@@ -79,8 +81,8 @@ export default function MetaPage() {
     <section className="panel spaced">
       <div className="section-title">
         <div>
-          <span className="eyebrow">Modelo competitivo · día 1</span>
-          <h2>Qué cambia ya en Draft Engine</h2>
+          <span className="eyebrow">Modelo competitivo · revisión 02/09</span>
+          <h2>Qué está cambiando en Draft Engine</h2>
           <p>{patchDay.status}. Baseline: {patchDay.baseline}.</p>
         </div>
         <strong>U69</strong>
@@ -88,18 +90,18 @@ export default function MetaPage() {
       <div className="patch-grid">
         <article className="patch-card">
           <div>
-            <span className="patch-badge patch-up">PRIOR ↑</span>
+            <span className="patch-badge patch-up">KIT ↑</span>
             <h3>Subidas modelizadas</h3>
             <div className="tag-row">{patchDay.buffs.map((name) => <span key={name}>{name}</span>)}</div>
-            <p>Solo se promociona de forma conservadora cuando el ajuste de kit justifica una expectativa competitiva clara. No son win rates observados.</p>
+            <p>La promoción exige coherencia entre el cambio oficial, el contexto del mapa y la señal temprana; no basta con una subida de uso.</p>
           </div>
         </article>
         <article className="patch-card">
           <div>
-            <span className="patch-badge patch-down">PRIOR ↓</span>
+            <span className="patch-badge patch-down">KIT ↓</span>
             <h3>Bajadas modelizadas</h3>
             <div className="tag-row danger">{patchDay.nerfs.map((name) => <span key={name}>{name}</span>)}</div>
-            <p>El motor reduce su viabilidad global, pero mapa, orden de draft y matchup pueden seguir colocándolos como primera opción.</p>
+            <p>El motor reduce margen y seguridad global. Un mapa o counter concreto todavía puede convertirlos en la respuesta correcta.</p>
           </div>
         </article>
         <article className="patch-card">
@@ -112,11 +114,24 @@ export default function MetaPage() {
         </article>
       </div>
 
+      <div className="meta-signal-grid-v32">
+        <article>
+          <span className="eyebrow">Señal que ya convierte</span>
+          <h3>{patchDay.observedLeaders.join(" · ")}</h3>
+          <p>Son los movimientos con más apoyo temprano. El Primo, Amber, Gus y Shade reciben además ajustes por interacción y tipo de mapa.</p>
+        </article>
+        <article>
+          <span className="eyebrow danger-text">Lectura con cautela</span>
+          <h3>{patchDay.volatilePicks.join(" · ")}</h3>
+          <p>Siguen siendo picks válidos, pero el motor evita convertir popularidad, poco volumen o un matchup favorable en seguridad universal.</p>
+        </article>
+      </div>
+
       <div className="two-column-matchups spaced">
         <article className="panel">
           <span className="eyebrow">Buffies U69 · watchlist</span>
           <h3>{patchDay.buffieWatchlist.join(" · ")}</h3>
-          <p>No se les concede un salto automático de tier por el mero anuncio del Buffie: el motor espera disponibilidad real y rendimiento Ranked.</p>
+          <p>Shade, El Primo, Amber y Gus ya tienen señal contextual. Poco y Chuck continúan bajo observación antes de elevarlos de forma general.</p>
         </article>
         <article className="panel">
           <span className="eyebrow">Hipercargas U69 · watchlist</span>
@@ -172,9 +187,9 @@ export default function MetaPage() {
       <span className="eyebrow">Criterio competitivo</span>
       <h2>Cómo interpretar esta revisión</h2>
       <div className="note-list">
-        <p>✓ Update 69 está live, pero una actualización de cliente no crea instantáneamente una muestra estadística fiable.</p>
-        <p>✓ El prior de día 1 mueve la viabilidad global de los afectados; mapa, geometría, orden del draft y matchup uno a uno conservan prioridad.</p>
-        <p>✓ La fotografía 30/08 permanece accesible como baseline para poder distinguir efecto del parche de simple ruido de muestra.</p>
+        <p>✓ La muestra 24 h del 02/09 detecta el movimiento temprano, pero la vista 30 d evita sobrerreaccionar a brawlers con poco volumen.</p>
+        <p>✓ El balance oficial cambia interacciones concretas; mapa, geometría, orden del draft y matchup uno a uno conservan prioridad.</p>
+        <p>✓ Las fotografías del 30/08 permanecen accesibles como baseline para medir el efecto real del parche.</p>
         <p>✓ Cosmo y Vince no se inventan dentro del motor competitivo antes de su release/elegibilidad real.</p>
       </div>
     </section>

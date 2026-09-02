@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Brawler } from "@/lib/types";
 import { rankCountersAgainst, rankTargetsFor } from "@/lib/counter-engine";
 import { auditRoster } from "@/lib/roster-audit";
+import { update69ObservedSignalFor } from "@/lib/update69-live";
 import { BrawlerPortrait } from "./GameArtwork";
 
 const normalize = (value: string) =>
@@ -44,12 +45,12 @@ export default function CounterExplorer({ brawlers }: { brawlers: Brawler[] }) {
   );
 
   const favorableRank = useMemo(
-    () => source ? rankTargetsFor(source, ordered, 6) : [],
+    () => source ? rankTargetsFor(source, ordered, 5) : [],
     [source, ordered],
   );
 
   const threatRank = useMemo(
-    () => source ? rankCountersAgainst(source, ordered, 6) : [],
+    () => source ? rankCountersAgainst(source, ordered, 5) : [],
     [source, ordered],
   );
 
@@ -72,17 +73,18 @@ export default function CounterExplorer({ brawlers }: { brawlers: Brawler[] }) {
   if (!source) return null;
 
   const sourceBroken = audit.brokenReferences.filter((item) => item.source === source.name);
+  const sourceSignal = update69ObservedSignalFor(source.name);
 
   return (
     <div className="counter-explorer counter-explorer-v81">
       <section className="panel counter-roster-panel">
         <div className="section-title">
           <div>
-            <span className="eyebrow">Roster completo · motor v0.18</span>
+            <span className="eyebrow">Roster completo · motor v0.32</span>
             <h2>Busca cualquier brawler</h2>
             <p>
               El ranking ya no usa una plantilla fija por rol. Se evalúa cada pareja de brawlers por relaciones explícitas,
-              movilidad, antidive, control, alcance, wallbreak y dependencia de cobertura.
+              movilidad, antidive, control, alcance, wallbreak, respuesta inversa y cambios mecánicos de Update 69.
             </p>
           </div>
           <span className="counter-roster-count">{visible.length}/{audit.total}</span>
@@ -91,7 +93,7 @@ export default function CounterExplorer({ brawlers }: { brawlers: Brawler[] }) {
         <div className="counter-audit-strip">
           <span><b>{audit.total}</b> brawlers</span>
           <span><b>{audit.withCounters}</b> con relaciones explícitas</span>
-          <span><b>6</b> mejores counters por objetivo</span>
+          <span><b>5</b> counters priorizados por objetivo</span>
           <span className={audit.brokenReferences.length ? "warning" : "ok"}>
             <b>{audit.brokenReferences.length}</b> referencias rotas
           </span>
@@ -139,10 +141,13 @@ export default function CounterExplorer({ brawlers }: { brawlers: Brawler[] }) {
           <h1>{source.name}</h1>
           <p>{source.build}</p>
           <div className="counter-source-status">
-            <span>Top 6 favorable calculado</span>
-            <span>Top 6 counters calculado</span>
+            <span>Top 5 favorable calculado</span>
+            <span>Top 5 counters calculado</span>
             <span>Ranking individual 1 vs 1</span>
-            {source.matchupReviewedAt && <span className="counter-reviewed-chip">Revisión específica: {source.matchupReviewedAt}</span>}
+            {sourceSignal && <span className={`counter-meta-chip trend-${sourceSignal.trend}`} title={sourceSignal.summary}>
+              U69 · {sourceSignal.trend === "up" ? "sube" : sourceSignal.trend === "down" ? "baja" : sourceSignal.trend === "volatile" ? "volátil" : "estable"} · confianza {sourceSignal.confidence.toLowerCase()}
+            </span>}
+            {source.matchupReviewedAt && <span className="counter-reviewed-chip">Motor recalculado: {source.matchupReviewedAt}</span>}
           </div>
         </div>
       </section>
@@ -167,6 +172,7 @@ export default function CounterExplorer({ brawlers }: { brawlers: Brawler[] }) {
                   <small>
                     {matchup.score}/100 · confianza {matchup.confidence}
                     {matchup.explicit ? " · relación explícita" : " · interacción calculada"}
+                    {matchup.patchAdjustment !== 0 ? " · recalibrado U69" : ""}
                   </small>
                 </div>
               </article>;
@@ -188,6 +194,7 @@ export default function CounterExplorer({ brawlers }: { brawlers: Brawler[] }) {
                   <small>
                     {matchup.score}/100 · confianza {matchup.confidence}
                     {matchup.explicit ? " · relación explícita" : " · interacción calculada"}
+                    {matchup.patchAdjustment !== 0 ? " · recalibrado U69" : ""}
                   </small>
                 </div>
               </article>;

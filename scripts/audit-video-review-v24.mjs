@@ -79,7 +79,7 @@ if (!report.sequences.some((sequence) => sequence.label === "Super → baja riva
 if (!report.sequences.some((sequence) => sequence.label === "Baja rival → objetivo")) {
   errors.push("No se detectó la conversión favorable baja rival → objetivo");
 }
-if (!report.sequences.some((sequence) => sequence.label === "Muerte aliada → objetivo")) {
+if (!report.sequences.some((sequence) => ["Muerte aliada → objetivo", "Combate → aliado cae → objetivo"].includes(sequence.label))) {
   errors.push("No se detectó la secuencia desfavorable muerte aliada → objetivo");
 }
 if (!report.sequences.some((sequence) => sequence.label === "Doble baja aliada")) {

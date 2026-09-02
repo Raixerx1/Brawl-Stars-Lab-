@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import DraftAssistant from "@/components/DraftAssistant";
-import DraftUiEnhancer from "@/components/DraftUiEnhancer";
 import DesktopPickVoiceGuard from "@/components/DesktopPickVoiceGuard";
 import VoiceDraftControl from "@/components/VoiceDraftControl";
 import { maps, brawlers, draftBrawlers } from "@/lib/data";
@@ -19,18 +18,18 @@ import "./draft-desktop-voice-v221.css";
 import "./draft-context-alignment-v231.css";
 import "./draft-first-pick-mobile-v232.css";
 import "./draft-select-contrast-v233.css";
+import "./draft-mobile-fit-v321.css";
 
 export const metadata: Metadata = { title: "Draft Coach en vivo" };
 
 export default function DraftPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Draft Engine 2.0 · v0.24.0 · Update 69 LIVE · 69.230</span>
+      <span className="eyebrow">Draft Engine 2.0 · v0.32.1 · meta U69 del 02/09</span>
       <h1>Draft Coach</h1>
-      <p>El snapshot Meta 24 h del 30/08 se conserva como baseline observado y desde el 01/09 el motor añade un prior competitivo provisional de Update 69. Counters, recomendaciones y coach por voz ya recalculan sobre esa capa sin confundirla con win rates post-parche todavía inmaduros.</p>
+      <p>Las recomendaciones cruzan la muestra top-200 post-U69, el balance oficial y el control de estabilidad a 30 días. El mapa, el orden de picks y cada matchup siguen pesando más que el tier global.</p>
     </div>
     <DraftAssistant maps={maps} brawlers={draftBrawlers} />
-    <DraftUiEnhancer />
     <DesktopPickVoiceGuard />
     <VoiceDraftControl roster={brawlers} targetMode="ban" />
     <VoiceDraftControl roster={brawlers} targetMode="pick" />

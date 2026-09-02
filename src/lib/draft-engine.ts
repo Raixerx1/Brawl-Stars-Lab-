@@ -1,5 +1,6 @@
 import { personalAdjustment } from "./performance";
 import { evaluateFirstPick } from "./first-pick-model";
+import { update69DraftAdjustment } from "./update69-live";
 import type {
   BanRecommendation,
   Brawler,
@@ -321,7 +322,7 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
   const exposedTo: string[] = [];
 
   let mapFit = 45;
-  const meta = tierMetric[brawler.tier] ?? 48;
+  let meta = tierMetric[brawler.tier] ?? 48;
   let counter = 50;
   let synergy = 50;
   let safety = 50;
@@ -342,6 +343,12 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
   score += modeScore * 1.55;
   mapFit += modeScore * 4;
   if (modeScore >= 8) reasons.push(`Afinidad alta con ${input.map.mode}`);
+
+  const postPatch = update69DraftAdjustment(brawler, input.map, input.position);
+  score += postPatch.score;
+  meta += postPatch.meta;
+  reasons.push(...postPatch.reasons);
+  warnings.push(...postPatch.warnings);
 
   const sIndex = input.map.tierS.indexOf(brawler.name);
   const aIndex = input.map.tierA.indexOf(brawler.name);

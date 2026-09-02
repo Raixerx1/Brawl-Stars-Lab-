@@ -1,4 +1,5 @@
 import type { Brawler } from "./types";
+import { update69MatchupAdjustment } from "./update69-live";
 
 export type CounterConfidence = "Alta" | "Media" | "Baja";
 
@@ -8,6 +9,7 @@ export type SpecificMatchup = {
   score: number;
   confidence: CounterConfidence;
   explicit: boolean;
+  patchAdjustment: number;
   reasons: string[];
   reason: string;
 };
@@ -290,6 +292,7 @@ export function evaluateSpecificMatchup(candidate: Brawler, target: Brawler): Sp
       score: 0,
       confidence: "Baja",
       explicit: false,
+      patchAdjustment: 0,
       reasons: ["Un brawler no puede counterearse a sí mismo"],
       reason: "Un brawler no puede counterearse a sí mismo",
     };
@@ -298,10 +301,12 @@ export function evaluateSpecificMatchup(candidate: Brawler, target: Brawler): Sp
   const forward = rawEdge(candidate, target);
   const reverseMechanics = mechanicScore(target, candidate);
   const reverseReply = Math.max(-14, Math.min(20, reverseMechanics.score));
-  const pairMargin = forward.value - reverseReply * .42;
+  const patch = update69MatchupAdjustment(candidate, target);
+  const pairMargin = forward.value + patch.score - reverseReply * .42;
 
   const reasons = [...forward.explicit.reasons];
   forward.mechanics.reasons.forEach((reason) => pushReason(reasons, reason));
+  patch.reasons.forEach((reason) => pushReason(reasons, reason));
 
   if (reverseReply >= 11 && !forward.explicit.positive) {
     pushReason(reasons, `${target.name} conserva herramientas de respuesta; no es un counter gratuito`);
@@ -311,7 +316,7 @@ export function evaluateSpecificMatchup(candidate: Brawler, target: Brawler): Sp
   const absoluteEdge = Math.abs(score - 50);
   const confidence: CounterConfidence =
     forward.explicit.reviewed || (forward.explicit.positive && !forward.explicit.negative && absoluteEdge >= 18) ? "Alta" :
-    forward.explicit.positive || forward.explicit.negative || forward.mechanics.reasons.length >= 2 || absoluteEdge >= 16 ? "Media" :
+    forward.explicit.positive || forward.explicit.negative || patch.score !== 0 || forward.mechanics.reasons.length >= 2 || absoluteEdge >= 16 ? "Media" :
     "Baja";
 
   if (!reasons.length) {
@@ -324,6 +329,7 @@ export function evaluateSpecificMatchup(candidate: Brawler, target: Brawler): Sp
     score,
     confidence,
     explicit: forward.explicit.positive,
+    patchAdjustment: patch.score,
     reasons: reasons.slice(0, 4),
     reason: reasons.slice(0, 2).join(" · "),
   };

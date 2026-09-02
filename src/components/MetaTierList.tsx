@@ -15,7 +15,7 @@ type TierListData = {
 };
 
 const tierOrder = ["S+", "S", "A+", "A", "B+", "B", "C", "D", "F", "Sin datos"];
-const PATCH_DAY_LABEL = "Prior U69 · 01/09";
+const CURRENT_MODEL_LABEL = "Motor U69 · 02/09";
 
 export default function MetaTierList({
   data,
@@ -34,14 +34,18 @@ export default function MetaTierList({
   }, [brawlers]);
 
   const snapshots = useMemo<Record<string, TierSnapshot>>(() => ({
-    [PATCH_DAY_LABEL]: patchDaySnapshot,
+    [CURRENT_MODEL_LABEL]: patchDaySnapshot,
     ...data.snapshots,
   }), [data.snapshots, patchDaySnapshot]);
 
   const snapshotNames = Object.keys(snapshots);
-  const [snapshot, setSnapshot] = useState(PATCH_DAY_LABEL);
+  const [snapshot, setSnapshot] = useState(CURRENT_MODEL_LABEL);
   const selected = snapshots[snapshot] || patchDaySnapshot;
-  const isPatchDay = snapshot === PATCH_DAY_LABEL;
+  const isCurrentModel = snapshot === CURRENT_MODEL_LABEL;
+  const snapshotDate = snapshot.match(/(\d{2}\/\d{2})/)?.[1] || "02/09";
+  const isBrawlBetterSnapshot = snapshot.startsWith("BrawlBetter");
+  const snapshotSource = isBrawlBetterSnapshot ? "BrawlBetter Ranked · archivo histórico" : data.source;
+  const snapshotSourceUrl = isBrawlBetterSnapshot ? "https://www.brawlbetter.com/meta" : data.sourceUrl;
   const lookup = useMemo(
     () => new Map(brawlers.map((brawler) => [brawler.name, brawler])),
     [brawlers],
@@ -51,10 +55,12 @@ export default function MetaTierList({
     <div className="section-title">
       <div>
         <span className="eyebrow">Tier list competitiva</span>
-        <h2>Update 69: prior de día 1 + snapshots observados</h2>
-        <p>{isPatchDay
-          ? "Modelo provisional tras 69.230. Parte del snapshot observado del 30/08 y aplica de forma conservadora la dirección del balance final; todavía no es una tier basada en win rate post-parche."
-          : "Snapshot estadístico anterior al parche. Sirve como baseline de contraste mientras entra muestra suficiente de Update 69."}</p>
+        <h2>Update 69: modelo calibrado + datos observados</h2>
+        <p>{isCurrentModel
+          ? "Ranking operativo del Draft Engine. Combina la muestra top-200 del 02/09, el balance oficial y la estabilidad a 30 días; corrige la distorsión de picks muy populares o con poco volumen."
+          : snapshot.includes("02/09")
+            ? "Fotografía postparche sin suavizar. Úsala para ver la señal temprana; el motor no copia automáticamente sus extremos."
+            : "Snapshot histórico anterior al parche, conservado para medir el cambio real de Update 69."}</p>
       </div>
       <div className="meta-tier-tabs" role="tablist" aria-label="Periodo de la tier list">
         {snapshotNames.map((name) => <button
@@ -69,11 +75,13 @@ export default function MetaTierList({
     </div>
 
     <div className="meta-tier-source">
-      <span><b>Actualización</b>{isPatchDay ? "01/09/2026 · Update 69" : data.updated.split("-").reverse().join("/")}</span>
-      <span><b>{isPatchDay ? "Base del modelo" : "Fuente estadística"}</b>{isPatchDay ? "Meta 24 h 30/08 + balance final U69" : data.source}{!isPatchDay && <a href={data.sourceUrl} target="_blank" rel="noreferrer">Abrir fuente ↗</a>}</span>
-      <span><b>Criterio</b>{isPatchDay
-        ? "Prior conservador; mapa, modo, geometría, orden y matchup prevalecen. Recalibrar con datos 24–72 h post-parche."
-        : "Snapshot observado pre-Update 69. Se conserva como control histórico para medir cuánto del cambio posterior procede del parche y cuánto del ruido de muestra."}</span>
+      <span><b>Actualización</b>{isCurrentModel ? "02/09/2026 · Update 69" : `${snapshotDate}/2026`}</span>
+      <span><b>{isCurrentModel ? "Base del modelo" : "Fuente estadística"}</b>{isCurrentModel ? "Meta 24 h 02/09 + General 30 d + balance oficial" : snapshotSource}{!isCurrentModel && <a href={snapshotSourceUrl} target="_blank" rel="noreferrer">Abrir fuente ↗</a>}</span>
+      <span><b>Criterio</b>{isCurrentModel
+        ? "Mapa, modo, geometría, orden y matchup prevalecen. Asesinos populares no se convierten en first picks por su tier global."
+        : snapshot.includes("02/09")
+          ? "Dato temprano sin calibrar: el bajo volumen puede enviar brawlers válidos a extremos artificiales."
+          : "Control histórico para separar el efecto del parche del ruido diario."}</span>
     </div>
 
     <div className="meta-tier-rows">

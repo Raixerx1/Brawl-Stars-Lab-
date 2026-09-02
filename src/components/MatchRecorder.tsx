@@ -46,7 +46,6 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<BlobPart[]>([]);
-  const startedAtRef = useRef<number | null>(null);
   const previewUrlRef = useRef<string | null>(null);
   const previewVideoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -93,11 +92,15 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
 
   useEffect(() => {
     if (status !== "recording") return;
+    // El reloj se inicia al entrar realmente en estado de grabación. Mantener
+    // Date.now() dentro del efecto preserva la pureza del render en React 19.
+    const startedAt = Date.now();
     const interval = window.setInterval(() => {
-      if (!startedAtRef.current) return;
-      setElapsed(Math.max(0, Math.floor((Date.now() - startedAtRef.current) / 1000)));
+      setElapsed(Math.max(0, Math.floor((Date.now() - startedAt) / 1000)));
     }, 250);
-    return () => window.clearInterval(interval);
+    return () => {
+      window.clearInterval(interval);
+    };
   }, [status]);
 
   const stopRecorder = () => {
@@ -153,7 +156,6 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
         streamRef.current = null;
       });
 
-      startedAtRef.current = Date.now();
       setSource("screen");
       setStatus("recording");
       recorder.start(1000);
@@ -250,7 +252,6 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
 
   const reset = () => {
     stopRecorder();
-    startedAtRef.current = null;
     setPreview(null);
     setElapsed(0);
     setStatus("idle");
@@ -259,7 +260,7 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
 
   return <section className="panel match-recorder-v18 match-recorder-v22">
     <div className="section-title">
-      <div><span className="eyebrow">Grabación + análisis local v0.25</span><h2>Grabar, importar y analizar partidas completas</h2></div>
+      <div><span className="eyebrow">Grabación + análisis local v0.31</span><h2>Grabar, importar y analizar partidas completas</h2></div>
       <span className={`recording-state-v18 state-${status}`}>{status === "recording" ? `● REC ${formatLiveTime(elapsed)}` : status === "ready" ? "Vídeo listo" : "Local"}</span>
     </div>
 

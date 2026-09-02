@@ -1,0 +1,165 @@
+/* v0.32.1 — Barreras globales contra overflow y controles demasiado pequeños en iOS. */
+
+@media (max-width: 700px), (pointer: coarse) and (hover: none) and (max-device-width: 1024px) {
+  html,
+  body,
+  .app-shell,
+  .app-shell > main {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .page,
+  .panel,
+  .card,
+  .section-title,
+  .detail-hero,
+  .counter-focus-v81,
+  .live-workspace-v8,
+  .live-review-grid-v8 {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea {
+    max-width: 100%;
+    font-size: 16px !important;
+  }
+
+  button,
+  a,
+  select,
+  input[type="checkbox"],
+  input[type="radio"] {
+    touch-action: manipulation;
+  }
+
+  .menu-button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 12px;
+  }
+
+  .topbar {
+    gap: 8px;
+  }
+
+  .topbar > div {
+    min-width: 0;
+  }
+
+  .topbar > div b {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .status-pill {
+    min-height: 40px;
+  }
+
+  .primary-button,
+  .secondary-button,
+  .compact-button,
+  .favorite,
+  .pwa-install-close {
+    min-height: 44px;
+  }
+
+  .favorite,
+  .pwa-install-close {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+  }
+
+  .filters,
+  .form-grid,
+  .live-setup-grid,
+  .tracker-form-v7,
+  .draft-result-form-v7,
+  .compare-selectors {
+    width: 100%;
+    grid-template-columns: 1fr !important;
+  }
+
+  .filters > *,
+  .form-grid > *,
+  .live-setup-grid > *,
+  .tracker-form-v7 > *,
+  .draft-result-form-v7 > *,
+  .compare-selectors > * {
+    min-width: 0;
+  }
+
+  .filters input,
+  .filters select,
+  .form-grid input,
+  .form-grid select,
+  .live-setup-grid input,
+  .live-setup-grid select,
+  .tracker-form-v7 input,
+  .tracker-form-v7 select {
+    min-height: 48px;
+  }
+
+  .counter-search-row,
+  .counter-search-row button {
+    width: 100%;
+  }
+
+  .counter-search-row input,
+  .counter-search-row select,
+  .counter-search-row button {
+    min-height: 48px;
+  }
+
+  .counter-roster-grid > button,
+  .matchup-card,
+  .meta-tier-tabs button,
+  .mobile-dock a {
+    touch-action: manipulation;
+  }
+
+  .meta-tier-tabs button {
+    min-height: 44px;
+    padding-inline: 13px;
+  }
+
+  .matchup-card {
+    min-width: 0;
+  }
+
+  .matchup-card > div {
+    min-width: 0;
+  }
+
+  .live-main-actions button,
+  .live-event-buttons button,
+  .auto-feedback-actions button,
+  .recording-actions-v18 > button,
+  .recording-import-v18,
+  .recording-library-list-v18 article button,
+  .coach-debrief-actions-v19 button {
+    min-height: 44px;
+  }
+
+  .recording-library-list-v18 article,
+  .auto-comment-history > article,
+  .match-list-v7 article {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .recording-library-list-v18 article > div,
+  .auto-comment-history > article > div,
+  .match-list-v7 article > div {
+    min-width: 0;
+  }
+}

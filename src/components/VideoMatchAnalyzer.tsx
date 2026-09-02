@@ -222,7 +222,8 @@ export default function VideoMatchAnalyzer({
         : Math.max(1, durationHint || 1);
       setAnalysisDuration(duration);
 
-      // v0.27 mantiene el doble barrido y endurece la capa HUD: tracking del
+      // v0.31 mantiene el doble barrido y añade lectura de primeras bajas,
+      // trades, reagrupación y pérdidas de ventaja sobre el estado estabilizado.
       // jugador por centro de cámara, calibración por contraste, mediana temporal
       // e histéresis para reducir falsos positivos de recursos.
       const coarseStep = Math.max(.36, duration / 360);
@@ -390,15 +391,15 @@ export default function VideoMatchAnalyzer({
   const chronological = [...baseEvents].sort((a, b) => a.second - b.second);
   const corrections = Object.keys(overrides).length;
 
-  return <section className="video-analyzer-v22 video-analyzer-v23 video-analyzer-v24 video-analyzer-v25 video-analyzer-v26 video-analyzer-v27">
+  return <section className="video-analyzer-v22 video-analyzer-v23 video-analyzer-v24 video-analyzer-v25 video-analyzer-v26 video-analyzer-v27 video-analyzer-v30 video-analyzer-v31">
     <video ref={videoRef} src={src} muted playsInline preload="auto" className="video-analyzer-source-v22" aria-hidden="true" />
     <canvas ref={canvasRef} className="video-analyzer-canvas-v22" aria-hidden="true" />
 
     <div className="video-analyzer-head-v22">
       <div>
-        <span className="eyebrow">Analizador de partidas v0.27</span>
-        <h3>Tracking estabilizado + recursos + riesgo de decisión</h3>
-        <p>El motor v0.27 deja de promediar todos los marcadores aliados: prioriza al jugador seguido por la cámara, exige contraste temporal real para recursos y aplica mediana + histéresis para reducir picos falsos. También combina HP, munición, super/hipercarga, objetivo e inferioridad para marcar muertes de alto riesgo.</p>
+        <span className="eyebrow">Analizador de partidas v0.31</span>
+        <h3>Primeras bajas + trades + control de momentum</h3>
+        <p>Reconstruye cada pelea desde 3v3, comprueba si conservas la primera ventaja, mide la respuesta de trade y detecta reagrupaciones o persecuciones que devuelven el momentum.</p>
       </div>
       <div className="video-analyzer-controls-v22">
         <label>Sensibilidad<select value={sensitivity} disabled={status === "analyzing"} onChange={(event) => setSensitivity(event.target.value as AutoReviewSensitivity)}><option>Baja</option><option>Media</option><option>Alta</option></select></label>
@@ -435,12 +436,40 @@ export default function VideoMatchAnalyzer({
       <section className="video-state-v26">
         <div className="video-state-head-v26">
           <div>
-            <span className="eyebrow">Modelo de estado v0.27</span>
+            <span className="eyebrow">Modelo de estado v0.31</span>
             <h4>{brawlerName || "Brawler seleccionado"} · identidad anclada al contexto</h4>
             <small>Tracking por centro de cámara + suavizado temporal. Los recursos solo se consideran legibles cuando existe señal y contraste suficientes dentro del propio vídeo.</small>
           </div>
           <span>{stateModel.hudQuality} · {stateModel.hudQualityScore}/100</span>
         </div>
+
+        <section className="video-momentum-v31">
+          <div className="video-momentum-head-v31">
+            <div>
+              <span className="eyebrow">Control de momentum v0.31</span>
+              <h4>Qué ocurre después de la primera baja</h4>
+              <small>Solo cuenta peleas que parten de 3v3 y bajas con confianza suficiente. Los momentos son clicables y se recalculan con tus correcciones.</small>
+            </div>
+            <span>{stateModel.lateGameSwings} swing{stateModel.lateGameSwings === 1 ? "" : "s"} final{stateModel.lateGameSwings === 1 ? "" : "es"}</span>
+          </div>
+          <div className="video-momentum-metrics-v31">
+            <article><span>Primera baja</span><b>{stateModel.fightOpenersFor}–{stateModel.fightOpenersAgainst}</b><small>a favor · en contra</small></article>
+            <article><span>Ventaja conservada</span><b>{stateModel.fightOpenersFor ? `${stateModel.openerRetentionRate}%` : "—"}</b><small>{stateModel.retainedOpenersFor}/{stateModel.fightOpenersFor} primeras bajas</small></article>
+            <article><span>Trade defensivo</span><b>{stateModel.fightOpenersAgainst ? `${stateModel.tradeResponseRate}%` : "—"}</b><small>{stateModel.tradeResponses}/{stateModel.fightOpenersAgainst} respuestas ≤5,5 s</small></article>
+            <article><span>Reagrupación limpia</span><b>{stateModel.disadvantageRecoveries ? `${stateModel.cleanRegroupRate}%` : "—"}</b><small>{stateModel.cleanRegroups}/{stateModel.disadvantageRecoveries} vueltas a igualdad</small></article>
+            <article><span>Recuperación activa</span><b>{stateModel.activeRecoveries}</b><small>{stateModel.disadvantageRecoveries}/{stateModel.disadvantageEpisodes} inferioridades recuperadas</small></article>
+            <article><span>Tiempo de recuperación</span><b>{stateModel.medianRecoverySeconds === undefined ? "—" : `${stateModel.medianRecoverySeconds}s`}</b><small>mediana hasta igualdad</small></article>
+            <article><span>Ventajas devueltas</span><b>{stateModel.advantageReversals}</b><small>muerte antes de convertir</small></article>
+            <article><span>Sobrepersecuciones</span><b>{stateModel.overchaseDeaths}</b><small>muerte post-wipe sin objetivo</small></article>
+          </div>
+          {stateModel.momentumMoments.length > 0 ? <div className="video-momentum-list-v31">
+            {stateModel.momentumMoments.map((moment) => <button type="button" key={`${moment.kind}-${moment.second}-${moment.label}`} className={`kind-${moment.kind} ${moment.lateGame ? "is-late" : ""}`} onClick={() => onSeek?.(moment.second)}>
+              <time>{formatLiveTime(Math.round(moment.second))}</time>
+              <div><b>{moment.label}</b><small>{moment.detail}</small></div>
+              <strong>Revisar</strong>
+            </button>)}
+          </div> : <p className="video-momentum-empty-v31">Todavía no hay una pelea 3v3 con señal suficiente para reconstruir su primera baja y respuesta.</p>}
+        </section>
 
         <div className="video-state-metrics-v26">
           <article><span>Poca vida</span><b>{stateModel.lowHpShare}%</b><small>HP proxy ≤35%</small></article>
@@ -449,6 +478,9 @@ export default function VideoMatchAnalyzer({
           <article><span>Hipercarga lista</span><b>{stateModel.hyperReadyShare}%</b><small>{stateModel.hyperHoldSeconds}s sostenida</small></article>
           {(mode === "Balón Brawl" || mode === "Atrapagemas") && <article><span>{mode === "Balón Brawl" ? "Balón probable" : "Portador probable"}</span><b>{stateModel.possessionShare}%</b><small>señal estabilizada cercana</small></article>}
           <article><span>Muertes críticas</span><b>{stateModel.criticalDeaths}</b><small>≥3 factores de riesgo</small></article>
+          <article><span>Wipes rápidos</span><b>{stateModel.fastWipeConversions}</b><small>{stateModel.meanWipeConversionSeconds === undefined ? "sin conversión medible" : `media ${stateModel.meanWipeConversionSeconds} s`}</small></article>
+          <article><span>Stagger</span><b>{stateModel.staggerRate}%</b><small>{stateModel.staggerDeaths}/{stateModel.staggerOpportunities} recuperaciones</small></article>
+          <article><span>Resets válidos</span><b>{stateModel.acceptedSceneResets}</b><small>{stateModel.ignoredSceneResets} transición(es) ignorada(s)</small></article>
         </div>
 
         <div className="video-teamstate-v26">
@@ -557,6 +589,6 @@ export default function VideoMatchAnalyzer({
       </div>
     </>}
 
-    <p className="video-analysis-disclaimer-v22">Análisis heurístico y local. v0.27 añade tracking por centro de cámara, calibración robusta por contraste, suavizado temporal e histéresis sobre el modelo de estado. HP, munición, super, hipercarga, posesión y posición siguen siendo proxies visuales: sirven para priorizar el replay y detectar decisiones candidatas, no sustituyen un contador oficial ni deben interpretarse como lectura perfecta del HUD.</p>
+    <p className="video-analysis-disclaimer-v22">Análisis heurístico y local. v0.31 relaciona primeras bajas, trades y cambios numéricos por proximidad temporal; HP, munición, super, hipercarga, posesión, posición y objetivo siguen siendo proxies visuales. Sirve para priorizar el replay, no sustituye una lectura oficial del HUD.</p>
   </section>;
 }

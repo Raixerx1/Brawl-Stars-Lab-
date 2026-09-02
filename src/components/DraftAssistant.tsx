@@ -29,6 +29,21 @@ type OrderedPick = string | null;
 
 const QUEUE_MODE_KEY = "brawl-lab:queue-mode-v1";
 
+const MODE_LABELS: Record<string, string> = {
+  "Atrapagemas": "Gem Grab",
+  "Balón Brawl": "Brawl Ball",
+  "Noqueo": "Knockout",
+  "Caza Estelar": "Bounty",
+  "Zona Restringida": "Hot Zone",
+  "Atraco": "Heist",
+  "Supervivencia": "Showdown",
+  "Duelos": "Duels",
+  "Balón Basket": "Basket Brawl",
+  "Aniquilación": "Wipeout",
+  "Pintura": "Paint Brawl",
+  "Caza de trofeos": "Trophy Escape",
+};
+
 const normalize = (value: string) => value.trim().toLowerCase();
 
 const alternativeTierBonus: Record<string, number> = {
@@ -66,6 +81,12 @@ function recommendationPosition(sequence: DraftTeam[], picks: OrderedPick[]): Dr
   if (ownIndex === 0) return "First pick";
   if (ownIndex === 5) return "Last pick";
   return "Pick intermedio";
+}
+
+function geometryBand(value: number) {
+  if (value >= 72) return "Alta";
+  if (value >= 45) return "Media";
+  return "Baja";
 }
 
 function selectDistinct(
@@ -393,6 +414,13 @@ export default function DraftAssistant({
     setMatchNote("");
   };
 
+  const toggleFirstPickOwner = () => {
+    setFirstPickOwner((current) => current === "Aliado" ? "Rival" : "Aliado");
+    setOrderedPicks(Array(6).fill(null));
+    setScenarioEnemy("");
+    setQuery("");
+  };
+
   const resetDraft = () => {
     setOrderedPicks(Array(6).fill(null));
     setBans([]);
@@ -545,7 +573,7 @@ export default function DraftAssistant({
   return <div className="ordered-draft-assistant">
     <section className="panel ordered-draft-panel">
       <div className="section-title">
-        <div><span className="eyebrow">Draft Coach v0.17</span><h2>Introduce los picks en orden</h2></div>
+        <div><span className="eyebrow">Draft Coach · motor U69 v0.32.1</span><h2>Introduce los picks en orden</h2></div>
         <div className="draft-action-row">
           <button type="button" className="secondary-button compact-button" onClick={shareDraft}>Compartir</button>
           <button type="button" className="secondary-button compact-button" onClick={resetDraft}>Reiniciar</button>
@@ -554,11 +582,22 @@ export default function DraftAssistant({
       {message && <div className="draft-toast">{message}</div>}
 
       <div className="ordered-draft-context ordered-draft-context-v5">
-        <label>Modo<select value={mode} onChange={(event) => changeMode(event.target.value)}>{modes.map((item) => <option key={item}>{item}</option>)}</select></label>
-        <label>Mapa<select value={mapSlug} onChange={(event) => { setMapSlug(event.target.value); setOrderedPicks(Array(6).fill(null)); setBans([]); setScenarioEnemy(""); }}>{availableMaps.map((item) => <option value={item.slug} key={item.slug}>{item.name}{item.rotationStatus === "Histórico" ? " · histórico" : ""}</option>)}</select></label>
-        <label>First pick<select value={firstPickOwner} onChange={(event) => { setFirstPickOwner(event.target.value as DraftFirstPickOwner); setOrderedPicks(Array(6).fill(null)); setScenarioEnemy(""); }}><option value="Aliado">Mi equipo</option><option value="Rival">Equipo rival</option></select></label>
-        <label>Política de pool<select value={poolPolicy} onChange={(event) => setPoolPolicy(event.target.value as PoolPolicy)}><option value="Off">No usar pool</option><option value="Preferir">Priorizar mi pool</option><option value="Solo pool">Solo brawlers disponibles</option></select></label>
-        <label>Cola Ranked<select value={queueMode} onChange={(event) => setQueueMode(event.target.value as QueueMode)}><option value="SoloQ">SoloQ</option><option value="Dúo">Dúo</option><option value="Trío">Trío premade</option></select></label>
+        <label className="draft-mode-english-control-v215 draft-context-mode-v321"><span>MODE</span><select className="draft-mode-display-v215" value={mode} onChange={(event) => changeMode(event.target.value)}>{modes.map((item) => <option value={item} key={item}>{MODE_LABELS[item] || item}</option>)}</select></label>
+        <label className="draft-context-map-v321"><span>Mapa</span><select value={mapSlug} onChange={(event) => { setMapSlug(event.target.value); setOrderedPicks(Array(6).fill(null)); setBans([]); setScenarioEnemy(""); }}>{availableMaps.map((item) => <option value={item.slug} key={item.slug}>{item.name}{item.rotationStatus === "Histórico" ? " · histórico" : ""}</option>)}</select></label>
+        <div className="draft-first-pick-coin-control-v214 draft-context-first-pick-v321">
+          <span className="draft-coin-label-v214">FIRST PICK</span>
+          <button
+            type="button"
+            className="draft-first-pick-switch-v321"
+            onClick={toggleFirstPickOwner}
+            aria-label={firstPickOwner === "Aliado" ? "Mi equipo tiene first pick. Cambiar a equipo rival" : "El equipo rival tiene first pick. Cambiar a mi equipo"}
+          >
+            <span className={`draft-team-coin-v214 ${firstPickOwner === "Aliado" ? "ally" : "enemy"}`} aria-hidden="true"><span className="draft-team-coin-face-v214">{firstPickOwner === "Aliado" ? "MI" : "RIV"}</span></span>
+            <span className="draft-coin-copy-v214"><b>{firstPickOwner === "Aliado" ? "Mi equipo" : "Equipo rival"}</b><small>{firstPickOwner === "Aliado" ? "Azul · nosotros primero" : "Rojo · rival primero"}</small></span>
+          </button>
+        </div>
+        <label className="draft-context-pool-v321"><span>Política de pool</span><select value={poolPolicy} onChange={(event) => setPoolPolicy(event.target.value as PoolPolicy)}><option value="Off">No usar pool</option><option value="Preferir">Priorizar mi pool</option><option value="Solo pool">Solo brawlers disponibles</option></select></label>
+        <label className="draft-context-queue-v321"><span>Cola Ranked</span><select value={queueMode} onChange={(event) => setQueueMode(event.target.value as QueueMode)}><option value="SoloQ">SoloQ</option><option value="Dúo">Dúo</option><option value="Trío">Trío premade</option></select></label>
         <label className="auto-position-toggle"><input type="checkbox" checked={quickMode} onChange={(event) => setQuickMode(event.target.checked)} /><span><b>Modo ultrarrápido</b><small>Pick, línea y build</small></span></label>
         <label className="auto-position-toggle learning-toggle-v7"><input type="checkbox" checked={learnFromHistory} onChange={(event) => setLearnFromHistory(event.target.checked)} /><span><b>Aprender de mi historial</b><small>{personalPerformance?.overall.games || 0} partidas registradas</small></span></label>
       </div>
@@ -566,15 +605,15 @@ export default function DraftAssistant({
       <div className="first-pick-audit-v11 first-pick-audit-v12">
         <div className="first-pick-audit-heading">
           <div>
-            <span className="eyebrow">First picks estructurales</span>
-            <small>{map.firstPickReviewedAt || "Revisión editorial"} · confianza {map.firstPickConfidence || "Media"} · motor v0.15</small>
+            <span className="eyebrow">First picks por mapa + meta actual</span>
+            <small>{map.firstPickReviewedAt || "Revisión editorial"} · confianza {map.firstPickConfidence || "Media"} · recalibrado U69</small>
           </div>
           {map.geometry && <div className="map-geometry-chips-v12">
-            <span><b>{map.geometry.openness}</b>Apertura</span>
-            <span><b>{map.geometry.bushDensity}</b>Arbustos</span>
-            <span><b>{map.geometry.wallDensity}</b>Muros</span>
-            <span><b>{map.geometry.destructibility}</b>Muros rompibles</span>
-            <span><b>{map.geometry.chokeDensity}</b>Pasillos</span>
+            <span><b>{map.layout}</b>Apertura</span>
+            <span><b>{geometryBand(map.geometry.bushDensity)}</b>Arbustos</span>
+            <span><b>{geometryBand(map.geometry.wallDensity)}</b>Muros</span>
+            <span><b>{geometryBand(map.geometry.destructibility)}</b>Wallbreak</span>
+            <span><b>{geometryBand(map.geometry.chokeDensity)}</b>Pasillos</span>
           </div>}
         </div>
         <div className="first-pick-audit-brawlers">
@@ -584,7 +623,7 @@ export default function DraftAssistant({
             const currentEvaluation = profile ? evaluateFirstPick(profile, map) : undefined;
             return <span key={name}>
               <BrawlerPortrait name={name} className="first-pick-audit-avatar" />
-              <span><b>{index + 1}. {name}</b><small>{currentEvaluation ? `${currentEvaluation.score}/100 · ${currentEvaluation.strengths[0] || candidate?.reasons[0] || "Pick ciego estable"}` : "Pick ciego auditado"}</small></span>
+              <span><b>{index + 1}. {name}</b><small>{currentEvaluation ? currentEvaluation.strengths[0] || candidate?.reasons[0] || "Pick ciego estable" : "Pick ciego auditado"}</small></span>
             </span>;
           })}
         </div>

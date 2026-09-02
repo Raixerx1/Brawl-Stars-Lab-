@@ -1,23 +1,23 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Brawler, MapProfile } from "@/lib/types";
 import { buildContextLearningProfile } from "@/lib/context-learning";
 import { readLiveReviews } from "@/lib/live-review";
 import { readMatchHistory } from "@/lib/performance";
 
 export default function LearningDashboard({ maps, brawlers }: { maps: MapProfile[]; brawlers: Brawler[] }) {
-  const [revision, setRevision] = useState(0);
+  const [, setRevision] = useState(0);
 
   useEffect(() => {
     const interval = window.setInterval(() => setRevision((value) => value + 1), 2500);
     return () => window.clearInterval(interval);
   }, []);
 
-  const profile = useMemo(() => buildContextLearningProfile(
+  const profile = buildContextLearningProfile(
     readMatchHistory(maps, brawlers),
     readLiveReviews(),
-  ), [maps, brawlers, revision]);
+  );
 
   return <section className="panel contextual-learning-v18">
     <div className="section-title">
