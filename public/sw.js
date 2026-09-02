@@ -7,6 +7,7 @@ const CORE = [
   "/maps",
   "/meta",
   "/manifest.webmanifest",
+  "/kanna-draft-header.jpg",
   "/favicon.ico",
   "/favicon-32.png",
   "/favicon-48.png",

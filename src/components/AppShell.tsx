@@ -31,11 +31,11 @@ export default function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   return <div className="app-shell">
     <aside id="primary-navigation" className={`sidebar ${open ? "open" : ""}`}>
-      <Link className="brand" href="/" aria-label="Ir al inicio de Knna Draft" onClick={() => setOpen(false)}>
+      <Link className="brand" href="/" aria-label="Ir al inicio de Kanna Draft" onClick={() => setOpen(false)}>
         <span className="brand-mark" aria-hidden="true">
           <Image className="brand-logo" src="/icon-192.png" alt="" width={44} height={44} priority />
         </span>
-        <span><strong>Knna Draft</strong><small>Competitive Intelligence</small></span>
+        <span><strong>Kanna Draft</strong><small>Competitive Intelligence</small></span>
       </Link>
       <nav aria-label="Navegación principal">{nav.map(([href, label, icon]) => {
         const active = isActivePath(path, href);
@@ -44,9 +44,11 @@ export default function AppShell({ children }: { children: ReactNode }) {
       <div className="sidebar-note"><b>Base v0.33.1</b><span>Meta U69 · calibrado 02/09</span><span>Analyzer v0.33 · captura + lectura en vivo</span></div>
     </aside>
     <main>
-      <header className="topbar">
+      <header className="topbar kanna-topbar">
         <button type="button" className="menu-button" onClick={() => setOpen(!open)} aria-controls="primary-navigation" aria-expanded={open} aria-label={open ? "Cerrar navegación" : "Abrir navegación"}>☰</button>
-        <div><b>Competitive Draft Center</b><span>Meta U69 del 02/09 · counters recalibrados · analyzer v0.33 en vivo</span></div>
+        <Link className="kanna-header-brand" href="/" aria-label="Ir al inicio de Kanna Draft">
+          <Image className="kanna-header-logo" src="/kanna-draft-header.jpg" alt="Kanna Draft" width={300} height={100} priority />
+        </Link>
         <Link className="status-pill" href="/meta">● META 02/09</Link>
       </header>
       {children}

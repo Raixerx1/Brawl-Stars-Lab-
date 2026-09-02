@@ -8,17 +8,18 @@ import "./visual-refresh-v230.css";
 import "./visual-home-v230.css";
 import "./visual-polish-v320.css";
 import "./visual-mobile-fit-v321.css";
+import "./kanna-brand.css";
 import AppShell from "@/components/AppShell";
 import PwaInstallPrompt from "@/components/PwaInstallPrompt";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
   title: {
-    default: "Knna Draft",
-    template: "%s · Knna Draft",
+    default: "Kanna Draft",
+    template: "%s · Kanna Draft",
   },
   description: "Guía competitiva y asistente de draft para Brawl Stars Ranked.",
-  applicationName: "Knna Draft",
+  applicationName: "Kanna Draft",
   manifest: "/manifest.webmanifest",
   formatDetection: {
     telephone: false,
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    title: "Knna Draft",
+    title: "Kanna Draft",
     statusBarStyle: "black",
   },
 };
