@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "Brawl Draft Lab",
-  "short_name": "Draft Lab",
+  "name": "Knna Draft",
+  "short_name": "Knna Draft",
   "description": "Asistente competitivo de draft, counters y mapas para Brawl Stars Ranked",
   "lang": "es",
   "dir": "ltr",
@@ -26,6 +26,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "shortcuts": [

@@ -1,6 +1,6 @@
 {
   "name": "brawl-stars-lab",
-  "version": "0.33.0",
+  "version": "0.33.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,7 +11,7 @@
     "audit:roster": "node scripts/audit-roster.mjs",
     "audit:first-picks": "node scripts/audit-first-picks.mjs",
     "audit:matchups": "node scripts/audit-matchups.mjs && node scripts/audit-matchups-v20.mjs",
-    "audit:all": "npm run audit:roster && npm run audit:matchups && npm run audit:first-picks && npm run audit:first-pick-model && npm run audit:recommendations && npm run audit:queue-pairs && npm run audit:resilience && npm run audit:draft-v2 && npm run audit:meta-u69 && npm run audit:auto-review && npm run audit:coach-debrief && npm run audit:voice && npm run audit:video-review && npm run audit:live-capture && npm run audit:mobile",
+    "audit:all": "npm run audit:roster && npm run audit:matchups && npm run audit:first-picks && npm run audit:first-pick-model && npm run audit:recommendations && npm run audit:queue-pairs && npm run audit:resilience && npm run audit:draft-v2 && npm run audit:meta-u69 && npm run audit:auto-review && npm run audit:coach-debrief && npm run audit:voice && npm run audit:video-review && npm run audit:live-capture && npm run audit:mobile && npm run audit:branding",
     "audit:first-pick-model": "node scripts/audit-first-pick-model.mjs",
     "audit:recommendations": "node scripts/audit-recommendation-balance.mjs",
     "audit:queue-pairs": "node scripts/audit-queue-pairs.mjs",
@@ -24,7 +24,8 @@
     "audit:voice": "node scripts/audit-voice-sequence-v24.mjs",
     "audit:video-review": "node scripts/audit-video-review-v24.mjs && node scripts/audit-video-review-v25.mjs && node scripts/audit-video-review-v26.mjs && node scripts/audit-video-review-v27.mjs && node scripts/audit-video-review-v28.mjs && node scripts/audit-video-review-v29.mjs && node scripts/audit-video-review-v30.mjs && node scripts/audit-video-review-v31.mjs",
     "audit:live-capture": "node scripts/audit-live-capture-v33.mjs",
-    "audit:mobile": "node scripts/audit-mobile-layout-v321.mjs"
+    "audit:mobile": "node scripts/audit-mobile-layout-v321.mjs",
+    "audit:branding": "node scripts/audit-branding-v331.mjs"
   },
   "dependencies": {
     "next": "16.2.12",

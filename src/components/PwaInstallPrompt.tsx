@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const DISMISSED_KEY = "brawl-lab:pwa-install-dismissed-v1";
@@ -64,16 +65,18 @@ export default function PwaInstallPrompt() {
   };
 
   if (dismissed) {
-    return <button type="button" className="pwa-install-pill" onClick={reopen} aria-label="Instalar Brawl Draft Lab en el iPhone">
+    return <button type="button" className="pwa-install-pill" onClick={reopen} aria-label="Instalar Knna Draft en el iPhone">
       <span>＋</span> Instalar app
     </button>;
   }
 
   return <>
-    <div className="pwa-install-banner" role="region" aria-label="Instalar Brawl Draft Lab">
-      <div className="pwa-install-icon">★</div>
+    <div className="pwa-install-banner" role="region" aria-label="Instalar Knna Draft">
+      <div className="pwa-install-icon" aria-hidden="true">
+        <Image src="/icon-192.png" alt="" width={42} height={42} />
+      </div>
       <div className="pwa-install-copy">
-        <b>Instala Brawl Draft Lab en tu iPhone</b>
+        <b>Instala Knna Draft en tu iPhone</b>
         <span>Ábrela desde la pantalla de inicio como una app, sin la barra de Safari.</span>
       </div>
       <button type="button" className="pwa-install-primary" onClick={() => setOpen(true)}>Cómo instalar</button>
@@ -96,7 +99,7 @@ export default function PwaInstallPrompt() {
           <li><strong>1</strong><span>En Safari, abre <b>Compartir</b> desde la barra del navegador.</span></li>
           <li><strong>2</strong><span>Pulsa <b>Añadir a pantalla de inicio</b>.</span></li>
           <li><strong>3</strong><span>Activa <b>Abrir como app web</b>.</span></li>
-          <li><strong>4</strong><span>Pulsa <b>Añadir</b>. Aparecerá el icono de Draft Lab en tu pantalla de inicio.</span></li>
+          <li><strong>4</strong><span>Pulsa <b>Añadir</b>. Aparecerá el icono de Knna Draft en tu pantalla de inicio.</span></li>
         </ol>
 
         <div className="pwa-install-result">

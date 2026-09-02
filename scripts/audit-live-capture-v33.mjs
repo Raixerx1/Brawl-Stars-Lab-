@@ -81,9 +81,9 @@ expect(page.includes('import "./video-review-v33.css"'), "Los estilos v0.33 no s
 expect(css.includes("@media(pointer:coarse)"), "Faltan targets táctiles para móvil");
 
 const pkg = JSON.parse(pkgSource);
-expect(pkg.version === "0.33.0", `Versión inesperada: ${pkg.version}`);
+expect(pkg.version === "0.33.1", `Versión inesperada: ${pkg.version}`);
 expect(pkg.scripts?.["audit:live-capture"] === "node scripts/audit-live-capture-v33.mjs", "La auditoría no está conectada");
-expect(serviceWorker.includes("brawl-draft-lab-v0330"), "La PWA no fuerza la caché v0.33");
+expect(serviceWorker.includes("knna-draft-v0331"), "La PWA no fuerza la caché v0.33.1");
 
 await rm(output, { recursive: true, force: true });
 console.log("Auditoría de captura y análisis en vivo v0.33");

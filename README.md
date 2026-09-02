@@ -1,4 +1,4 @@
-# Brawl Draft Lab v0.17
+# Knna Draft
 
 Aplicación web competitiva para Brawl Stars Ranked.
 

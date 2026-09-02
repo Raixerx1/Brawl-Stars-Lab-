@@ -452,6 +452,6 @@ export default function MatchRecorder({ maps, brawlers }: { maps: MapProfile[]; 
       </div>
     </div>
 
-    <p className="live-privacy-note">La grabación, el análisis en vivo, el barrido de fotogramas y la biblioteca son locales. Brawl Draft Lab no sube el vídeo a un servidor. La captura nunca se inicia sola: el navegador exige que elijas y autorices la pantalla en cada sesión.</p>
+    <p className="live-privacy-note">La grabación, el análisis en vivo, el barrido de fotogramas y la biblioteca son locales. Knna Draft no sube el vídeo a un servidor. La captura nunca se inicia sola: el navegador exige que elijas y autorices la pantalla en cada sesión.</p>
   </section>;
 }

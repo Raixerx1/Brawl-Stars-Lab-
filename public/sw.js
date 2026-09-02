@@ -1,4 +1,4 @@
-const CACHE = "brawl-draft-lab-v0330";
+const CACHE = "knna-draft-v0331";
 const CORE = [
   "/",
   "/draft",
@@ -7,8 +7,13 @@ const CORE = [
   "/maps",
   "/meta",
   "/manifest.webmanifest",
+  "/favicon.ico",
+  "/favicon-32.png",
+  "/favicon-48.png",
+  "/apple-touch-icon.png",
   "/icon-192.png",
   "/icon-512.png",
+  "/icon-maskable-512.png",
 ];
 
 self.addEventListener("install", (event) => {

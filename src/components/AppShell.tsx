@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
 
@@ -30,12 +31,17 @@ export default function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   return <div className="app-shell">
     <aside id="primary-navigation" className={`sidebar ${open ? "open" : ""}`}>
-      <div className="brand"><div className="brand-mark">★</div><div><strong>Brawl Draft Lab</strong><small>Competitive Intelligence</small></div></div>
+      <Link className="brand" href="/" aria-label="Ir al inicio de Knna Draft" onClick={() => setOpen(false)}>
+        <span className="brand-mark" aria-hidden="true">
+          <Image className="brand-logo" src="/icon-192.png" alt="" width={44} height={44} priority />
+        </span>
+        <span><strong>Knna Draft</strong><small>Competitive Intelligence</small></span>
+      </Link>
       <nav aria-label="Navegación principal">{nav.map(([href, label, icon]) => {
         const active = isActivePath(path, href);
         return <Link key={href} className={active ? "active" : ""} aria-current={active ? "page" : undefined} href={href} onClick={() => setOpen(false)}><span aria-hidden="true">{icon}</span>{label}</Link>;
       })}</nav>
-      <div className="sidebar-note"><b>Base v0.33.0</b><span>Meta U69 · calibrado 02/09</span><span>Analyzer v0.33 · captura + lectura en vivo</span></div>
+      <div className="sidebar-note"><b>Base v0.33.1</b><span>Meta U69 · calibrado 02/09</span><span>Analyzer v0.33 · captura + lectura en vivo</span></div>
     </aside>
     <main>
       <header className="topbar">

@@ -46,11 +46,11 @@ expect(globalCss.includes("touch-action: manipulation"), "Falta estabilizar la i
 expect(globalCss.includes("font-size: 16px !important"), "Los formularios globales pueden activar zoom de Safari");
 
 const pkg = JSON.parse(packageJson);
-expect(pkg.version === "0.33.0", `Versión inesperada: ${pkg.version}`);
+expect(pkg.version === "0.33.1", `Versión inesperada: ${pkg.version}`);
 expect(pkg.scripts?.["audit:mobile"] === "node scripts/audit-mobile-layout-v321.mjs", "La auditoría móvil no está conectada");
-expect(serviceWorker.includes('brawl-draft-lab-v0330'), "La caché PWA no fuerza la actualización móvil");
+expect(serviceWorker.includes('knna-draft-v0331'), "La caché PWA no fuerza la actualización móvil");
 
-console.log("Auditoría móvil v0.33.0 · base de layout v0.32.1");
+console.log("Auditoría móvil v0.33.1 · base de layout v0.32.1");
 console.log(`Comprobaciones: ${checks - errors.length}/${checks}`);
 console.log(`Errores: ${errors.length}`);
 
