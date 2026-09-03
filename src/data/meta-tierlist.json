@@ -1,9 +1,25 @@
 {
-  "updated": "2026-09-02",
-  "source": "NOFF Meta 24 h · top 200 global · datos post-Update 69 revisados 02/09/2026; control General 30 d y Brawl Time Ninja",
-  "sourceUrl": "https://www.noff.gg/brawl-stars/tier-list",
-  "method": "La vista observada conserva la fotografía Meta 24 h post-U69 de NOFF para los 106 brawlers. El motor competitivo la calibra con el balance oficial, la vista General 30 d y una muestra amplia secundaria para limitar picos de uso. Mapa, modo, geometría, orden y matchup recíproco prevalecen sobre el tier global.",
+  "updated": "2026-09-03",
+  "source": "Kanna Draft U69 · síntesis 03/09/2026 con BrawlMetrics Ranked Legendary/Masters, NOFF Meta 24 h y balance oficial",
+  "sourceUrl": "https://brawlmetrics.gg/tier-list/ranked/legendary",
+  "method": "El tier operativo prioriza Ranked alto: Legendary del 03/09 como ancla principal, Masters como confirmación, NOFF top 200 de 24 h como señal rápida y los cambios oficiales de Update 69 como contexto causal. Se rebajan extremos sostenidos solo por popularidad o muestras pequeñas. Pro no entra todavía por volumen insuficiente. Mapa, modo, geometría, orden y matchup recíproco prevalecen sobre el tier global.",
   "snapshots": {
+    "Motor U69 · 03/09": {
+      "S+": ["Amber", "Shade", "Wendy"],
+      "S": ["Emz", "Ash", "Rico", "Stu", "Brock"],
+      "A": ["Bibi", "Griff", "El Primo", "8-Bit", "Gus", "Meg", "Pearl", "Sprout", "Max", "Gray", "Surge", "Melodie", "Carl", "Bolt", "Kaze"],
+      "B": ["Edgar", "Mortis", "Bull", "Nita", "Piper", "Colt", "Mina", "Kenji", "Starr Nova", "Doug", "Pierce", "Angelo", "Gene", "Barley", "Meeple", "Bo", "Sirius", "Nori", "Rosa", "Leon", "Frank", "Spike", "Tara", "Otis", "Damian", "Trunk", "Buster", "Maisie", "Chester"],
+      "C": ["Najia", "Penny", "Larry & Lawrie", "Mandy", "Charlie", "R-T", "Cordelius", "Buzz", "Sandy", "Lou", "Bea", "Byron", "Mico", "Ruffs", "Moe", "Finx", "Colette", "Fang", "Alli", "Draco", "Lumi", "Jessie", "Shelly", "Willow", "Nani", "Darryl", "Juju", "Glowy", "Mr. P", "Poco", "Belle", "Crow"],
+      "D": ["Bonnie", "Janet", "Clancy", "Jacky", "Eve", "Ollie", "Lily", "Tick", "Grom", "Squeak", "Gale", "Hank", "Sam", "Gigi", "Kit", "Berry", "Lola", "Jae-Yong", "Chuck", "Pam", "Dynamike", "Ziggy"]
+    },
+    "BrawlMetrics Legendary · 03/09": {
+      "S+": ["Amber", "Wendy"],
+      "S": ["Emz", "Shade", "Ash", "Rico", "Stu", "Brock"],
+      "A": ["Bibi", "Griff", "Bolt", "El Primo", "8-Bit", "Gus", "Edgar", "Meg", "Pearl", "Sprout", "Max", "Gray", "Surge", "Melodie", "Carl"],
+      "B": ["Mortis", "Bull", "Nita", "Piper", "Colt", "Kaze", "Mina", "Kenji", "Starr Nova", "Doug", "Pierce", "Angelo", "Gene", "Barley", "Meeple", "Bo", "Sirius", "Nori", "Rosa", "Leon", "Frank", "Spike", "Tara", "Otis", "Damian", "Trunk", "Buster", "Maisie", "Chester"],
+      "C": ["Najia", "Penny", "Larry & Lawrie", "Mandy", "Charlie", "R-T", "Cordelius", "Buzz", "Sandy", "Lou", "Bea", "Byron", "Mico", "Ruffs", "Moe", "Finx", "Colette", "Fang", "Alli", "Draco", "Lumi", "Jessie", "Shelly", "Willow", "Nani", "Darryl", "Juju", "Glowy", "Mr. P", "Poco", "Belle", "Crow"],
+      "D": ["Bonnie", "Janet", "Clancy", "Jacky", "Eve", "Ollie", "Lily", "Tick", "Grom", "Squeak", "Gale", "Hank", "Sam", "Gigi", "Kit", "Berry", "Lola", "Jae-Yong", "Chuck", "Pam", "Dynamike", "Ziggy"]
+    },
     "NOFF Meta 24 h · 02/09": {
       "S": ["Shade", "Wendy", "El Primo", "Edgar", "Melodie"],
       "A": ["Bibi", "Nori", "Brock", "Amber", "Mortis", "Gus", "8-Bit", "Griff"],
