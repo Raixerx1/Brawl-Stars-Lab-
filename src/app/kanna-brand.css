@@ -1,65 +1,243 @@
-/* Kanna Draft — capa de marca final. Se importa al final para no alterar el layout competitivo. */
+/* Kanna Draft — wordmark responsive integrado en la superficie oscura de la app. */
 .kanna-topbar {
-  min-height: 76px;
-  height: 76px;
+  min-height: 78px;
+  height: 78px;
+  gap: clamp(10px, 1.3vw, 18px);
 }
 
 .kanna-header-brand {
   display: flex;
   flex: 1 1 auto;
   min-width: 0;
+  max-width: 430px;
   align-items: center;
   justify-content: flex-start;
+  gap: clamp(8px, 1vw, 13px);
+  align-self: stretch;
+  overflow: visible;
 }
 
-.kanna-header-logo {
-  display: block;
-  width: auto;
+.kanna-topbar > .status-pill {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.kanna-header-emblem {
+  position: relative;
+  display: grid;
+  flex: 0 0 auto;
+  width: 58px;
   height: 58px;
-  max-width: min(44vw, 300px);
-  object-fit: contain;
-  border-radius: 10px;
-  box-shadow: 0 8px 26px rgba(137, 47, 255, .18);
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(115, 242, 157, .24);
+  border-radius: 18px;
+  background: radial-gradient(circle at 35% 28%, rgba(109, 242, 140, .12), rgba(7, 12, 27, .86) 68%);
+  box-shadow:
+    0 10px 28px rgba(19, 225, 132, .14),
+    inset 0 1px 0 rgba(213, 255, 220, .1);
+}
+
+.kanna-header-emblem::after {
+  content: "";
+  position: absolute;
+  inset: auto 7px 5px auto;
+  width: 12px;
+  height: 7px;
+  border-radius: 100% 0 100% 0;
+  background: linear-gradient(135deg, #d8ff72, #3be795 72%);
+  box-shadow: 0 0 10px rgba(93, 247, 158, .62);
+  transform: rotate(-24deg);
+}
+
+.kanna-header-crow {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kanna-header-wordmark {
+  position: relative;
+  display: grid !important;
+  flex: 0 1 auto;
+  min-width: 0;
+  width: max-content;
+  padding: 2px 13px 3px 2px;
+  line-height: .78;
+  transform: skewX(-7deg);
+  filter: drop-shadow(0 6px 12px rgba(13, 229, 123, .12));
+}
+
+.kanna-header-wordmark strong,
+.kanna-header-wordmark em {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 0;
+  color: #75ee9c;
+  background:
+    linear-gradient(112deg, #efffc6 2%, #a8f47c 25%, #58e79b 50%, #16bd87 70%, #b9ff75 94%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-style: italic;
+  font-weight: 950;
+  letter-spacing: -.075em;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px rgba(70, 239, 143, .2);
+}
+
+.kanna-header-wordmark strong {
+  font-size: clamp(27px, 2.4vw, 39px);
+}
+
+.kanna-header-wordmark em {
+  justify-self: end;
+  margin-top: 5px;
+  padding-right: 2px;
+  font-size: clamp(17px, 1.55vw, 25px);
+  letter-spacing: -.035em;
+}
+
+.kanna-header-wordmark::before,
+.kanna-header-wordmark::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  border: 1px solid rgba(206, 255, 142, .7);
+  border-left: 0;
+  border-bottom: 0;
+  border-radius: 100% 0 100% 0;
+  background: linear-gradient(145deg, rgba(198, 255, 105, .92), rgba(31, 202, 128, .76));
+  box-shadow: 0 0 11px rgba(70, 239, 143, .35);
+  transform-origin: bottom left;
+}
+
+.kanna-header-wordmark::before {
+  top: 5px;
+  width: 11px;
+  height: 6px;
+  transform: rotate(-27deg);
+}
+
+.kanna-header-wordmark::after {
+  top: 14px;
+  right: 3px;
+  width: 8px;
+  height: 5px;
+  opacity: .72;
+  transform: rotate(12deg) scale(.82);
 }
 
 @media (max-width: 1050px) {
   .kanna-topbar {
-    gap: 10px;
-    padding-inline: 14px;
+    padding-inline: 16px;
   }
 
-  .kanna-header-logo {
-    height: 50px;
-    max-width: min(52vw, 240px);
+  .kanna-header-brand {
+    max-width: none;
   }
 }
 
 @media (max-width: 620px) {
   .kanna-topbar {
-    min-height: 64px;
-    height: 64px;
-    padding-inline: 10px;
+    min-height: 68px;
+    height: 68px;
+    gap: 8px;
+    padding-inline: 9px;
   }
 
-  .kanna-header-logo {
-    height: 44px;
-    max-width: min(48vw, 190px);
-    border-radius: 8px;
+  .kanna-header-brand {
+    gap: 7px;
+  }
+
+  .kanna-header-emblem {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+  }
+
+  .kanna-header-wordmark {
+    padding-right: 11px;
+  }
+
+  .kanna-header-wordmark strong {
+    font-size: clamp(24px, 7.5vw, 31px);
+  }
+
+  .kanna-header-wordmark em {
+    margin-top: 4px;
+    font-size: clamp(15px, 4.7vw, 20px);
   }
 
   .kanna-topbar .status-pill {
-    padding: 7px 9px;
+    min-height: 44px;
+    padding: 7px 10px;
     font-size: 10px !important;
   }
 }
 
 @media (max-width: 430px) {
-  .kanna-header-logo {
-    height: 40px;
-    max-width: min(46vw, 165px);
+  .kanna-topbar .menu-button {
+    width: 46px;
+    height: 46px;
+  }
+
+  .kanna-header-emblem {
+    width: clamp(42px, 12vw, 48px);
+    height: clamp(42px, 12vw, 48px);
+  }
+
+  .kanna-header-wordmark strong {
+    font-size: clamp(21px, 7vw, 28px);
+  }
+
+  .kanna-header-wordmark em {
+    font-size: clamp(14px, 4.5vw, 18px);
+  }
+
+  .kanna-topbar .status-pill {
+    padding-inline: 8px;
+    letter-spacing: -.015em;
+  }
+}
+
+@media (max-width: 355px) {
+  .kanna-topbar {
+    gap: 6px;
+    padding-inline: 7px;
+  }
+
+  .kanna-header-brand {
+    gap: 5px;
+  }
+
+  .kanna-header-wordmark {
+    padding-right: 7px;
+  }
+
+  .kanna-header-wordmark strong {
+    font-size: 20px;
+  }
+
+  .kanna-header-wordmark em {
+    font-size: 13px;
   }
 
   .kanna-topbar .status-pill {
     padding-inline: 7px;
+    font-size: 9px !important;
   }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .kanna-header-wordmark::before {
+    animation: kanna-leaf-glint 4.8s ease-in-out infinite;
+  }
+}
+
+@keyframes kanna-leaf-glint {
+  0%, 72%, 100% { filter: brightness(1); }
+  80% { filter: brightness(1.7) drop-shadow(0 0 5px rgba(185, 255, 117, .8)); }
 }

@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.33.2 — Cabecera vegetal responsive
+
+- Sustituido el wordmark JPG con fondo blanco por una composición nativa sin fondo claro.
+- Crow conserva el icono oficial de la app dentro de una superficie oscura integrada.
+- “Kanna Draft” usa degradados, brillo y detalles de hoja en tonos verdes.
+- La marca ocupa más ancho útil tanto en móvil como en escritorio.
+- Añadidos ajustes específicos para 320–430 px sin solapar el menú ni el estado del meta.
+- Animación ornamental desactivada automáticamente cuando el sistema solicita reducir movimiento.
+- Caché PWA renovada para servir la nueva cabecera al reabrir la app.
+
 ## v0.17 — Jerarquía única de picks
 
 - Pick principal grande justo debajo de los seis huecos del draft.

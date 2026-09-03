@@ -27,16 +27,21 @@ expect(layout.includes('url: "/favicon.ico"'), "El navegador no recibe el favico
 expect(layout.includes('default: "Kanna Draft"'), "El título de la web no es Kanna Draft");
 expect(layout.includes('title: "Kanna Draft"'), "El título de la app para iOS no es Kanna Draft");
 expect(layout.includes('import "./kanna-brand.css"'), "La capa visual de Kanna Draft no está importada");
-expect(shell.includes('src="/kanna-draft-header.jpg"'), "El encabezado no usa la imagen panorámica de Kanna Draft");
-expect(shell.includes('className="kanna-header-logo"'), "El encabezado no tiene la clase de marca panorámica");
+expect(!shell.includes('src="/kanna-draft-header.jpg"'), "El encabezado todavía usa el JPG con fondo blanco");
+expect(shell.includes('className="kanna-header-crow"'), "El encabezado no conserva el Crow de la marca");
+expect(shell.includes('className="kanna-header-wordmark"'), "El encabezado no tiene el wordmark responsive");
+expect(shell.includes("<strong>Kanna</strong>"), "El wordmark no muestra Kanna");
+expect(shell.includes("<em>Draft</em>"), "El wordmark no muestra Draft");
 expect(shell.includes('src="/icon-192.png"'), "La marca compacta no usa el icono de Crow");
 expect(shell.includes("<strong>Kanna Draft</strong>"), "La marca visible no se llama Kanna Draft");
 expect(styles.includes(".brand-logo"), "Faltan los estilos del logo compacto");
-expect(brandStyles.includes(".kanna-header-logo"), "Faltan los estilos del encabezado de Kanna Draft");
+expect(brandStyles.includes(".kanna-header-wordmark"), "Faltan los estilos del wordmark de Kanna Draft");
+expect(brandStyles.includes("background-clip: text"), "El wordmark no aplica el degradado verde");
+expect(brandStyles.includes("kanna-leaf-glint"), "El wordmark no incluye el brillo vegetal accesible");
 expect(installPrompt.includes('src="/icon-192.png"'), "El aviso de instalación no muestra el icono de Crow");
 expect(installPrompt.includes("Instala Kanna Draft"), "El aviso de instalación conserva el nombre anterior");
 expect(pwaStyles.includes(".pwa-install-icon img"), "Faltan los estilos del icono en el aviso de instalación");
-expect(serviceWorker.includes('knna-draft-v0331'), "La caché PWA no conserva la clave v0.33.1 esperada");
+expect(serviceWorker.includes('kanna-draft-v0332'), "La caché PWA no conserva la clave v0.33.2 esperada");
 for (const asset of [
   "/kanna-draft-header.jpg",
   "/favicon.ico",
@@ -50,4 +55,4 @@ for (const asset of [
   expect(serviceWorker.includes(`"${asset}"`), `La PWA no precarga ${asset}`);
 }
 
-console.log("Auditoría de marca e iconos Kanna Draft v0.33.1");
+console.log("Auditoría de marca e iconos Kanna Draft v0.33.2");
