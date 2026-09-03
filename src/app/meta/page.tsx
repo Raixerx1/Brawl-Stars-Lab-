@@ -36,12 +36,14 @@ export default function MetaPage() {
 
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Meta post-U69 · revisado 02/09/2026 · cliente 69.230</span>
+      <span className="eyebrow">Meta post-U69 · revisado 03/09/2026 · cliente 69.230</span>
       <h1>Meta Center · Update 69</h1>
-      <p>La primera muestra postparche ya está integrada. El motor cruza el top 200 de las últimas 24 horas con el balance oficial y la vista de 30 días, para reaccionar al meta sin copiar sus picos de popularidad.</p>
+      <p>La lectura ya incorpora los primeros días del parche. Para Ranked competitivo damos prioridad a la señal de Legendary y Masters del 03/09, contrastada con el top 200 diario, la muestra general y los cambios oficiales.</p>
     </div>
 
-    <section className="panel meta-season-v20">
+    <MetaTierList data={tierListRaw} brawlers={brawlers} />
+
+    <section className="panel meta-season-v20 spaced">
       <div className="section-title">
         <div><span className="eyebrow">Estado del juego</span><h2>{meta.season}</h2></div>
         <strong>{meta.newestBrawler}</strong>
@@ -81,7 +83,7 @@ export default function MetaPage() {
     <section className="panel spaced">
       <div className="section-title">
         <div>
-          <span className="eyebrow">Modelo competitivo · revisión 02/09</span>
+          <span className="eyebrow">Modelo competitivo · revisión 03/09</span>
           <h2>Qué está cambiando en Draft Engine</h2>
           <p>{patchDay.status}. Baseline: {patchDay.baseline}.</p>
         </div>
@@ -118,12 +120,12 @@ export default function MetaPage() {
         <article>
           <span className="eyebrow">Señal que ya convierte</span>
           <h3>{patchDay.observedLeaders.join(" · ")}</h3>
-          <p>Son los movimientos con más apoyo temprano. El Primo, Amber, Gus y Shade reciben además ajustes por interacción y tipo de mapa.</p>
+          <p>Son los movimientos con más apoyo temprano en Ranked alto. El motor exige además que el mapa y el matchup permitan explotar esa subida.</p>
         </article>
         <article>
           <span className="eyebrow danger-text">Lectura con cautela</span>
           <h3>{patchDay.volatilePicks.join(" · ")}</h3>
-          <p>Siguen siendo picks válidos, pero el motor evita convertir popularidad, poco volumen o un matchup favorable en seguridad universal.</p>
+          <p>Siguen siendo picks válidos, pero su posición cambia bastante según rango, volumen y mapa; no se convierten en aperturas universales.</p>
         </article>
       </div>
 
@@ -146,8 +148,6 @@ export default function MetaPage() {
       <h2>Novedades confirmadas</h2>
       <div className="note-list">{meta.update69Highlights.map((item) => <p key={item}>✓ {item}</p>)}</div>
     </section>
-
-    <MetaTierList data={tierListRaw} brawlers={brawlers} />
 
     <div className="stats-grid meta-stats-v11">
       <div className="stat-card"><b>{meta.rosterCount}</b><span>brawlers operativos en el motor</span></div>
@@ -187,9 +187,10 @@ export default function MetaPage() {
       <span className="eyebrow">Criterio competitivo</span>
       <h2>Cómo interpretar esta revisión</h2>
       <div className="note-list">
-        <p>✓ La muestra 24 h del 02/09 detecta el movimiento temprano, pero la vista 30 d evita sobrerreaccionar a brawlers con poco volumen.</p>
+        <p>✓ Legendary del 03/09 aporta la base más útil para Ranked competitivo; Masters se usa como confirmación y no como verdad aislada por su menor volumen.</p>
+        <p>✓ La señal top-200 de 24 h sirve para detectar desplazamientos rápidos, pero no fuerza por sí sola un tier si contradice de forma fuerte la muestra de Ranked alto.</p>
+        <p>✓ Pro se excluye de esta revisión: la muestra disponible del 03/09 es demasiado pequeña para sostener un tier fiable.</p>
         <p>✓ El balance oficial cambia interacciones concretas; mapa, geometría, orden del draft y matchup uno a uno conservan prioridad.</p>
-        <p>✓ Las fotografías del 30/08 permanecen accesibles como baseline para medir el efecto real del parche.</p>
         <p>✓ Cosmo y Vince no se inventan dentro del motor competitivo antes de su release/elegibilidad real.</p>
       </div>
     </section>
