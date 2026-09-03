@@ -41,7 +41,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
         const active = isActivePath(path, href);
         return <Link key={href} className={active ? "active" : ""} aria-current={active ? "page" : undefined} href={href} onClick={() => setOpen(false)}><span aria-hidden="true">{icon}</span>{label}</Link>;
       })}</nav>
-      <div className="sidebar-note"><b>Base v0.33.2</b><span>Meta U69 · calibrado 02/09</span><span>Analyzer v0.33 · captura + lectura en vivo</span></div>
+      <div className="sidebar-note"><b>Base v0.33.2</b><span>Meta U69 · calibrado 03/09</span><span>Analyzer v0.33 · captura + lectura en vivo</span></div>
     </aside>
     <main>
       <header className="topbar kanna-topbar">
@@ -55,7 +55,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
             <em>Draft</em>
           </span>
         </Link>
-        <Link className="status-pill" href="/meta">● META 02/09</Link>
+        <Link className="status-pill" href="/meta">● META 03/09</Link>
       </header>
       {children}
       <footer>Proyecto independiente no afiliado a Supercell. Imágenes servidas por BrawlAPI/Brawlify. Los tiers estadísticos no equivalen por sí solos a porcentajes de victoria en tu draft.</footer>
