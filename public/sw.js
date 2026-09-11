@@ -1,4 +1,4 @@
-const CACHE = "kanna-draft-v0332-crow2";
+const CACHE = "kanna-draft-v0332-crow3";
 const CORE = [
   "/",
   "/draft",
