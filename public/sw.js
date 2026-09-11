@@ -1,4 +1,4 @@
-const CACHE = "kanna-draft-v0332-crow3";
+const CACHE = "kanna-draft-v0332-crow4";
 const CORE = [
   "/",
   "/draft",
@@ -6,15 +6,13 @@ const CORE = [
   "/counters",
   "/maps",
   "/meta",
-  "/manifest.webmanifest",
-  "/kanna-draft-header.jpg",
-  "/favicon.ico",
-  "/favicon-32.png",
-  "/favicon-48.png",
-  "/apple-touch-icon.png",
-  "/icon-192.png",
-  "/icon-512.png",
-  "/icon-maskable-512.png",
+  "/manifest.webmanifest?crow=4",
+  "/favicon-32.png?crow=4",
+  "/favicon-48.png?crow=4",
+  "/apple-touch-icon.png?crow=4",
+  "/icon-192.png?crow=4",
+  "/icon-512.png?crow=4",
+  "/icon-maskable-512.png?crow=4",
 ];
 
 self.addEventListener("install", (event) => {
@@ -49,7 +47,7 @@ self.addEventListener("fetch", (event) => {
   if (event.request.mode === "navigate") {
     event.respondWith((async () => {
       try {
-        const response = await fetch(event.request);
+        const response = await fetch(event.request, { cache: "no-store" });
         if (response.ok) {
           const cache = await caches.open(CACHE);
           await cache.put(event.request, response.clone());
@@ -57,6 +55,23 @@ self.addEventListener("fetch", (event) => {
         return response;
       } catch {
         return (await caches.match(event.request)) || (await caches.match("/"));
+      }
+    })());
+    return;
+  }
+
+  const isBrandAsset = requestUrl.searchParams.get("crow") === "4";
+  if (isBrandAsset) {
+    event.respondWith((async () => {
+      try {
+        const response = await fetch(event.request, { cache: "reload" });
+        if (response.ok) {
+          const cache = await caches.open(CACHE);
+          await cache.put(event.request, response.clone());
+        }
+        return response;
+      } catch {
+        return (await caches.match(event.request)) || new Response("Offline", { status: 503, statusText: "Offline" });
       }
     })());
     return;
