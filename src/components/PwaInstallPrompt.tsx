@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const DISMISSED_KEY = "brawl-lab:pwa-install-dismissed-v1";
+const CROW_ICON = "/icon-192.png?crow=4";
 
 type NavigatorWithStandalone = Navigator & { standalone?: boolean };
 
@@ -73,7 +74,7 @@ export default function PwaInstallPrompt() {
   return <>
     <div className="pwa-install-banner" role="region" aria-label="Instalar Kanna Draft">
       <div className="pwa-install-icon" aria-hidden="true">
-        <Image src="/icon-192.png" alt="" width={42} height={42} />
+        <Image src={CROW_ICON} alt="" width={42} height={42} unoptimized />
       </div>
       <div className="pwa-install-copy">
         <b>Instala Kanna Draft en tu iPhone</b>
