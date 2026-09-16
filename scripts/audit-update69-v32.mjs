@@ -52,22 +52,28 @@ const expectTier = (name, tier) => {
   if (byName.get(name)?.tier !== tier) errors.push(`${name}: tier ${byName.get(name)?.tier}, esperado ${tier}`);
 };
 
+expectTier("Wendy", "S+");
 expectTier("Shade", "S");
-expectTier("Melodie", "S");
-expectTier("El Primo", "A");
-expectTier("Amber", "A");
-expectTier("Max", "B");
-expectTier("Ruffs", "F");
+expectTier("El Primo", "S");
+expectTier("Amber", "S");
+expectTier("Gus", "S");
+expectTier("Poco", "A");
+expectTier("R-T", "A");
+expectTier("Brock", "A");
+expectTier("Nori", "B");
+expectTier("Meg", "B");
+expectTier("Willow", "B");
 
 const wendy = byName.get("Wendy");
-if (!wendy || wendy.firstPickProfile?.blindSafety > 72 || wendy.firstPickProfile?.counterRisk < 48) {
-  errors.push("Wendy no conserva la penalización de first pick posterior al nerf");
+if (!wendy || wendy.firstPickProfile?.blindSafety > 66 || wendy.firstPickProfile?.counterRisk < 55) {
+  errors.push("Wendy no conserva la penalización de first pick posterior al balance del 16/09");
 }
 
 const pairCases = [
-  ["Shade", "Tick", 8],
-  ["Gus", "Edgar", 6],
-  ["Colette", "El Primo", 5],
+  ["Shade", "Tick", 5],
+  ["Gus", "Edgar", 4],
+  ["Colette", "El Primo", 4],
+  ["R-T", "Edgar", 5],
 ];
 
 for (const [candidateName, targetName, minimum] of pairCases) {
@@ -79,13 +85,14 @@ for (const [candidateName, targetName, minimum] of pairCases) {
   }
   const adjustment = update69.update69MatchupAdjustment(candidate, target);
   const matchup = counters.evaluateSpecificMatchup(candidate, target);
-  if (adjustment.score < minimum) errors.push(`${candidateName} -> ${targetName}: ajuste U69 insuficiente`);
-  if (matchup.patchAdjustment !== adjustment.score) errors.push(`${candidateName} -> ${targetName}: el counter engine ignora U69`);
-  if (!matchup.reasons.some((reason) => reason.includes("U69"))) errors.push(`${candidateName} -> ${targetName}: falta explicación U69`);
+  if (adjustment.score < minimum) errors.push(`${candidateName} -> ${targetName}: ajuste 16/09 insuficiente`);
+  if (matchup.patchAdjustment !== adjustment.score) errors.push(`${candidateName} -> ${targetName}: el counter engine ignora el balance 16/09`);
+  if (!adjustment.reasons.length) errors.push(`${candidateName} -> ${targetName}: falta explicación del balance actual`);
 }
 
 const edgar = byName.get("Edgar");
 const primo = byName.get("El Primo");
+const poco = byName.get("Poco");
 if (edgar) {
   const first = update69.update69DraftAdjustment(edgar, { mode: "Noqueo", layout: "Cerrado" }, "First pick");
   const last = update69.update69DraftAdjustment(edgar, { mode: "Noqueo", layout: "Cerrado" }, "Last pick");
@@ -94,7 +101,11 @@ if (edgar) {
 if (primo) {
   const closed = update69.update69DraftAdjustment(primo, { mode: "Balón Brawl", layout: "Cerrado" }, "Pick intermedio");
   const open = update69.update69DraftAdjustment(primo, { mode: "Caza Estelar", layout: "Abierto" }, "Pick intermedio");
-  if (closed.score < open.score + 7) errors.push("El Primo no distingue mapa cerrado de abierto");
+  if (closed.score < open.score + 6) errors.push("El Primo no distingue mapa cerrado de abierto tras su nerf");
+}
+if (poco) {
+  const control = update69.update69DraftAdjustment(poco, { mode: "Zona Restringida", layout: "Cerrado" }, "Pick intermedio");
+  if (control.score < 5 || control.meta < 5) errors.push("Poco no recibe la promoción esperada tras los buffs del 16/09");
 }
 
 for (const targetName of ["Shade", "Wendy", "Nori", "Rico", "Max"]) {
@@ -106,10 +117,14 @@ for (const targetName of ["Shade", "Wendy", "Nori", "Rico", "Max"]) {
   }
 }
 
-const observed = tiers.snapshots["NOFF Meta 24 h · 02/09"];
+const observed = tiers.snapshots["Motor post-balance · 16/09"];
 const observedNames = Object.values(observed || {}).flat();
 if (observedNames.length !== roster.length || new Set(observedNames).size !== roster.length) {
-  errors.push(`Snapshot 02/09 inválido: ${observedNames.length} entradas / ${new Set(observedNames).size} únicas`);
+  errors.push(`Snapshot 16/09 inválido: ${observedNames.length} entradas / ${new Set(observedNames).size} únicas`);
+}
+for (const brawler of roster) {
+  const snapshotTier = Object.entries(observed || {}).find(([, names]) => names.includes(brawler.name))?.[0];
+  if (snapshotTier !== brawler.tier) errors.push(`${brawler.name}: motor=${brawler.tier}, snapshot16/09=${snapshotTier}`);
 }
 
 const sampleMap = maps.find((map) => map.mode === "Balón Brawl" && map.layout === "Cerrado") || maps[0];
@@ -131,13 +146,13 @@ const analysis = draft.analyzeDraft({
 if (analysis.recommendations.length < 5) errors.push("Draft Engine no devuelve suficientes recomendaciones");
 for (let index = 1; index < analysis.recommendations.length; index += 1) {
   if (analysis.recommendations[index].score > analysis.recommendations[index - 1].score) {
-    errors.push("Las recomendaciones post-U69 no están ordenadas");
+    errors.push("Las recomendaciones post-balance no están ordenadas");
     break;
   }
 }
 
 console.log(`Roster calibrado: ${roster.length}`);
-console.log(`Snapshot observado: ${observedNames.length} brawlers`);
+console.log(`Snapshot 16/09: ${observedNames.length} brawlers`);
 console.log(`Top recomendado de control: ${analysis.recommendations.slice(0, 5).map((item) => item.brawler.name).join(", ")}`);
 console.log(`Errores: ${errors.length}`);
 
@@ -147,5 +162,5 @@ if (errors.length) {
   errors.forEach((error) => console.error(`ERROR: ${error}`));
   process.exitCode = 1;
 } else {
-  console.log("Auditoría post-Update 69 v0.32 correcta.");
+  console.log("Auditoría Update 69 · balance 16/09 correcta.");
 }

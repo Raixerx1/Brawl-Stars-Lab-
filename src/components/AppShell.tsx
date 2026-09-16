@@ -25,7 +25,6 @@ const mobileNav = ["/draft", "/counters", "/live", "/meta"]
   .filter((item): item is string[] => Boolean(item));
 
 const isActivePath = (path: string, href: string) => path === href || (href !== "/" && path.startsWith(`${href}/`));
-const CROW_ICON = "/icon-192.png?crow=4";
 
 export default function AppShell({ children }: { children: ReactNode }) {
   const path = usePathname();
@@ -34,7 +33,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
     <aside id="primary-navigation" className={`sidebar ${open ? "open" : ""}`}>
       <Link className="brand" href="/" aria-label="Ir al inicio de Kanna Draft" onClick={() => setOpen(false)}>
         <span className="brand-mark" aria-hidden="true">
-          <Image className="brand-logo" src={CROW_ICON} alt="" width={44} height={44} priority unoptimized />
+          <Image className="brand-logo" src="/icon-192.png?crow=4" alt="" width={44} height={44} priority unoptimized />
         </span>
         <span><strong>Kanna Draft</strong><small>Competitive Intelligence</small></span>
       </Link>
@@ -42,21 +41,21 @@ export default function AppShell({ children }: { children: ReactNode }) {
         const active = isActivePath(path, href);
         return <Link key={href} className={active ? "active" : ""} aria-current={active ? "page" : undefined} href={href} onClick={() => setOpen(false)}><span aria-hidden="true">{icon}</span>{label}</Link>;
       })}</nav>
-      <div className="sidebar-note"><b>Base v0.33.2</b><span>Meta U69 · calibrado 03/09</span><span>Analyzer v0.33 · captura + lectura en vivo</span></div>
+      <div className="sidebar-note"><b>Base v0.33.2</b><span>Meta U69 · balance 16/09</span><span>Analyzer v0.33 · captura + lectura en vivo</span></div>
     </aside>
     <main>
       <header className="topbar kanna-topbar">
         <button type="button" className="menu-button" onClick={() => setOpen(!open)} aria-controls="primary-navigation" aria-expanded={open} aria-label={open ? "Cerrar navegación" : "Abrir navegación"}>☰</button>
         <Link className="kanna-header-brand" href="/" aria-label="Ir al inicio de Kanna Draft">
           <span className="kanna-header-emblem" aria-hidden="true">
-            <Image className="kanna-header-crow" src={CROW_ICON} alt="" width={58} height={58} priority unoptimized />
+            <Image className="kanna-header-crow" src="/icon-192.png?crow=4" alt="" width={58} height={58} priority unoptimized />
           </span>
           <span className="kanna-header-wordmark" aria-hidden="true">
             <strong>Kanna</strong>
             <em>Draft</em>
           </span>
         </Link>
-        <Link className="status-pill" href="/meta">● META 03/09</Link>
+        <Link className="status-pill" href="/meta">● META 16/09</Link>
       </header>
       {children}
       <footer>Proyecto independiente no afiliado a Supercell. Imágenes servidas por BrawlAPI/Brawlify. Los tiers estadísticos no equivalen por sí solos a porcentajes de victoria en tu draft.</footer>
