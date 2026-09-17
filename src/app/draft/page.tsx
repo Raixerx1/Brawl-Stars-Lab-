@@ -25,9 +25,9 @@ export const metadata: Metadata = { title: "Draft Coach en vivo" };
 export default function DraftPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Draft Engine 2.0 · v0.32.1 · meta U69 del 02/09</span>
+      <span className="eyebrow">Draft Engine 2.0 · v0.33.3 · meta post-balance 17/09</span>
       <h1>Draft Coach</h1>
-      <p>Las recomendaciones cruzan la muestra top-200 post-U69, el balance oficial y el control de estabilidad a 30 días. El mapa, el orden de picks y cada matchup siguen pesando más que el tier global.</p>
+      <p>Las recomendaciones ya incorporan el balance oficial del 16/09, la primera señal Ranked postparche del 17/09 y los counters recalculados por matchup. El mapa, el orden de picks y la composición siguen pesando más que el tier global.</p>
     </div>
     <DraftAssistant maps={maps} brawlers={draftBrawlers} />
     <DesktopPickVoiceGuard />

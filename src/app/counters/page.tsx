@@ -7,9 +7,9 @@ export const metadata: Metadata = { title: "Counters" };
 export default function CountersPage() {
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Matchup Lab v0.15</span>
+      <span className="eyebrow">Matchup Lab v0.16 · recalculado 17/09</span>
       <h1>Counters y amenazas</h1>
-      <p>Roster completo con búsqueda, razones específicas para brawlers recientes y auditoría de cobertura. El mapa y la composición pueden invertir un matchup teórico.</p>
+      <p>Los enfrentamientos están sincronizados con el meta post-balance: ajustes oficiales del 16/09, viabilidad actualizada el 17/09 y cálculo recíproco por movilidad, antidive, control, alcance y wallbreak. Este mismo motor alimenta Draft Assist.</p>
     </div>
     <CounterExplorer brawlers={brawlers} />
   </div>;

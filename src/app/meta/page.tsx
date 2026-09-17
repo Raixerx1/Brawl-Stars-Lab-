@@ -44,9 +44,9 @@ export default function MetaPage() {
 
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Meta post-balance · revisado 16/09/2026 · Update 69</span>
-      <h1>Meta Center · Balance 16/09</h1>
-      <p>El mantenimiento del 16 de septiembre ya está incorporado. La tier list se recalibra con los cambios oficiales y la señal disponible el mismo día, pero se marca como provisional porque las primeras horas todavía mezclan partidas anteriores y posteriores al balance.</p>
+      <span className="eyebrow">Meta post-balance · revisado 17/09/2026 · Update 69</span>
+      <h1>Meta Center · Post-balance 17/09</h1>
+      <p>El balance oficial del 16 de septiembre ya está integrado y la tier list incorpora la primera jornada post-mantenimiento del 17/09. La señal Ranked es más limpia que el mismo día del parche, aunque los movimientos sin consenso siguen limitados para evitar sobreajuste.</p>
     </div>
 
     <MetaTierList data={tierListRaw} brawlers={brawlers} />
@@ -107,10 +107,10 @@ export default function MetaPage() {
         <strong>{meta.newestBrawler}</strong>
       </div>
       <div className="stats-grid">
-        <div className="stat-card"><b>16/09</b><span>último balance oficial aplicado</span></div>
+        <div className="stat-card"><b>17/09</b><span>última recalibración competitiva</span></div>
         <div className="stat-card"><b>{rankedFeatured.mode}</b><span>último modo Ranked destacado registrado</span></div>
         <div className="stat-card"><b>{meta.rankedDataThrough}</b><span>evidencia observada activa</span></div>
-        <div className="stat-card"><b>{meta.officialPatchDate}</b><span>revisión de balance vigente</span></div>
+        <div className="stat-card"><b>{meta.officialPatchDate}</b><span>balance oficial vigente</span></div>
       </div>
       <p className="muted">{meta.engineRosterNote}</p>
     </section>
@@ -118,11 +118,11 @@ export default function MetaPage() {
     <section className="panel spaced">
       <div className="section-title">
         <div>
-          <span className="eyebrow">Modelo competitivo · revisión 16/09</span>
+          <span className="eyebrow">Modelo competitivo · revisión 17/09</span>
           <h2>Qué cambia en Draft Engine</h2>
-          <p>{patchDay.status}. Baseline: {patchDay.baseline}.</p>
+          <p>{patchDay.status}. La capa del 17/09 vuelve a ordenar la viabilidad global sin deshacer los deltas mecánicos del 16/09.</p>
         </div>
-        <strong>16/09</strong>
+        <strong>17/09</strong>
       </div>
       <div className="patch-grid">
         <article className="patch-card">
@@ -130,7 +130,7 @@ export default function MetaPage() {
             <span className="patch-badge patch-up">SUBEN</span>
             <h3>Buffs modelizados</h3>
             <div className="tag-row">{patchDay.buffs.map((name) => <span key={name}>{name}</span>)}</div>
-            <p>El cambio oficial entra inmediatamente en el modelo, pero la subida de tier adicional exige señal competitiva suficiente.</p>
+            <p>El cambio oficial entra inmediatamente en el modelo; la promoción global posterior depende de la señal competitiva acumulada.</p>
           </div>
         </article>
         <article className="patch-card">
@@ -144,23 +144,23 @@ export default function MetaPage() {
         <article className="patch-card">
           <div>
             <span className="patch-badge">MIXTO</span>
-            <h3>No forzar conclusión todavía</h3>
+            <h3>No forzar conclusión por un solo indicador</h3>
             <div className="tag-row">{patchDay.mixed.map((name) => <span key={name}>{name}</span>)}</div>
-            <p>Wendy gana vida base y movilidad sobre agua con gadget, pero pierde una parte muy importante de sus escudos y de la resistencia de la torreta.</p>
+            <p>Wendy gana vida base y movilidad sobre agua con gadget, pero pierde una parte importante de sus escudos y de la resistencia de la torreta; el 17/09 pasa de S+ a S.</p>
           </div>
         </article>
       </div>
 
       <div className="meta-signal-grid-v32">
         <article>
-          <span className="eyebrow">Señal que vigilamos arriba</span>
-          <h3>{patchDay.observedLeaders.join(" · ")}</h3>
-          <p>Son los nombres con mejor combinación de fuerza previa, señal reciente o buff directo. No implica que todos sean first pick universales.</p>
+          <span className="eyebrow">Núcleo alto del 17/09</span>
+          <h3>Gus · Amber · Shade · Wendy · El Primo · Ash · Poco</h3>
+          <p>Combinan fortaleza previa, impacto mecánico del parche y señal post-mantenimiento. El orden concreto depende del mapa y del draft.</p>
         </article>
         <article>
           <span className="eyebrow danger-text">Lectura con cautela</span>
-          <h3>{patchDay.volatilePicks.join(" · ")}</h3>
-          <p>El cambio de kit es suficientemente grande o la muestra suficientemente joven como para evitar conclusiones fuertes el mismo día del mantenimiento.</p>
+          <h3>Wendy · Nori · R-T · Ollie · Chuck · Meg</h3>
+          <p>El cambio de kit, el rol contextual o la muestra todavía joven impiden convertir una subida puntual en una conclusión universal.</p>
         </article>
       </div>
     </section>
@@ -224,13 +224,13 @@ export default function MetaPage() {
 
     <section className="panel spaced">
       <span className="eyebrow">Criterio competitivo</span>
-      <h2>Cómo interpretar la revisión del 16/09</h2>
+      <h2>Cómo interpretar la revisión del 17/09</h2>
       <div className="note-list">
-        <p>✓ Las cifras de balance son oficiales de Supercell; los tiers son una interpretación competitiva y provisional.</p>
-        <p>✓ El dato del mismo día del parche tiene contaminación pre-mantenimiento, por lo que no se hacen saltos extremos sin apoyo mecánico y estadístico.</p>
-        <p>✓ BrawlBetter patch-aware y Brawl Time Ninja se usan como señales recientes; el modelo de Ranked alto del 03/09 actúa como baseline de estabilidad.</p>
+        <p>✓ Las cifras de balance son oficiales de Supercell; los tiers son una interpretación competitiva actualizada con señal posterior al mantenimiento.</p>
+        <p>✓ BrawlBetter patch-aware se prioriza para Ranked; Brawl Time Ninja y NOFF sirven de contraste para detectar picos de uso o discrepancias.</p>
+        <p>✓ Un movimiento aislado de una fuente no fuerza por sí solo un salto extremo de tier.</p>
         <p>✓ Mapa, geometría, orden del draft y matchup uno a uno conservan prioridad sobre el tier global.</p>
-        <p>✓ Los snapshots anteriores permanecen accesibles en la tabla para auditar cuánto del cambio procede del balance del 16/09.</p>
+        <p>✓ El snapshot provisional del 16/09 permanece accesible para comparar cuánto cambió la lectura tras la primera jornada postparche.</p>
       </div>
     </section>
   </div>;
