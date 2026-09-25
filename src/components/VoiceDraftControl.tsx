@@ -62,7 +62,12 @@ function nativeSetInputValue(input: HTMLInputElement, value: string) {
 function pickSlotEntries() {
   return [...document.querySelectorAll<HTMLButtonElement>(".ordered-pick-slot")]
     .slice(0, MAX_SLOTS)
-    .map((slot) => slot.querySelector("b")?.textContent?.trim() || "");
+    .map((slot) => {
+      // Empty draft slots also render a <b> with the placeholder "Aliado"/"Rival".
+      // Only slots marked as filled represent an actual brawler pick.
+      if (!slot.classList.contains("filled")) return "";
+      return slot.querySelector("b")?.textContent?.trim() || "";
+    });
 }
 
 function nextPickSlotIndex() {
