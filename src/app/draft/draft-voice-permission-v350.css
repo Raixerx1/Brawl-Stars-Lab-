@@ -1,0 +1,30 @@
+/* v0.35.0 — permiso de micrófono compartido para bans y picks, desktop y móvil */
+.voice-draft-control-v185.mic-requesting-v350 .voice-draft-status-v185,
+.voice-draft-control-v185.mic-denied-v350 .voice-draft-status-v185 {
+  display: block !important;
+}
+
+.voice-draft-control-v185.mic-requesting-v350 .voice-draft-button-v185 {
+  opacity: .72;
+  cursor: progress;
+}
+
+.voice-draft-control-v185.mic-denied-v350 .voice-draft-button-v185 {
+  border-color: rgba(255,104,123,.72) !important;
+  background: rgba(255,104,123,.16) !important;
+  color: #ffd3d9 !important;
+}
+
+@media (max-width: 720px) {
+  .voice-draft-control-v185.mic-requesting-v350 .voice-draft-status-v185,
+  .voice-draft-control-v185.mic-denied-v350 .voice-draft-status-v185 {
+    position: fixed;
+    left: 50%;
+    right: auto;
+    bottom: max(14px, calc(env(safe-area-inset-bottom) + 10px));
+    z-index: 190;
+    max-width: calc(100vw - 28px);
+    transform: translateX(-50%);
+    text-align: center;
+  }
+}
