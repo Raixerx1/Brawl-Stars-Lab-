@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import DraftAssistant from "@/components/DraftAssistant";
-import DesktopPickVoiceGuard from "@/components/DesktopPickVoiceGuard";
+import DraftVoicePermissionGuard from "@/components/DraftVoicePermissionGuard";
 import VoiceDraftControl from "@/components/VoiceDraftControl";
 import { maps, brawlers, draftBrawlers } from "@/lib/data";
 import "./draft-compact.css";
@@ -20,18 +20,19 @@ import "./draft-first-pick-mobile-v232.css";
 import "./draft-select-contrast-v233.css";
 import "./draft-mobile-fit-v321.css";
 import "./draft-mobile-accessibility-v340.css";
+import "./draft-voice-permission-v350.css";
 
 export const metadata: Metadata = { title: "Draft Coach en vivo" };
 
 export default function DraftPage() {
   return <div className="page draft-page-v340">
     <div className="page-heading">
-      <span className="eyebrow">Draft Engine 2.0 · v0.34.0 · meta revisado 25/09</span>
+      <span className="eyebrow">Draft Engine 2.0 · v0.35.0 · meta revisado 25/09</span>
       <h1>Draft Coach</h1>
-      <p>Las recomendaciones incorporan el balance oficial del 16/09 y la revisión v0.34.0 del 25/09. El motor distingue tier global de valor contextual: Pam, Nori, Rico y Belle pueden subir según mapa y modo, mientras los counters se recalculan sobre el roster vigente. Mapa, orden de picks, composición y matchup siguen pesando más que el tier global.</p>
+      <p>Las recomendaciones incorporan el balance oficial del 16/09 y la revisión v0.34.0 del 25/09. El motor distingue tier global de valor contextual: Pam, Nori, Rico y Belle pueden subir según mapa y modo, mientras los counters se recalculan sobre el roster vigente. La entrada por voz v0.35.0 comparte el permiso de micrófono entre bans y picks y funciona tanto en móvil como en escritorio.</p>
     </div>
     <DraftAssistant maps={maps} brawlers={draftBrawlers} />
-    <DesktopPickVoiceGuard />
+    <DraftVoicePermissionGuard />
     <VoiceDraftControl roster={brawlers} targetMode="ban" />
     <VoiceDraftControl roster={brawlers} targetMode="pick" />
   </div>;
