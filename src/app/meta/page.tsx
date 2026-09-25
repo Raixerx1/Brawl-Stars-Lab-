@@ -44,9 +44,9 @@ export default function MetaPage() {
 
   return <div className="page">
     <div className="page-heading">
-      <span className="eyebrow">Meta post-balance · revisado 17/09/2026 · Update 69</span>
-      <h1>Meta Center · Post-balance 17/09</h1>
-      <p>El balance oficial del 16 de septiembre ya está integrado y la tier list incorpora la primera jornada post-mantenimiento del 17/09. La señal Ranked es más limpia que el mismo día del parche, aunque los movimientos sin consenso siguen limitados para evitar sobreajuste.</p>
+      <span className="eyebrow">Meta v0.34.0 · revisado 25/09/2026 · Update 69</span>
+      <h1>Meta Center · Revisión 25/09</h1>
+      <p>El balance oficial del 16 de septiembre sigue plenamente integrado. La revisión v0.34.0 consolida la lectura posterior al parche y separa el tier global del valor contextual para evitar que un buen mapa o una señal agregada conviertan un pick situacional en prioridad universal.</p>
     </div>
 
     <MetaTierList data={tierListRaw} brawlers={brawlers} />
@@ -78,7 +78,7 @@ export default function MetaPage() {
         <div>
           <span className="eyebrow">Mantenimiento 16/09 · oficial</span>
           <h2>Buffs del balance</h2>
-          <p>Poco, Chuck, Ollie, Trunk, Willow, Juju, Pam, Belle y R-T reciben mejoras directas. La promoción en tier se mantiene prudente hasta acumular más Ranked postparche.</p>
+          <p>Poco, Chuck, Ollie, Trunk, Willow, Juju, Pam, Belle y R-T reciben mejoras directas. v0.34.0 conserva esos cambios mecánicos, pero limita su traducción a tier global cuando el rendimiento depende del mapa o de una composición concreta.</p>
         </div>
         <strong>{september16.buffs.length} afectados</strong>
       </div>
@@ -107,7 +107,7 @@ export default function MetaPage() {
         <strong>{meta.newestBrawler}</strong>
       </div>
       <div className="stats-grid">
-        <div className="stat-card"><b>17/09</b><span>última recalibración competitiva</span></div>
+        <div className="stat-card"><b>25/09</b><span>última recalibración competitiva</span></div>
         <div className="stat-card"><b>{rankedFeatured.mode}</b><span>último modo Ranked destacado registrado</span></div>
         <div className="stat-card"><b>{meta.rankedDataThrough}</b><span>evidencia observada activa</span></div>
         <div className="stat-card"><b>{meta.officialPatchDate}</b><span>balance oficial vigente</span></div>
@@ -118,49 +118,49 @@ export default function MetaPage() {
     <section className="panel spaced">
       <div className="section-title">
         <div>
-          <span className="eyebrow">Modelo competitivo · revisión 17/09</span>
+          <span className="eyebrow">Modelo competitivo · revisión 25/09</span>
           <h2>Qué cambia en Draft Engine</h2>
-          <p>{patchDay.status}. La capa del 17/09 vuelve a ordenar la viabilidad global sin deshacer los deltas mecánicos del 16/09.</p>
+          <p>{patchDay.status}. v0.34.0 mantiene los deltas mecánicos del 16/09, pero recalibra la viabilidad general y el riesgo de first pick con una lectura más estable.</p>
         </div>
-        <strong>17/09</strong>
+        <strong>v0.34.0</strong>
       </div>
       <div className="patch-grid">
         <article className="patch-card">
           <div>
-            <span className="patch-badge patch-up">SUBEN</span>
-            <h3>Buffs modelizados</h3>
+            <span className="patch-badge patch-up">BUFFS VIGENTES</span>
+            <h3>Mejoras mecánicas conservadas</h3>
             <div className="tag-row">{patchDay.buffs.map((name) => <span key={name}>{name}</span>)}</div>
-            <p>El cambio oficial entra inmediatamente en el modelo; la promoción global posterior depende de la señal competitiva acumulada.</p>
+            <p>El buff oficial sigue entrando al motor. Su efecto sobre tier y prioridad de draft se limita cuando el valor depende de mapa, modo o protección del equipo.</p>
           </div>
         </article>
         <article className="patch-card">
           <div>
-            <span className="patch-badge patch-down">BAJAN</span>
-            <h3>Nerfs modelizados</h3>
+            <span className="patch-badge patch-down">NERFS VIGENTES</span>
+            <h3>Recortes mecánicos conservados</h3>
             <div className="tag-row danger">{patchDay.nerfs.map((name) => <span key={name}>{name}</span>)}</div>
-            <p>Se reduce seguridad, tempo o burst según el cambio. El mapa y el matchup concreto todavía pueden convertirlos en la mejor respuesta.</p>
+            <p>Los recortes siguen reduciendo seguridad, tempo o burst. Un mapa favorable puede compensar parte del nerf, pero no revierte automáticamente el tier general.</p>
           </div>
         </article>
         <article className="patch-card">
           <div>
-            <span className="patch-badge">MIXTO</span>
-            <h3>No forzar conclusión por un solo indicador</h3>
-            <div className="tag-row">{patchDay.mixed.map((name) => <span key={name}>{name}</span>)}</div>
-            <p>Wendy gana vida base y movilidad sobre agua con gadget, pero pierde una parte importante de sus escudos y de la resistencia de la torreta; el 17/09 pasa de S+ a S.</p>
+            <span className="patch-badge">RECALIBRADO</span>
+            <h3>Wendy deja de ser prioridad S global</h3>
+            <div className="tag-row"><span>Wendy · A</span></div>
+            <p>La vida base y la movilidad sobre agua siguen aportando, pero los escudos y la torreta más débiles elevan el riesgo de abrirla a ciegas. v0.34.0 la deja en A general.</p>
           </div>
         </article>
       </div>
 
       <div className="meta-signal-grid-v32">
         <article>
-          <span className="eyebrow">Núcleo alto del 17/09</span>
-          <h3>Gus · Amber · Shade · Wendy · El Primo · Ash · Poco</h3>
-          <p>Combinan fortaleza previa, impacto mecánico del parche y señal post-mantenimiento. El orden concreto depende del mapa y del draft.</p>
+          <span className="eyebrow">Decisiones consolidadas 25/09</span>
+          <h3>Wendy A · Brock A · Rico A · Nori B · Belle B · Trunk B · Pam C</h3>
+          <p>Son tiers generales. Rico puede alcanzar valor S contextual; Nori y Belle A contextual; Pam B/A contextual en Zona Restringida y mapas estáticos que protegen su torreta.</p>
         </article>
         <article>
-          <span className="eyebrow danger-text">Lectura con cautela</span>
-          <h3>Wendy · Nori · R-T · Ollie · Chuck · Meg</h3>
-          <p>El cambio de kit, el rol contextual o la muestra todavía joven impiden convertir una subida puntual en una conclusión universal.</p>
+          <span className="eyebrow danger-text">Contexto antes que etiqueta</span>
+          <h3>Rico · Nori · Belle · Pam</h3>
+          <p>Estos picks son especialmente sensibles a geometría, modo y composición. Draft Assist aplica sus perfiles y afinidades concretas en lugar de elevar permanentemente el tier global.</p>
         </article>
       </div>
     </section>
@@ -224,13 +224,13 @@ export default function MetaPage() {
 
     <section className="panel spaced">
       <span className="eyebrow">Criterio competitivo</span>
-      <h2>Cómo interpretar la revisión del 17/09</h2>
+      <h2>Cómo interpretar la revisión del 25/09</h2>
       <div className="note-list">
-        <p>✓ Las cifras de balance son oficiales de Supercell; los tiers son una interpretación competitiva actualizada con señal posterior al mantenimiento.</p>
-        <p>✓ BrawlBetter patch-aware se prioriza para Ranked; Brawl Time Ninja y NOFF sirven de contraste para detectar picos de uso o discrepancias.</p>
-        <p>✓ Un movimiento aislado de una fuente no fuerza por sí solo un salto extremo de tier.</p>
-        <p>✓ Mapa, geometría, orden del draft y matchup uno a uno conservan prioridad sobre el tier global.</p>
-        <p>✓ El snapshot provisional del 16/09 permanece accesible para comparar cuánto cambió la lectura tras la primera jornada postparche.</p>
+        <p>✓ Las cifras del balance del 16/09 siguen siendo las oficiales de Supercell; los tiers son una capa competitiva del motor.</p>
+        <p>✓ BrawlBetter y NOFF pesan más en esta revisión; Brawl Time Ninja se usa como contraste agregado y no como señal post-hotfix aislada.</p>
+        <p>✓ Un buen rendimiento en un modo o geometría concreta se expresa como valor contextual, no como promoción automática del tier global.</p>
+        <p>✓ Mapa, geometría, orden del draft, composición y matchup uno a uno conservan prioridad sobre el tier general.</p>
+        <p>✓ Los snapshots previos permanecen como histórico para distinguir el efecto del parche de la recalibración posterior.</p>
       </div>
     </section>
   </div>;

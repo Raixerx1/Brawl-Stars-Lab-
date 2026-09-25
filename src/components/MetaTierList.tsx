@@ -15,7 +15,7 @@ type TierListData = {
 };
 
 const tierOrder = ["S+", "S", "A+", "A", "B+", "B", "C", "D", "F", "Sin datos"];
-const CURRENT_MODEL_LABEL = "Motor post-balance · 17/09";
+const CURRENT_MODEL_LABEL = "Motor v0.34 · 25/09";
 
 function sourceForSnapshot(snapshot: string, data: TierListData) {
   if (snapshot.startsWith("BrawlMetrics Legendary")) {
@@ -55,9 +55,9 @@ export default function MetaTierList({
     return grouped;
   }, [brawlers]);
 
-  // The live 17/09 model is generated from the same runtime roster consumed by
-  // Draft Assist and Counter Explorer. The 16/09 JSON snapshot remains below as
-  // an auditable historical tab.
+  // The v0.34 model is generated from the same runtime roster consumed by Draft
+  // Assist and Counter Explorer. Older JSON snapshots remain available as an
+  // auditable historical reference.
   const currentModel = rosterFallback;
   const snapshots = useMemo<Record<string, TierSnapshot>>(() => ({
     [CURRENT_MODEL_LABEL]: currentModel,
@@ -68,7 +68,7 @@ export default function MetaTierList({
   const [snapshot, setSnapshot] = useState(CURRENT_MODEL_LABEL);
   const selected = snapshots[snapshot] || currentModel;
   const isCurrentModel = snapshot === CURRENT_MODEL_LABEL;
-  const snapshotDate = snapshot.match(/(\d{2}\/\d{2})/)?.[1] || "17/09";
+  const snapshotDate = snapshot.match(/(\d{2}\/\d{2})/)?.[1] || "25/09";
   const snapshotSource = sourceForSnapshot(snapshot, data);
   const lookup = useMemo(
     () => new Map(brawlers.map((brawler) => [brawler.name, brawler])),
@@ -79,11 +79,11 @@ export default function MetaTierList({
     <div className="section-title">
       <div>
         <span className="eyebrow">Tier list competitiva</span>
-        <h2>Update 69: meta post-balance del 17/09</h2>
+        <h2>Update 69: meta revisado 25/09</h2>
         <p>{isCurrentModel
-          ? "Primera jornada completa tras el mantenimiento del 16/09. El motor conserva los cambios mecánicos oficiales y ya incorpora una señal Ranked postparche más limpia, contrastada con fuentes live; los movimientos sin consenso siguen limitados para evitar sobreajuste."
+          ? "La revisión v0.34.0 consolida el balance oficial del 16/09 y separa el tier global del valor contextual. Wendy queda A general; Pam C general; Nori y Belle B; Rico y Brock A; Trunk B. El mapa, el modo, el orden y el matchup pueden elevar o reducir su prioridad real."
           : snapshot.startsWith("Motor post-balance · 16/09")
-            ? "Fotografía provisional del mismo día del mantenimiento. Se conserva para auditar cuánto cambió la lectura tras acumular una jornada postparche."
+            ? "Fotografía provisional del mismo día del mantenimiento. Se conserva para auditar cuánto cambió la lectura al acumular señal postparche."
             : snapshot.startsWith("Motor U69")
               ? "Fotografía operativa anterior al balance del 16/09. Se conserva para ver qué movimientos vienen del parche y cuáles ya existían antes."
               : snapshot.startsWith("BrawlMetrics Legendary")
@@ -105,12 +105,12 @@ export default function MetaTierList({
     </div>
 
     <div className="meta-tier-source">
-      <span><b>Actualización</b>{isCurrentModel ? "17/09/2026 · balance 16/09 aplicado" : `${snapshotDate}/2026`}</span>
+      <span><b>Actualización</b>{isCurrentModel ? "25/09/2026 · balance 16/09 aplicado" : `${snapshotDate}/2026`}</span>
       <span><b>{isCurrentModel ? "Base del modelo" : "Fuente estadística"}</b>{isCurrentModel
-        ? "Supercell 16/09 + BrawlBetter patch-aware 17/09 + Brawl Time Ninja live + NOFF 24 h"
+        ? "Revisión v0.34.0 + BrawlBetter/NOFF; Brawl Time Ninja se usa solo como contraste agregado"
         : snapshotSource.label}{!isCurrentModel && <a href={snapshotSource.url} target="_blank" rel="noreferrer">Abrir fuente ↗</a>}</span>
       <span><b>Criterio</b>{isCurrentModel
-        ? "El cambio oficial sigue pesando desde el minuto uno; la primera jornada postparche permite ajustar prioridad global, pero mapa, modo, geometría, orden y matchup recíproco prevalecen sobre el tier."
+        ? "El tier resume viabilidad general, no sustituye el contexto. Mapa, modo, geometría, orden del draft, composición y matchup recíproco prevalecen cuando existe evidencia específica."
         : snapshot.startsWith("BrawlMetrics Legendary")
           ? "Dato de Legendary previo al balance: útil como baseline, no como estado actual del parche."
           : snapshot.includes("02/09")

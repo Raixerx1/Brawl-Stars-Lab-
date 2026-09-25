@@ -1,0 +1,60 @@
+/* v0.34.0 mobile readability/accessibility pass.
+ * Keep this file last in the Draft page imports so it can safely override the
+ * older density layers without adding JS, dependencies or network requests.
+ */
+
+.draft-page-v340 :is(button, input, select, textarea, a, [role="button"]):focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(8, 11, 22, .88);
+}
+
+@media (max-width: 760px) {
+  .draft-page-v340 :is(button, input, select, textarea, [role="button"]) {
+    min-height: 44px;
+  }
+
+  .draft-page-v340 .recommendation {
+    padding: 15px;
+    gap: 11px;
+  }
+
+  .draft-page-v340 .rec-copy h3 {
+    font-size: 1.05rem;
+    line-height: 1.2;
+  }
+
+  .draft-page-v340 .rec-copy > div > span,
+  .draft-page-v340 .rec-copy small {
+    font-size: .78rem;
+    line-height: 1.45;
+  }
+
+  .draft-page-v340 .rec-copy ul {
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .draft-page-v340 .rec-copy li {
+    padding: 6px 8px;
+    font-size: .75rem;
+    line-height: 1.35;
+  }
+
+  .draft-page-v340 .score b {
+    font-size: 1.65rem;
+  }
+
+  .draft-page-v340 .score span,
+  .draft-page-v340 .helper,
+  .draft-page-v340 .eyebrow {
+    font-size: .72rem;
+    line-height: 1.4;
+  }
+
+  .draft-page-v340 .primary-button,
+  .draft-page-v340 .secondary-button {
+    min-height: 46px;
+    padding-inline: 16px;
+  }
+}
