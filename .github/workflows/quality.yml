@@ -31,6 +31,9 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Voice audits
+        run: npm run audit:voice
+
       - name: Video review audits
         run: npm run audit:video-review
 
