@@ -21,6 +21,7 @@ const checks = [
   ["sin restricción exclusiva de escritorio", !guard.includes("min-width") && !guard.includes("matchMedia")],
   ["fallback SpeechRecognition/webkitSpeechRecognition", guard.includes("SpeechRecognition") && guard.includes("webkitSpeechRecognition")],
   ["coordinación ban/pick existente", control.includes("VOICE_START_EVENT")],
+  ["picks solo cuentan slots realmente llenos", control.includes('slot.classList.contains("filled")')],
   ["estado de solicitud visible", css.includes("mic-requesting-v350")],
   ["estado de permiso denegado visible", css.includes("mic-denied-v350")],
 ];
@@ -33,4 +34,4 @@ if (failed.length) {
   process.exit(1);
 }
 
-console.log("Auditoría de micrófono v0.35 correcta: bans + picks, móvil + escritorio.");
+console.log("Auditoría de micrófono v0.35 correcta: bans + picks, móvil + escritorio, sin contar placeholders como picks.");
