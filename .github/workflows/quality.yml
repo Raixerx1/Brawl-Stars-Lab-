@@ -31,6 +31,9 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Draft recommendation diversity
+        run: npm run audit:recommendations-v36
+
       - name: Voice audits
         run: npm run audit:voice
 
