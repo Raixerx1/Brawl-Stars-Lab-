@@ -8,6 +8,7 @@ import { update69LiveSources, update69MetaLive } from "./update69-meta";
 import { applyUpdate69Maps } from "./update69-maps";
 import { applyPostBalance1709 } from "./post-balance-1709";
 import { applyPostBalance2509 } from "./post-balance-2509";
+import { applyPostBalance2609 } from "./post-balance-2609";
 import { rankCountersAgainst, rankTargetsFor } from "./counter-engine";
 
 const currentMetaSources = [
@@ -16,14 +17,16 @@ const currentMetaSources = [
 ];
 
 /**
- * Update 69 + balance 16/09. The patch layer applies the official mechanical
- * changes first; the 17/09 layer establishes the first clean post-maintenance
- * baseline; v0.34.0 then consolidates the later 25/09 review without rewriting
- * unrelated roster decisions.
+ * Update 69 + balance 16/09. Mechanical changes are applied first, followed by
+ * the 17/09 baseline, the 25/09 viability review and the 26/09 recommendation
+ * calibration that tightens stale broad-safety profiles without deleting valid
+ * contextual counterpicks.
  */
-export const brawlers = applyPostBalance2509(
-  applyPostBalance1709(
-    applyUpdate69Live(applySeason53Meta(brawlersRaw as Brawler[])),
+export const brawlers = applyPostBalance2609(
+  applyPostBalance2509(
+    applyPostBalance1709(
+      applyUpdate69Live(applySeason53Meta(brawlersRaw as Brawler[])),
+    ),
   ),
 );
 
@@ -33,10 +36,10 @@ const isStrongDraftMatchup = (matchup: ReturnType<typeof rankTargetsFor>[number]
 
 /**
  * Draft Engine consumes counters/counteredBy as strong tactical relationships.
- * Rebuild them from the current reciprocal engine after the v0.34.0 calibration,
- * so old static relations cannot override the September 16 balance or the later
- * 25/09 viability review. Calculated matchups require >=70 plus at least medium
- * confidence; explicit reviewed relations are admitted from >=66.
+ * Rebuild them from the current reciprocal engine after the v0.36.0 calibration,
+ * so stale profile assumptions cannot keep dominating the shortlist. Calculated
+ * matchups require >=70 plus at least medium confidence; explicit reviewed
+ * relations are admitted from >=66.
  */
 export const draftBrawlers: Brawler[] = brawlers.map((brawler) => ({
   ...brawler,
@@ -69,17 +72,17 @@ export const maps = applyUpdate69Maps(mapsRaw as MapProfile[]).map((map) => {
 export const meta = {
   ...metaRaw,
   ...update69MetaLive,
-  updated: "2026-09-25",
-  rankedDataThrough: "25/09/2026 · revisión v0.34.0 post-balance; BrawlBetter/NOFF priorizados y Brawl Time Ninja usado solo como contraste agregado",
-  update69BalanceStatus: "BALANCE 16/09 APLICADO · v0.34.0 consolidado 25/09. Los tiers globales no sustituyen el ajuste por mapa, modo, orden y matchup.",
-  nextBalanceWindow: "Seguimiento posterior a v0.34.0 · vigilar estabilidad de Wendy y Pam y mantener los picks contextuales separados del tier global",
+  updated: "2026-09-26",
+  rankedDataThrough: "26/09/2026 · calibración v0.36.0: contraste BrawlBetter + NOFF tras balance 16/09; el motor separa fuerza global de utilidad contextual",
+  update69BalanceStatus: "BALANCE 16/09 APLICADO · v0.36.0 calibrado 26/09. Wendy, Gale y Lou ya no reciben prioridad universal por perfiles antiguos; conservan sus ventanas reales por mapa y matchup.",
+  nextBalanceWindow: "Seguir estabilidad post-16/09 y revisar si la divergencia entre BrawlBetter y NOFF se resuelve con más muestra Ranked",
   update69Highlights: [
     "Balance oficial del 16/09 plenamente aplicado al Draft Engine y al Counter Engine.",
-    "Wendy queda A general: sigue siendo competitiva, pero los recortes de escudos y torreta ya no justifican una prioridad S global.",
-    "Pam queda C general. Conserva valor B/A contextual en Zona Restringida y escenarios estáticos que protegen la torreta, y deja de tratarse como first pick seguro.",
-    "Nori queda B general con ventanas A contextuales; Rico A con techo S contextual; Belle B con valor A contextual en mapas abiertos.",
-    "Brock se mantiene A y Trunk se mantiene B; no se fuerzan promociones por señales puntuales.",
-    "Los counters del Draft Assist se regeneran desde el motor recíproco sobre el roster v0.34.0, por lo que tier y perfiles revisados se propagan a Counter Explorer y Draft Assist.",
+    "Calibración 26/09: Wendy queda A general y deja de tratarse como blind pick universal; mantiene valor alto en mapas compatibles.",
+    "Gale queda C general en el modelo: sigue siendo counter antidive válido, pero pierde la etiqueta de pick seguro y baja su afinidad automática fuera de Balón Brawl/Zona Restringida.",
+    "Lou queda B general: conserva identidad fuerte en Zona Restringida y como antitanque/control, pero no se fuerza como respuesta genérica.",
+    "Pam queda C general. Conserva valor B/A contextual en Zona Restringida y escenarios estáticos que protegen la torreta.",
+    "Los counters del Draft Assist se regeneran desde el motor recíproco sobre el roster v0.36.0, por lo que la nueva calibración se propaga también a Counter Explorer.",
     "Mapa, geometría, orden del draft y matchup uno a uno siguen prevaleciendo sobre el tier global."
   ],
   sources: currentMetaSources,
