@@ -27,9 +27,9 @@ export const metadata: Metadata = { title: "Draft Coach en vivo" };
 export default function DraftPage() {
   return <div className="page draft-page-v340">
     <div className="page-heading">
-      <span className="eyebrow">Draft Engine 2.0 · v0.35.0 · meta revisado 25/09</span>
+      <span className="eyebrow">Draft Engine 2.0 · v0.36.0 · calibrado 26/09</span>
       <h1>Draft Coach</h1>
-      <p>Las recomendaciones incorporan el balance oficial del 16/09 y la revisión v0.34.0 del 25/09. El motor distingue tier global de valor contextual: Pam, Nori, Rico y Belle pueden subir según mapa y modo, mientras los counters se recalculan sobre el roster vigente. La entrada por voz v0.35.0 comparte el permiso de micrófono entre bans y picks y funciona tanto en móvil como en escritorio.</p>
+      <p>Las recomendaciones incorporan el balance oficial del 16/09 y una recalibración del 26/09 para evitar picks repetitivos. Gale vuelve a ser un counter contextual, Lou conserva su valor fuerte en Zona Restringida y Wendy sigue siendo meta sin tratarse como blind pick universal. El mapa, el orden del draft, la composición y los matchups directos pesan por encima de perfiles genéricos.</p>
     </div>
     <DraftAssistant maps={maps} brawlers={draftBrawlers} />
     <DraftVoicePermissionGuard />
