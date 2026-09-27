@@ -13,9 +13,9 @@ type MapMetaEvidence = {
 
 /**
  * Ranked-only map evidence. `core` is the current top-five map prior from
- * SeeMeta's Ranked sample. It is deliberately not copied into the final
- * first-pick order: Draft Assist still resolves blind safety, geometry, mode
- * utility, counters, composition and pick order.
+ * SeeMeta's Ranked sample. It stays separate from the editorial S/A lists:
+ * Ranked performance is evidence for the map, not a literal draft tier or
+ * first-pick order.
  */
 export const mapMeta2509: Record<string, MapMetaEvidence> = {
   "Dry Season": { core: ["Wendy", "Amber", "Shade", "Gus", "Bolt"], sample: 28693, source: "https://seemeta.com/es/brawl-stars/maps/bounty/dry-season" },
@@ -68,8 +68,6 @@ export function mapMetaForMap(name: string): MapMetaEvidence | undefined {
   return mapMetaByKey.get(normalizeMapName(name));
 }
 
-const unique = (values: string[]) => [...new Set(values)];
-
 export function applyMapMeta2509(maps: MapProfile[]): MapProfile[] {
   return maps.map((map) => {
     const evidence = mapMetaForMap(map.name);
@@ -77,19 +75,17 @@ export function applyMapMeta2509(maps: MapProfile[]): MapProfile[] {
 
     const reviewedAt = evidence.reviewedAt || MAP_META_DEFAULT_REVIEW_DATE;
     const confidence = evidence.confidence || (evidence.sample >= 20000 ? "Alta" : "Media");
-    const legacySpecialists = unique([...map.tierS, ...map.tierA])
-      .filter((name) => !evidence.core.includes(name))
-      .slice(0, 10);
     const sampleNote = ` · muestra ${evidence.sample.toLocaleString("es-ES")}`;
 
     return {
       ...map,
-      tierS: [...evidence.core],
-      tierA: legacySpecialists,
-      bans: evidence.core.slice(0, 3),
+      rankedMetaCore: [...evidence.core],
+      rankedMetaReviewedAt: reviewedAt,
+      rankedMetaSample: evidence.sample,
+      rankedMetaSource: evidence.source,
       firstPickConfidence: confidence,
       status: `${map.status.replace(/\s*$/, "")} · Meta Ranked por mapa revisado ${reviewedAt}${sampleNote}.`,
-      firstPickNotes: `Prior estadístico Ranked ${reviewedAt} (${evidence.sample.toLocaleString("es-ES")} batallas): ${evidence.core.join(", ")}. Se usa como evidencia del mapa, no como orden literal de first pick; el motor sigue ponderando seguridad a ciegas, geometría, counters, composición y orden del draft. Fuente: ${evidence.source}`,
+      firstPickNotes: `Prior estadístico Ranked ${reviewedAt} (${evidence.sample.toLocaleString("es-ES")} batallas): ${evidence.core.join(", ")}. Se conserva separado de los tiers editoriales y se usa como evidencia del mapa, no como orden literal de first pick.`,
     };
   });
 }
