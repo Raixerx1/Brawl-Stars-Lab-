@@ -53,6 +53,7 @@ const mapMeta = require(join(output, "map-meta-2509.js"));
 
 const rawBrawlers = JSON.parse(await readFile(join(root, "src/data/brawlers.json"), "utf8"));
 const rawMaps = JSON.parse(await readFile(join(root, "src/data/maps.json"), "utf8"));
+const draftEngineSource = await readFile(join(root, "src/lib/draft-engine.ts"), "utf8");
 
 const normalize = (value) => value
   .normalize("NFD")
@@ -104,11 +105,22 @@ const top3CoreMisses = [];
 const leaderCoreMisses = [];
 for (const map of current) {
   const evidence = mapMeta.mapMetaForMap(map.name);
+  const editorial = pool.find((candidate) => normalize(candidate.name) === normalize(map.name));
   expect(Boolean(evidence), `${map.name}: falta evidencia Ranked por mapa`);
-  if (!evidence) continue;
+  expect(Boolean(editorial), `${map.name}: falta baseline editorial`);
+  if (!evidence || !editorial) continue;
 
-  expect(JSON.stringify(map.tierS) === JSON.stringify(evidence.core), `${map.name}: tierS no refleja el core Ranked actual`);
-  expect(JSON.stringify(map.bans) === JSON.stringify(evidence.core.slice(0, 3)), `${map.name}: bans no parten del core actual`);
+  expect(JSON.stringify(map.rankedMetaCore) === JSON.stringify(evidence.core), `${map.name}: rankedMetaCore no refleja el core Ranked actual`);
+  expect(map.rankedMetaSample === evidence.sample, `${map.name}: muestra Ranked desincronizada`);
+  expect(map.rankedMetaSource === evidence.source, `${map.name}: fuente Ranked desincronizada`);
+  expect(map.rankedMetaReviewedAt === (evidence.reviewedAt || "25/09/2026"), `${map.name}: fecha de revisión Ranked incorrecta`);
+
+  // La capa empírica no debe reetiquetar como Tier S ni ban editorial a todo
+  // brawler que simplemente tenga buen rendimiento estadístico en ese mapa.
+  expect(JSON.stringify(map.tierS) === JSON.stringify(editorial.tierS), `${map.name}: el prior Ranked sobrescribió tierS editorial`);
+  expect(JSON.stringify(map.tierA) === JSON.stringify(editorial.tierA), `${map.name}: el prior Ranked sobrescribió tierA editorial`);
+  expect(JSON.stringify(map.bans) === JSON.stringify(editorial.bans), `${map.name}: el prior Ranked sobrescribió bans editoriales`);
+
   expect(map.firstPicks.length === 3, `${map.name}: no tiene top 3 first-pick`);
   expect(map.firstPickCandidates?.length === 8, `${map.name}: no tiene 8 candidatos auditables`);
   expect(map.firstPickModelVersion === "v0.36.2-ranked-pool-2709", `${map.name}: versión first-pick antigua`);
@@ -119,27 +131,24 @@ for (const map of current) {
   if (!evidence.core.includes(map.firstPicks[0])) leaderCoreMisses.push(`${map.name}: ${map.firstPicks[0]}`);
 }
 
-// These two lists are diagnostics, not failures. Ranked performance on a map
-// and blind first-pick safety answer different questions and should not be forced
-// to produce the same ordering.
+// Ranked performance and blind first-pick safety answer different questions;
+// these are diagnostics, not forced convergence tests.
 const byName = (name) => current.find((map) => normalize(map.name) === normalize(name));
-const belle = byName("Belle's Rock");
-const flaring = byName("Flaring Phoenix");
-const openBusiness = byName("Open Business");
-const parallel = byName("Parallel Plays");
-const ring = byName("Ring of Fire");
-const liminal = byName("In the Liminal");
-const quick = byName("Quick Travel");
+const core = (name) => byName(name)?.rankedMetaCore?.join("|");
+expect(core("Belle's Rock") === "Wendy|Brock|Gus|Shade|Sprout", "Belle's Rock no usa el core 25/09");
+expect(core("Flaring Phoenix") === "Brock|Wendy|Pearl|Gus|Shade", "Flaring Phoenix no usa el core 25/09");
+expect(core("Open Business") === "Amber|Gus|Juju|Wendy|Shade", "Open Business conserva el core anterior");
+expect(core("Parallel Plays") === "Shade|Gus|Juju|El Primo|Bibi", "Parallel Plays conserva el core anterior");
+expect(core("Ring of Fire") === "Wendy|Amber|Bo|Gus|Ash", "Ring of Fire conserva el core anterior");
+expect(core("In the Liminal") === "Amber|Wendy|Bo|Gus|Colette", "In the Liminal conserva el core del 17/09");
+expect(core("Quick Travel") === "Nita|Shade|Ash|Bibi|Emz", "Quick Travel conserva un perfil genérico obsoleto");
+for (const smallerSample of ["Spiraling Out", "Beach Ball", "In the Liminal", "Quick Travel"]) {
+  expect(byName(smallerSample)?.firstPickConfidence === "Media", `${smallerSample}: falta cautela por muestra menor`);
+}
 
-expect(belle?.tierS.join("|") === "Wendy|Brock|Gus|Shade|Sprout", "Belle's Rock no usa el core 25/09");
-expect(flaring?.tierS.join("|") === "Brock|Wendy|Pearl|Gus|Shade", "Flaring Phoenix no usa el core 25/09");
-expect(openBusiness?.tierS.join("|") === "Amber|Gus|Juju|Wendy|Shade", "Open Business conserva el core anterior");
-expect(parallel?.tierS.join("|") === "Shade|Gus|Juju|El Primo|Bibi", "Parallel Plays conserva el core anterior");
-expect(ring?.tierS.join("|") === "Wendy|Amber|Bo|Gus|Ash", "Ring of Fire conserva el core anterior");
-expect(liminal?.tierS.join("|") === "Amber|Wendy|Bo|Gus|Colette", "In the Liminal conserva la muestra/core del 17/09");
-expect(liminal?.firstPickConfidence === "Media", "In the Liminal no conserva cautela por muestra menor");
-expect(quick?.tierS.join("|") === "Nita|Shade|Ash|Bibi|Emz", "Quick Travel conserva un perfil genérico obsoleto");
-expect(quick?.firstPickConfidence === "Media", "Quick Travel no conserva cautela por muestra menor");
+expect(draftEngineSource.includes("input.map.rankedMetaCore?.indexOf(brawler.name)"), "Draft Engine no consume rankedMetaCore");
+expect(draftEngineSource.includes("Amenaza frecuente y eficaz en Ranked del mapa"), "Bans no incorporan el prior Ranked");
+expect(draftEngineSource.includes("Alta presencia/rendimiento Ranked en este mapa"), "Predicción rival no incorpora el prior Ranked");
 
 const leaders = new Map();
 for (const map of current) leaders.set(map.firstPicks[0], (leaders.get(map.firstPicks[0]) || 0) + 1);
@@ -158,4 +167,4 @@ if (errors.length) {
   errors.forEach((error) => console.error(`ERROR: ${error}`));
   process.exit(1);
 }
-console.log("Auditoría v0.36.2 correcta: pool y meta mapa por mapa sincronizados.");
+console.log("Auditoría v0.36.2 correcta: pool, meta empírico y tiers editoriales permanecen sincronizados y separados.");
