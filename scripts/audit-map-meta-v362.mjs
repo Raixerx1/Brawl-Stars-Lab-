@@ -96,7 +96,10 @@ for (const stale of ["Call of the Water", "Stroke of Luck"]) {
   expect(!current.some((map) => normalize(map.name) === normalize(stale)), `${stale} sigue entrando en Draft Assist`);
 }
 
-expect(Object.keys(mapMeta.mapMeta2509).length === 28, `Hay ${Object.keys(mapMeta.mapMeta2509).length} priors, esperado 28`);
+const evidenceRows = Object.values(mapMeta.mapMeta2509);
+expect(evidenceRows.length === 28, `Hay ${evidenceRows.length} priors, esperado 28`);
+expect(evidenceRows.every((evidence) => evidence.sample >= 10000), "Algún prior actual usa una muestra inferior a 10.000 partidas");
+
 const top3CoreMisses = [];
 const leaderCoreMisses = [];
 for (const map of current) {
@@ -110,28 +113,41 @@ for (const map of current) {
   expect(map.firstPickCandidates?.length === 8, `${map.name}: no tiene 8 candidatos auditables`);
   expect(map.firstPickModelVersion === "v0.36.2-ranked-pool-2709", `${map.name}: versión first-pick antigua`);
   expect(map.firstPickNotes?.includes("Prior estadístico Ranked"), `${map.name}: perdió la trazabilidad del prior estadístico`);
+  expect(map.firstPickNotes?.includes(evidence.sample.toLocaleString("es-ES")), `${map.name}: no muestra la muestra estadística usada`);
 
   if (!map.firstPicks.some((name) => evidence.core.includes(name))) top3CoreMisses.push(map.name);
   if (!evidence.core.includes(map.firstPicks[0])) leaderCoreMisses.push(`${map.name}: ${map.firstPicks[0]}`);
 }
 
-// These two lists are diagnostics, not failures. The SeeMeta core describes
-// general Ranked performance on the map; a blind first pick has a different
-// target and may correctly prefer a safer option outside that core.
+// These two lists are diagnostics, not failures. Ranked performance on a map
+// and blind first-pick safety answer different questions and should not be forced
+// to produce the same ordering.
 const byName = (name) => current.find((map) => normalize(map.name) === normalize(name));
 const belle = byName("Belle's Rock");
 const flaring = byName("Flaring Phoenix");
+const openBusiness = byName("Open Business");
+const parallel = byName("Parallel Plays");
+const ring = byName("Ring of Fire");
+const liminal = byName("In the Liminal");
 const quick = byName("Quick Travel");
+
 expect(belle?.tierS.join("|") === "Wendy|Brock|Gus|Shade|Sprout", "Belle's Rock no usa el core 25/09");
 expect(flaring?.tierS.join("|") === "Brock|Wendy|Pearl|Gus|Shade", "Flaring Phoenix no usa el core 25/09");
+expect(openBusiness?.tierS.join("|") === "Amber|Gus|Juju|Wendy|Shade", "Open Business conserva el core anterior");
+expect(parallel?.tierS.join("|") === "Shade|Gus|Juju|El Primo|Bibi", "Parallel Plays conserva el core anterior");
+expect(ring?.tierS.join("|") === "Wendy|Amber|Bo|Gus|Ash", "Ring of Fire conserva el core anterior");
+expect(liminal?.tierS.join("|") === "Amber|Wendy|Bo|Gus|Colette", "In the Liminal conserva la muestra/core del 17/09");
+expect(liminal?.firstPickConfidence === "Media", "In the Liminal no conserva cautela por muestra menor");
 expect(quick?.tierS.join("|") === "Nita|Shade|Ash|Bibi|Emz", "Quick Travel conserva un perfil genérico obsoleto");
+expect(quick?.firstPickConfidence === "Media", "Quick Travel no conserva cautela por muestra menor");
 
 const leaders = new Map();
 for (const map of current) leaders.set(map.firstPicks[0], (leaders.get(map.firstPicks[0]) || 0) + 1);
 const topLeaders = [...leaders.entries()].sort((a, b) => b[1] - a[1]);
 
 console.log(`Mapas auditados: ${current.length}`);
-console.log(`Priors específicos: ${Object.keys(mapMeta.mapMeta2509).length}`);
+console.log(`Priors específicos: ${evidenceRows.length}`);
+console.log(`Muestra mínima: ${Math.min(...evidenceRows.map((evidence) => evidence.sample)).toLocaleString("es-ES")}`);
 console.log(`Top 3 blind sin core estadístico: ${top3CoreMisses.length}${top3CoreMisses.length ? ` · ${top3CoreMisses.join(", ")}` : ""}`);
 console.log(`Líderes blind fuera del core: ${leaderCoreMisses.length}${leaderCoreMisses.length ? ` · ${leaderCoreMisses.join(" · ")}` : ""}`);
 console.log(`Líderes first pick: ${topLeaders.map(([name, count]) => `${name} ${count}`).join(" · ")}`);
