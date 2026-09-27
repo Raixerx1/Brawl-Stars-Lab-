@@ -96,6 +96,10 @@ export type MapProfile = {
     reasons: string[];
     risks: string[];
   }>;
+  rankedMetaCore?: string[];
+  rankedMetaReviewedAt?: string;
+  rankedMetaSample?: number;
+  rankedMetaSource?: string;
 };
 
 export type DraftPosition = "First pick" | "Pick intermedio" | "Last pick";
@@ -178,250 +182,31 @@ export type LiveMatchEvent = {
   tone: LiveEventTone;
   note?: string;
   source?: LiveEventSource;
-  confidence?: number;
-  autoKey?: string;
-  feedback?: AutoFeedbackVerdict;
-  sequenceKey?: string;
 };
 
-export type AutoReviewSensitivity = "Baja" | "Media" | "Alta";
-
-export type AutoReviewStatus = "idle" | "calibrating" | "active" | "paused";
-
-export type AutoLiveComment = {
-  id: string;
+export type LiveMatchSnapshot = {
   second: number;
-  text: string;
-  confidence: number;
-  tone: LiveEventTone;
-  eventLabel?: string;
-  autoKey?: string;
-  feedback?: AutoFeedbackVerdict;
-  kind?: "frame" | "sequence";
+  label?: string;
+  mode?: string;
+  objective?: string;
+  score?: string;
+  health?: string;
+  superReady?: boolean;
+  ammo?: number;
+  visibleEnemies?: number;
+  centerControl?: boolean;
+  note?: string;
 };
 
-export type AutoReviewScorecard = {
-  overall: number;
-  positioning: number;
-  resources: number;
-  objective: number;
-  tempo: number;
-  reviewCoverage: number;
-  verdict: "Excelente" | "Sólida" | "Mejorable" | "Crítica" | "Sin datos";
-  keyMoment?: {
-    second: number;
-    label: string;
-    impact: "Positivo" | "Negativo" | "Neutral";
-    reason: string;
-  };
-};
-
-export type LiveReviewSummary = {
-  strengths: string[];
-  mistakes: string[];
-  recommendations: string[];
-  headline: string;
-  scorecard: AutoReviewScorecard;
-};
-
-export type LiveReviewSession = {
+export type LiveMatchReview = {
   id: string;
-  date: string;
-  mapSlug: string;
-  mapName: string;
-  mode: string;
-  brawler: string;
-  brawlerSlug?: string;
-  result?: MatchResult;
+  createdAt: string;
   duration: number;
-  events: LiveMatchEvent[];
-  comments?: AutoLiveComment[];
-  autoAnalysis?: {
-    enabled: boolean;
-    sensitivity: AutoReviewSensitivity;
-    detections: number;
-    accepted?: number;
-    rejected?: number;
-    sequenceInsights?: number;
-  };
-  note: string;
-  summary: LiveReviewSummary;
-};
-
-export type TacticalBuild = {
-  gadget: string;
-  starPower: string;
-  gears: string[];
-  hypercharge: string;
-  reason: string;
-};
-
-export type LanePlan = {
-  lane: string;
-  target?: string;
-  avoid?: string;
-  instruction: string;
-};
-
-export type DraftInput = {
-  map: MapProfile;
-  position: DraftPosition;
-  allies: string[];
-  enemies: string[];
-  bans: string[];
-  myPick?: string;
-  priority?: DraftPriority;
-  personalPool?: PlayerPool;
-  usePersonalPool?: boolean;
-  poolPolicy?: PoolPolicy;
-  personalPerformance?: PersonalPerformance;
-  learnFromHistory?: boolean;
-  queueMode?: QueueMode;
-};
-
-export type DraftMetrics = {
-  meta: number;
-  mapFit: number;
-  counter: number;
-  synergy: number;
-  safety: number;
-  composition: number;
-  personal: number;
-  risk: number;
-};
-
-export type DraftMatchupEvaluation = {
-  enemy: string;
-  verdict: "Ventaja clara" | "Ventaja" | "Neutral" | "Riesgo" | "Desventaja";
-  score: number;
-  reason: string;
-};
-
-export type DraftConfidence = {
-  score: number;
-  label: "Baja" | "Media" | "Alta";
-  gap: number;
-  reasons: string[];
-  cautions: string[];
-};
-
-export type DraftChecklistItem = {
-  label: string;
-  status: "Cubierto" | "Parcial" | "Falta";
-  detail: string;
-};
-
-export type DraftRecommendation = {
-  brawler: Brawler;
-  score: number;
-  reasons: string[];
-  brief: string;
-  warning?: string;
-  metrics: DraftMetrics;
-  countersHit: string[];
-  softCounters: string[];
-  exposedTo: string[];
-  uncoveredEnemies: string[];
-  matchups: DraftMatchupEvaluation[];
-  counterLabel: string;
-  suggestedLine: string;
-  plan: string;
-  personalHistory?: PersonalStat;
-  personalMapHistory?: PersonalStat;
-  personalAdjustment?: number;
-  build: TacticalBuild;
-  lanePlan: LanePlan;
-  firstPickEvaluation?: FirstPickEvaluation;
-};
-
-export type PairRecommendation = {
-  first: DraftRecommendation;
-  second: DraftRecommendation;
-  score: number;
-  synergy: number;
-  coverage: number;
-  coordination: number;
-  reasons: string[];
-  risks: string[];
-  lanePlan: string;
-};
-
-export type BanRecommendation = {
-  brawler: Brawler;
-  score: number;
-  reasons: string[];
-};
-
-export type EnemyPickPrediction = {
-  brawler: Brawler;
-  score: number;
-  target?: string;
-  reason: string;
-  response: string;
-};
-
-export type DraftStressScenario = {
-  enemy: Brawler;
-  likelihood: number;
-  candidateScore: number;
-  scoreDrop: number;
-  directThreat: boolean;
-  reason: string;
-};
-
-export type DraftStressResult = {
-  recommendation: DraftRecommendation;
-  resilience: number;
-  averageScore: number;
-  worstScore: number;
-  directThreats: number;
-  verdict: "Blindado" | "Estable" | "Vigilable" | "Frágil";
-  scenarios: DraftStressScenario[];
-};
-
-export type DraftStressAnalysis = {
-  results: DraftStressResult[];
-  robustPick?: DraftStressResult;
-  scenarioCount: number;
+  map?: string;
+  mode?: string;
+  brawler?: string;
+  result?: MatchResult;
   summary: string;
-};
-
-export type TeamAssignment = {
-  ally: string;
-  enemy?: string;
-  lane: string;
-  instruction: string;
-};
-
-
-export type WinEstimate = {
-  percentage: number;
-  lower: number;
-  upper: number;
-  confidence: "Baja" | "Media" | "Alta";
-  completeness: number;
-  alliedScore: number;
-  enemyScore: number;
-  title: string;
-  advantages: string[];
-  risks: string[];
-  disclaimer: string;
-};
-
-export type DraftAnalysis = {
-  recommendations: DraftRecommendation[];
-  selectedPick?: DraftRecommendation;
-  winEstimate?: WinEstimate;
-  needs: string[];
-  threats: string[];
-  strengths: string[];
-  enemyWeaknesses: string[];
-  banRecommendations: BanRecommendation[];
-  predictedEnemyPicks: EnemyPickPrediction[];
-  teamAssignments: TeamAssignment[];
-  compositionScore: number;
-  draftStage: string;
-  availableCount: number;
-  confidence: DraftConfidence;
-  checklist: DraftChecklistItem[];
+  events: LiveMatchEvent[];
+  snapshots?: LiveMatchSnapshot[];
 };
