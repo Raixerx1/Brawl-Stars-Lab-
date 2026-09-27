@@ -1,0 +1,91 @@
+import type { MapProfile } from "./types";
+
+export const MAP_META_2509_VERSION = "v0.36.2-map-meta-2509";
+export const MAP_META_DEFAULT_REVIEW_DATE = "25/09/2026";
+
+type MapMetaEvidence = {
+  core: [string, string, string, string, string];
+  sample: number;
+  reviewedAt?: string;
+  confidence?: "Media" | "Alta";
+  source: string;
+};
+
+/**
+ * Ranked-only map evidence. `core` is the current top-five map prior from
+ * SeeMeta's Ranked sample. It stays separate from the editorial S/A lists:
+ * Ranked performance is evidence for the map, not a literal draft tier or
+ * first-pick order.
+ */
+export const mapMeta2509: Record<string, MapMetaEvidence> = {
+  "Dry Season": { core: ["Wendy", "Amber", "Shade", "Gus", "Bolt"], sample: 28693, source: "https://seemeta.com/es/brawl-stars/maps/bounty/dry-season" },
+  "Hideout": { core: ["Wendy", "Amber", "Gus", "Janet", "Ollie"], sample: 28832, source: "https://seemeta.com/es/brawl-stars/maps/bounty/hideout" },
+  "Layer Cake": { core: ["Amber", "Shade", "Wendy", "Brock", "Gus"], sample: 28283, source: "https://seemeta.com/es/brawl-stars/maps/bounty/layer-cake" },
+  "Shooting Star": { core: ["Wendy", "Gus", "Amber", "Ollie", "Brock"], sample: 29392, source: "https://seemeta.com/es/brawl-stars/maps/bounty/shooting-star" },
+
+  "Center Stage": { core: ["Amber", "Shade", "El Primo", "Gus", "Jacky"], sample: 28770, source: "https://seemeta.com/es/brawl-stars/maps/brawl-ball/center-stage" },
+  "Pinball Dreams": { core: ["Shade", "Amber", "Wendy", "El Primo", "Gus"], sample: 27715, source: "https://seemeta.com/es/brawl-stars/maps/brawl-ball/pinball-dreams" },
+  "Sneaky Fields": { core: ["El Primo", "Amber", "Shade", "Rico", "Gus"], sample: 28189, source: "https://seemeta.com/es/brawl-stars/maps/brawl-ball/sneaky-fields" },
+  "Triple Dribble": { core: ["Shade", "Amber", "El Primo", "Wendy", "Gus"], sample: 28105, source: "https://seemeta.com/es/brawl-stars/maps/brawl-ball/triple-dribble" },
+  "Spiraling Out": { core: ["Wendy", "Shade", "Amber", "Gus", "El Primo"], sample: 14552, confidence: "Media", source: "https://seemeta.com/es/brawl-stars/maps/brawl-ball/spiraling-out" },
+  "Beach Ball": { core: ["Amber", "Shade", "El Primo", "Wendy", "Gus"], sample: 14767, confidence: "Media", source: "https://seemeta.com/es/brawl-stars/maps/brawl-ball/beach-ball" },
+
+  "Double Swoosh": { core: ["Amber", "Wendy", "El Primo", "Tara", "Emz"], sample: 27701, source: "https://seemeta.com/es/brawl-stars/maps/gem-grab/double-swoosh" },
+  "Gem Fort": { core: ["Wendy", "Shade", "Gus", "El Primo", "Amber"], sample: 27882, source: "https://seemeta.com/es/brawl-stars/maps/gem-grab/gem-fort" },
+  "Hard Rock Mine": { core: ["Shade", "Wendy", "Gus", "Rico", "Amber"], sample: 27719, source: "https://seemeta.com/es/brawl-stars/maps/gem-grab/hard-rock-mine" },
+  "Undermine": { core: ["Wendy", "Amber", "Shade", "Gus", "Ollie"], sample: 28127, source: "https://seemeta.com/es/brawl-stars/maps/gem-grab/undermine" },
+
+  "Bridge Too Far": { core: ["Shade", "Wendy", "Nori", "Colt", "8-Bit"], sample: 27596, source: "https://seemeta.com/es/brawl-stars/maps/heist/bridge-too-far" },
+  "Hot Potato": { core: ["Shade", "Nori", "Colette", "Bibi", "Rico"], sample: 28038, source: "https://seemeta.com/es/brawl-stars/maps/heist/hot-potato" },
+  "Kaboom Canyon": { core: ["Nori", "Shade", "Colette", "Wendy", "Amber"], sample: 27225, source: "https://seemeta.com/es/brawl-stars/maps/heist/kaboom-canyon" },
+  "Safe Zone": { core: ["Shade", "Nori", "Amber", "Wendy", "Colette"], sample: 27512, source: "https://seemeta.com/es/brawl-stars/maps/heist/safe-zone" },
+
+  "Dueling Beetles": { core: ["Amber", "Wendy", "Gus", "Shade", "Bo"], sample: 27622, source: "https://seemeta.com/es/brawl-stars/maps/hot-zone/dueling-beetles" },
+  "Open Business": { core: ["Amber", "Gus", "Juju", "Wendy", "Shade"], sample: 27024, source: "https://seemeta.com/es/brawl-stars/maps/hot-zone/open-business" },
+  "Parallel Plays": { core: ["Shade", "Gus", "Juju", "El Primo", "Bibi"], sample: 26669, source: "https://seemeta.com/es/brawl-stars/maps/hot-zone/parallel-plays" },
+  "Ring of Fire": { core: ["Wendy", "Amber", "Bo", "Gus", "Ash"], sample: 27337, source: "https://seemeta.com/es/brawl-stars/maps/hot-zone/ring-of-fire" },
+  "In the Liminal": { core: ["Amber", "Wendy", "Bo", "Gus", "Colette"], sample: 13450, confidence: "Media", source: "https://seemeta.com/es/brawl-stars/maps/hot-zone/in-the-liminal" },
+  "Quick Travel": { core: ["Nita", "Shade", "Ash", "Bibi", "Emz"], sample: 13384, confidence: "Media", source: "https://seemeta.com/es/brawl-stars/maps/hot-zone/quick-travel" },
+
+  "New Horizons": { core: ["Wendy", "Sprout", "Brock", "Shade", "Gus"], sample: 29206, source: "https://seemeta.com/es/brawl-stars/maps/knockout/new-horizons" },
+  "Out in the Open": { core: ["Wendy", "Brock", "Pearl", "Gus", "Amber"], sample: 28973, source: "https://seemeta.com/es/brawl-stars/maps/knockout/out-in-the-open" },
+  "Belle's Rock": { core: ["Wendy", "Brock", "Gus", "Shade", "Sprout"], sample: 28606, source: "https://seemeta.com/es/brawl-stars/maps/knockout/belles-rock" },
+  "Flaring Phoenix": { core: ["Brock", "Wendy", "Pearl", "Gus", "Shade"], sample: 28648, source: "https://seemeta.com/es/brawl-stars/maps/knockout/flaring-phoenix" },
+};
+
+const normalizeMapName = (value: string) => value
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-+|-+$/g, "");
+
+const mapMetaByKey = new Map(
+  Object.entries(mapMeta2509).map(([name, evidence]) => [normalizeMapName(name), evidence]),
+);
+
+export function mapMetaForMap(name: string): MapMetaEvidence | undefined {
+  return mapMetaByKey.get(normalizeMapName(name));
+}
+
+export function applyMapMeta2509(maps: MapProfile[]): MapProfile[] {
+  return maps.map((map) => {
+    const evidence = mapMetaForMap(map.name);
+    if (!evidence || map.rotationStatus !== "Actual") return map;
+
+    const reviewedAt = evidence.reviewedAt || MAP_META_DEFAULT_REVIEW_DATE;
+    const confidence = evidence.confidence || (evidence.sample >= 20000 ? "Alta" : "Media");
+    const sampleNote = ` · muestra ${evidence.sample.toLocaleString("es-ES")}`;
+
+    return {
+      ...map,
+      rankedMetaCore: [...evidence.core],
+      rankedMetaReviewedAt: reviewedAt,
+      rankedMetaSample: evidence.sample,
+      rankedMetaSource: evidence.source,
+      firstPickConfidence: confidence,
+      status: `${map.status.replace(/\s*$/, "")} · Meta Ranked por mapa revisado ${reviewedAt}${sampleNote}.`,
+      firstPickNotes: `Prior estadístico Ranked ${reviewedAt} (${evidence.sample.toLocaleString("es-ES")} batallas): ${evidence.core.join(", ")}. Se conserva separado de los tiers editoriales y se usa como evidencia del mapa, no como orden literal de first pick.`,
+    };
+  });
+}

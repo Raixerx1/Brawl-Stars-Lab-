@@ -2,7 +2,7 @@ import type { Brawler, MapProfile } from "./types";
 import { evaluateFirstPick } from "./first-pick-model";
 
 export const RANKED_POOL_2709_REVIEW_DATE = "27/09/2026";
-export const RANKED_POOL_2709_MODEL_VERSION = "v0.36.1-ranked-pool-2709";
+export const RANKED_POOL_2709_MODEL_VERSION = "v0.36.2-ranked-pool-2709";
 
 const normalize = (value: string) => value
   .normalize("NFD")
@@ -11,17 +11,14 @@ const normalize = (value: string) => value
   .replace(/[^a-z0-9]+/g, "-")
   .replace(/^-+|-+$/g, "");
 
-/**
- * Current Ranked pool used by Draft Assist after the September rotation.
- * Featured maps are included in addition to the standard pool.
- */
+/** Current Ranked pool. Featured maps are included in addition to the standard pool. */
 export const rankedPool2709ByMode = {
   "Caza Estelar": ["Dry Season", "Hideout", "Layer Cake", "Shooting Star"],
   "Balón Brawl": ["Center Stage", "Pinball Dreams", "Sneaky Fields", "Triple Dribble", "Spiraling Out", "Beach Ball"],
   "Atrapagemas": ["Double Swoosh", "Gem Fort", "Hard Rock Mine", "Undermine"],
   "Atraco": ["Bridge Too Far", "Hot Potato", "Kaboom Canyon", "Safe Zone"],
   "Zona Restringida": ["Dueling Beetles", "Open Business", "Parallel Plays", "Ring of Fire", "In the Liminal", "Quick Travel"],
-  "Noqueo": ["New Horizons", "Out in the Open", "Call of the Water", "Stroke of Luck"],
+  "Noqueo": ["New Horizons", "Out in the Open", "Belle's Rock", "Flaring Phoenix"],
 } as const;
 
 export const rankedPool2709Names = Object.values(rankedPool2709ByMode).flat();
@@ -52,7 +49,7 @@ function featuredHotZoneMap(name: "In the Liminal" | "Quick Travel"): MapProfile
     aliases: name === "In the Liminal" ? ["Al límite"] : ["Viaje rápido"],
     firstPickReviewedAt: RANKED_POOL_2709_REVIEW_DATE,
     firstPickConfidence: "Media",
-    firstPickNotes: "Mapa destacado de Ranked. Recomendaciones recalculadas con el meta y perfiles v0.36.1; la geometría específica se trata con confianza media.",
+    firstPickNotes: "Mapa destacado de Ranked. La geometría específica se trata con confianza media.",
     geometry: {
       openness: quick ? 55 : 48,
       bushDensity: quick ? 32 : 42,
@@ -114,9 +111,8 @@ const tierWeight: Record<string, number> = {
 };
 
 /**
- * Rebuild the map's blind-pick shortlist from the current roster rather than
- * carrying August recommendations forward. This changes only first-pick data;
- * map-specific tier and ban information stays available to the full draft model.
+ * Rebuild blind-pick shortlists from the current roster. Ranked map evidence is
+ * a moderate prior and remains separate from the map's editorial S/A tiers.
  */
 export function recalibrateRankedFirstPicks2709(maps: MapProfile[], roster: Brawler[]): MapProfile[] {
   return maps.map((map) => {
@@ -125,10 +121,16 @@ export function recalibrateRankedFirstPicks2709(maps: MapProfile[], roster: Braw
     const ranked = roster
       .map((brawler) => {
         const evaluation = evaluateFirstPick(brawler, map);
+        const metaIndex = map.rankedMetaCore?.indexOf(brawler.name) ?? -1;
         const sIndex = map.tierS.indexOf(brawler.name);
         const aIndex = map.tierA.indexOf(brawler.name);
-        const editorial = sIndex >= 0 ? Math.max(1, 5 - sIndex) : aIndex >= 0 ? Math.max(0, 2 - aIndex * .25) : 0;
-        const score = evaluation.score + (tierWeight[brawler.tier] || 0) + editorial;
+        const rankedMetaPrior = metaIndex >= 0 ? Math.max(.8, 5 - metaIndex * .8) : 0;
+        const editorialPrior = sIndex >= 0
+          ? Math.max(.5, 2.5 - sIndex * .35)
+          : aIndex >= 0
+            ? Math.max(0, 1 - aIndex * .1)
+            : 0;
+        const score = evaluation.score + (tierWeight[brawler.tier] || 0) + rankedMetaPrior + editorialPrior;
         return { brawler, evaluation, score };
       })
       .filter(({ brawler, evaluation }) =>
@@ -142,13 +144,14 @@ export function recalibrateRankedFirstPicks2709(maps: MapProfile[], roster: Braw
         b.evaluation.expectedMapFit - a.evaluation.expectedMapFit
       );
 
-    const candidates = ranked.slice(0, 8).map(({ brawler, evaluation }) => ({
+    const candidates = ranked.slice(0, 8).map(({ brawler, evaluation, score }) => ({
       name: brawler.name,
-      score: evaluation.score,
+      score: Math.round(score),
       reasons: evaluation.strengths,
       risks: evaluation.risks,
     }));
 
+    const metaNote = map.firstPickNotes ? `${map.firstPickNotes} ` : "";
     return {
       ...map,
       firstPicks: candidates.slice(0, 3).map((candidate) => candidate.name),
@@ -156,7 +159,7 @@ export function recalibrateRankedFirstPicks2709(maps: MapProfile[], roster: Braw
       firstPickReviewedAt: RANKED_POOL_2709_REVIEW_DATE,
       firstPickModelVersion: RANKED_POOL_2709_MODEL_VERSION,
       firstPickConfidence: map.firstPickConfidence === "Baja" ? "Media" : map.firstPickConfidence || "Media",
-      firstPickNotes: "First picks recalculados el 27/09 con meta v0.36.1, seguridad a ciegas, geometría y utilidad del modo. El resto del Draft Assist sigue ponderando counters, composición y orden de picks.",
+      firstPickNotes: `${metaNote}First picks recalculados con v0.36.2: prior Ranked específico + tiers editoriales + seguridad a ciegas + geometría + utilidad del modo. Counters, composición y orden de picks siguen resolviéndose en Draft Assist.`,
     };
   });
 }

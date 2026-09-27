@@ -352,6 +352,8 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
 
   const sIndex = input.map.tierS.indexOf(brawler.name);
   const aIndex = input.map.tierA.indexOf(brawler.name);
+  const rankedMetaIndex = input.map.rankedMetaCore?.indexOf(brawler.name) ?? -1;
+  const rankedMetaConfidence = Math.min(1, Math.max(.62, (input.map.rankedMetaSample || 10000) / 25000));
   const firstPickIndex = input.map.firstPicks.indexOf(brawler.name);
   const firstPickEvaluation = input.position === "First pick"
     ? evaluateFirstPick(brawler, input.map)
@@ -380,6 +382,18 @@ function scoreCandidate(brawler: Brawler, input: DraftInput, allies: Brawler[], 
         ? 7 - aIndex * .5
         : 4 - aIndex * .25;
     reasons.push("Tier A editorial del mapa");
+  }
+
+  if (rankedMetaIndex >= 0) {
+    const stageBase =
+      input.position === "First pick" ? 6.5 :
+      input.position === "Pick intermedio" ? 5.5 :
+      4.5;
+    const empiricalBonus = Math.max(1, stageBase - rankedMetaIndex * .8) * rankedMetaConfidence;
+    score += empiricalBonus;
+    mapFit += Math.max(2, 8 - rankedMetaIndex) * rankedMetaConfidence;
+    meta += Math.max(1, 5 - rankedMetaIndex * .7) * rankedMetaConfidence;
+    reasons.push("Meta Ranked del mapa" + (input.map.rankedMetaSample ? " · " + input.map.rankedMetaSample.toLocaleString("es-ES") + " partidas" : ""));
   }
 
   if (firstPickEvaluation) {
@@ -735,8 +749,14 @@ function banRecommendations(input: DraftInput, roster: Brawler[], allies: Brawle
       const reasons: string[] = [];
       const mapBanIndex = input.map.bans.indexOf(brawler.name);
       const tierIndex = input.map.tierS.indexOf(brawler.name);
-      if (mapBanIndex >= 0) { score += 35 - mapBanIndex * 5; reasons.push("Ban prioritario del mapa"); }
-      if (tierIndex >= 0) { score += 18 - tierIndex * 2; reasons.push("Tier S del mapa"); }
+      const rankedMetaIndex = input.map.rankedMetaCore?.indexOf(brawler.name) ?? -1;
+      const rankedMetaConfidence = Math.min(1, Math.max(.62, (input.map.rankedMetaSample || 10000) / 25000));
+      if (mapBanIndex >= 0) { score += 35 - mapBanIndex * 5; reasons.push("Ban prioritario editorial del mapa"); }
+      if (tierIndex >= 0) { score += 18 - tierIndex * 2; reasons.push("Tier S editorial del mapa"); }
+      if (rankedMetaIndex >= 0) {
+        score += Math.max(2, 11 - rankedMetaIndex * 1.6) * rankedMetaConfidence;
+        reasons.push("Amenaza frecuente y eficaz en Ranked del mapa");
+      }
       const threatened = allies.filter((ally) => includesName(ally.counteredBy, brawler.name));
       if (threatened.length) { score += threatened.length * 17; reasons.push(`Protege a ${threatened.map((ally) => ally.name).join(" y ")}`); }
       if (input.position === "First pick" && (isLongRange(brawler) || isControl(brawler))) score += 4;
@@ -763,13 +783,19 @@ function predictEnemyPicks(input: DraftInput, roster: Brawler[], allies: Brawler
       const reasons: string[] = [];
       const tierIndex = input.map.tierS.indexOf(brawler.name);
       const aIndex = input.map.tierA.indexOf(brawler.name);
+      const rankedMetaIndex = input.map.rankedMetaCore?.indexOf(brawler.name) ?? -1;
+      const rankedMetaConfidence = Math.min(1, Math.max(.62, (input.map.rankedMetaSample || 10000) / 25000));
 
       if (tierIndex >= 0) {
         score += 18 - tierIndex * 2;
-        reasons.push("Prioridad natural del mapa");
+        reasons.push("Prioridad editorial del mapa");
       } else if (aIndex >= 0) {
         score += 9 - aIndex;
-        reasons.push("Buen encaje con el mapa");
+        reasons.push("Buen encaje editorial con el mapa");
+      }
+      if (rankedMetaIndex >= 0) {
+        score += Math.max(1.5, 7 - rankedMetaIndex) * rankedMetaConfidence;
+        reasons.push("Alta presencia/rendimiento Ranked en este mapa");
       }
 
       const targets = allies.filter((ally) =>
@@ -879,8 +905,11 @@ function brawlerMapStrength(brawler: Brawler, input: DraftInput) {
 
   const sIndex = input.map.tierS.indexOf(brawler.name);
   const aIndex = input.map.tierA.indexOf(brawler.name);
+  const rankedMetaIndex = input.map.rankedMetaCore?.indexOf(brawler.name) ?? -1;
+  const rankedMetaConfidence = Math.min(1, Math.max(.62, (input.map.rankedMetaSample || 10000) / 25000));
   if (sIndex >= 0) score += 18 - sIndex * 1.8;
   else if (aIndex >= 0) score += 10 - aIndex * 1.2;
+  if (rankedMetaIndex >= 0) score += Math.max(1, 6 - rankedMetaIndex) * rankedMetaConfidence;
 
   if (input.map.layout === "Abierto") {
     if (isLongRange(brawler)) score += 7;

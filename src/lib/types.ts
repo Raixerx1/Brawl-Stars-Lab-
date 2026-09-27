@@ -96,6 +96,10 @@ export type MapProfile = {
     reasons: string[];
     risks: string[];
   }>;
+  rankedMetaCore?: string[];
+  rankedMetaReviewedAt?: string;
+  rankedMetaSample?: number;
+  rankedMetaSource?: string;
 };
 
 export type DraftPosition = "First pick" | "Pick intermedio" | "Last pick";
