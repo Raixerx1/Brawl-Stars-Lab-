@@ -28,6 +28,7 @@ type DraftTeam = "ally" | "enemy";
 type OrderedPick = string | null;
 
 const QUEUE_MODE_KEY = "brawl-lab:queue-mode-v1";
+const VOICE_PICK_COMMIT_EVENT = "brawl-draft-lab:voice-pick-commit";
 
 const MODE_LABELS: Record<string, string> = {
   "Atrapagemas": "Gem Grab",
@@ -110,11 +111,8 @@ export default function DraftAssistant({
   const [mode, setMode] = useState(modes[0]);
   const availableMaps = useMemo(
     () => maps
-      .filter((map) => map.mode === mode)
-      .sort((a, b) =>
-        Number(b.rotationStatus === "Actual") - Number(a.rotationStatus === "Actual") ||
-        a.name.localeCompare(b.name)
-      ),
+      .filter((map) => map.mode === mode && map.rotationStatus === "Actual")
+      .sort((a, b) => a.name.localeCompare(b.name)),
     [maps, mode],
   );
   const [mapSlug, setMapSlug] = useState(availableMaps[0]?.slug || "");
@@ -184,6 +182,39 @@ export default function DraftAssistant({
       // Mantener la selección durante la sesión aunque el navegador bloquee storage.
     }
   }, [queueMode, queueLoaded]);
+
+  useEffect(() => {
+    const commitVoicePick = (event: Event) => {
+      const requested = (event as CustomEvent<{ name?: string }>).detail?.name?.trim();
+      if (!requested) return;
+      const profile = brawlers.find((brawler) => normalize(brawler.name) === normalize(requested));
+      if (!profile) return;
+
+      let committed = false;
+      setOrderedPicks((current) => {
+        const next = current.findIndex((pick) => !pick);
+        if (next < 0) return current;
+        const blocked = new Set([
+          ...current.filter(Boolean).map((name) => normalize(name as string)),
+          ...bans.map(normalize),
+        ]);
+        if (blocked.has(normalize(profile.name))) return current;
+        committed = true;
+        return current.map((pick, index) => index === next ? profile.name : pick);
+      });
+
+      if (committed) {
+        setScenarioEnemy("");
+        setPlayedBrawler("");
+        setMatchNote("");
+        setQuery("");
+        setFocused(false);
+      }
+    };
+
+    window.addEventListener(VOICE_PICK_COMMIT_EVENT, commitVoicePick as EventListener);
+    return () => window.removeEventListener(VOICE_PICK_COMMIT_EVENT, commitVoicePick as EventListener);
+  }, [brawlers, bans]);
 
   const map = maps.find((item) => item.slug === mapSlug) || availableMaps[0];
   const sequence = useMemo(() => sequenceFor(firstPickOwner), [firstPickOwner]);
@@ -573,7 +604,7 @@ export default function DraftAssistant({
   return <div className="ordered-draft-assistant">
     <section className="panel ordered-draft-panel">
       <div className="section-title">
-        <div><span className="eyebrow">Draft Coach · motor U69 v0.32.1</span><h2>Introduce los picks en orden</h2></div>
+        <div><span className="eyebrow">Draft Coach · motor U69 v0.36.1</span><h2>Introduce los picks en orden</h2></div>
         <div className="draft-action-row">
           <button type="button" className="secondary-button compact-button" onClick={shareDraft}>Compartir</button>
           <button type="button" className="secondary-button compact-button" onClick={resetDraft}>Reiniciar</button>
@@ -583,7 +614,7 @@ export default function DraftAssistant({
 
       <div className="ordered-draft-context ordered-draft-context-v5">
         <label className="draft-mode-english-control-v215 draft-context-mode-v321"><span>MODE</span><select className="draft-mode-display-v215" value={mode} onChange={(event) => changeMode(event.target.value)}>{modes.map((item) => <option value={item} key={item}>{MODE_LABELS[item] || item}</option>)}</select></label>
-        <label className="draft-context-map-v321"><span>Mapa</span><select value={mapSlug} onChange={(event) => { setMapSlug(event.target.value); setOrderedPicks(Array(6).fill(null)); setBans([]); setScenarioEnemy(""); }}>{availableMaps.map((item) => <option value={item.slug} key={item.slug}>{item.name}{item.rotationStatus === "Histórico" ? " · histórico" : ""}</option>)}</select></label>
+        <label className="draft-context-map-v321"><span>Mapa</span><select value={mapSlug} onChange={(event) => { setMapSlug(event.target.value); setOrderedPicks(Array(6).fill(null)); setBans([]); setScenarioEnemy(""); }}>{availableMaps.map((item) => <option value={item.slug} key={item.slug}>{item.name}</option>)}</select></label>
         <div className="draft-first-pick-coin-control-v214 draft-context-first-pick-v321">
           <span className="draft-coin-label-v214">FIRST PICK</span>
           <button
