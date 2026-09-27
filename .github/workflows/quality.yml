@@ -31,14 +31,14 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Draft v0.36.1 pool and first picks
+        run: npm run audit:draft-v361
+
       - name: Draft recommendation diversity
         run: npm run audit:recommendations-v36
 
-      - name: Voice audits
-        run: npm run audit:voice
-
-      - name: Video review audits
-        run: npm run audit:video-review
+      - name: Full regression audit
+        run: npm run audit:all
 
       - name: Production build
         run: npm run build
