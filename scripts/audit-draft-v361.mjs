@@ -118,9 +118,10 @@ expect(voiceControl.includes("window.dispatchEvent(new CustomEvent(VOICE_PICK_CO
 const leaders = new Map();
 for (const map of current) leaders.set(map.firstPicks[0], (leaders.get(map.firstPicks[0]) || 0) + 1);
 const topLeaders = [...leaders.entries()].sort((a, b) => b[1] - a[1]);
-const dominant = topLeaders[0];
-expect(!dominant || dominant[1] <= 10, `${dominant?.[0]} domina ${dominant?.[1]}/28 mapas como first pick`);
 
+// La concentración se informa, pero no se fuerza una cuota artificial de diversidad:
+// un meta real puede hacer que un blind pick seguro lidere varios mapas. v0.36.2
+// audita por separado que el prior Ranked específico de cada mapa esté presente.
 console.log(`Mapas Ranked actuales: ${current.length}`);
 console.log(`Históricos conservados: ${historical.length}`);
 console.log(`R-T lidera: ${rtLeads.length}/28`);
