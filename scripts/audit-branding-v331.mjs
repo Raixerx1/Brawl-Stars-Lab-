@@ -45,7 +45,7 @@ expect(installPrompt.includes('const CROW_ICON = "/icon-192.png?crow=4"'), "El a
 expect(installPrompt.includes("Instala Kanna Draft"), "El aviso de instalación conserva el nombre anterior");
 expect(pwaStyles.includes(".pwa-install-icon img"), "Faltan los estilos del icono en el aviso de instalación");
 expect(serviceWorkerRegister.includes('register("/sw.js?crow=4"'), "El navegador puede conservar el service worker anterior");
-expect(serviceWorker.includes('kanna-draft-v0332-crow4'), "La caché PWA no usa Crow v4");
+expect(serviceWorker.includes('kanna-draft-v0361-crow4'), "La caché PWA v0.36.1 no usa Crow v4");
 for (const asset of [
   "/manifest.webmanifest?crow=4",
   "/favicon-32.png?crow=4",
@@ -58,4 +58,4 @@ for (const asset of [
   expect(serviceWorker.includes(`"${asset}"`), `La PWA no precarga ${asset}`);
 }
 
-console.log("Auditoría de marca e iconos Kanna Draft · Crow v4");
+console.log("Auditoría de marca e iconos Kanna Draft · Crow v4 · v0.36.1");
