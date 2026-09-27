@@ -43,6 +43,7 @@ type HeardEvidence = {
 type TranscriptLedgerItem = { transcript: string; isFinal: boolean };
 
 const VOICE_START_EVENT = "brawl-draft-lab:voice-start";
+const VOICE_PICK_COMMIT_EVENT = "brawl-draft-lab:voice-pick-commit";
 const MAX_SLOTS = 6;
 const MAX_COMMIT_ATTEMPTS = 3;
 const MAX_BAN_QUEUE_RETRIES = 1;
@@ -193,6 +194,25 @@ async function commitVoiceEntry(name: string, targetMode: VoiceDraftTarget): Pro
   if (hasSelected(name, targetMode)) return "already";
   const expectedPickIndex = targetMode === "pick" ? nextPickSlotIndex() : undefined;
   if (targetMode === "pick" && typeof expectedPickIndex !== "number") return "failed";
+
+  if (targetMode === "pick" && typeof expectedPickIndex === "number") {
+    const before = selectedEntries(targetMode);
+    for (let attempt = 1; attempt <= MAX_COMMIT_ATTEMPTS; attempt += 1) {
+      if (hasSelected(name, targetMode)) return "already";
+      window.dispatchEvent(new CustomEvent(VOICE_PICK_COMMIT_EVENT, { detail: { name } }));
+      const outcome = await waitForCommitOutcome(
+        name,
+        targetMode,
+        before,
+        expectedPickIndex,
+        1000 + attempt * 300,
+      );
+      if (outcome === "added") return "added";
+      if (outcome === "wrong") await rollbackUnexpected(targetMode, before, expectedPickIndex);
+      await sleep(140 + attempt * 90);
+    }
+    return normalizeVoice(pickSlotEntries()[expectedPickIndex] || "") === normalizeVoice(name) ? "added" : "failed";
+  }
 
   for (let attempt = 1; attempt <= MAX_COMMIT_ATTEMPTS; attempt += 1) {
     if (hasSelected(name, targetMode)) return "already";
