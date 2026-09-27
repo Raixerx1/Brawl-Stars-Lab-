@@ -111,9 +111,8 @@ const tierWeight: Record<string, number> = {
 };
 
 /**
- * Rebuild blind-pick shortlists from the current roster. tierS now represents
- * the current per-map Ranked statistical core after applyMapMeta2509; it is a
- * moderate prior, never a replacement for blind safety or geometry.
+ * Rebuild blind-pick shortlists from the current roster. Ranked map evidence is
+ * a moderate prior and remains separate from the map's editorial S/A tiers.
  */
 export function recalibrateRankedFirstPicks2709(maps: MapProfile[], roster: Brawler[]): MapProfile[] {
   return maps.map((map) => {
@@ -122,10 +121,16 @@ export function recalibrateRankedFirstPicks2709(maps: MapProfile[], roster: Braw
     const ranked = roster
       .map((brawler) => {
         const evaluation = evaluateFirstPick(brawler, map);
+        const metaIndex = map.rankedMetaCore?.indexOf(brawler.name) ?? -1;
         const sIndex = map.tierS.indexOf(brawler.name);
         const aIndex = map.tierA.indexOf(brawler.name);
-        const mapPrior = sIndex >= 0 ? Math.max(1, 6 - sIndex) : aIndex >= 0 ? Math.max(0, 2 - aIndex * .2) : 0;
-        const score = evaluation.score + (tierWeight[brawler.tier] || 0) + mapPrior;
+        const rankedMetaPrior = metaIndex >= 0 ? Math.max(.8, 5 - metaIndex * .8) : 0;
+        const editorialPrior = sIndex >= 0
+          ? Math.max(.5, 2.5 - sIndex * .35)
+          : aIndex >= 0
+            ? Math.max(0, 1 - aIndex * .1)
+            : 0;
+        const score = evaluation.score + (tierWeight[brawler.tier] || 0) + rankedMetaPrior + editorialPrior;
         return { brawler, evaluation, score };
       })
       .filter(({ brawler, evaluation }) =>
@@ -154,7 +159,7 @@ export function recalibrateRankedFirstPicks2709(maps: MapProfile[], roster: Braw
       firstPickReviewedAt: RANKED_POOL_2709_REVIEW_DATE,
       firstPickModelVersion: RANKED_POOL_2709_MODEL_VERSION,
       firstPickConfidence: map.firstPickConfidence === "Baja" ? "Media" : map.firstPickConfidence || "Media",
-      firstPickNotes: `${metaNote}First picks recalculados con v0.36.2: meta específico del mapa + seguridad a ciegas + geometría + utilidad del modo. Counters, composición y orden de picks siguen resolviéndose en Draft Assist.`,
+      firstPickNotes: `${metaNote}First picks recalculados con v0.36.2: prior Ranked específico + tiers editoriales + seguridad a ciegas + geometría + utilidad del modo. Counters, composición y orden de picks siguen resolviéndose en Draft Assist.`,
     };
   });
 }
