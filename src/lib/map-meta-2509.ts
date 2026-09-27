@@ -52,11 +52,26 @@ export const mapMeta2509: Record<string, MapMetaEvidence> = {
   "Flaring Phoenix": { core: ["Brock", "Wendy", "Pearl", "Gus", "Shade"], sample: 28648, source: "https://seemeta.com/es/brawl-stars/maps/knockout/flaring-phoenix" },
 };
 
+const normalizeMapName = (value: string) => value
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-+|-+$/g, "");
+
+const mapMetaByKey = new Map(
+  Object.entries(mapMeta2509).map(([name, evidence]) => [normalizeMapName(name), evidence]),
+);
+
+export function mapMetaForMap(name: string): MapMetaEvidence | undefined {
+  return mapMetaByKey.get(normalizeMapName(name));
+}
+
 const unique = (values: string[]) => [...new Set(values)];
 
 export function applyMapMeta2509(maps: MapProfile[]): MapProfile[] {
   return maps.map((map) => {
-    const evidence = mapMeta2509[map.name];
+    const evidence = mapMetaForMap(map.name);
     if (!evidence || map.rotationStatus !== "Actual") return map;
 
     const reviewedAt = evidence.reviewedAt || MAP_META_DEFAULT_REVIEW_DATE;
