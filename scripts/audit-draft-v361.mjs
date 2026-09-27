@@ -51,7 +51,11 @@ const ranked = require(join(output, "ranked-pool-2709.js"));
 
 const rawBrawlers = JSON.parse(await readFile(join(root, "src/data/brawlers.json"), "utf8"));
 const rawMaps = JSON.parse(await readFile(join(root, "src/data/maps.json"), "utf8"));
-const draftPage = await readFile(join(root, "src/app/draft/page.tsx"), "utf8");
+const [draftPage, draftAssistant, voiceControl] = await Promise.all([
+  readFile(join(root, "src/app/draft/page.tsx"), "utf8"),
+  readFile(join(root, "src/components/DraftAssistant.tsx"), "utf8"),
+  readFile(join(root, "src/components/VoiceDraftControl.tsx"), "utf8"),
+]);
 
 const roster = calibration.applyDraftCalibration2709(
   post2609.applyPostBalance2609(
@@ -105,6 +109,12 @@ expect(current.every((map) => map.firstPickReviewedAt === "27/09/2026"), "Hay fi
 expect(historical.length > 0, "Se perdieron los mapas históricos");
 expect(draftPage.includes("DraftAssistant maps={rankedMaps}"), "Draft Assist no está aislado al pool Ranked actual");
 
+expect(draftAssistant.includes('VOICE_PICK_COMMIT_EVENT = "brawl-draft-lab:voice-pick-commit"'), "DraftAssistant no declara el puente React de picks por voz");
+expect(draftAssistant.includes("window.addEventListener(VOICE_PICK_COMMIT_EVENT"), "DraftAssistant no escucha commits de voz");
+expect(draftAssistant.includes("setOrderedPicks((current) =>"), "El puente de voz no actualiza el estado ordenado de React");
+expect(voiceControl.includes('VOICE_PICK_COMMIT_EVENT = "brawl-draft-lab:voice-pick-commit"'), "VoiceDraftControl no comparte el evento de commit");
+expect(voiceControl.includes("window.dispatchEvent(new CustomEvent(VOICE_PICK_COMMIT_EVENT"), "VoiceDraftControl no envía cada pick directamente al estado React");
+
 const leaders = new Map();
 for (const map of current) leaders.set(map.firstPicks[0], (leaders.get(map.firstPicks[0]) || 0) + 1);
 const topLeaders = [...leaders.entries()].sort((a, b) => b[1] - a[1]);
@@ -115,6 +125,7 @@ console.log(`Mapas Ranked actuales: ${current.length}`);
 console.log(`Históricos conservados: ${historical.length}`);
 console.log(`R-T lidera: ${rtLeads.length}/28`);
 console.log(`Líderes first pick: ${topLeaders.map(([name, count]) => `${name} ${count}`).join(" · ")}`);
+console.log(`Voz picks: bridge React directo verificado`);
 console.log(`Errores: ${errors.length}`);
 
 await rm(output, { recursive: true, force: true });
@@ -122,4 +133,4 @@ if (errors.length) {
   errors.forEach((error) => console.error(`ERROR: ${error}`));
   process.exit(1);
 }
-console.log("Auditoría v0.36.1 correcta: pool, mapas destacados y first picks sincronizados.");
+console.log("Auditoría v0.36.1 correcta: pool, mapas destacados, first picks y voz sincronizados.");
