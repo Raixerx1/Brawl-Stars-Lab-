@@ -68,7 +68,7 @@ replace(
     score += empiricalBonus;
     mapFit += Math.max(2, 8 - rankedMetaIndex) * rankedMetaConfidence;
     meta += Math.max(1, 5 - rankedMetaIndex * .7) * rankedMetaConfidence;
-    reasons.push(`Meta Ranked del mapa${input.map.rankedMetaSample ? ` · ${input.map.rankedMetaSample.toLocaleString("es-ES")} partidas` : ""}`);
+    reasons.push("Meta Ranked del mapa" + (input.map.rankedMetaSample ? " · " + input.map.rankedMetaSample.toLocaleString("es-ES") + " partidas" : ""));
   }
 
   if (firstPickEvaluation) {
